@@ -1,0 +1,370 @@
+import { describe, test, expect, beforeEach, vi } from 'vitest';
+import { Game } from '../js/gameEngine.js';
+import { PHASES } from '../js/config.js';
+
+// Mock UI
+vi.mock('../js/ui.js', () => ({
+  showTutorSuggestions: vi.fn(),
+  renderBoard: vi.fn(),
+  updateShopUI: vi.fn(),
+  getPieceText: vi.fn(piece => (piece ? piece.type : '')),
+  setTutorLoading: vi.fn(),
+}));
+
+vi.mock('../js/aiEngine.js', () => ({
+  getBestMoveDetailed: vi.fn(),
+  getTopMoves: vi.fn(() => []),
+  extractPV: vi.fn(() => []),
+  evaluatePosition: vi.fn(() => 0),
+  isSquareAttacked: vi.fn(() => false),
+  see: vi.fn(() => 0),
+  getAllThreats: vi.fn().mockReturnValue([]),
+  getKingThreats: vi.fn().mockReturnValue([]),
+  getXRayThreats: vi.fn().mockReturnValue([]),
+  getDiscoveredAttackPotential: vi.fn().mockReturnValue([]),
+  // Piece constants needed by TacticsDetector
+  PIECE_PAWN: 1,
+  PIECE_KNIGHT: 2,
+  PIECE_BISHOP: 3,
+  PIECE_ROOK: 4,
+  PIECE_QUEEN: 5,
+  PIECE_KING: 6,
+  PIECE_ARCHBISHOP: 7,
+  PIECE_CHANCELLOR: 8,
+  PIECE_ANGEL: 9,
+  PIECE_NIGHTRIDER: 10,
+  PIECE_NONE: 0,
+  COLOR_WHITE: 16,
+  COLOR_BLACK: 32,
+}));
+
+const aiEngine = await import('../js/aiEngine.js');
+
+const UI = await import('../js/ui.js');
+const {
+  getTutorHints,
+  getSetupTemplates,
+  applySetupTemplate,
+  isTutorMove,
+  showTutorSuggestions,
+  updateBestMoves,
+} = await import('../js/tutor/HintGenerator.js');
+
+describe('HintGenerator - Unit Tests', () => {
+  let game: any;
+  let mockTutorController: any;
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+
+    game = new Game(15, 'classic');
+    game.board = Array(9)
+      .fill(null)
+      .map(() => Array(9).fill(null));
+    game.bestMoves = [];
+
+    mockTutorController = {
+      getPieceName: vi.fn(type => type),
+      getThreatenedPieces: vi.fn(() => []),
+      getDefendedPieces: vi.fn(() => []),
+      detectTacticalPatterns: vi.fn(() => []),
+      analyzeMoveWithExplanation: vi.fn(() => ({ title: 'Test' })),
+      getSetupTemplates: vi.fn(() => []),
+      debouncedGetTutorHints: vi.fn(),
+    };
+  });
+
+  test('getTutorHints should return empty if not in PLAY phase', async () => {
+    game.phase = PHASES.SETUP_WHITE_KING;
+    const hints = await getTutorHints(game, mockTutorController);
+    expect(hints).toEqual([]);
+  });
+
+  test('getTutorHints should return hints for human player', async () => {
+    game.phase = PHASES.PLAY;
+    game.isAI = true;
+    game.turn = 'white';
+
+    // Mock AI engine result
+    const bestMove = { from: { r: 7, c: 4 }, to: { r: 5, c: 4 } };
+    (aiEngine.getTopMoves as any).mockReturnValue([
+      {
+        move: bestMove,
+        score: 50,
+        notation: 'e4',
+        nodes: 100,
+      },
+    ]);
+
+    game.board[7][4] = { type: 'p', color: 'white' };
+
+    const hints = await getTutorHints(game, mockTutorController);
+    expect(hints.length).toBeGreaterThan(0);
+  });
+
+  test('getTutorHints should filter out pieces of wrong color or missing', async () => {
+    game.phase = PHASES.PLAY;
+    game.board[7][4] = { type: 'p', color: 'black' }; // Wrong color
+    (aiEngine.getTopMoves as any).mockReturnValue([
+      {
+        move: { from: { r: 7, c: 4 }, to: { r: 5, c: 4 } },
+        score: 50,
+      },
+    ]);
+
+    expect(await getTutorHints(game, mockTutorController)).toEqual([]);
+
+    game.board[7][4] = null; // Missing
+    expect(await getTutorHints(game, mockTutorController)).toEqual([]);
+  });
+
+  test('getTutorHints should skip self-captures (though illegal)', async () => {
+    game.phase = PHASES.PLAY;
+    game.board[7][4] = { type: 'p', color: 'white' };
+    game.board[5][4] = { type: 'p', color: 'white' }; // Same color
+    (aiEngine.getTopMoves as any).mockReturnValue([
+      {
+        move: { from: { r: 7, c: 4 }, to: { r: 5, c: 4 } },
+        score: 50,
+      },
+    ]);
+
+    expect(await getTutorHints(game, mockTutorController)).toEqual([]);
+  });
+
+  test('getTutorHints should return empty for AI turn', async () => {
+    game.turn = 'black';
+    game.isAI = true;
+    expect(await getTutorHints(game, mockTutorController)).toEqual([]);
+  });
+
+  test('getTutorHints should return empty if no legal moves', async () => {
+    game.phase = PHASES.PLAY;
+    game.getAllLegalMoves = vi.fn(() => []);
+    expect(await getTutorHints(game, mockTutorController)).toEqual([]);
+  });
+
+  test('getTutorHints should skip invalid candidates', async () => {
+    game.phase = PHASES.PLAY;
+    (aiEngine.getTopMoves as any).mockReturnValue([
+      {
+        move: { from: { r: 7, c: 4 }, to: { r: 5, c: 4 } },
+        score: 50,
+      },
+    ]);
+    game.board[7][4] = null; // No piece at 'from' effectively makes it invalid in getTutorHints logic
+    // Actually, getTutorHints filters pieces of wrong color/missing BEFORE calling engine in some tests,
+    // but here we call the engine first in the new logic.
+
+    expect(await getTutorHints(game, mockTutorController)).toEqual([]);
+  });
+
+  test('should return setup templates for different budgets', () => {
+    game.initialPoints = 12;
+    expect(getSetupTemplates(game)[0].cost).toBe(12);
+
+    game.initialPoints = 18;
+    expect(getSetupTemplates(game)[0].cost).toBe(18);
+
+    game.initialPoints = 20;
+    expect(getSetupTemplates(game)[0].cost).toBe(20);
+
+    game.initialPoints = 25;
+    expect(getSetupTemplates(game)[0].cost).toBe(25);
+
+    // 30 points (Boss 1)
+    game.initialPoints = 30;
+    const t30 = getSetupTemplates(game);
+    expect(t30.length).toBeGreaterThan(0);
+    expect(t30[0].id).toBe('dark_tower_30');
+    expect(t30[0].cost).toBe(30);
+
+    // 50 points (Boss 2)
+    game.initialPoints = 50;
+    const t50 = getSetupTemplates(game);
+    expect(t50.length).toBeGreaterThan(0);
+    expect(t50[0].id).toBe('imperator_50');
+    expect(t50[0].cost).toBe(50);
+
+    game.initialPoints = 11;
+    // Dynamic generator should match exactly 11 points
+    expect(getSetupTemplates(game)[0].cost).toBe(11);
+
+    game.initialPoints = 500;
+    // Should respect MAX_PIECES limit (8)
+    const bigBudgetTemplates = getSetupTemplates(game);
+    expect(bigBudgetTemplates[0].pieces.length).toBeLessThanOrEqual(8);
+    // Cost should be >= some reasonable amount but < 500 likely, or exactly what fit.
+  });
+
+  test('showTutorSuggestions should Call UI even if no bestMoves (to show "No suggestions")', async () => {
+    game.bestMoves = null;
+    await showTutorSuggestions(game);
+    expect(UI.showTutorSuggestions).toHaveBeenCalled();
+
+    game.bestMoves = [];
+    await showTutorSuggestions(game);
+    expect(UI.showTutorSuggestions).toHaveBeenCalledTimes(2);
+  });
+
+  test('showTutorSuggestions should call UI if bestMoves exists', async () => {
+    game.bestMoves = [{ move: {}, notation: 'e4' }];
+    await showTutorSuggestions(game);
+    expect(UI.showTutorSuggestions).toHaveBeenCalled();
+  });
+
+  test('applySetupTemplate for black pieces', () => {
+    game.phase = PHASES.SETUP_BLACK_PIECES;
+    game.blackCorridor = 3;
+    const template = {
+      id: 'rush_12',
+      name: 'Rush',
+      pieces: ['q', 'p', 'p', 'p'],
+    };
+    (mockTutorController.getSetupTemplates as any).mockReturnValue([template]);
+
+    applySetupTemplate(game, mockTutorController, 'rush_12');
+
+    // Black frontRow is rowStart + 2 = 2
+    expect(game.board[2][3].type).toBe('p');
+  });
+
+  test('applySetupTemplate with piece placement fallback', () => {
+    game.phase = PHASES.SETUP_WHITE_PIECES;
+    game.whiteCorridor = 3;
+    // Fill up rows
+    for (let c = 3; c < 6; c++) {
+      game.board[6][c] = { type: 'p' };
+      game.board[7][c] = { type: 'p' };
+      game.board[8][c] = { type: 'p' };
+    }
+    game.board[8][3] = null;
+
+    const template = {
+      id: 'test',
+      pieces: ['r'],
+    };
+    (mockTutorController.getSetupTemplates as any).mockReturnValue([template]);
+
+    applySetupTemplate(game, mockTutorController, 'test');
+    expect(game.board[8][3].type).toBe('r');
+  });
+
+  test('applySetupTemplate fallbacks for queens, knights and others', () => {
+    game.phase = PHASES.SETUP_WHITE_PIECES;
+    game.whiteCorridor = 3;
+
+    // Block all normal slots
+    for (let r = 6; r <= 8; r++) {
+      for (let c = 3; c <= 5; c++) {
+        game.board[r][c] = { type: 'p' };
+      }
+    }
+
+    // Open one fallback slot in back row
+    game.board[8][3] = null;
+
+    const template = {
+      id: 'fallback',
+      pieces: ['q', 'n', 'e'], // Queen, Knight, Angel (others)
+    };
+    (mockTutorController.getSetupTemplates as any).mockReturnValue([template]);
+
+    applySetupTemplate(game, mockTutorController, 'fallback');
+    // They should all hit placeAnywhere and eventually find 8,3
+    expect(game.board[8][3]).toBeDefined();
+  });
+
+  test('applySetupTemplate with blocked corners for rooks/bishops', () => {
+    game.phase = PHASES.SETUP_WHITE_PIECES;
+    game.whiteCorridor = 3;
+
+    // Pieces everywhere
+    for (let r = 6; r <= 8; r++) {
+      for (let c = 3; c <= 5; c++) {
+        game.board[r][c] = { type: 'p' };
+      }
+    }
+
+    // Only one opening not in corner/center
+    game.board[7][4] = null;
+
+    const template = {
+      id: 'blocked',
+      pieces: ['r', 'b'],
+    };
+    (mockTutorController.getSetupTemplates as any).mockReturnValue([template]);
+
+    applySetupTemplate(game, mockTutorController, 'blocked');
+    expect(game.board[7][4]).toBeDefined();
+  });
+
+  test('applySetupTemplate should place pieces around key blocker (King)', () => {
+    game.phase = PHASES.SETUP_WHITE_PIECES;
+    game.whiteCorridor = 3;
+
+    // Place King in the best spot for a Queen (Back row centerish)
+    // White Back Row is 8. Center col of corridor (3,4,5) is 4.
+    game.board[8][4] = { type: 'k', color: 'white' };
+
+    // Template with Queen
+    const template = {
+      id: 'queen_test',
+      pieces: ['q'],
+    };
+    (mockTutorController.getSetupTemplates as any).mockReturnValue([template]);
+
+    applySetupTemplate(game, mockTutorController, 'queen_test');
+
+    // Queen prefers back row (8). 8,4 is taken by King.
+    // Should go to 8,3 or 8,5 or 7,4.
+    // Check Queen is placed and NOT at 8,4
+    let queenPos = null;
+    for (let r = 6; r <= 8; r++) {
+      for (let c = 3; c <= 5; c++) {
+        if (game.board[r][c] && game.board[r][c].type === 'q') {
+          queenPos = { r, c };
+        }
+      }
+    }
+
+    expect(queenPos).not.toBeNull();
+    // Verify it didn't overwrite King
+    expect(game.board[8][4].type).toBe('k');
+    // Verify it found a spot (likely 8,3 or 8,5 as they are back row score 50+20=70 vs middle row 10)
+    expect(queenPos!.r).toBe(8);
+  });
+
+  test('applySetupTemplate heuristics: Pawn preference', () => {
+    game.phase = PHASES.SETUP_WHITE_PIECES;
+    game.whiteCorridor = 3;
+
+    // We use a custom template with 1 pawn and 1 rook
+    const template = { id: 'heuristic_test', pieces: ['p', 'r'] };
+    (mockTutorController.getSetupTemplates as any).mockReturnValue([template]);
+
+    // Apply
+    applySetupTemplate(game, mockTutorController, 'heuristic_test');
+
+    // Expected: Pawn in front row (6), Rook in back row (8)
+    // We check if ANY pawn is in row 6, and ANY rook is in row 8
+    const pawnsInFront = [3, 4, 5].some(c => game.board[6][c] && game.board[6][c].type === 'p');
+    const rooksInBack = [3, 4, 5].some(c => game.board[8][c] && game.board[8][c].type === 'r');
+
+    expect(pawnsInFront).toBe(true);
+    expect(rooksInBack).toBe(true);
+  });
+
+  test('isTutorMove should identify moves correctly', () => {
+    const from = { r: 6, c: 4 },
+      to = { r: 4, c: 4 };
+    game.bestMoves = [{ move: { from, to } }];
+    expect(isTutorMove(game, from, to)).toBe(true);
+  });
+
+  test('updateBestMoves should NOT trigger hints automatically (user request)', () => {
+    game.phase = PHASES.PLAY;
+    updateBestMoves(game, mockTutorController);
+    expect(mockTutorController.debouncedGetTutorHints).not.toHaveBeenCalled();
+  });
+});

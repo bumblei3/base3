@@ -1,0 +1,42 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
+    "paths": {
+      "@/*": ["js/*"]
+    },
+    "types": ["vitest/globals", "@types/node", "happy-dom"]
+  },
+  "include": [
+    "js/types.ts",
+    "js/hex.ts",
+    "js/pieces.ts",
+    "js/game-check.ts",
+    "js/game.ts",
+    "js/board.ts",
+    "js/ai-core.ts",
+    "js/main.ts",
+    "js/ai-worker.ts",
+    "js/puzzle.ts",
+    "tests/**/*.ts",
+    "tests-e2e/**/*.ts",
+    "playwright.config.ts",
+    "vitest.config.ts"
+  ],
+  "exclude": ["node_modules", "dist", "js/**/*.js"]
+}

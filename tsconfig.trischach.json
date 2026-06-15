@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "allowImportingTsExtensions": true,
+    "baseUrl": ".",
+    "paths": {
+      "@trischach/*": ["js/trischach/*"],
+      "@shared/*": ["js/shared/*"]
+    },
+    "types": ["vitest/globals", "@types/node", "happy-dom"],
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "outDir": "./dist/trischach",
+    "rootDir": "./"
+  },
+  "include": [
+    "js/trischach/**/*",
+    "js/shared/**/*",
+    "tests/**/trischach/**/*",
+    "tests-e2e/**/*",
+    "playwright.config.ts",
+    "vitest.config.ts"
+  ],
+  "exclude": ["node_modules", "dist", "js/**/*.js"]
+}

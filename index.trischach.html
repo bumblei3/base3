@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TriSchach – 3-Fraktionen Schach mit Schere-Stein-Papier</title>
+    <meta
+      name="description"
+      content="TriSchach: Ein strategisches Schachspiel für 3 Spieler auf einem Dreieck-Hexfeld mit Schere-Stein-Papier Kampfmechanik."
+    />
+    <meta name="theme-color" content="#FF4500" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="icons/icon-192.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content="TriSchach" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header id="header">
+        <h1>⚔️ TriSchach</h1>
+        <p class="subtitle">
+          3 Fraktionen · Schere-Stein-Papier · Hexagon-Schach
+        </p>
+      </header>
+
+      <main id="main">
+        <aside id="sidebar-left" class="sidebar">
+          <div id="panel-nature" class="faction-panel nature">
+            <div class="faction-header">
+              <h2>🌿 Natur</h2>
+              <div class="rps-hint">schlägt 🌊</div>
+            </div>
+            <div id="captures-nature" class="captured-pieces"></div>
+          </div>
+          <div id="rps-info" class="rps-diagram">
+            <div class="rps-cycle">
+              <span class="rps-item fire">🔥</span>
+              <span class="rps-arrow">→</span>
+              <span class="rps-item nature">🌿</span>
+              <span class="rps-arrow">→</span>
+              <span class="rps-item water">🌊</span>
+              <span class="rps-arrow">→</span>
+              <span class="rps-item fire">🔥</span>
+            </div>
+          </div>
+        </aside>
+
+        <section id="board-container">
+          <div id="turn-bar">
+            <span>Am Zug: </span>
+            <span id="turn-indicator">Feuer 🔥</span>
+            <span> · </span>
+            <span id="status">Wähle eine Figur</span>
+          </div>
+          <div id="eval-bar-container">
+            <div id="eval-bar">
+              <div id="eval-fire" class="eval-segment fire"></div>
+              <div id="eval-nature" class="eval-segment nature"></div>
+              <div id="eval-water" class="eval-segment water"></div>
+            </div>
+            <div id="eval-labels">
+              <span class="eval-label fire">🔥</span>
+              <span class="eval-label nature">🌿</span>
+              <span class="eval-label water">🌊</span>
+            </div>
+          </div>
+          <svg id="board-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+          <div class="controls">
+            <div class="rps-toggle-container">
+              <span class="toggle-label">RPS</span>
+              <label class="switch">
+                <input type="checkbox" id="rps-toggle" checked />
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <div class="rps-toggle-container">
+              <span class="toggle-label">Sound</span>
+              <label class="switch">
+                <input type="checkbox" id="sound-toggle" checked />
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <div class="rps-toggle-container">
+              <span class="toggle-label" id="depth-label">KI: Mittel</span>
+              <input
+                type="range"
+                id="depth-slider"
+                min="1"
+                max="4"
+                value="3"
+                style="width: 80px"
+              />
+            </div>
+            <div class="rps-toggle-container">
+              <span class="toggle-label">KI-Modus</span>
+              <select
+                id="personality-select"
+                style="width: 110px; padding: 4px"
+              >
+                <option value="balanced">⚖️ Ausgewogen</option>
+                <option value="aggressive">⚔️ Aggressiv</option>
+                <option value="defensive">🛡️ Defensiv</option>
+                <option value="tactical">🎯 Taktisch</option>
+              </select>
+            </div>
+            <button id="rotate-btn">🔃 Board drehen</button>
+            <button id="restart-btn">🔄 Neues Spiel</button>
+            <button id="auto-battle-btn">🤖 Auto Battle</button>
+            <button id="undo-btn">↩ Undo</button>
+            <button id="save-btn" title="Spiel als .tspn speichern">
+              💾 Speichern
+            </button>
+            <button id="load-btn" title="Spiel aus .tspn laden">
+              📂 Laden
+            </button>
+            <button id="copy-btn" title="Spiel in Zwischenablage kopieren">
+              📋 Kopieren
+            </button>
+            <button id="puzzle-btn" title="Puzzle Modus (Matt in N)">
+              ♟ Puzzle
+            </button>
+            <button id="settings-btn" title="Einstellungen">⚙️</button>
+            <button
+              id="install-btn"
+              title="Als App installieren"
+              style="display: none"
+            >
+              📱 Installieren
+            </button>
+            <button id="darkmode-btn" title="Dark Mode (D)" class="toggle-btn">
+              🌙
+            </button>
+          </div>
+          <div
+            id="replay-controls"
+            class="controls replay-controls"
+            style="display: none; margin-top: 0.5rem"
+          >
+            <div class="rps-toggle-container replay-btn-group">
+              <button id="replay-first" title="Zum Anfang">⏮</button>
+              <button id="replay-prev" title="Zurück">⏪</button>
+              <button id="replay-play" title="Abspielen">▶️</button>
+              <button id="replay-pause" title="Pause" style="display: none">
+                ⏸️
+              </button>
+              <button id="replay-next" title="Vorwärts">⏩</button>
+              <button id="replay-last" title="Zum Ende">⏭</button>
+              <button
+                id="replay-export"
+                title="Aktuelle Position als .tspn exportieren"
+              >
+                📤 TSPN
+              </button>
+              <button
+                id="replay-export-full"
+                title="Gesamte Partie als .tspn exportieren"
+              >
+                💾 Ganze Partie
+              </button>
+            </div>
+            <div class="rps-toggle-container replay-info">
+              <span id="replay-move-info">Zug 0 / 0</span>
+              <input
+                type="range"
+                id="replay-speed"
+                min="0.5"
+                max="3"
+                step="0.25"
+                value="1"
+                style="width: 80px"
+              />
+            </div>
+          </div>
+        </section>
+
+        <aside id="sidebar-right" class="sidebar">
+          <div id="panel-water" class="faction-panel water">
+            <div class="faction-header">
+              <h2>🌊 Wasser</h2>
+              <div class="rps-hint">schlägt 🔥</div>
+            </div>
+            <div id="captures-water" class="captured-pieces"></div>
+          </div>
+          <div id="panel-fire" class="faction-panel fire">
+            <div class="faction-header">
+              <h2>🔥 Feuer</h2>
+              <div class="rps-hint">schlägt 🌿</div>
+            </div>
+            <div id="captures-fire" class="captured-pieces"></div>
+          </div>
+
+          <div id="move-history-container" class="history-panel">
+            <h3>📜 Verlauf</h3>
+            <div id="move-log"></div>
+          </div>
+        </aside>
+      </main>
+
+      <div id="combat-overlay"></div>
+      <div id="promotion-overlay"></div>
+      <div id="puzzle-overlay"></div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-overlay">
+      <div class="settings-box">
+        <header class="settings-header">
+          <h2>⚙️ Einstellungen</h2>
+          <button id="settings-close" class="settings-close-btn">
+            &times;
+          </button>
+        </header>
+        <div class="settings-tabs">
+          <button class="settings-tab active" data-tab="general">
+            Allgemein
+          </button>
+          <button class="settings-tab" data-tab="learning">
+            Auto-Battle Learning
+          </button>
+          <button class="settings-tab" data-tab="opening-book">
+            Opening Book
+          </button>
+        </div>
+        <div class="settings-content">
+          <!-- General Tab -->
+          <div class="settings-panel active" id="panel-general">
+            <div class="setting-row">
+              <label for="auto-queen">Automatische Damen-Umwandlung</label>
+              <input type="checkbox" id="auto-queen" />
+            </div>
+          </div>
+          <!-- Learning Tab -->
+          <div class="settings-panel" id="panel-learning">
+            <div class="setting-group">
+              <h3>Auto-Battle Learning Konfiguration</h3>
+              <p class="setting-desc">
+                Führt viele KI-Selbstspiele durch, um das Eröffnungsbuch durch
+                Erfahrung zu verbessern. Die gelernten Gewichte werden in
+                <code>opening-book.learned.json</code> gespeichert und beim
+                nächsten Spielstart automatisch geladen.
+              </p>
+            </div>
+            <div class="setting-row">
+              <label for="ab-games">Anzahl Spiele</label>
+              <div class="slider-with-value">
+                <input
+                  type="range"
+                  id="ab-games"
+                  min="10"
+                  max="500"
+                  step="10"
+                  value="100"
+                />
+                <span id="ab-games-value">100</span>
+              </div>
+            </div>
+            <div class="setting-row">
+              <label for="ab-depth">KI-Tiefe</label>
+              <div class="slider-with-value">
+                <input
+                  type="range"
+                  id="ab-depth"
+                  min="1"
+                  max="5"
+                  step="1"
+                  value="4"
+                />
+                <span id="ab-depth-value">4</span>
+              </div>
+            </div>
+            <div class="setting-row">
+              <label for="ab-max-moves">Max. Züge pro Spiel</label>
+              <div class="slider-with-value">
+                <input
+                  type="range"
+                  id="ab-max-moves"
+                  min="100"
+                  max="500"
+                  step="50"
+                  value="300"
+                />
+                <span id="ab-max-moves-value">300</span>
+              </div>
+            </div>
+            <div class="setting-group">
+              <label>Persönlichkeiten (Mehrfachauswahl)</label>
+              <div class="personality-checkboxes">
+                <label class="checkbox-label"
+                  ><input type="checkbox" value="balanced" checked /> ⚖️
+                  Ausgewogen</label
+                >
+                <label class="checkbox-label"
+                  ><input type="checkbox" value="aggressive" checked /> ⚔️
+                  Aggressiv</label
+                >
+                <label class="checkbox-label"
+                  ><input type="checkbox" value="defensive" checked /> 🛡️
+                  Defensiv</label
+                >
+                <label class="checkbox-label"
+                  ><input type="checkbox" value="tactical" checked /> 🎯
+                  Taktisch</label
+                >
+              </div>
+            </div>
+            <div class="setting-row">
+              <button id="run-auto-battle-learning" class="btn-primary">
+                🚀 Auto-Battle Learning starten
+              </button>
+              <button id="resume-auto-battle-learning" class="btn-secondary" style="display: none;">
+                ▶️ Fortsetzen
+              </button>
+            </div>
+            <div class="setting-row">
+              <div
+                id="ab-progress"
+                class="progress-container"
+                style="display: none"
+              >
+                <div class="progress-bar">
+                  <div id="ab-progress-fill" class="progress-fill"></div>
+                </div>
+                <span id="ab-progress-text">Vorbereitung...</span>
+              </div>
+            </div>
+            <div class="setting-row">
+              <div
+                id="ab-result"
+                class="result-text"
+                style="display: none"
+              ></div>
+            </div>
+          </div>
+          <!-- Opening Book Tab -->
+          <div class="settings-panel" id="panel-opening-book">
+            <div class="setting-group">
+              <h3>Opening Book Statistiken</h3>
+              <p class="setting-desc">
+                Zeigt Informationen zum geladenen Eröffnungsbuch und den
+                gelernten Gewichten aus Auto-Battle Self-Play.
+              </p>
+            </div>
+            <div class="setting-row">
+              <div class="stats-grid" id="ob-stats">
+                <div class="stat-card">
+                  <span class="stat-value" id="ob-positions">–</span>
+                  <span class="stat-label">Positionen</span>
+                </div>
+                <div class="stat-card">
+                  <span class="stat-value" id="ob-variations">–</span>
+                  <span class="stat-label">Variationen</span>
+                </div>
+                <div class="stat-card">
+                  <span class="stat-value" id="ob-max-depth">–</span>
+                  <span class="stat-label">Max. Tiefe (Ply)</span>
+                </div>
+                <div class="stat-card">
+                  <span class="stat-value" id="ob-learned">–</span>
+                  <span class="stat-label">Gelernte Positionen</span>
+                </div>
+                <div class="stat-card">
+                  <span class="stat-value" id="ob-compiled">–</span>
+                  <span class="stat-label">Letztes Kompiliert</span>
+                </div>
+                <div class="stat-card">
+                  <span class="stat-value" id="ob-updated">–</span>
+                  <span class="stat-label">Letztes Update</span>
+                </div>
+              </div>
+            </div>
+            <div class="setting-group">
+              <h3>Aktionen</h3>
+              <div class="buttons-row">
+                <button id="ob-refresh" class="btn-secondary">
+                  🔄 Aktualisieren
+                </button>
+                <button id="ob-export-learned" class="btn-secondary">
+                  📥 Gelernte Daten exportieren
+                </button>
+                <button id="ob-reset-learned" class="btn-danger">
+                  🗑️ Learning zurücksetzen
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/js/trischach/main.ts"></script>
+    <script>
+      // Register Service Worker for PWA offline support
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("sw.js")
+            .then((registration) => {
+              console.log(
+                "[PWA] Service Worker registered:",
+                registration.scope,
+              );
+
+              // Check for updates periodically
+              setInterval(
+                () => {
+                  registration.update();
+                },
+                60 * 60 * 1000,
+              ); // Every hour
+            })
+            .catch((error) => {
+              console.warn("[PWA] Service Worker registration failed:", error);
+            });
+        });
+      }
+
+      // Handle install prompt
+      let deferredPrompt;
+      const installBtn = document.getElementById("install-btn");
+
+      window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        console.log("[PWA] Install prompt available");
+        if (installBtn) installBtn.style.display = "inline-block";
+      });
+
+      window.addEventListener("appinstalled", () => {
+        console.log("[PWA] App installed");
+        if (installBtn) installBtn.style.display = "none";
+        deferredPrompt = null;
+      });
+
+      // Install button click handler
+      installBtn?.addEventListener("click", async () => {
+        if (!deferredPrompt) {
+          console.log("[PWA] No deferred prompt available");
+          return;
+        }
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log("[PWA] Install prompt outcome:", outcome);
+        if (outcome === "accepted") {
+          deferredPrompt = null;
+          if (installBtn) installBtn.style.display = "none";
+        }
+      });
+    </script>
+  </body>
+</html>

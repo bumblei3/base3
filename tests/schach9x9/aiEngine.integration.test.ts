@@ -1,0 +1,41 @@
+import { describe, test, expect, beforeEach } from 'vitest';
+import * as AIEngine from '../js/aiEngine.js';
+import { Game } from '../js/gameEngine.js';
+import type { Piece } from '../js/types/game.js';
+
+describe('AIEngine Integration', () => {
+  let game: Game;
+
+  beforeEach(() => {
+    game = new Game(15, 'classic');
+  });
+
+  test('analyzePosition re-export functionality', async () => {
+    // analyzePosition now delegates to getBestMoveDetailed
+    const result = await AIEngine.analyzePosition(game.board, 'white');
+    // Result may be null (no legal moves in empty board) or a valid SearchResult
+    expect(result === null || typeof result === 'object').toBe(true);
+  });
+
+  test('getBestMove re-export functionality', async () => {
+    const board: (Piece | null)[][] = Array(9)
+      .fill(null)
+      .map(() => Array(9).fill(null));
+    board[7][4] = { type: 'k', color: 'white' };
+    board[1][4] = { type: 'k', color: 'black' };
+    const result = await AIEngine.getBestMove(board, 'white', 1, 'hard', { elo: 2500 });
+    expect(result).toBeDefined();
+    expect(result!.from).toBeDefined();
+  });
+
+  test('evaluatePosition re-export functionality', async () => {
+    const score = await AIEngine.evaluatePosition(game.board, 'white');
+    expect(typeof score).toBe('number');
+  });
+
+  test('extractPV re-export functionality', async () => {
+    // extractPV is currently a stub returning [] in Wasm port
+    const pv = AIEngine.extractPV(game.board, 'white');
+    expect(Array.isArray(pv)).toBe(true);
+  });
+});

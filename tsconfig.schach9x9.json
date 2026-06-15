@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "strict": true,
+    "allowJs": true,
+    "checkJs": false,
+    "outDir": "./dist/schach9x9",
+    "rootDir": "./",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "types": ["node", "vitest", "happy-dom"],
+    "incremental": true,
+    "tsBuildInfoFile": ".tsbuildinfo.schach9x9",
+    "baseUrl": ".",
+    "paths": {
+      "@schach9x9/*": ["js/schach9x9/*"],
+      "@shared/*": ["js/shared/*"]
+    },
+    "composite": true
+  },
+  "include": [
+    "js/schach9x9/**/*",
+    "js/shared/**/*",
+    "tests/**/schach9x9/**/*",
+    "service-worker.ts"
+  ],
+  "exclude": ["node_modules", "dist", "engine-wasm"]
+}

@@ -1,0 +1,63 @@
+# Dependencies
+node_modules/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Test coverage
+coverage/
+coverage_*.txt
+coverage_full.txt
+coverage_output.txt
+
+# Build output
+dist/
+build/
+*.d.ts
+*.d.ts.map
+*.js.map
+*.spec.js
+*.spec.d.ts
+*.spec.d.ts.map
+
+# Environment variables
+.env
+.env.local
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+
+# TypeScript
+*.tsbuildinfo*
+
+# WASM
+engine-wasm/pkg/
+engine-wasm/target/
+
+# Temp files
+*.tmp
+*.temp
+current_test_run.txt
+full_coverage_raw.txt
+
+# Misc
+*.cjs
+service-worker.js
+favicon.ico
+icon-*.png
+manifest.json

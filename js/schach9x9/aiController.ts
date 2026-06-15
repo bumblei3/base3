@@ -1,0 +1,914 @@
+import { PHASES, type Game } from './gameEngine.js';
+import type { Player } from './types/game.js';
+import {
+  DRAW_OFFER_THRESHOLD_LOW,
+  DRAW_OFFER_THRESHOLD_HIGH,
+  DRAW_OFFER_MIN_MOVES,
+  DRAW_ACCEPT_SCORE_MAX,
+  DRAW_ACCEPT_MOVES_MIN,
+  HALF_MOVE_CLOCK_NEAR_50,
+} from './constants.js';
+import {
+  SHOP_PIECES,
+  AI_DEPTH_CONFIG,
+  AI_DIFFICULTIES,
+  isBlockedCell,
+  type ShopPieceConfig,
+} from './config.js';
+import { logger } from './logger.js';
+import * as UI from './ui.js';
+import * as aiEngine from './aiEngine.js';
+import type { MoveResult, SearchResult } from './aiEngine.js';
+import { AI_PERSONALITIES } from './ai/personalities.js';
+import { AnalysisUI } from './ui/AnalysisUI.js';
+
+// @ts-expect-error - Vite worker import (.ts extension)
+import AIWorker from './ai/aiWorker.ts?worker';
+
+// Piece values for shop
+const PIECES: Record<string, ShopPieceConfig> = SHOP_PIECES;
+
+export class AIController {
+  public game: Game;
+  public aiWorker: Worker | null;
+  public aiWorkers: Worker[];
+  public analysisActive: boolean;
+  public analysisUI: AnalysisUI | null;
+  public currentBookMode: string | null;
+  public openingBookData: Record<string, unknown> | null;
+  // Dynamic delegate methods set by App.applyDelegates()
+  public evaluatePosition?: (_color: Player) => number;
+  public requestPositionAnalysis?: () => void;
+  private _aiMoveStartTime: number;
+
+  constructor(game: Game) {
+    this.game = game;
+    this.aiWorker = null;
+    this.aiWorkers = [];
+    this.analysisActive = false;
+    this.analysisUI = null;
+    this.currentBookMode = null;
+    this.openingBookData = null;
+    this._aiMoveStartTime = 0;
+  }
+
+  public setAnalysisUI(analysisUI: AnalysisUI): void {
+    this.analysisUI = analysisUI;
+  }
+
+  /**
+   * Broadcast boardShape to all AI workers
+   */
+  public setBoardShapeForWorkers(shape: string): void {
+    // Also send to main worker
+    if (this.aiWorker) {
+      this.aiWorker.postMessage({ type: 'setBoardShape', data: { shape } });
+    }
+    // Send to pool workers
+    this.aiWorkers.forEach(w => {
+      w.postMessage({ type: 'setBoardShape', data: { shape } });
+    });
+  }
+
+  public toggleAnalysisMode(): boolean {
+    this.analysisActive = !this.analysisActive;
+
+    if (this.game.evaluationBar) {
+      this.game.evaluationBar.show(this.analysisActive);
+    }
+
+    if (this.game.analysisManager) {
+      this.game.analysisManager.showBestMove = this.analysisActive;
+      this.game.analysisManager.updateArrows();
+    }
+
+    if (this.analysisActive) {
+      this.analyzePosition();
+    }
+    return this.analysisActive;
+  }
+
+  public aiSetupKing(): void {
+    // Choose random corridor (0, 3, 6)
+    let cols = [0, 3, 6];
+
+    // For cross-shaped board, only center corridor (3) is valid
+    if (this.game.boardShape && this.game.boardShape !== 'standard') {
+      cols = [3]; // Only center column in cross mode
+    }
+
+    const randomCol = cols[Math.floor(Math.random() * cols.length)];
+    // Black King goes to row 0-2 (top), specifically row 1, col randomCol+1
+    if (this.game.gameController) {
+      this.game.gameController.placeKing(1, randomCol + 1, 'black');
+    }
+    UI.renderBoard(this.game);
+  }
+
+  public aiSetupPieces(): void {
+    // blackCorridor is just the colStart number, not an object
+    const colStart = this.game.blackCorridor;
+    if (colStart === null || colStart === undefined) {
+      return;
+    }
+
+    // Black corridor is at top (row 0-2)
+    const rowStart = 0;
+
+    // Map piece names to their symbols
+    const pieceSymbols: Record<string, string> = {
+      QUEEN: 'q',
+      CHANCELLOR: 'c',
+      ARCHBISHOP: 'a',
+      ROOK: 'r',
+      BISHOP: 'b',
+      KNIGHT: 'n',
+      PAWN: 'p',
+    };
+
+    // Simple greedy strategy: buy expensive stuff first
+    while (this.game.points > 0) {
+      // Filter affordable pieces
+      const pieceNames = ['QUEEN', 'CHANCELLOR', 'ARCHBISHOP', 'ROOK', 'BISHOP', 'KNIGHT', 'PAWN'];
+      const affordable = pieceNames.filter(name => PIECES[name].points <= this.game.points);
+      if (affordable.length === 0) break;
+
+      const choice = affordable[Math.floor(Math.random() * affordable.length)];
+      const symbol = pieceSymbols[choice];
+      this.game.selectedShopPiece = symbol;
+
+      // Find empty spot in the 3x3 corridor
+      let emptySpots: { r: number; c: number }[] = [];
+      for (let r = rowStart; r < rowStart + 3; r++) {
+        for (let c = colStart; c < colStart + 3; c++) {
+          if (!this.game.board[r][c]) emptySpots.push({ r, c });
+        }
+      }
+
+      // Filter out blocked squares for cross-shaped board
+      if (this.game.boardShape && this.game.boardShape !== 'standard') {
+        emptySpots = emptySpots.filter(s => !isBlockedCell(s.r, s.c, this.game.boardShape));
+      }
+
+      if (emptySpots.length === 0) break;
+
+      // Heuristic Placement Logic
+      let candidates: { r: number; c: number }[] = [];
+      const kingPos = this.game.findKing('black'); // Should be present from aiSetupKing
+
+      if (symbol === 'p' && kingPos) {
+        // Pawns prefer protecting the King (same col or adjacent) and being forward
+        candidates = emptySpots.filter(s => s.r > kingPos.r);
+        // Sort by closeness to King's column
+        candidates.sort((a, b) => Math.abs(a.c - kingPos.c) - Math.abs(b.c - kingPos.c));
+      } else if (symbol === 'r' || symbol === 'q') {
+        // Rooks/Queens prefer back rank
+        candidates = emptySpots.filter(s => s.r === rowStart);
+      } else if (symbol === 'n' || symbol === 'b') {
+        // Knights/Bishops prefer not to be on edges of valid area if possible
+        candidates = emptySpots.filter(s => s.r > rowStart);
+      }
+
+      // Fallback if no specific candidates found
+      if (candidates.length === 0) {
+        candidates = emptySpots;
+      }
+
+      const spot = candidates[Math.floor(Math.random() * candidates.length)];
+      if (this.game.gameController) {
+        this.game.gameController.placeShopPiece(spot.r, spot.c);
+      }
+    }
+    if (this.game.gameController) {
+      this.game.gameController.finishSetupPhase();
+    }
+  }
+
+  public aiSetupUpgrades(): void {
+    if (this.game.mode === 'upgrade') {
+      logger.info('[AI] Skipping upgrades in Classic 9x9 Upgrade mode.');
+      return;
+    }
+    if (this.game.gameController && this.game.gameController.shopManager) {
+      this.game.gameController.shopManager.aiPerformUpgrades();
+    }
+  }
+
+  public async aiMove(): Promise<void> {
+    // Don't move in puzzle mode - player solves alone
+    if (this.game.mode === 'puzzle') {
+      logger.debug('[AI] Skipping aiMove - puzzle mode');
+      return;
+    }
+
+    logger.info('[AI] Starting aiMove...');
+    this._aiMoveStartTime = Date.now();
+
+    // Check if AI should resign
+    if (await this.aiShouldResign()) {
+      if (this.game.gameController) {
+        this.game.gameController.resign('black');
+      }
+      return;
+    }
+
+    // Check if AI should offer draw
+    if (await this.aiShouldOfferDraw()) {
+      if (this.game.gameController) {
+        this.game.gameController.offerDraw('black');
+      }
+      // Continue with move if player hasn't responded yet
+    }
+
+    // Check if there's a pending draw offer from player
+    if (this.game.drawOffered && this.game.drawOfferedBy === 'white') {
+      await this.aiEvaluateDrawOffer();
+      // If draw was accepted, game is over, so return
+      if (this.game.phase === PHASES.GAME_OVER) {
+        return;
+      }
+    }
+
+    const spinner = document.getElementById('spinner-overlay');
+    if (spinner) spinner.classList.remove('hidden');
+
+    // Initialize persistent worker pool if not exists
+    if (!this.aiWorkers || this.aiWorkers.length === 0) {
+      this.initWorkerPool();
+    } else if (this.currentBookMode !== this.game.mode) {
+      // Reload workers if mode changed (different opening book)
+      logger.info(
+        `[AI] Mode changed from ${this.currentBookMode} to ${this.game.mode}. Reloading workers.`
+      );
+      this.terminate();
+      this.initWorkerPool();
+    }
+
+    // Use centralized depth mapping
+    let depth =
+      (AI_DEPTH_CONFIG[this.game.difficulty as keyof typeof AI_DEPTH_CONFIG] as number) || 3;
+
+    // Add "human-like" inaccuracies for lower difficulties
+    const inaccuracyRoll = Math.random();
+    const isBeginner = this.game.difficulty === AI_DIFFICULTIES.BEGINNER;
+    const isEasy = this.game.difficulty === AI_DIFFICULTIES.EASY;
+
+    if (isBeginner && inaccuracyRoll < 0.25) {
+      // 25% chance to make a completely random move (Blunder)
+      logger.info('[AI] Beginner Blunder Triggered: Making random move');
+      const allMoves = this.game.getAllLegalMoves('black');
+      if (allMoves.length > 0) {
+        const randomMove = allMoves[Math.floor(Math.random() * allMoves.length)];
+        this.game.executeMove(randomMove.from, randomMove.to, false, randomMove.promotion as string | undefined);
+        if (this.game.renderBoard) this.game.renderBoard();
+        if (spinner) spinner.classList.add('hidden');
+        return;
+      }
+    } else if (isEasy && inaccuracyRoll < 0.1) {
+      depth = 2; // Slight inaccuracy
+      logger.info('[AI] Easy Mistake Triggered: Reducing depth to 2');
+    }
+
+    logger.debug(`[AI] Difficulty ${this.game.difficulty}: using depth ${depth}`);
+
+    // Prepare board state for workers - Optimization: Use Int8Array instead of JSON cloning
+    const boardInt = aiEngine.convertBoardToInt(this.game.board);
+    const lastMove = this.game.lastMove; // Needed for En Passant
+
+    // Track results
+    const workerResults: (SearchResult | null)[] = [];
+    let completedWorkers = 0;
+    const numWorkers = this.aiWorkers.length;
+
+    return new Promise<void>(resolve => {
+      const processResults = () => {
+        logger.context('AIController').debug('[DEBUG] AI processResults started');
+        const elapsed = Date.now() - this._aiMoveStartTime;
+        logger.info(`[AI] Processing results after ${elapsed}ms`);
+
+        if (spinner) spinner.classList.add('hidden');
+
+        // Find best result
+        const bestResult = workerResults.find(r => r && r.move);
+        logger.debug(
+          '[AI] Worker results:',
+          workerResults.map(r =>
+            r && r.move
+              ? `${r.move.from?.r},${r.move.from?.c}->${r.move.to?.r},${r.move.to?.c}`
+              : 'null'
+          )
+        );
+
+        if (bestResult && bestResult.move) {
+          logger.info(
+            `[AI] Executing move: ${bestResult.move.from.r},${bestResult.move.from.c} -> ${bestResult.move.to.r},${bestResult.move.to.c}${bestResult.move.promotion ? ` (Promote to ${bestResult.move.promotion})` : ''}`
+          );
+          this.game.executeMove(
+            bestResult.move.from,
+            bestResult.move.to,
+            false,
+                        bestResult.move.promotion as string | undefined
+          );
+          if (this.game.renderBoard) this.game.renderBoard();
+
+          // Display AI Thinking (PV)
+          if (bestResult.pv && bestResult.pv.length > 0) {
+            const bestMoveEl = document.getElementById('ai-best-move');
+            if (bestMoveEl) {
+              // PV is a UCI string like "e2e4 e7e5 g1f3"
+              // Parse each 4-char move into from/to coordinates
+              const uciMoves = bestResult.pv.split(' ').filter(Boolean);
+              const pvText = uciMoves
+                .map((uci: string) => {
+                  if (uci.length >= 4) {
+                    return uci.slice(0, 2) + uci.slice(2, 4);
+                  }
+                  return uci;
+                })
+                .join(' ');
+              bestMoveEl.textContent = `KI Plan: ${pvText}`;
+            }
+          }
+        } else {
+          logger.warn('[AI] No valid move found in worker results!');
+          this.game.log('KI kann nicht ziehen (Patt oder Matt?)');
+        }
+        logger.context('AIController').debug('[DEBUG] AI processResults calling resolve');
+        resolve();
+      };
+
+      // Add timeout to prevent game from freezing if workers hang
+      let hasProcessed = false;
+      const timeoutId = setTimeout(() => {
+        if (!hasProcessed) {
+          hasProcessed = true;
+          logger.error('[AI] Worker timeout after 30 seconds! Making fallback move.');
+          if (spinner) spinner.classList.add('hidden');
+
+          // Make a random legal move as fallback
+          const allMoves = this.game.getAllLegalMoves('black');
+          if (allMoves.length > 0) {
+            const randomMove = allMoves[Math.floor(Math.random() * allMoves.length)];
+            this.game.executeMove(randomMove.from, randomMove.to);
+          } else {
+            this.game.log('KI kann nicht ziehen (Patt oder Matt?)');
+          }
+          resolve();
+        }
+      }, 30000); // 30 second timeout
+
+      const processResultsWithTimeout = () => {
+        if (hasProcessed) return;
+        hasProcessed = true;
+        clearTimeout(timeoutId);
+        processResults();
+      };
+
+      // Dispatch tasks to persistent workers
+      this.aiWorkers.forEach((worker, i) => {
+        // Use one-time message handler for the move search
+        const moveHandler = (e: MessageEvent) => {
+          const { type, data } = e.data;
+          if (type === 'bestMove') {
+            logger.context('AIController').debug(`[DEBUG] AI worker ${i} bestMove received`);
+            worker.removeEventListener('message', moveHandler);
+            workerResults[i] = data;
+            completedWorkers++;
+            logger
+              .context('AIController')
+              .debug(`[DEBUG] AI completedWorkers: ${completedWorkers}`);
+            if (completedWorkers === 1) {
+              logger
+                .context('AIController')
+                .debug('[DEBUG] AI triggering processResultsWithTimeout');
+              processResultsWithTimeout();
+            }
+          }
+        };
+        worker.addEventListener('message', moveHandler);
+
+        worker.onerror = err => {
+          logger.error(`[AI] Worker ${i} error:`, err);
+          completedWorkers++;
+          if (completedWorkers === numWorkers) processResultsWithTimeout();
+        };
+
+        logger.debug(`[AI] Dispatching search to worker ${i}`);
+
+        // Calculate Time Limit based on difficulty
+        let timeLimit = 5000;
+        if (this.game.mode === 'standard8x8' || this.game.mode === 'classic') {
+          timeLimit = 8000;
+        } else {
+          const timeMap: Record<string, number> = {
+            beginner: 2000,
+            easy: 3000,
+            medium: 4000,
+            hard: 5000,
+            expert: 8000,
+          };
+          timeLimit = timeMap[this.game.difficulty] || 5000;
+        }
+
+        const personalityConfig = AI_PERSONALITIES[this.game.aiPersonality || 'balanced'];
+
+        // Send search request
+        worker.postMessage({
+          type: 'getBestMove',
+          data: {
+            board: boardInt,
+            color: 'black',
+            depth: depth,
+            personality: personalityConfig.id,
+            difficulty: this.game.difficulty,
+            moveNumber: Math.floor(this.game.moveHistory.length / 2),
+            config: personalityConfig,
+            lastMove: lastMove,
+            timeLimit: timeLimit,
+          },
+        });
+      });
+    });
+  }
+
+  public initWorkerPool(): void {
+    const numWorkers = Math.min(navigator.hardwareConcurrency || 2, 4);
+    logger.debug(`[AI] Initializing pool with ${numWorkers} workers`);
+
+    this.aiWorkers = [];
+    this.currentBookMode = this.game.mode;
+
+    const bookFile =
+      this.game.mode === 'standard8x8' || this.game.mode === 'upgrade8x8'
+        ? 'opening-book-8x8.json'
+        : 'opening-book.json';
+
+    // Load opening book once
+    fetch(bookFile)
+      .then(r => {
+        if (!r.ok) throw new Error(`HTTP error! status: ${r.status}`);
+        return r.json();
+      })
+      .then(book => {
+        logger.info(
+          `[AIController] Opening book loaded successfully. Positions: ${Object.keys(book.positions || {}).length}`
+        );
+        this.openingBookData = book;
+        this.aiWorkers.forEach(w => w.postMessage({ type: 'loadBook', data: { book } }));
+      })
+      .catch(err => {
+        logger.error('[AIController] Could not load opening-book.json:', err);
+      });
+
+    for (let i = 0; i < numWorkers; i++) {
+      const worker = new AIWorker();
+      this.aiWorkers.push(worker);
+
+      // Dedicated message handler per worker
+      worker.onmessage = (e: MessageEvent) => this.handleWorkerMessage(e, i);
+
+      // Send boardShape to worker immediately after creation
+      if (this.game.boardShape) {
+        worker.postMessage({ type: 'setBoardShape', data: { shape: this.game.boardShape } });
+      }
+
+      if (this.openingBookData) {
+        worker.postMessage({ type: 'loadBook', data: { book: this.openingBookData } });
+      }
+    }
+  }
+
+  /**
+   * Calculates the best move for the current player without executing it.
+   * Used for the Interactive Tutor hint system.
+   */
+  public async getHint(
+    depth: number = 4
+  ): Promise<{ move: MoveResult; explanation: string } | null> {
+    if (this.game.phase === PHASES.GAME_OVER) return null;
+
+    // Initialize pool if needed
+    if (!this.aiWorkers || this.aiWorkers.length === 0) {
+      this.initWorkerPool();
+    }
+
+    const boardInt = aiEngine.convertBoardToInt(this.game.board);
+    const lastMove = this.game.lastMove;
+    const workerResults: SearchResult[] = [];
+    let completedWorkers = 0;
+    const numWorkers = this.aiWorkers.length;
+
+    return new Promise(resolve => {
+      const processResults = () => {
+        const bestResult = workerResults.find(r => r && r.move);
+        if (bestResult && bestResult.move) {
+          // Generate simple explanation based on score/action
+          let explanation = 'Ein solider Zug.';
+          if (bestResult.score > 300) explanation = 'Gewinnt deutlich Material.';
+          else if (bestResult.score > 100) explanation = 'Verschafft einen Vorteil.';
+          else if (bestResult.move.capture) explanation = 'Schlägt eine gegnerische Figur.';
+          else if (bestResult.move.promotion) explanation = 'Holt eine neue Figur.';
+          else explanation = 'Verbessert die Position.';
+
+          resolve({ move: bestResult.move, explanation });
+        } else {
+          resolve(null);
+        }
+      };
+
+      // Set timeout
+      const timeoutId = setTimeout(() => {
+        logger.warn('[AI] Hint generation timed out');
+        processResults();
+      }, 5000);
+
+      const workerHandler = (e: MessageEvent) => {
+        const { type, id, bestMove, score, pv, depth, nodes } = e.data;
+        if (type === 'bestMove') {
+          workerResults[id] = { move: bestMove, score, pv, depth: depth ?? 0, nodes: nodes ?? 0 };
+          completedWorkers++;
+          if (completedWorkers >= numWorkers) {
+            clearTimeout(timeoutId);
+            processResults();
+          }
+        }
+      };
+
+      // Dispatch to workers
+      // Use different personalities for broader search, or just Normal/Balanced
+      const personalities = ['AGGRESSIVE', 'DEFENSIVE', 'POSITIONAL', 'NORMAL'];
+
+      this.aiWorkers.forEach((w, i) => {
+        // Temporarily override onmessage for this hint request
+        // Note: This is a bit risky if AI is also moving. Hints should only be requested on player turn.
+        w.onmessage = workerHandler;
+
+        const p = personalities[i % personalities.length] || 'NORMAL';
+        const color = this.game.turn === 'white' ? 0 : 1;
+
+        w.postMessage({
+          type: 'search',
+          data: {
+            board: boardInt,
+            color,
+            depth,
+            alpha: -Infinity,
+            beta: Infinity,
+            lastMove,
+            personality: p,
+            id: i,
+          },
+        });
+      });
+    });
+  }
+
+  /**
+   * Central worker message dispatcher
+   */
+  private handleWorkerMessage(e: MessageEvent, workerIndex: number): void {
+    const { type, data } = e.data;
+
+    if (type === 'progress') {
+      if (workerIndex === 0) this.updateAIProgress(data);
+      // Also update live analysis UI
+      if (this.analysisUI) {
+        this.analysisUI.updateLiveProgress(data);
+      }
+    } else if (type === 'bestMove') {
+      // Handled by specific promises in aiMove, but we can store it here too
+      this.game.lastBestMove = data;
+    } else if (type === 'analysis') {
+      this.handleAnalysisResult(data);
+    }
+  }
+
+  /**
+   * Processes live engine analysis results
+   */
+  private handleAnalysisResult(data: {
+    score?: number;
+    topMoves?: Array<{
+      move: MoveResult;
+      score: number;
+      notation: string;
+    }>;
+    depth?: number;
+    maxDepth?: number;
+    nodes?: number;
+  }): void {
+    if (this.analysisUI) {
+      this.analysisUI.update(data);
+    }
+
+    // Update global game state for best move arrows
+    if (data.topMoves && data.topMoves.length > 0) {
+      this.game.bestMoves = data.topMoves.map(m => ({
+        move: m.move,
+        score: m.score,
+        notation: m.notation,
+      }));
+
+      // Automatically trigger arrow update if analysis manager is present
+      if (this.game.analysisManager) {
+        this.game.analysisManager.updateArrows();
+      }
+    }
+
+    // Also update eval bar outside the panel
+    if (this.game.evaluationBar && data.score !== undefined) {
+      this.game.evaluationBar.update(data.score);
+    }
+  }
+
+  public terminate(): void {
+    if (this.aiWorkers) {
+      this.aiWorkers.forEach(w => w.terminate());
+      this.aiWorkers = [];
+    }
+    if (this.aiWorker) {
+      this.aiWorker.terminate();
+      this.aiWorker = null;
+    }
+  }
+
+  public updateAIProgress(
+    data: {
+      depth?: number;
+      maxDepth?: number;
+      nodes?: number;
+      bestMove?: {
+        from: { r: number; c: number };
+        to: { r: number; c: number };
+      };
+    } | null
+  ): void {
+    const depthEl = document.getElementById('ai-depth');
+    const nodesEl = document.getElementById('ai-nodes');
+    const bestMoveEl = document.getElementById('ai-best-move');
+    const progressFill = document.getElementById('progress-fill');
+
+    if (!data) return; // Guard against null data
+
+    if (data && depthEl) {
+      depthEl.textContent = `Tiefe ${data.depth ?? 0}/${data.maxDepth ?? 0}`;
+    }
+
+    if (nodesEl && data.nodes !== undefined) {
+      const nodesFormatted = data.nodes.toLocaleString('de-DE');
+      nodesEl.textContent = `${nodesFormatted} Positionen`;
+    }
+
+    if (bestMoveEl && data.bestMove) {
+      const size = this.game.boardSize;
+      const from = String.fromCharCode(97 + data.bestMove.from.c) + (size - data.bestMove.from.r);
+      const to = String.fromCharCode(97 + data.bestMove.to.c) + (size - data.bestMove.to.r);
+      bestMoveEl.textContent = `Bester Zug: ${from}-${to}`;
+
+      // Show engine arrow
+      if (UI.drawEngineArrow) {
+        UI.drawEngineArrow(data.bestMove.from, data.bestMove.to);
+      }
+    }
+
+    if (progressFill) {
+      const maxDepth = data.maxDepth ?? 0;
+      const depth = data.depth ?? 0;
+      if (maxDepth > 0) {
+        const progress = (depth / maxDepth) * 100;
+        progressFill.style.width = `${progress}%`;
+      }
+    }
+  }
+
+  public async aiEvaluateDrawOffer(): Promise<void> {
+    if (!this.game.drawOffered) {
+      return;
+    }
+
+    const aiColor = 'black'; // Assuming AI is always black
+    let shouldAccept = false;
+
+    const score = await aiEngine.evaluatePosition(this.game.board, aiColor);
+
+    // Accept if position is bad for AI (score <= -200 means AI is losing)
+    if (score <= -200) {
+      shouldAccept = true;
+      this.game.log('KI akzeptiert: Position ist schlecht.');
+    }
+
+    // Accept if insufficient material
+    if (this.game.isInsufficientMaterial && this.game.isInsufficientMaterial()) {
+      shouldAccept = true;
+      this.game.log('KI akzeptiert: Ungenügendes Material.');
+    }
+
+    // Accept if 50-move rule is close
+    if (this.game.halfMoveClock >= HALF_MOVE_CLOCK_NEAR_50) {
+      shouldAccept = true;
+      this.game.log('KI akzeptiert: 50-Züge-Regel nahe.');
+    }
+
+    // Accept if position is roughly equal and many moves have been played
+    if (Math.abs(score) < DRAW_ACCEPT_SCORE_MAX && this.game.moveHistory.length > DRAW_ACCEPT_MOVES_MIN) {
+      shouldAccept = true;
+      this.game.log('KI akzeptiert: Ausgeglichene Position nach vielen Zügen.');
+    }
+
+    if (shouldAccept) {
+      if (this.game.gameController) {
+        this.game.gameController.acceptDraw();
+      }
+    } else {
+      this.game.log('KI lehnt das Remis-Angebot ab.');
+      if (this.game.gameController) {
+        this.game.gameController.declineDraw();
+      }
+    }
+  }
+
+  public async aiShouldOfferDraw(): Promise<boolean> {
+    if (this.game.drawOffered) {
+      return false; // Already an offer pending
+    }
+
+    const aiColor = 'black';
+    const score = await aiEngine.evaluatePosition(this.game.board, aiColor);
+
+    // Offer draw if position is bad but not hopeless
+    if (score >= DRAW_OFFER_THRESHOLD_LOW && score <= DRAW_OFFER_THRESHOLD_HIGH && this.game.moveHistory.length > DRAW_OFFER_MIN_MOVES) {
+      this.game.log('KI bietet Remis an (schlechte Position).');
+      return true;
+    }
+
+    // Offer draw if threefold repetition is imminent
+    const currentHash = this.game.getBoardHash();
+    const occurrences = this.game.positionHistory.filter((h: string) => h === currentHash).length;
+    if (occurrences >= 2) {
+      this.game.log('KI bietet Remis an (drohende Stellungswiederholung).');
+      return true;
+    }
+
+    // Offer draw if position is roughly equal and game is long
+    if (Math.abs(score) < 30 && this.game.moveHistory.length > 50) {
+      this.game.log('KI bietet Remis an (ausgeglichene Position, langes Spiel).');
+      return true;
+    }
+
+    return false;
+  }
+
+  public async aiShouldResign(): Promise<boolean> {
+    const aiColor = 'black';
+
+    // Never resign in Campaign mode - bosses fight to the end!
+    if (this.game.campaignMode) {
+      return false;
+    }
+
+    const score = await aiEngine.evaluatePosition(this.game.board, aiColor);
+    const materialAdvantage = this.game.calculateMaterialAdvantage
+      ? this.game.calculateMaterialAdvantage()
+      : 0;
+
+    // In "Classic 9x9 + Upgrades" (mode='upgrade'), player starts with extra points (15).
+    // So AI is naturally behind in material. We must be much more resilient.
+    if (this.game.mode === 'upgrade') {
+      // Only resign if truly hopeless (score <= -3000, approx 3 queens down)
+      // And ignore pure material difference because player bought upgrades
+      if (score <= -3000) {
+        this.game.log('KI gibt auf (aussichtslose Position im Upgrade-Modus).');
+        return true;
+      }
+      return false;
+    }
+
+    // Normal Modes Resignation Logic
+    // Resign if position is hopeless (score <= -1500 means AI is losing badly)
+    if (score <= -1500) {
+      this.game.log('KI gibt auf (aussichtslose Position).');
+      return true;
+    }
+
+    // Resign if we're down massive material (more than 15 points)
+    // materialAdvantage is white - black, so if it's > 15, white is way ahead
+    if (materialAdvantage > 15) {
+      this.game.log('KI gibt auf (massiver Materialverlust).');
+      return true;
+    }
+
+    return false;
+  }
+
+  // ===== ANALYSIS MODE METHODS =====
+
+  public analyzePosition(): void {
+    // Check if either dedicated analysis mode OR live engine overlay is active
+    if (!this.game.analysisMode && !this.analysisActive) {
+      return;
+    }
+
+    if (!this.aiWorkers || this.aiWorkers.length === 0) {
+      this.initWorkerPool();
+    }
+
+    // Use worker 0 for analysis to avoid conflict with game search
+    const worker = this.aiWorkers[0];
+    const boardInt = aiEngine.convertBoardToInt(this.game.board);
+
+    // Deep analysis depth
+    const analysisDepth = this.game.analysisMode ? 12 : 8;
+
+    worker.postMessage({
+      type: 'analyze',
+      data: {
+        board: boardInt,
+        color: this.game.turn,
+        depth: analysisDepth,
+        topMovesCount: 3,
+      },
+    });
+  }
+
+  public updateAnalysisUI(data: {
+    score?: number;
+    topMoves?: Array<{ move: MoveResult; score: number; notation: string }>;
+    depth?: number;
+    maxDepth?: number;
+    nodes?: number;
+  }): void {
+    if (this.analysisUI) {
+      this.analysisUI.update(data);
+    }
+  }
+
+  public updateAnalysisStats(data: { depth?: number; maxDepth?: number; nodes?: number }): void {
+    const engineInfo = document.getElementById('analysis-engine-info');
+    if (engineInfo) {
+      const depth = data.depth || 0;
+      const maxDepth = data.maxDepth || 0;
+      const nodes = data.nodes ? data.nodes.toLocaleString('de-DE') : 0;
+      engineInfo.textContent = `Tiefe: ${depth}/${maxDepth} | Knoten: ${nodes}`;
+    }
+  }
+
+  public highlightMove(
+    move: { from?: { r?: number; c?: number }; to?: { r?: number; c?: number } } | null
+  ): void {
+    if (
+      !move ||
+      !move.from ||
+      !move.to ||
+      move.from.r === undefined ||
+      move.from.c === undefined ||
+      move.to.r === undefined ||
+      move.to.c === undefined
+    )
+      return;
+
+    // Clear previous highlights
+    document.querySelectorAll('.cell').forEach(cell => {
+      cell.classList.remove('analysis-from', 'analysis-to');
+    });
+
+    // Highlight the from and to squares
+    const fromCell = document.querySelector(
+      `.cell[data-r="${move.from.r}"][data-c="${move.from.c}"]`
+    );
+    const toCell = document.querySelector(`.cell[data-r="${move.to.r}"][data-c="${move.to.c}"]`);
+
+    if (fromCell) fromCell.classList.add('analysis-from');
+    if (toCell) toCell.classList.add('analysis-to');
+
+    // Optionally draw an arrow
+    if (
+      this.game.arrowRenderer &&
+      this.game.arrowRenderer.drawArrow &&
+      move.from.r !== undefined &&
+      move.from.c !== undefined &&
+      move.to.r !== undefined &&
+      move.to.c !== undefined
+    ) {
+      this.game.arrowRenderer.clearArrows();
+      this.game.arrowRenderer.drawArrow(
+        move.from.r,
+        move.from.c,
+        move.to.r,
+        move.to.c,
+        'rgba(79, 156, 249, 0.7)'
+      );
+    }
+  }
+
+  public getAlgebraicNotation(
+    move: { from?: { r: number; c: number }; to?: { r: number; c: number } } | null
+  ): string {
+    if (!move || !move.from || !move.to) return '??';
+    const size = this.game.boardSize;
+    const fromFile = String.fromCharCode(97 + move.from.c);
+    const fromRank = size - move.from.r;
+    const toFile = String.fromCharCode(97 + move.to.c);
+    const toRank = size - move.to.r;
+    return `${fromFile}${fromRank}-${toFile}${toRank}`;
+  }
+}

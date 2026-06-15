@@ -1,0 +1,166 @@
+/* ===========================================
+   BASE.CSS - CSS Variables, Reset, Typography
+   =========================================== */
+
+:root {
+  /* --- Palette: Deep Space Minimalist (Premium) --- */
+  --bg-app: #02040a;
+  /* Deeper black for contrast */
+
+  /* Glassmorphism Tokens */
+  --glass-bg: rgba(15, 23, 42, 0.65);
+  --glass-bg-hover: rgba(15, 23, 42, 0.8);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+  /* More subtle */
+  --glass-border-bright: 1px solid rgba(255, 255, 255, 0.15);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.7);
+  --glass-reflection: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, transparent 40%);
+
+  --bg-panel: var(--glass-bg);
+
+  /* Board Colors - Refined */
+  --bg-board-dark: #1e293b;
+  --bg-board-light: #94a3b8;
+  --cell-accent: rgba(99, 102, 241, 0.15);
+
+  /* Accent Colors (Neon & Vibrant) */
+  --accent-primary: #6366f1;
+  /* Indigo 500 */
+  --accent-secondary: #ec4899;
+  /* Pink 500 */
+  --accent-tertiary: #10b981;
+  /* Emerald 500 */
+  --accent-hover: #818cf8;
+  --accent-glow: rgba(99, 102, 241, 0.5);
+  --accent-gradient: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+  --accent-gradient-hover: linear-gradient(135deg, #818cf8 0%, #f472b6 100%);
+
+  /* Text Colors */
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+
+  /* Semantic Colors */
+  --success: #34d399;
+  --danger: #fb7185;
+  --warning: #fbbf24;
+
+  /* Dimensions & Spacing */
+  --cell-size: min(8vw, 64px);
+  --radius-xl: 24px;
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+
+  /* Transitions */
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+  --transition-bounce: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Typography */
+  --font-main: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Grid Line Colors */
+  --grid-line-color: rgba(255, 255, 255, 0.1);
+
+  /* Z-Index Layers */
+  --z-background: -1;
+  --z-board: 10;
+  --z-ui: 50;
+  --z-overlay: 100;
+  --z-modal: 200;
+  --z-tooltip: 300;
+}
+
+/* --- Reset --- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Mobile: Prevent double-tap zoom and improve touch performance */
+@media (pointer: coarse) {
+  * {
+    touch-action: manipulation;
+  }
+  
+  /* Disable text selection on touch devices for game elements */
+  #board, .cell, .piece-svg, .promotion-option {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}
+
+/* Safe area variables for notched devices */
+:root {
+  --safe-area-inset-top: env(safe-area-inset-top, 0);
+  --safe-area-inset-right: env(safe-area-inset-right, 0);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom, 0);
+  --safe-area-inset-left: env(safe-area-inset-left, 0);
+}
+
+/* Mobile: Prevent zoom on input focus (iOS) */
+@media screen and (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* --- Body --- */
+body {
+  font-family: var(--font-main);
+  background-color: var(--bg-app);
+  /* Premium radial gradient background */
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.05) 0%, transparent 60%);
+  background-attachment: fixed;
+  color: var(--text-main);
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Noise Texture Overlay */
+body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('data:image/svg+xml;utf8,<svg opacity="0.04" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)"/></svg>');
+  pointer-events: none;
+  z-index: var(--z-background);
+}
+
+/* --- Hidden Utility --- */
+.hidden {
+  display: none !important;
+}
+
+/* --- Scrollbars (Webkit) --- */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
