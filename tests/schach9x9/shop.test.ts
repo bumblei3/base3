@@ -3,11 +3,11 @@ import { describe, test, expect, beforeEach, vi } from 'vitest';
  * @jest-environment jsdom
  */
 
-import { Game } from "@schach9x9/gameEngine.js";
-import { PHASES } from "@schach9x9/config.js";
+import { Game } from '@schach9x9/gameEngine.js';
+import { PHASES } from '@schach9x9/config.js';
 
 // Mock UI module
-vi.mock("@schach9x9/ui.js", () => ({
+vi.mock('@schach9x9/ui.js', () => ({
   renderBoard: vi.fn(),
   showModal: vi.fn(),
   updateShopUI: vi.fn(),
@@ -16,7 +16,7 @@ vi.mock("@schach9x9/ui.js", () => ({
 }));
 
 // Mock sounds module
-vi.mock("@schach9x9/sounds.js", () => ({
+vi.mock('@schach9x9/sounds.js', () => ({
   soundManager: {
     playMove: vi.fn(),
     init: vi.fn(),
@@ -35,7 +35,7 @@ vi.stubGlobal('AudioContext', mockAudioContext);
 vi.stubGlobal('webkitAudioContext', mockAudioContext);
 
 // Import after mocking
-const { GameController } = await import("@schach9x9/gameController.js");
+const { GameController } = await import('@schach9x9/gameController.js');
 
 describe('Shop System', () => {
   let game: any;

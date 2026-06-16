@@ -1,5 +1,5 @@
 import { describe, expect, test, beforeEach, vi } from 'vitest';
-import { logger } from "@schach9x9/logger.js";
+import { logger } from '@schach9x9/logger.js';
 
 // Mock localStorage
 const localStorageMock = (() => {
@@ -35,7 +35,7 @@ vi.mock('../js/campaign/campaignData.js', importOriginal => ({
 }));
 
 // Mock dependencies
-vi.mock("@schach9x9/storage.js", () => ({
+vi.mock('@schach9x9/storage.js', () => ({
   storageManager: {},
 }));
 

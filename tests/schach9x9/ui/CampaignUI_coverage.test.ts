@@ -1,14 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { CampaignUI } from "@schach9x9/ui/CampaignUI";
-import { campaignManager } from "@schach9x9/campaign/CampaignManager";
+import { CampaignUI } from '@schach9x9/ui/CampaignUI';
+import { campaignManager } from '@schach9x9/campaign/CampaignManager';
 // @ts-ignore
-import { talentTreeUI } from "@schach9x9/ui/TalentTreeUI";
+import { talentTreeUI } from '@schach9x9/ui/TalentTreeUI';
 
-vi.mock("@schach9x9/ui/OverlayManager", () => ({
+vi.mock('@schach9x9/ui/OverlayManager', () => ({
   showToast: vi.fn(),
 }));
 
-vi.mock("@schach9x9/campaign/CampaignManager", () => ({
+vi.mock('@schach9x9/campaign/CampaignManager', () => ({
   campaignManager: {
     getAllLevels: vi.fn(),
     isLevelUnlocked: vi.fn(),
@@ -32,13 +32,13 @@ vi.mock("@schach9x9/campaign/CampaignManager", () => ({
   },
 }));
 
-vi.mock("@schach9x9/ui/TalentTreeUI", () => ({
+vi.mock('@schach9x9/ui/TalentTreeUI', () => ({
   talentTreeUI: {
     show: vi.fn(),
   },
 }));
 
-vi.mock("@schach9x9/campaign/campaignData", () => ({
+vi.mock('@schach9x9/campaign/campaignData', () => ({
   CAMPAIGN_PERKS: [
     { id: 'double_gold', name: 'Double Gold', cost: 100, description: 'Earn 2x gold' },
     { id: 'extra_hp', name: 'Extra HP', cost: 200, description: '+10 HP' },

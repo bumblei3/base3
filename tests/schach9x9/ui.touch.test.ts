@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
 import { initBoardUI, getPieceSymbol as _getPieceSymbol } from '../js/ui/BoardRenderer.js';
-import { PHASES } from "@schach9x9/config.js";
+import { PHASES } from '@schach9x9/config.js';
 
 // Mock PIECE_SVGS globally
 (window as any).PIECE_SVGS = {

@@ -1,5 +1,5 @@
 import { describe, expect, test, beforeEach, afterEach, vi } from 'vitest';
-import { debounce, deepCopy, coordToAlgebraic } from "@schach9x9/utils.js";
+import { debounce, deepCopy, coordToAlgebraic } from '@schach9x9/utils.js';
 
 describe('Utils', () => {
   describe('debounce', () => {

@@ -5,10 +5,10 @@
  */
 
 import { describe, test, expect, beforeEach, vi, afterEach } from 'vitest';
-import * as AIEngine from "@schach9x9/aiEngine.js";
-import { createEmptyBoard } from "@schach9x9/gameEngine.js";
+import * as AIEngine from '@schach9x9/aiEngine.js';
+import { createEmptyBoard } from '@schach9x9/gameEngine.js';
 import type { Board, PieceType, Player } from '../js/types/game.js';
-import { EVAL_VALUES } from "@schach9x9/evaluate.js";
+import { EVAL_VALUES } from '@schach9x9/evaluate.js';
 
 // Make EVAL_VALUES available globally for quickEval in aiEngine.ts
 const originalEvalValues = (globalThis as Record<string, unknown>).EVAL_VALUES;

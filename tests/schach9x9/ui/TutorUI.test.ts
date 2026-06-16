@@ -1,7 +1,7 @@
 // Mock config
 import { describe, expect, test, beforeEach, vi } from 'vitest';
 
-vi.mock("@schach9x9/config.js", () => ({
+vi.mock('@schach9x9/config.js', () => ({
   BOARD_SIZE: 9,
   PHASES: {
     PLAY: 'PLAY',
@@ -11,7 +11,7 @@ vi.mock("@schach9x9/config.js", () => ({
   PIECE_VALUES: { p: 100 },
 }));
 
-import * as TutorUI from "@schach9x9/ui/TutorUI.js";
+import * as TutorUI from '@schach9x9/ui/TutorUI.js';
 
 describe('TutorUI Component', () => {
   let game: any;

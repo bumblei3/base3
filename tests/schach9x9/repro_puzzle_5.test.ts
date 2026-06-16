@@ -1,8 +1,8 @@
 import { describe, expect, test } from 'vitest';
-import { PuzzleManager } from "@schach9x9/puzzleManager";
-import { Game, type PieceWithMoved } from "@schach9x9/gameEngine";
-import { PuzzleGenerator } from "@schach9x9/puzzleGenerator";
-import { RulesEngine } from "@schach9x9/RulesEngine";
+import { PuzzleManager } from '@schach9x9/puzzleManager';
+import { Game, type PieceWithMoved } from '@schach9x9/gameEngine';
+import { PuzzleGenerator } from '@schach9x9/puzzleGenerator';
+import { RulesEngine } from '@schach9x9/RulesEngine';
 
 describe('Puzzle 5 Logic Verification', () => {
   const manager = new PuzzleManager();

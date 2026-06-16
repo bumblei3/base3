@@ -4,12 +4,12 @@ import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
  */
 
 // Mock BoardRenderer
-vi.mock("@schach9x9/ui/BoardRenderer.js", () => ({
+vi.mock('@schach9x9/ui/BoardRenderer.js', () => ({
   renderBoard: vi.fn(),
 }));
 
 // Mock SoundManager
-vi.mock("@schach9x9/sounds.js", () => ({
+vi.mock('@schach9x9/sounds.js', () => ({
   soundManager: {
     playPromotion: vi.fn(),
     enabled: true,

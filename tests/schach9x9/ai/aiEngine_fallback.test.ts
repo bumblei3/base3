@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeAll, afterAll, vi } from 'vitest';
-import * as aiEngine from "@schach9x9/aiEngine.js";
-import { createEmptyBoard } from "@schach9x9/gameEngine.js";
+import * as aiEngine from '@schach9x9/aiEngine.js';
+import { createEmptyBoard } from '@schach9x9/gameEngine.js';
 
 vi.mock('../../js/ai/wasmBridge.js', () => ({
   getBestMoveWasm: vi.fn().mockResolvedValue(null),

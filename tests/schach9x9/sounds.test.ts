@@ -1,7 +1,7 @@
 // tests/sounds.test.ts
 // Tests for the SoundManager class
 import { describe, expect, vi, beforeEach, test, type MockInstance } from 'vitest';
-import { SoundManager } from "@schach9x9/sounds";
+import { SoundManager } from '@schach9x9/sounds';
 
 // Mock Web Audio API before importing SoundManager
 // We need to extend the Window interface to include AudioContext

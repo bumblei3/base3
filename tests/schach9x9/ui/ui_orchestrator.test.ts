@@ -1,13 +1,13 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { animateCheck, animateCheckmate } from "@schach9x9/ui.js";
-import * as AIEngine from "@schach9x9/aiEngine.js";
-import { confettiSystem } from "@schach9x9/effects.js";
+import { animateCheck, animateCheckmate } from '@schach9x9/ui.js';
+import * as AIEngine from '@schach9x9/aiEngine.js';
+import { confettiSystem } from '@schach9x9/effects.js';
 
-vi.mock("@schach9x9/aiEngine.js", () => ({
+vi.mock('@schach9x9/aiEngine.js', () => ({
   findKing: vi.fn(),
 }));
 
-vi.mock("@schach9x9/effects.js", () => ({
+vi.mock('@schach9x9/effects.js', () => ({
   confettiSystem: {
     spawn: vi.fn(),
   },

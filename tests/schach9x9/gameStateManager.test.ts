@@ -1,6 +1,6 @@
 import { describe, expect, test, beforeEach, beforeAll, vi } from 'vitest';
-import { Game } from "@schach9x9/gameEngine.js";
-import * as UI from "@schach9x9/ui.js";
+import { Game } from '@schach9x9/gameEngine.js';
+import * as UI from '@schach9x9/ui.js';
 // Dynamic import or direct import? Let's try direct first, if it fails we mock.
 // GameStateManager is likely a default export or named export.
 // Importing directly to avoid top-level await issues in some envs
@@ -16,7 +16,7 @@ const PHASES = {
 };
 
 // Mock dependencies
-vi.mock("@schach9x9/gameEngine.js", () => ({
+vi.mock('@schach9x9/gameEngine.js', () => ({
   Game: class {},
   PHASES: {
     PLAY: 'PLAY',
@@ -28,7 +28,7 @@ vi.mock("@schach9x9/gameEngine.js", () => ({
   BOARD_SIZE: 9,
 }));
 
-vi.mock("@schach9x9/ui.js", () => ({
+vi.mock('@schach9x9/ui.js', () => ({
   updateCapturedUI: vi.fn(),
   updateStatus: vi.fn(),
   updateMoveHistoryUI: vi.fn(),

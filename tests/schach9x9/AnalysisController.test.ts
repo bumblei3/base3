@@ -1,12 +1,12 @@
 import { describe, expect, test, beforeEach, afterEach, vi } from 'vitest';
-import { PHASES } from "@schach9x9/config.js";
+import { PHASES } from '@schach9x9/config.js';
 // Change to proper imports if possible, or keep dynamic if needed.
 // Given previous issues, standard import is safer if modules are aligned.
-import { AnalysisController } from "@schach9x9/AnalysisController.js";
-import * as UI from "@schach9x9/ui.js";
+import { AnalysisController } from '@schach9x9/AnalysisController.js';
+import * as UI from '@schach9x9/ui.js';
 
 // Mock dependencies
-vi.mock("@schach9x9/ui.js", () => ({
+vi.mock('@schach9x9/ui.js', () => ({
   renderBoard: vi.fn(),
   updateStatus: vi.fn(),
   renderEvalGraph: vi.fn(),

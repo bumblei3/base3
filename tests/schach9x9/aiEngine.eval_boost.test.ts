@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeEach } from 'vitest';
-import { evaluatePosition } from "@schach9x9/aiEngine.js";
-import { createEmptyBoard } from "@schach9x9/gameEngine.js";
+import { evaluatePosition } from '@schach9x9/aiEngine.js';
+import { createEmptyBoard } from '@schach9x9/gameEngine.js';
 
 describe('AI Engine - Evaluation Boost', () => {
   let board: any;

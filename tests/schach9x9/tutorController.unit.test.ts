@@ -35,7 +35,7 @@ vi.mock('../js/tutor/HintGenerator.js', () => ({
 }));
 
 // Mock gameEngine to avoid side effects
-vi.mock("@schach9x9/gameEngine.js", () => ({
+vi.mock('@schach9x9/gameEngine.js', () => ({
   Game: class {
     board: any[][];
     constructor() {
@@ -51,8 +51,8 @@ import * as TacticsDetector from '../js/tutor/TacticsDetector.js';
 import * as MoveAnalyzer from '../js/tutor/MoveAnalyzer.js';
 import * as HintGenerator from '../js/tutor/HintGenerator.js';
 import '../js/utils.js';
-import { TutorController } from "@schach9x9/tutorController.js";
-import { Game } from "@schach9x9/gameEngine.js";
+import { TutorController } from '@schach9x9/tutorController.js';
+import { Game } from '@schach9x9/gameEngine.js';
 
 describe('TutorController', () => {
   let game: any;

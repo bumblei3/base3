@@ -6,7 +6,7 @@ import { describe, test, expect, beforeEach, vi } from 'vitest';
 };
 
 // Mock dependencies
-vi.mock("@schach9x9/chess-pieces.js", () => ({
+vi.mock('@schach9x9/chess-pieces.js', () => ({
   PIECE_SVGS: {
     white: {
       p: 'wp',
@@ -35,7 +35,7 @@ vi.mock("@schach9x9/chess-pieces.js", () => ({
   },
 }));
 
-import { Tutorial } from "@schach9x9/tutorial.js";
+import { Tutorial } from '@schach9x9/tutorial.js';
 
 describe('Tutorial System', () => {
   let tutorial: any;

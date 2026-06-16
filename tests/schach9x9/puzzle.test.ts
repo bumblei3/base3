@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest';
-import { BOARD_SIZE } from "@schach9x9/gameEngine.js";
+import { BOARD_SIZE } from '@schach9x9/gameEngine.js';
 
 // Mock ProceduralGenerator BEFORE importing PuzzleManager
 vi.mock('../js/puzzle/ProceduralGenerator.js', () => ({
@@ -25,8 +25,8 @@ vi.mock('../js/puzzle/ProceduralGenerator.js', () => ({
   },
 }));
 
-const { PuzzleManager } = await import("@schach9x9/puzzleManager.js");
-const { Game } = await import("@schach9x9/gameEngine.js");
+const { PuzzleManager } = await import('@schach9x9/puzzleManager.js');
+const { Game } = await import('@schach9x9/gameEngine.js');
 
 describe('PuzzleMode', () => {
   let puzzleManager: any;

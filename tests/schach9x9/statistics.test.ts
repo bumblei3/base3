@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest';
 // Mock logger
-vi.mock("@schach9x9/logger.js", () => ({
+vi.mock('@schach9x9/logger.js', () => ({
   logger: {
     info: vi.fn(),
     error: vi.fn(),
@@ -9,7 +9,7 @@ vi.mock("@schach9x9/logger.js", () => ({
   },
 }));
 
-const { StatisticsManager } = await import("@schach9x9/statisticsManager.js");
+const { StatisticsManager } = await import('@schach9x9/statisticsManager.js');
 
 describe('StatisticsManager', () => {
   let stats: any;

@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest';
-import { PHASES } from "@schach9x9/config.js";
+import { PHASES } from '@schach9x9/config.js';
 
 // Mock UI and other dependencies
 (global as any).document = {
@@ -15,7 +15,7 @@ import { PHASES } from "@schach9x9/config.js";
   },
 };
 
-vi.mock("@schach9x9/ui.js", () => ({
+vi.mock('@schach9x9/ui.js', () => ({
   showToast: vi.fn(),
   showModal: vi.fn(),
   renderBoard: vi.fn(),
@@ -24,8 +24,8 @@ vi.mock("@schach9x9/ui.js", () => ({
   updateStatus: vi.fn(),
 }));
 
-const UI = await import("@schach9x9/ui.js");
-const { TutorController } = await import("@schach9x9/tutorController.js");
+const UI = await import('@schach9x9/ui.js');
+const { TutorController } = await import('@schach9x9/tutorController.js');
 
 describe('TutorController Extra Coverage', () => {
   let game: any, tutor: any;

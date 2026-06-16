@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { evaluate } from "@schach9x9/aiEngine.js";
+import { evaluate } from '@schach9x9/aiEngine.js';
 import {
   SQUARE_COUNT,
   PIECE_NONE,

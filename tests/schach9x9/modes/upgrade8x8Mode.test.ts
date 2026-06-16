@@ -1,8 +1,8 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest';
-import { PHASES } from "@schach9x9/config.js";
+import { PHASES } from '@schach9x9/config.js';
 
 // Mock dependencies (same as upgradeMode.test.js)
-vi.mock("@schach9x9/ui.js", () => ({
+vi.mock('@schach9x9/ui.js', () => ({
   renderBoard: vi.fn(),
   showModal: vi.fn((_title: any, _content: any, actions: any) => {
     if (actions) {
@@ -26,7 +26,7 @@ vi.mock("@schach9x9/ui.js", () => ({
   animateCheck: vi.fn(),
 }));
 
-vi.mock("@schach9x9/sounds.js", () => ({
+vi.mock('@schach9x9/sounds.js', () => ({
   soundManager: {
     init: vi.fn(),
     playMove: vi.fn(),
@@ -44,7 +44,7 @@ vi.mock('../../js/campaign/CampaignManager.js', () => ({
   },
 }));
 
-vi.mock("@schach9x9/TimeManager.js", () => ({
+vi.mock('@schach9x9/TimeManager.js', () => ({
   TimeManager: class {
     constructor() {}
     setTimeControl() {}
@@ -53,8 +53,8 @@ vi.mock("@schach9x9/TimeManager.js", () => ({
     stopClock() {}
   },
 }));
-vi.mock("@schach9x9/tutorial.js", () => ({ Tutorial: class {} }));
-vi.mock("@schach9x9/AnalysisController.js", () => ({
+vi.mock('@schach9x9/tutorial.js', () => ({ Tutorial: class {} }));
+vi.mock('@schach9x9/AnalysisController.js', () => ({
   AnalysisController: class {
     constructor() {}
     enterAnalysisMode() {}
@@ -72,8 +72,8 @@ vi.mock('../../js/ui/PuzzleMenu.js', () => ({
   },
 }));
 
-import { GameController } from "@schach9x9/gameController.js";
-import { Game } from "@schach9x9/gameEngine.js";
+import { GameController } from '@schach9x9/gameController.js';
+import { Game } from '@schach9x9/gameEngine.js';
 
 describe('8x8 Upgrade Mode', () => {
   let game: any;

@@ -1,12 +1,12 @@
 import { describe, expect, test, beforeEach } from 'vitest';
-import { Game, type PieceWithMoved } from "@schach9x9/gameEngine.js";
+import { Game, type PieceWithMoved } from '@schach9x9/gameEngine.js';
 import {
   isInsufficientMaterial,
   checkDraw,
   getBoardHash,
   calculateMaterialAdvantage,
 } from '../js/move/MoveValidator.js';
-import { BOARD_SIZE } from "@schach9x9/config.js";
+import { BOARD_SIZE } from '@schach9x9/config.js';
 
 describe('MoveValidator - Unit Tests', () => {
   let game: Game;

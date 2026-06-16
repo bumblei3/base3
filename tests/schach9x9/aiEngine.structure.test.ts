@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import * as aiEngine from "@schach9x9/aiEngine.js";
+import * as aiEngine from '@schach9x9/aiEngine.js';
 
 describe('AI Engine Structure', () => {
   test('should export search functions', () => {

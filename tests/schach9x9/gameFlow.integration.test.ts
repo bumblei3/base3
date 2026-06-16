@@ -1,10 +1,10 @@
 import { describe, expect, test, beforeEach, vi } from 'vitest';
-import { Game } from "@schach9x9/gameEngine.js";
-import { PHASES } from "@schach9x9/config.js";
+import { Game } from '@schach9x9/gameEngine.js';
+import { PHASES } from '@schach9x9/config.js';
 import { setupJSDOM } from './test-utils.js';
 
 // Mock UI dependencies
-vi.mock("@schach9x9/ui.js", async importOriginal => {
+vi.mock('@schach9x9/ui.js', async importOriginal => {
   const actual: any = await importOriginal();
   return {
     ...actual,
@@ -33,7 +33,7 @@ vi.mock("@schach9x9/ui.js", async importOriginal => {
   };
 });
 
-vi.mock("@schach9x9/sounds.js", () => ({
+vi.mock('@schach9x9/sounds.js', () => ({
   soundManager: {
     init: vi.fn(),
     playMove: vi.fn(),
@@ -46,16 +46,16 @@ vi.mock("@schach9x9/sounds.js", () => ({
   },
 }));
 
-vi.mock("@schach9x9/aiEngine.js", () => ({
+vi.mock('@schach9x9/aiEngine.js', () => ({
   evaluatePosition: vi.fn(() => 0),
   findKing: vi.fn(() => ({ r: 0, c: 0 })),
   getBestMove: vi.fn().mockResolvedValue(null),
 }));
 
-import { GameController } from "@schach9x9/gameController.js";
-import { MoveController } from "@schach9x9/moveController.js";
-import { TutorController } from "@schach9x9/tutorController.js";
-import * as UI from "@schach9x9/ui.js";
+import { GameController } from '@schach9x9/gameController.js';
+import { MoveController } from '@schach9x9/moveController.js';
+import { TutorController } from '@schach9x9/tutorController.js';
+import * as UI from '@schach9x9/ui.js';
 
 describe('Comprehensive Game Flow Integration Tests', () => {
   let game: any;
@@ -185,7 +185,7 @@ describe('Comprehensive Game Flow Integration Tests', () => {
 
   describe('Puzzle Mode Lifecycle', () => {
     test('should transition to puzzle mode and solve a simple puzzle', async () => {
-      await import("@schach9x9/puzzleManager.js");
+      await import('@schach9x9/puzzleManager.js');
 
       // Start puzzle mode
       gc.startPuzzleMode(0);

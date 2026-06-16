@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach } from 'vitest';
-import { RulesEngine } from "@schach9x9/RulesEngine.js";
+import { RulesEngine } from '@schach9x9/RulesEngine.js';
 
 describe('Nightrider (j)', () => {
   let mockGame: any;
@@ -126,7 +126,7 @@ describe('Nightrider (j)', () => {
   });
 
   test('should respect board boundaries and size in 8x8 mode', async () => {
-    const { setBoardVariant, BOARD_VARIANTS } = await import("@schach9x9/config.js");
+    const { setBoardVariant, BOARD_VARIANTS } = await import('@schach9x9/config.js');
 
     // Switch to 8x8
     setBoardVariant(BOARD_VARIANTS.STANDARD_8X8);

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import * as MoveAnalyzer from '../../js/tutor/MoveAnalyzer.js';
-import * as aiEngine from "@schach9x9/aiEngine.js";
-import { PHASES } from "@schach9x9/gameEngine.js";
+import * as aiEngine from '@schach9x9/aiEngine.js';
+import { PHASES } from '@schach9x9/gameEngine.js';
 
 // Mock dependencies
 vi.mock('../../js/tutor/TacticsDetector.js', () => ({
@@ -10,7 +10,7 @@ vi.mock('../../js/tutor/TacticsDetector.js', () => ({
   detectTacticalPatterns: vi.fn().mockReturnValue([]),
 }));
 
-vi.mock("@schach9x9/aiEngine.js", () => ({
+vi.mock('@schach9x9/aiEngine.js', () => ({
   evaluatePosition: vi.fn(),
 }));
 

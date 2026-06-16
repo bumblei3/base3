@@ -2,7 +2,7 @@ import { describe, test, expect, beforeEach, vi } from 'vitest';
 import { setupJSDOM, createMockGame } from './test-utils.js';
 
 // Mock dependencies
-vi.mock("@schach9x9/chess-pieces.js", () => ({
+vi.mock('@schach9x9/chess-pieces.js', () => ({
   setPieceSkin: vi.fn(),
   PIECE_SVGS: {
     white: { p: 'wp' },
@@ -27,8 +27,8 @@ describe('UI Settings Tests', () => {
     vi.clearAllMocks();
 
     // Import modules after mocks
-    UI = await import("@schach9x9/ui.js");
-    const chessPiecesModule = await import("@schach9x9/chess-pieces.js");
+    UI = await import('@schach9x9/ui.js');
+    const chessPiecesModule = await import('@schach9x9/chess-pieces.js');
     chessPieces = chessPiecesModule;
 
     game = createMockGame();

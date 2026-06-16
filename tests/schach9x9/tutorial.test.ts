@@ -4,7 +4,7 @@ import { describe, test, expect, beforeEach, afterEach } from 'vitest';
  * @jest-environment jsdom
  */
 
-import { Tutorial } from "@schach9x9/tutorial.js";
+import { Tutorial } from '@schach9x9/tutorial.js';
 
 describe('Tutorial', () => {
   let tutorial: any;

@@ -6,7 +6,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { KeyboardManager } from '../js/input/KeyboardManager.js';
 
 // Mock dynamic import for ui.js
-vi.mock("@schach9x9/ui.js", () => ({
+vi.mock('@schach9x9/ui.js', () => ({
   showToast: vi.fn(),
   closeModal: vi.fn(),
   renderBoard: vi.fn(),
@@ -120,7 +120,7 @@ describe('KeyboardManager', () => {
 
   it('should handle Escape key with fallback if resetSelection is missing', async () => {
     delete app.gameController.resetSelection;
-    const { renderBoard } = await import("@schach9x9/ui.js");
+    const { renderBoard } = await import('@schach9x9/ui.js');
 
     const event = new KeyboardEvent('keydown', { key: 'escape' });
     Object.defineProperty(event, 'target', { value: document.body });
@@ -231,7 +231,7 @@ describe('KeyboardManager', () => {
 
   it('should handle Escape key when no square is selected', async () => {
     app.game.selectedSquare = null;
-    const { closeModal } = (await import("@schach9x9/ui.js")) as any;
+    const { closeModal } = (await import('@schach9x9/ui.js')) as any;
 
     const event = new KeyboardEvent('keydown', { key: 'escape' });
     Object.defineProperty(event, 'target', { value: document.body });

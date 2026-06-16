@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeEach } from 'vitest';
-import { createEmptyBoard, Game } from "@schach9x9/gameEngine.js";
-import { PHASES } from "@schach9x9/config.js";
+import { createEmptyBoard, Game } from '@schach9x9/gameEngine.js';
+import { PHASES } from '@schach9x9/config.js';
 
 describe('Game Engine Edge Cases', () => {
   let game: any;

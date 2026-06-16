@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import * as AIEngine from "@schach9x9/aiEngine.js";
+import * as AIEngine from '@schach9x9/aiEngine.js';
 
 describe('AIEngine Extra Coverage', () => {
   test('getAllLegalMoves for special pieces (Knight jumps)', () => {

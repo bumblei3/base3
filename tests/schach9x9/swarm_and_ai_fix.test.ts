@@ -1,9 +1,9 @@
 import { describe, test, expect, vi } from 'vitest';
-import { Game } from "@schach9x9/gameEngine.js";
+import { Game } from '@schach9x9/gameEngine.js';
 import * as HintGenerator from '../js/tutor/HintGenerator.js';
 
 // Mock UI module to prevent errors when calling UI.renderBoard etc.
-vi.mock("@schach9x9/ui.js", () => ({
+vi.mock('@schach9x9/ui.js', () => ({
   renderBoard: vi.fn(),
   showTutorSuggestions: vi.fn(),
   updateShopUI: vi.fn(),
@@ -68,7 +68,7 @@ describe('Verification: Swarm Template and AI Fix', () => {
   describe('AI Controller Fix', () => {
     test('highlightMove should not throw when move is undefined or incomplete', async () => {
       // Import AIController after mocking dependencies if needed
-      const { AIController } = await import("@schach9x9/aiController.js");
+      const { AIController } = await import('@schach9x9/aiController.js');
       const game = new Game(15, 'play' as any);
       const ai = new AIController(game);
 

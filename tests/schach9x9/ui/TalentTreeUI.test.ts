@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { TalentTreeUI } from "@schach9x9/ui/TalentTreeUI";
-import { campaignManager } from "@schach9x9/campaign/CampaignManager";
+import { TalentTreeUI } from '@schach9x9/ui/TalentTreeUI';
+import { campaignManager } from '@schach9x9/campaign/CampaignManager';
 // @ts-ignore
-import { showModal, showToast } from "@schach9x9/ui/OverlayManager";
+import { showModal, showToast } from '@schach9x9/ui/OverlayManager';
 
 // Mock dependencies
-vi.mock("@schach9x9/campaign/CampaignManager", () => ({
+vi.mock('@schach9x9/campaign/CampaignManager', () => ({
   campaignManager: {
     getGold: vi.fn(() => 1000),
     getUnitXp: vi.fn(() => ({ level: 5, xp: 0, captures: 10 })),
@@ -14,7 +14,7 @@ vi.mock("@schach9x9/campaign/CampaignManager", () => ({
   },
 }));
 
-vi.mock("@schach9x9/ui/OverlayManager", () => ({
+vi.mock('@schach9x9/ui/OverlayManager', () => ({
   showModal: vi.fn(),
   showToast: vi.fn(),
 }));

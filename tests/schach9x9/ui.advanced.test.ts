@@ -1,13 +1,13 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest';
-import { PHASES } from "@schach9x9/config.js";
+import { PHASES } from '@schach9x9/config.js';
 
 // Mock dependencies
-vi.mock("@schach9x9/utils.js", () => ({
+vi.mock('@schach9x9/utils.js', () => ({
   debounce: vi.fn(fn => fn),
   formatTime: vi.fn(t => `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`),
 }));
 
-vi.mock("@schach9x9/effects.js", () => ({
+vi.mock('@schach9x9/effects.js', () => ({
   particleSystem: {
     spawn: vi.fn(),
   },
@@ -20,7 +20,7 @@ vi.mock("@schach9x9/effects.js", () => ({
 }));
 
 // Import UI module
-const UI = await import("@schach9x9/ui.js");
+const UI = await import('@schach9x9/ui.js');
 
 describe('UI Module - Advanced Features', () => {
   let game: any;

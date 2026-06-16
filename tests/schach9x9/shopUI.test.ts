@@ -1,7 +1,7 @@
 // Mock config
 import { describe, expect, test, beforeEach, vi } from 'vitest';
 
-vi.mock("@schach9x9/config.js", () => ({
+vi.mock('@schach9x9/config.js', () => ({
   PIECE_VALUES: { p: 100, n: 300, b: 300, r: 500, q: 900, k: 0, a: 800, c: 800, e: 1000 },
 }));
 

@@ -1,5 +1,5 @@
 import { describe, expect, test, beforeEach, vi } from 'vitest';
-import { logger, LOG_LEVELS } from "@schach9x9/logger.js";
+import { logger, LOG_LEVELS } from '@schach9x9/logger.js';
 
 // Mock console
 const originalConsole = global.console;

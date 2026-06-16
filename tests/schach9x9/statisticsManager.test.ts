@@ -1,6 +1,6 @@
 import { describe, expect, test, beforeEach, vi } from 'vitest';
-import { StatisticsManager } from "@schach9x9/statisticsManager.js";
-import { logger } from "@schach9x9/logger.js";
+import { StatisticsManager } from '@schach9x9/statisticsManager.js';
+import { logger } from '@schach9x9/logger.js';
 
 describe('StatisticsManager', () => {
   let manager: StatisticsManager;

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { setOpeningBook, queryOpeningBook, OpeningBook } from '../js/ai/OpeningBook.js';
-import { logger } from "@schach9x9/logger.js";
-import { type Piece } from "@schach9x9/gameEngine.js";
+import { logger } from '@schach9x9/logger.js';
+import { type Piece } from '@schach9x9/gameEngine.js';
 
 // Mock logger to avoid clutter
 vi.spyOn(logger, 'debug').mockImplementation(function () {});

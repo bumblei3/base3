@@ -1,7 +1,7 @@
 import { describe, expect, test, beforeEach, vi } from 'vitest';
 import { errorManager } from '../js/utils/ErrorManager.js';
 import { notificationUI } from '../js/ui/NotificationUI.js';
-import { logger } from "@schach9x9/logger.js";
+import { logger } from '@schach9x9/logger.js';
 
 // Use spyOn for notificationUI
 vi.spyOn(notificationUI, 'show').mockImplementation(function () {});

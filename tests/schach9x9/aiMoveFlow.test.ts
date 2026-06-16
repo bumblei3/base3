@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach } from 'vitest';
-import { Game } from "@schach9x9/gameEngine.js";
+import { Game } from '@schach9x9/gameEngine.js';
 
 describe('Game.executeMove - AI uses gameEngine executeMove directly', () => {
   let game: any;

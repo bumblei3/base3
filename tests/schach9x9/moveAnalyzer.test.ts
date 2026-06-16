@@ -3,7 +3,7 @@ import { describe, test, expect } from 'vitest';
  * Enhanced Tests for MoveAnalyzer
  */
 
-import { BOARD_SIZE, PHASES } from "@schach9x9/gameEngine.js";
+import { BOARD_SIZE, PHASES } from '@schach9x9/gameEngine.js';
 import * as MoveAnalyzer from '../js/tutor/MoveAnalyzer.js';
 
 // Helper to create game with board

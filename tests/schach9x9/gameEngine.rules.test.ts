@@ -1,5 +1,5 @@
 import { describe, expect, beforeEach, test } from 'vitest';
-import { Game, PHASES, BOARD_SIZE, createEmptyBoard } from "@schach9x9/gameEngine";
+import { Game, PHASES, BOARD_SIZE, createEmptyBoard } from '@schach9x9/gameEngine';
 
 describe('Game Engine Rules', () => {
   let game: Game;

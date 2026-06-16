@@ -5,11 +5,11 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { SetupModeStrategy } from '../../js/modes/strategies/SetupMode';
-import { PHASES } from "@schach9x9/config";
-import * as UI from "@schach9x9/ui";
-import { soundManager } from "@schach9x9/sounds";
+import { PHASES } from '@schach9x9/config';
+import * as UI from '@schach9x9/ui';
+import { soundManager } from '@schach9x9/sounds';
 
-vi.mock("@schach9x9/logger", () => ({
+vi.mock('@schach9x9/logger', () => ({
   logger: {
     info: vi.fn(),
     debug: vi.fn(),
@@ -17,7 +17,7 @@ vi.mock("@schach9x9/logger", () => ({
 }));
 
 // Mock dependencies
-vi.mock("@schach9x9/ui", () => ({
+vi.mock('@schach9x9/ui', () => ({
   updateStatus: vi.fn(),
   updateShopUI: vi.fn(),
   renderBoard: vi.fn(),
@@ -26,13 +26,13 @@ vi.mock("@schach9x9/ui", () => ({
   log: vi.fn(),
 }));
 
-vi.mock("@schach9x9/sounds", () => ({
+vi.mock('@schach9x9/sounds', () => ({
   soundManager: {
     playGameStart: vi.fn(),
   },
 }));
 
-vi.mock("@schach9x9/logger", () => ({
+vi.mock('@schach9x9/logger', () => ({
   logger: {
     info: vi.fn(),
     debug: vi.fn(),

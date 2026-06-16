@@ -4,7 +4,7 @@
  */
 
 import { describe, expect, test, beforeAll, afterAll, beforeEach, vi } from 'vitest';
-import { logger } from "@schach9x9/logger.js";
+import { logger } from '@schach9x9/logger.js';
 
 describe('AI Worker - Branch Coverage for Untested Paths', () => {
   let mockPostMessage: ReturnType<typeof vi.fn>;
@@ -17,7 +17,7 @@ describe('AI Worker - Branch Coverage for Untested Paths', () => {
     vi.spyOn(logger, 'warn').mockImplementation(() => {});
     vi.spyOn(logger, 'error').mockImplementation(() => {});
 
-    vi.mock("@schach9x9/aiEngine.js", () => ({
+    vi.mock('@schach9x9/aiEngine.js', () => ({
       getBestMoveDetailed: vi.fn().mockResolvedValue({ 
         move: { from: { r: 1, c: 1 }, to: { r: 2, c: 2 } }, 
         score: 50 
@@ -37,12 +37,12 @@ describe('AI Worker - Branch Coverage for Untested Paths', () => {
       setProgressCallback: vi.fn(),
     }));
 
-    vi.mock("@schach9x9/config.js", () => ({
+    vi.mock('@schach9x9/config.js', () => ({
       setCurrentBoardShape: vi.fn(),
       getCurrentBoardShape: vi.fn(() => 'standard'),
     }));
 
-    vi.mock("@schach9x9/logger.js", () => ({
+    vi.mock('@schach9x9/logger.js', () => ({
       logger: {
         info: vi.fn(),
         debug: vi.fn(),
@@ -79,7 +79,7 @@ describe('AI Worker - Branch Coverage for Untested Paths', () => {
 
   describe('setBoardShape - missing branches', () => {
     test('should skip setting board shape when data is null', async () => {
-      const { setCurrentBoardShape } = await import("@schach9x9/config.js");
+      const { setCurrentBoardShape } = await import('@schach9x9/config.js');
       
       await onmessageHandler({
         data: {
@@ -93,7 +93,7 @@ describe('AI Worker - Branch Coverage for Untested Paths', () => {
     });
 
     test('should skip setting board shape when data.shape is undefined', async () => {
-      const { setCurrentBoardShape } = await import("@schach9x9/config.js");
+      const { setCurrentBoardShape } = await import('@schach9x9/config.js');
       
       await onmessageHandler({
         data: {
@@ -107,7 +107,7 @@ describe('AI Worker - Branch Coverage for Untested Paths', () => {
     });
 
     test('should skip setting board shape when data.shape is empty string', async () => {
-      const { setCurrentBoardShape } = await import("@schach9x9/config.js");
+      const { setCurrentBoardShape } = await import('@schach9x9/config.js');
       
       await onmessageHandler({
         data: {
@@ -123,7 +123,7 @@ describe('AI Worker - Branch Coverage for Untested Paths', () => {
 
   describe('getBestMove - error handling', () => {
     test('should post null result when getBestMoveDetailed throws', async () => {
-      const { getBestMoveDetailed } = await import("@schach9x9/aiEngine.js");
+      const { getBestMoveDetailed } = await import('@schach9x9/aiEngine.js');
       (getBestMoveDetailed as any).mockRejectedValueOnce(new Error('Worker search failed'));
 
       const mockBoard = Array(9).fill(null).map(() => Array(9).fill(null));
@@ -153,7 +153,7 @@ describe('AI Worker - Branch Coverage for Untested Paths', () => {
 
   describe('getTopMoves - error handling', () => {
     test('should post empty array when getTopMoves throws', async () => {
-      const { getTopMoves } = await import("@schach9x9/aiEngine.js");
+      const { getTopMoves } = await import('@schach9x9/aiEngine.js');
       (getTopMoves as any).mockRejectedValueOnce(new Error('Top moves failed'));
 
       const mockBoard = Array(9).fill(null).map(() => Array(9).fill(null));
@@ -183,7 +183,7 @@ describe('AI Worker - Branch Coverage for Untested Paths', () => {
 
   describe('search - error handling', () => {
     test('should post null bestMove when getBestMoveDetailed throws in search', async () => {
-      const { getBestMoveDetailed } = await import("@schach9x9/aiEngine.js");
+      const { getBestMoveDetailed } = await import('@schach9x9/aiEngine.js');
       (getBestMoveDetailed as any).mockRejectedValueOnce(new Error('Search failed'));
 
       const mockBoard = Array(9).fill(null).map(() => Array(9).fill(null));
@@ -211,7 +211,7 @@ describe('AI Worker - Branch Coverage for Untested Paths', () => {
 
   describe('analyze - success path', () => {
     test('should call setProgressCallback and analyzePosition', async () => {
-      const { analyzePosition, setProgressCallback } = await import("@schach9x9/aiEngine.js");
+      const { analyzePosition, setProgressCallback } = await import('@schach9x9/aiEngine.js');
       (analyzePosition as any).mockResolvedValueOnce({ 
         bestMove: { from: { r: 3, c: 3 }, to: { r: 4, c: 4 } }, 
         score: 75, 
@@ -266,7 +266,7 @@ describe('AI Worker - Branch Coverage for Untested Paths', () => {
 
   describe('default case - unknown message type', () => {
     test('should warn for unknown message type', async () => {
-      const { logger } = await import("@schach9x9/logger.js");
+      const { logger } = await import('@schach9x9/logger.js');
       
       await onmessageHandler({
         data: {
@@ -282,7 +282,7 @@ describe('AI Worker - Branch Coverage for Untested Paths', () => {
 
   describe('loadBook - edge cases', () => {
     test('should warn when data is undefined', async () => {
-      const { logger } = await import("@schach9x9/logger.js");
+      const { logger } = await import('@schach9x9/logger.js');
       
       await onmessageHandler({
         data: {
@@ -296,7 +296,7 @@ describe('AI Worker - Branch Coverage for Untested Paths', () => {
     });
 
     test('should warn when data.book is undefined', async () => {
-      const { logger } = await import("@schach9x9/logger.js");
+      const { logger } = await import('@schach9x9/logger.js');
       
       await onmessageHandler({
         data: {
@@ -312,7 +312,7 @@ describe('AI Worker - Branch Coverage for Untested Paths', () => {
 
   describe('evaluatePosition - success path with score', () => {
     test('should return numeric score', async () => {
-      const { evaluatePosition } = await import("@schach9x9/aiEngine.js");
+      const { evaluatePosition } = await import('@schach9x9/aiEngine.js');
       (evaluatePosition as any).mockResolvedValueOnce(150);
 
       const mockBoard = Array(9).fill(null).map(() => Array(9).fill(null));
@@ -335,7 +335,7 @@ describe('AI Worker - Branch Coverage for Untested Paths', () => {
 
   describe('progress callback - getBestMove', () => {
     test('should call progress callback during getBestMove', async () => {
-      const { setProgressCallback } = await import("@schach9x9/aiEngine.js");
+      const { setProgressCallback } = await import('@schach9x9/aiEngine.js');
       
       await onmessageHandler({
         data: {
@@ -357,7 +357,7 @@ describe('AI Worker - Branch Coverage for Untested Paths', () => {
 
   describe('analyze - missing depth/topMovesCount params', () => {
     test('should call analyzePosition without extra params', async () => {
-      const { analyzePosition } = await import("@schach9x9/aiEngine.js");
+      const { analyzePosition } = await import('@schach9x9/aiEngine.js');
       (analyzePosition as any).mockResolvedValueOnce({ 
         bestMove: null, 
         score: 0, 

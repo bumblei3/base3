@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeEach } from 'vitest';
-import { getBestMoveDetailed, evaluatePosition } from "@schach9x9/aiEngine.js";
-import { createEmptyBoard } from "@schach9x9/gameEngine.js";
+import { getBestMoveDetailed, evaluatePosition } from '@schach9x9/aiEngine.js';
+import { createEmptyBoard } from '@schach9x9/gameEngine.js';
 
 describe('AI Performance Benchmarks', () => {
   let board: any;

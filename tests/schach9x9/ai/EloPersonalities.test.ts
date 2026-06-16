@@ -1,5 +1,5 @@
 import { describe, expect, test, beforeEach } from 'vitest';
-import { getBestMoveDetailed } from "@schach9x9/aiEngine.js";
+import { getBestMoveDetailed } from '@schach9x9/aiEngine.js';
 
 describe('AI Elo Personalities', () => {
   let uiBoard: any[][];

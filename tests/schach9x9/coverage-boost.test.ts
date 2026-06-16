@@ -1,15 +1,15 @@
 import { describe, test, expect, beforeEach, vi, type MockedFunction } from 'vitest';
-import { PHASES } from "@schach9x9/config.js";
+import { PHASES } from '@schach9x9/config.js';
 
 // Mock dependencies
-vi.mock("@schach9x9/utils.js", () => ({
+vi.mock('@schach9x9/utils.js', () => ({
   debounce: vi.fn((fn: any) => fn),
   formatTime: vi.fn((t: number) => `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`),
   deepCopy: vi.fn((obj: any) => JSON.parse(JSON.stringify(obj))),
   parseFEN: vi.fn(() => ({ board: [], turn: 'white' })),
 }));
 
-vi.mock("@schach9x9/effects.js", () => ({
+vi.mock('@schach9x9/effects.js', () => ({
   particleSystem: {
     spawn: vi.fn(),
   },
@@ -21,7 +21,7 @@ vi.mock("@schach9x9/effects.js", () => ({
   confettiSystem: { spawn: vi.fn() },
 }));
 
-vi.mock("@schach9x9/sounds.js", () => ({
+vi.mock('@schach9x9/sounds.js', () => ({
   soundManager: {
     init: vi.fn(),
     playMove: vi.fn(),
@@ -33,7 +33,7 @@ vi.mock("@schach9x9/sounds.js", () => ({
   },
 }));
 
-vi.mock("@schach9x9/storage.js", () => ({
+vi.mock('@schach9x9/storage.js', () => ({
   storageManager: {
     loadGame: vi.fn(),
     loadStateIntoGame: vi.fn(),
@@ -42,7 +42,7 @@ vi.mock("@schach9x9/storage.js", () => ({
   },
 }));
 
-vi.mock("@schach9x9/statisticsManager.js", () => ({
+vi.mock('@schach9x9/statisticsManager.js', () => ({
   StatisticsManager: vi.fn().mockImplementation(function () {
     return {
       saveGame: vi.fn(),
@@ -51,7 +51,7 @@ vi.mock("@schach9x9/statisticsManager.js", () => ({
   }),
 }));
 
-vi.mock("@schach9x9/tutorial.js", () => ({
+vi.mock('@schach9x9/tutorial.js', () => ({
   Tutorial: vi.fn().mockImplementation(function () {
     return {
       init: vi.fn(),
@@ -59,7 +59,7 @@ vi.mock("@schach9x9/tutorial.js", () => ({
   }),
 }));
 
-vi.mock("@schach9x9/arrows.js", () => ({
+vi.mock('@schach9x9/arrows.js', () => ({
   ArrowRenderer: vi.fn().mockImplementation(function () {
     return {
       clear: vi.fn(),
@@ -67,7 +67,7 @@ vi.mock("@schach9x9/arrows.js", () => ({
   }),
 }));
 
-vi.mock("@schach9x9/puzzleManager.js", () => ({
+vi.mock('@schach9x9/puzzleManager.js', () => ({
   puzzleManager: {
     init: vi.fn(),
     loadPuzzle: vi.fn(),
@@ -75,11 +75,11 @@ vi.mock("@schach9x9/puzzleManager.js", () => ({
   },
 }));
 
-const UI = await import("@schach9x9/ui.js");
-const { GameController } = await import("@schach9x9/gameController.js");
-const { storageManager } = await import("@schach9x9/storage.js");
-const { soundManager } = await import("@schach9x9/sounds.js");
-const { puzzleManager } = await import("@schach9x9/puzzleManager.js");
+const UI = await import('@schach9x9/ui.js');
+const { GameController } = await import('@schach9x9/gameController.js');
+const { storageManager } = await import('@schach9x9/storage.js');
+const { soundManager } = await import('@schach9x9/sounds.js');
+const { puzzleManager } = await import('@schach9x9/puzzleManager.js');
 
 describe('Coverage Boost Tests', () => {
   let game: any;

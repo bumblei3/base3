@@ -4,10 +4,10 @@
  */
 import { describe, test, expect, beforeEach, vi } from 'vitest';
 import { ShopManager } from '../../js/shop/ShopManager.js';
-import { PHASES } from "@schach9x9/gameEngine.js";
+import { PHASES } from '@schach9x9/gameEngine.js';
 
 // Mock UI module
-vi.mock("@schach9x9/ui.js", () => ({
+vi.mock('@schach9x9/ui.js', () => ({
   updateShopUI: vi.fn(),
   showModal: vi.fn(),
   renderBoard: vi.fn(),
@@ -93,7 +93,7 @@ describe('ShopManager', () => {
 
   describe('handleSellPiece()', () => {
     test('should sell own non-king piece and refund points', async () => {
-      const { updateShopUI } = await import("@schach9x9/ui.js");
+      const { updateShopUI } = await import('@schach9x9/ui.js');
       mockGame.board[6][4] = { type: 'n', color: 'white' };
       mockGame.phase = PHASES.SETUP_WHITE_PIECES;
       mockGame.points = 0;
@@ -125,7 +125,7 @@ describe('ShopManager', () => {
 
   describe('handleBuyPiece()', () => {
     test('should place piece in valid corridor and deduct points', async () => {
-      const { updateShopUI } = await import("@schach9x9/ui.js");
+      const { updateShopUI } = await import('@schach9x9/ui.js');
       mockGame.selectedShopPiece = 'n';
       mockGame.phase = PHASES.SETUP_WHITE_PIECES;
 
@@ -167,7 +167,7 @@ describe('ShopManager', () => {
 
   describe('showUpgradeOptions()', () => {
     test('should show modal with available upgrades', async () => {
-      const { showModal } = await import("@schach9x9/ui.js");
+      const { showModal } = await import('@schach9x9/ui.js');
       mockGame.board[6][4] = { type: 'p', color: 'white' };
 
       shopManager.showUpgradeOptions(6, 4);
@@ -193,7 +193,7 @@ describe('ShopManager', () => {
 
   describe('upgradePiece()', () => {
     test('should execute upgrade and deduct cost', async () => {
-      const { updateShopUI, renderBoard, closeModal } = await import("@schach9x9/ui.js");
+      const { updateShopUI, renderBoard, closeModal } = await import('@schach9x9/ui.js');
       mockGame.board[6][4] = { type: 'p', color: 'white' }; // Pawn value 1
       mockGame.points = 10;
 

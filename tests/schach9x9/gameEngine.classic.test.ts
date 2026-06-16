@@ -1,5 +1,5 @@
 import { describe, expect, test, beforeEach } from 'vitest';
-import { Game, BOARD_SIZE, PHASES } from "@schach9x9/gameEngine.js";
+import { Game, BOARD_SIZE, PHASES } from '@schach9x9/gameEngine.js';
 
 describe('Game Engine - Classic Mode', () => {
   let game: Game;

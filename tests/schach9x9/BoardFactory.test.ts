@@ -1,6 +1,6 @@
 import { describe, test, expect } from 'vitest';
 import { BoardFactory } from '../js/campaign/BoardFactory.js';
-import { BOARD_SIZE } from "@schach9x9/config.js";
+import { BOARD_SIZE } from '@schach9x9/config.js';
 
 describe('BoardFactory', () => {
   test('createEmptyBoard should return 9x9 null matrix', () => {

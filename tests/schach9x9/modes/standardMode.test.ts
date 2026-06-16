@@ -4,7 +4,7 @@
  */
 import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
 import { StandardModeStrategy } from '../../js/modes/strategies/StandardMode.js';
-import { PHASES } from "@schach9x9/config.js";
+import { PHASES } from '@schach9x9/config.js';
 
 interface ModalAction {
   text: string;
@@ -13,7 +13,7 @@ interface ModalAction {
 }
 
 // Mock UI module
-vi.mock("@schach9x9/ui.js", () => ({
+vi.mock('@schach9x9/ui.js', () => ({
   updateShopUI: vi.fn(),
   updateStatus: vi.fn(),
   renderBoard: vi.fn(),
@@ -26,14 +26,14 @@ vi.mock("@schach9x9/ui.js", () => ({
 }));
 
 // Mock sounds module
-vi.mock("@schach9x9/sounds.js", () => ({
+vi.mock('@schach9x9/sounds.js', () => ({
   soundManager: {
     playGameStart: vi.fn(),
   },
 }));
 
 // Mock logger
-vi.mock("@schach9x9/logger.js", () => ({
+vi.mock('@schach9x9/logger.js', () => ({
   logger: {
     info: vi.fn(),
     debug: vi.fn(),
@@ -197,7 +197,7 @@ describe('StandardModeStrategy', () => {
     });
 
     test('should show modal when points remain (human white)', async () => {
-      const { showModal } = await import("@schach9x9/ui.js");
+      const { showModal } = await import('@schach9x9/ui.js');
       mockGame.phase = PHASES.SETUP_WHITE_UPGRADES;
       mockGame.points = 5;
       mockGame.isAI = false;

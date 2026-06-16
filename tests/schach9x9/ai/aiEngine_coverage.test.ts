@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest';
-import * as aiEngine from "@schach9x9/aiEngine.js";
-import { createEmptyBoard } from "@schach9x9/gameEngine.js";
+import * as aiEngine from '@schach9x9/aiEngine.js';
+import { createEmptyBoard } from '@schach9x9/gameEngine.js';
 
 import { COLOR_WHITE } from '../../js/ai/BoardDefinitions';
 // Mock Worker for aiEngine

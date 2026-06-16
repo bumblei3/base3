@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ClassicModeStrategy } from '../../js/modes/strategies/ClassicMode';
-import { PHASES } from "@schach9x9/config";
-import * as UI from "@schach9x9/ui";
+import { PHASES } from '@schach9x9/config';
+import * as UI from '@schach9x9/ui';
 
 // Mock dependencies
-vi.mock("@schach9x9/ui", () => ({
+vi.mock('@schach9x9/ui', () => ({
   initBoardUI: vi.fn(),
   updateStatus: vi.fn(),
   updateShopUI: vi.fn(),
@@ -14,7 +14,7 @@ vi.mock("@schach9x9/ui", () => ({
   updateClockDisplay: vi.fn(),
 }));
 
-vi.mock("@schach9x9/logger", () => ({
+vi.mock('@schach9x9/logger', () => ({
   logger: {
     info: vi.fn(),
   },

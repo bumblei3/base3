@@ -4,7 +4,7 @@ import {
   isBlockedCell,
   setCurrentBoardShape,
   BOARD_SHAPES,
-} from "@schach9x9/config.js";
+} from '@schach9x9/config.js';
 import * as MoveGenerator from '../js/ai/MoveGenerator.js';
 import {
   PIECE_ROOK,
@@ -19,8 +19,8 @@ import {
   WHITE_PAWN,
   BLACK_PAWN,
 } from '../js/ai/BoardDefinitions.js';
-import { Game } from "@schach9x9/gameEngine.js";
-import * as aiEngine from "@schach9x9/aiEngine.js";
+import { Game } from '@schach9x9/gameEngine.js';
+import * as aiEngine from '@schach9x9/aiEngine.js';
 
 describe('Cross-Shaped Board Mode (Comprehensive)', () => {
   describe('Config Helper Functions', () => {

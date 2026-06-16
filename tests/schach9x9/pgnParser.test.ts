@@ -1,6 +1,6 @@
 import { describe, expect, beforeEach, it } from 'vitest';
 import { PGNParser } from '../js/utils/PGNParser.js';
-import { Game } from "@schach9x9/gameEngine.js";
+import { Game } from '@schach9x9/gameEngine.js';
 
 describe('PGNParser', () => {
   let parser: PGNParser;

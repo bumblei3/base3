@@ -3,8 +3,8 @@ import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
  * Tests for TimeManager
  */
 
-import { TimeManager } from "@schach9x9/TimeManager.js";
-import { PHASES } from "@schach9x9/config.js";
+import { TimeManager } from '@schach9x9/TimeManager.js';
+import { PHASES } from '@schach9x9/config.js';
 
 describe('TimeManager', () => {
   let mockGame: any;

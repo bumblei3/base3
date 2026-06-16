@@ -1,9 +1,9 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest';
-import { Game, PHASES } from "@schach9x9/gameEngine.js";
-import { GameController } from "@schach9x9/gameController.js";
+import { Game, PHASES } from '@schach9x9/gameEngine.js';
+import { GameController } from '@schach9x9/gameController.js';
 
 // Mock UI and sounds
-vi.mock("@schach9x9/ui.js", () => ({
+vi.mock('@schach9x9/ui.js', () => ({
   initBoardUI: vi.fn(),
   updateStatus: vi.fn(),
   updateShopUI: vi.fn(),
@@ -16,7 +16,7 @@ vi.mock("@schach9x9/ui.js", () => ({
   updateCapturedUI: vi.fn(),
 }));
 
-vi.mock("@schach9x9/sounds.js", () => ({
+vi.mock('@schach9x9/sounds.js', () => ({
   soundManager: {
     init: vi.fn(),
     playGameStart: vi.fn(),
@@ -25,7 +25,7 @@ vi.mock("@schach9x9/sounds.js", () => ({
 }));
 
 // Mock Tutorial
-vi.mock("@schach9x9/tutorial.js", () => ({
+vi.mock('@schach9x9/tutorial.js', () => ({
   Tutorial: vi.fn().mockImplementation(function () {
     return {
       init: vi.fn(),
@@ -35,7 +35,7 @@ vi.mock("@schach9x9/tutorial.js", () => ({
 }));
 
 // Mock logger
-vi.mock("@schach9x9/logger.js", () => ({
+vi.mock('@schach9x9/logger.js', () => ({
   logger: {
     info: vi.fn(),
     error: vi.fn(),

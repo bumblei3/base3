@@ -1,7 +1,7 @@
 import { describe, expect, test, beforeEach, vi } from 'vitest';
 
 // Mock all internal dependencies of DOMHandler BEFORE importing it
-vi.mock("@schach9x9/ui.js", () => ({
+vi.mock('@schach9x9/ui.js', () => ({
   renderBoard: vi.fn(),
   showModal: vi.fn(),
   showToast: vi.fn(),
@@ -14,14 +14,14 @@ vi.mock('../js/utils/PGNGenerator.js', () => ({
   downloadPGN: vi.fn(),
 }));
 
-vi.mock("@schach9x9/sounds.js", () => ({
+vi.mock('@schach9x9/sounds.js', () => ({
   soundManager: {
     setEnabled: vi.fn(),
     setVolume: vi.fn(),
   },
 }));
 
-vi.mock("@schach9x9/chess-pieces.js", () => ({
+vi.mock('@schach9x9/chess-pieces.js', () => ({
   setPieceSkin: vi.fn(),
 }));
 
