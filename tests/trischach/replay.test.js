@@ -2,10 +2,10 @@
  * replay.test.js - Tests for TriSchach Game Replay/Export System (TSPN format)
  */
 import { expect, test, describe, beforeEach, vi } from "vitest";
-import { Hex } from "../js/hex.js";
-import { FACTION, generateBoard } from "../js/board.js";
-import { PIECE_TYPE, Piece } from "../js/pieces.js";
-import { GAME_STATE } from "../js/game.js";
+import { Hex } from "../../js/trischach/hex.js";
+import { FACTION, generateBoard } from "../../js/trischach/board.js";
+import { PIECE_TYPE, Piece } from "../../js/trischach/pieces.js";
+import { GAME_STATE } from "../../js/trischach/game.js";
 
 // Import all exported functions from replay.js
 import {
@@ -27,7 +27,7 @@ import {
   copyGameToClipboard,
   loadGameFromFile,
   loadGameFromString,
-} from "../js/replay.js";
+} from "../../js/trischach/replay.js";
 
 // --- Test Helpers ---
 
@@ -1054,7 +1054,7 @@ describe("Replay: Export/Import Helpers", () => {
 
     // Spy on serializeGame
     const serializeSpy = vi
-      .spyOn(await import("../js/replay.js"), "serializeGame")
+      .spyOn(await import("../js/replay.ts"), "serializeGame")
       .mockReturnValue("mocked tspn");
 
     // Mock navigator.clipboard.writeText (may not work in test env)

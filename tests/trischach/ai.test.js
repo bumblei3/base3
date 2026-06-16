@@ -1,9 +1,9 @@
 import { expect, test, describe, beforeEach } from "vitest";
-import { calculateBestMove } from "../js/ai.js";
-import { Game } from "../js/game.js";
-import { FACTION, generateBoard } from "../js/board.js";
-import { Piece, PIECE_TYPE } from "../js/pieces.js";
-import { Hex } from "../js/hex.js";
+import { calculateBestMove } from "../../js/trischach/ai.js";
+import { Game } from "../../js/trischach/game.js";
+import { FACTION, generateBoard } from "../../js/trischach/board.js";
+import { Piece, PIECE_TYPE } from "../../js/trischach/pieces.js";
+import { Hex } from "../../js/trischach/hex.js";
 
 describe("AI Decision Making (Minimax)", () => {
   let game;

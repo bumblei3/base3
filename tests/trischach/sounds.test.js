@@ -1,5 +1,5 @@
 import { expect, test, describe, vi, beforeEach } from "vitest";
-import { sounds } from "../js/sounds.js";
+import { sounds } from "../../js/trischach/sounds.js";
 
 describe("Sound System", () => {
   beforeEach(() => {

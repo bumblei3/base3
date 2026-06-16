@@ -1,8 +1,8 @@
 import { expect, test, describe, beforeEach } from "vitest";
-import { Game, GAME_STATE, PROMOTION_CHOICES } from "../js/game.js";
-import { FACTION, generateBoard } from "../js/board.js";
-import { Piece, PIECE_TYPE } from "../js/pieces.js";
-import { Hex } from "../js/hex.js";
+import { Game, GAME_STATE, PROMOTION_CHOICES } from "../../js/trischach/game.js";
+import { FACTION, generateBoard } from "../../js/trischach/board.js";
+import { Piece, PIECE_TYPE } from "../../js/trischach/pieces.js";
+import { Hex } from "../../js/trischach/hex.js";
 
 describe("Pawn Promotion", () => {
   let game;
