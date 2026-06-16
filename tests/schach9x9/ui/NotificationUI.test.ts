@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { NotificationUI } from '../../js/ui/NotificationUI';
+import { NotificationUI } from "@schach9x9/ui/NotificationUI";
 
 describe('NotificationUI', () => {
   let notificationUI: NotificationUI;

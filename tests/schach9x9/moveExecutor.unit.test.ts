@@ -1,19 +1,19 @@
 import { describe, expect, test, beforeEach, vi, type Mock } from 'vitest';
-import { Game } from '../js/gameEngine.js';
-import { PHASES } from '../js/config.js';
+import { Game } from "@schach9x9/gameEngine.js";
+import { PHASES } from "@schach9x9/config.js";
 import * as MoveExecutor from '../js/move/MoveExecutor.js';
 // Import dependencies to mock
 
-import * as UI from '../js/ui.js';
-import { puzzleManager } from '../js/puzzleManager.js';
-import { soundManager } from '../js/sounds.js';
+import * as UI from "@schach9x9/ui.js";
+import { puzzleManager } from "@schach9x9/puzzleManager.js";
+import { soundManager } from "@schach9x9/sounds.js";
 
 // Mocks
-vi.mock('../js/aiEngine.js', () => ({
+vi.mock("@schach9x9/aiEngine.js", () => ({
   evaluatePosition: vi.fn(() => Promise.resolve(0)),
 }));
 
-vi.mock('../js/ui.js', () => ({
+vi.mock("@schach9x9/ui.js", () => ({
   renderBoard: vi.fn(),
   animateMove: vi.fn(() => Promise.resolve()),
   updateCapturedUI: vi.fn(),
@@ -36,14 +36,14 @@ vi.mock('../js/ui.js', () => ({
   }),
 }));
 
-vi.mock('../js/puzzleManager.js', () => ({
+vi.mock("@schach9x9/puzzleManager.js", () => ({
   puzzleManager: {
     checkMove: vi.fn(),
     getPuzzle: vi.fn(() => ({ solution: [] })),
   },
 }));
 
-vi.mock('../js/sounds.js', () => ({
+vi.mock("@schach9x9/sounds.js", () => ({
   soundManager: {
     playMove: vi.fn(),
     playCapture: vi.fn(),
@@ -54,7 +54,7 @@ vi.mock('../js/sounds.js', () => ({
   },
 }));
 
-vi.mock('../js/effects.js', () => ({
+vi.mock("@schach9x9/effects.js", () => ({
   confettiSystem: { spawn: vi.fn() },
   shakeScreen: vi.fn(),
   triggerVibration: vi.fn(),

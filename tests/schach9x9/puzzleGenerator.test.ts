@@ -1,6 +1,6 @@
 import { describe, test, expect } from 'vitest';
-import { PuzzleGenerator } from '../js/puzzleGenerator.js';
-import { createEmptyBoard } from '../js/gameEngine.js';
+import { PuzzleGenerator } from "@schach9x9/puzzleGenerator.js";
+import { createEmptyBoard } from "@schach9x9/gameEngine.js";
 
 describe('PuzzleGenerator', () => {
   test('boardToString and stringToBoard should be inverse', () => {

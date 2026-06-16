@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { createEmptyBoard, Game } from '../js/gameEngine.js';
+import { createEmptyBoard, Game } from "@schach9x9/gameEngine.js";
 
 describe('getValidMoves - Pawn', () => {
   it('should allow white pawn to move forward one square', () => {

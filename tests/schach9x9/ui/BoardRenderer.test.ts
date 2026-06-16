@@ -1,7 +1,7 @@
 import { describe, expect, test, beforeEach, vi } from 'vitest';
 
 // Mock config first
-vi.mock('../../js/config.js', () => ({
+vi.mock("@schach9x9/config.js", () => ({
   BOARD_SIZE: 9,
   PHASES: { PLAY: 'play' },
   PIECE_VALUES: { p: 100, k: 0, r: 500, n: 300, b: 300, q: 900 },
@@ -9,7 +9,7 @@ vi.mock('../../js/config.js', () => ({
 }));
 
 // Mock dependencies
-vi.mock('../../js/effects.js', () => ({
+vi.mock("@schach9x9/effects.js", () => ({
   particleSystem: { spawn: vi.fn(), spawnTrail: vi.fn() },
   floatingTextManager: { show: vi.fn() },
   shakeScreen: vi.fn(),
@@ -17,11 +17,11 @@ vi.mock('../../js/effects.js', () => ({
   confettiSystem: { spawn: vi.fn() },
 }));
 
-vi.mock('../../js/utils.js', () => ({
+vi.mock("@schach9x9/utils.js", () => ({
   debounce: (fn: any) => fn,
 }));
 
-import * as BoardRenderer from '../../js/ui/BoardRenderer.js';
+import * as BoardRenderer from "@schach9x9/ui/BoardRenderer.js";
 
 describe('BoardRenderer Component', () => {
   let game: any;

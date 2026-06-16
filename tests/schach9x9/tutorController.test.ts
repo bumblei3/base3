@@ -1,10 +1,10 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest';
-import { Game } from '../js/gameEngine.js';
-import { PHASES } from '../js/config.js';
-import * as aiEngine from '../js/aiEngine.js';
+import { Game } from "@schach9x9/gameEngine.js";
+import { PHASES } from "@schach9x9/config.js";
+import * as aiEngine from "@schach9x9/aiEngine.js";
 
 // Mock UI module
-vi.mock('../js/ui.js', () => ({
+vi.mock("@schach9x9/ui.js", () => ({
   renderBoard: vi.fn(),
   showModal: vi.fn(),
   updateStatus: vi.fn(),
@@ -29,12 +29,12 @@ vi.mock('../js/ui.js', () => ({
 }));
 
 // Mock sounds module
-vi.mock('../js/sounds.js', () => ({
+vi.mock("@schach9x9/sounds.js", () => ({
   soundManager: { init: vi.fn() },
 }));
 
 // Mock AI Engine to prevent slow JS fallback execution
-vi.mock('../js/aiEngine.js', () => ({
+vi.mock("@schach9x9/aiEngine.js", () => ({
   getBestMoveDetailed: vi.fn().mockResolvedValue({
     move: {
       from: { r: 6, c: 4 },
@@ -89,7 +89,7 @@ vi.mock('../js/aiEngine.js', () => ({
 }));
 
 // Import after mocking
-const { TutorController } = await import('../js/tutorController.js');
+const { TutorController } = await import("@schach9x9/tutorController.js");
 
 describe('TutorController', () => {
   let game: any;
@@ -645,7 +645,7 @@ describe('TutorController', () => {
       game.phase = PHASES.GAME_OVER;
 
       // Spy on setTutorLoading from the mocked UI module
-      const uiModule = await import('../js/ui.js');
+      const uiModule = await import("@schach9x9/ui.js");
       const loadingSpy = uiModule.setTutorLoading as any;
       loadingSpy.mockClear();
 

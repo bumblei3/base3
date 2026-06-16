@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { deepCopy, coordToAlgebraic, debounce, safeJSONParse, parseFEN } from '../js/utils.js';
+import { deepCopy, coordToAlgebraic, debounce, safeJSONParse, parseFEN } from "@schach9x9/utils.js";
 
 describe('Utils - Comprehensive Tests', () => {
   describe('deepCopy', () => {

@@ -1,6 +1,6 @@
 import { describe, expect, test, beforeEach, vi } from 'vitest';
-import { StorageManager } from '../js/storage.js';
-import { PHASES } from '../js/gameEngine.js';
+import { StorageManager } from "@schach9x9/storage.js";
+import { PHASES } from "@schach9x9/gameEngine.js";
 
 // Mock localStorage
 const localStorageMock = (function () {

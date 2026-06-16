@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
-import * as Effects from '../js/effects.js';
+import * as Effects from "@schach9x9/effects.js";
 
 describe('Effects System', () => {
   beforeEach(() => {

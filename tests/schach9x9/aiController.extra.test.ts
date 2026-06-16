@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest';
-import { PHASES } from '../js/gameEngine.js';
+import { PHASES } from "@schach9x9/gameEngine.js";
 
 // Setup JSDOM body
 document.body.innerHTML = `
@@ -39,7 +39,7 @@ global.fetch = vi.fn(() =>
 );
 
 // Mocks
-vi.mock('../js/ui.js', () => ({
+vi.mock("@schach9x9/ui.js", () => ({
   updateStatus: vi.fn(),
   updateCapturedUI: vi.fn(),
   updateMoveHistoryUI: vi.fn(),
@@ -47,15 +47,15 @@ vi.mock('../js/ui.js', () => ({
   showModal: vi.fn(),
 }));
 
-vi.mock('../js/aiEngine.js', () => ({
+vi.mock("@schach9x9/aiEngine.js", () => ({
   evaluatePosition: vi.fn().mockResolvedValue(0),
   getBestMove: vi.fn(),
   getParamsForElo: vi.fn(() => ({ maxDepth: 4, elo: 2500 })),
   convertBoardToInt: vi.fn(),
 }));
 
-const { AIController } = await import('../js/aiController.js');
-const aiEngine = await import('../js/aiEngine.js');
+const { AIController } = await import("@schach9x9/aiController.js");
+const aiEngine = await import("@schach9x9/aiEngine.js");
 
 describe('AIController Ultimate Precision V5 - Updated', () => {
   let game: any, controller: any;

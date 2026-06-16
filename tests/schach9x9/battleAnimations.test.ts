@@ -79,7 +79,7 @@ mockThree.Vector3.prototype = {
 
 vi.mock('three', () => mockThree);
 
-const { BattleAnimator } = await import('../js/battleAnimations.js');
+const { BattleAnimator } = await import("@schach9x9/battleAnimations.js");
 
 describe('BattleAnimator Class', () => {
   let scene: any, camera: any, animator: any;

@@ -1,10 +1,10 @@
 import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
-import { Game, PHASES } from '../js/gameEngine.js';
-import { GameController } from '../js/gameController.js';
-import { MoveController } from '../js/moveController.js';
-import { AIController } from '../js/aiController.js';
+import { Game, PHASES } from "@schach9x9/gameEngine.js";
+import { GameController } from "@schach9x9/gameController.js";
+import { MoveController } from "@schach9x9/moveController.js";
+import { AIController } from "@schach9x9/aiController.js";
 
-vi.mock('../js/ui.js', () => ({
+vi.mock("@schach9x9/ui.js", () => ({
   renderBoard: vi.fn(),
   initBoardUI: vi.fn(),
   animateMove: vi.fn((_g: any, _f: any, _t: any, _p: any, cb?: any) => cb && cb()),
@@ -28,7 +28,7 @@ vi.mock('../js/ui.js', () => ({
   renderEvalGraph: vi.fn(),
 }));
 
-vi.mock('../js/sounds.js', () => ({
+vi.mock("@schach9x9/sounds.js", () => ({
   soundManager: {
     init: vi.fn(),
     playMove: vi.fn(),

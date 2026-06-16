@@ -1,10 +1,10 @@
 import { describe, test, expect, vi, beforeAll } from 'vitest';
 // Mock dependencies MUST be hoisted or defined before imports
-vi.mock('../js/config.js', () => ({
+vi.mock("@schach9x9/config.js", () => ({
   BOARD_SIZE: 9,
 }));
 
-vi.mock('../js/puzzleGenerator.js', () => ({
+vi.mock("@schach9x9/puzzleGenerator.js", () => ({
   PuzzleGenerator: {
     findMateSequence: vi.fn(),
     boardToString: vi.fn(() => 'mock_setup_string'),
@@ -17,7 +17,7 @@ describe('ProceduralGenerator', () => {
 
   beforeAll(async () => {
     // Import module AFTER mocking
-    const pgModule = await import('../js/puzzleGenerator.js');
+    const pgModule = await import("@schach9x9/puzzleGenerator.js");
     PuzzleGenerator = pgModule.PuzzleGenerator;
 
     const procModule = await import('../js/puzzle/ProceduralGenerator.js');

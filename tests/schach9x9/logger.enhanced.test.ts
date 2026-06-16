@@ -3,7 +3,7 @@ import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
  * Enhanced Tests for Logger System
  */
 
-import { logger, LOG_LEVELS } from '../js/logger.js';
+import { logger, LOG_LEVELS } from "@schach9x9/logger.js";
 
 describe('Logger Enhanced', () => {
   let consoleSpy: any;

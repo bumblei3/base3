@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
 import { setupJSDOM, createMockGame } from './test-utils.js';
-import { PHASES } from '../js/config.js';
+import { PHASES } from "@schach9x9/config.js";
 
 // Setup Mocks
 const UI_MOCK = {
@@ -23,9 +23,9 @@ const UI_MOCK = {
   closeModal: vi.fn(),
 };
 
-vi.mock('../js/ui.js', () => UI_MOCK);
+vi.mock("@schach9x9/ui.js", () => UI_MOCK);
 
-vi.mock('../js/sounds.js', () => ({
+vi.mock("@schach9x9/sounds.js", () => ({
   soundManager: {
     init: vi.fn(),
     playGameOver: vi.fn(),
@@ -35,11 +35,11 @@ vi.mock('../js/sounds.js', () => ({
   },
 }));
 
-vi.mock('../js/storage.js', () => ({
+vi.mock("@schach9x9/storage.js", () => ({
   storageManager: { saveGame: vi.fn(), loadGame: vi.fn(), loadStateIntoGame: vi.fn() },
 }));
 
-vi.mock('../js/aiEngine.js', () => ({
+vi.mock("@schach9x9/aiEngine.js", () => ({
   evaluatePosition: vi.fn(),
   see: vi.fn(() => 0),
   isSquareAttacked: vi.fn(() => false),
@@ -69,11 +69,11 @@ vi.mock('../js/aiEngine.js', () => ({
 }));
 
 // Use top-level await
-const { GameController } = await import('../js/gameController.js');
-const { AIController } = await import('../js/aiController.js');
-const { TutorController } = await import('../js/tutorController.js');
-const { storageManager } = await import('../js/storage.js');
-const { evaluatePosition } = await import('../js/aiEngine.js');
+const { GameController } = await import("@schach9x9/gameController.js");
+const { AIController } = await import("@schach9x9/aiController.js");
+const { TutorController } = await import("@schach9x9/tutorController.js");
+const { storageManager } = await import("@schach9x9/storage.js");
+const { evaluatePosition } = await import("@schach9x9/aiEngine.js");
 
 describe('Controllers Coverage Expansion', () => {
   let game: any, gc: any, ac: any, tc: any;

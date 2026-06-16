@@ -1,7 +1,7 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest';
-import { Game } from '../js/gameEngine.js';
-import { MoveController } from '../js/moveController.js';
-import { PHASES } from '../js/config.js';
+import { Game } from "@schach9x9/gameEngine.js";
+import { MoveController } from "@schach9x9/moveController.js";
+import { PHASES } from "@schach9x9/config.js";
 
 describe('MoveController - Enhanced Coverage Tests', () => {
   let game: any;

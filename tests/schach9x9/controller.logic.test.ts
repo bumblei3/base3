@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
-import { PHASES } from '../js/config.js';
+import { PHASES } from "@schach9x9/config.js";
 
 // Setup JSDOM body
 document.body.innerHTML = `
@@ -23,7 +23,7 @@ document.body.innerHTML = `
 `;
 
 // Mock dependencies
-vi.mock('../js/ui.js', () => ({
+vi.mock("@schach9x9/ui.js", () => ({
   renderBoard: vi.fn(),
   showModal: vi.fn(),
   updateStatus: vi.fn(),
@@ -48,7 +48,7 @@ vi.mock('../js/ui.js', () => ({
   flashSquare: vi.fn(),
 }));
 
-vi.mock('../js/sounds.js', () => ({
+vi.mock("@schach9x9/sounds.js", () => ({
   soundManager: {
     playMove: vi.fn(),
     playCapture: vi.fn(),
@@ -58,15 +58,15 @@ vi.mock('../js/sounds.js', () => ({
   },
 }));
 
-vi.mock('../js/aiEngine.js', () => ({
+vi.mock("@schach9x9/aiEngine.js", () => ({
   evaluatePosition: vi.fn(() => 0),
   findKing: vi.fn(() => ({ r: 0, c: 0 })),
   getBestMove: vi.fn().mockResolvedValue(null),
 }));
 
-const { Game } = await import('../js/gameEngine.js');
-const { GameController } = await import('../js/gameController.js');
-const { MoveController } = await import('../js/moveController.js');
+const { Game } = await import("@schach9x9/gameEngine.js");
+const { GameController } = await import("@schach9x9/gameController.js");
+const { MoveController } = await import("@schach9x9/moveController.js");
 
 describe('Controller Logic Deep Dive', () => {
   let game: any;

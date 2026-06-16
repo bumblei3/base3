@@ -4,7 +4,7 @@
 
 import { describe, expect, test, beforeEach, vi } from 'vitest';
 import { ShopManager } from '../js/shop/ShopManager.js';
-import { BOARD_SIZE, PHASES } from '../js/config.js';
+import { BOARD_SIZE, PHASES } from "@schach9x9/config.js";
 
 describe('ShopManager', () => {
   let mockGame: any;

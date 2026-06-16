@@ -1,9 +1,9 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest';
-import { Game } from '../js/gameEngine.js';
-import { PHASES } from '../js/config.js';
+import { Game } from "@schach9x9/gameEngine.js";
+import { PHASES } from "@schach9x9/config.js";
 
 // Mock UI
-vi.mock('../js/ui.js', () => ({
+vi.mock("@schach9x9/ui.js", () => ({
   renderBoard: vi.fn(),
   updateShopUI: vi.fn(),
   showModal: vi.fn(),

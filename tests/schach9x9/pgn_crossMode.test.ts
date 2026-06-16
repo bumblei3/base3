@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { Game } from '../js/gameEngine.js';
+import { Game } from "@schach9x9/gameEngine.js";
 import { generatePGN } from '../js/utils/PGNGenerator.js';
 
 describe('PGN Generator - Cross Mode', () => {

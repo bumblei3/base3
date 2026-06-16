@@ -9,7 +9,7 @@
 
 import { describe, test, expect, beforeEach, vi, afterEach } from 'vitest';
 import * as TacticsDetector from '../../js/tutor/TacticsDetector.js';
-import * as aiEngine from '../../js/aiEngine.js';
+import * as aiEngine from "@schach9x9/aiEngine.js";
 
 describe('TacticsDetector - Additional Coverage', () => {
   let mockGame: any;
@@ -119,7 +119,7 @@ describe('TacticsDetector - Additional Coverage', () => {
       mockGame.board[4][6] = { type: 'q', color: 'black' };
       mockGame.board[4][8] = { type: 'k', color: 'black' };
       
-      vi.mock('../../js/config.js', () => ({
+      vi.mock("@schach9x9/config.js", () => ({
         isBlockedCell: vi.fn(() => true),
         getCurrentBoardShape: vi.fn(() => 'standard'),
       }));
@@ -300,7 +300,7 @@ describe('TacticsDetector - Additional Coverage', () => {
       mockGame.board[2][2] = { type: 'n', color: 'black' };
       mockGame.board[4][4] = { type: 'k', color: 'black' };
       
-      vi.mock('../../js/config.js', () => ({
+      vi.mock("@schach9x9/config.js", () => ({
         isBlockedCell: vi.fn(() => true),
         getCurrentBoardShape: vi.fn(() => 'standard'),
       }));
@@ -605,7 +605,7 @@ describe('TacticsDetector - Additional Coverage', () => {
       mockGame.board[4][6] = { type: 'p', color: 'white' };
       mockGame.board[4][8] = { type: 'r', color: 'white' };
       
-      vi.mock('../../js/config.js', () => ({
+      vi.mock("@schach9x9/config.js", () => ({
         isBlockedCell: vi.fn((r: number, c: number) => r === 4 && c === 6),
         getCurrentBoardShape: vi.fn(() => 'standard'),
       }));

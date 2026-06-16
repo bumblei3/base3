@@ -59,20 +59,20 @@ const { mockUI, mockSoundManager, MOCK_CAMPAIGN_LEVELS } = vi.hoisted(() => ({
   ],
 }));
 
-vi.mock('../js/ui.js', () => mockUI);
+vi.mock("@schach9x9/ui.js", () => mockUI);
 
-vi.mock('../js/sounds.js', () => ({
+vi.mock("@schach9x9/sounds.js", () => ({
   soundManager: mockSoundManager,
 }));
 
-vi.mock('../js/tutorial.js', () => ({
+vi.mock("@schach9x9/tutorial.js", () => ({
   Tutorial: class {
     constructor() {}
   },
 }));
 
 // Mock other dependencies of GameController
-vi.mock('../js/gameEngine.js', () => ({
+vi.mock("@schach9x9/gameEngine.js", () => ({
   Game: class {
     board = [];
     capturedPieces = { white: [], black: [] };
@@ -105,7 +105,7 @@ vi.mock('../js/campaign/campaignData.js', () => ({
 }));
 
 // Import system under test
-import { GameController } from '../js/gameController.js';
+import { GameController } from "@schach9x9/gameController.js";
 import { campaignManager } from '../js/campaign/CampaignManager.js';
 
 describe('Campaign Integration', () => {

@@ -1,9 +1,9 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest';
-import { Game } from '../js/gameEngine.js';
-import { PHASES } from '../js/config.js';
+import { Game } from "@schach9x9/gameEngine.js";
+import { PHASES } from "@schach9x9/config.js";
 
 // Mock UI
-vi.mock('../js/ui.js', () => ({
+vi.mock("@schach9x9/ui.js", () => ({
   showTutorSuggestions: vi.fn(),
   renderBoard: vi.fn(),
   updateShopUI: vi.fn(),
@@ -11,7 +11,7 @@ vi.mock('../js/ui.js', () => ({
   setTutorLoading: vi.fn(),
 }));
 
-vi.mock('../js/aiEngine.js', () => ({
+vi.mock("@schach9x9/aiEngine.js", () => ({
   getBestMoveDetailed: vi.fn(),
   getTopMoves: vi.fn(() => []),
   extractPV: vi.fn(() => []),
@@ -38,9 +38,9 @@ vi.mock('../js/aiEngine.js', () => ({
   COLOR_BLACK: 32,
 }));
 
-const aiEngine = await import('../js/aiEngine.js');
+const aiEngine = await import("@schach9x9/aiEngine.js");
 
-const UI = await import('../js/ui.js');
+const UI = await import("@schach9x9/ui.js");
 const {
   getTutorHints,
   getSetupTemplates,

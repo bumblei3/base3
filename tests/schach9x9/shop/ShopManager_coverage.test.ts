@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ShopManager } from '../../js/shop/ShopManager.js';
-import { PHASES } from '../../js/gameEngine.js';
-import { PIECE_VALUES } from '../../js/config.js';
-import * as UI from '../../js/ui.js';
+import { PHASES } from "@schach9x9/gameEngine.js";
+import { PIECE_VALUES } from "@schach9x9/config.js";
+import * as UI from "@schach9x9/ui.js";
 
 // Mock UI dependencies
-vi.mock('../../js/ui.js', () => ({
+vi.mock("@schach9x9/ui.js", () => ({
   updateShopUI: vi.fn(),
   showModal: vi.fn(),
   closeModal: vi.fn(),

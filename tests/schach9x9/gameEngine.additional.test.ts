@@ -1,7 +1,7 @@
 // gameEngine.additional.test.ts
 // Additional tests for core game engine functions beyond the basic knight tests.
 import { describe, expect, test, beforeEach } from 'vitest';
-import { createEmptyBoard, Game } from '../js/gameEngine.js';
+import { createEmptyBoard, Game } from "@schach9x9/gameEngine.js";
 
 describe('Game Engine Additional Tests', () => {
   let game: Game;

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { GameController } from '../../js/gameController';
-import { Game } from '../../js/gameEngine';
-import { PHASES } from '../../js/gameEngine';
+import { GameController } from "@schach9x9/gameController";
+import { Game } from "@schach9x9/gameEngine";
+import { PHASES } from "@schach9x9/gameEngine";
 import { notificationUI } from '../../js/ui/NotificationUI';
 
 // Mock UI dependencies
@@ -11,7 +11,7 @@ vi.mock('../../js/ui/NotificationUI', () => ({
   },
 }));
 
-vi.mock('../../js/arrows', () => ({
+vi.mock("@schach9x9/arrows", () => ({
   ArrowRenderer: vi.fn().mockImplementation(() => ({
     clearArrows: vi.fn(),
     addArrow: vi.fn(),

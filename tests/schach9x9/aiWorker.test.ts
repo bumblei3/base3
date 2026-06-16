@@ -1,6 +1,6 @@
 import { describe, expect, test, beforeAll, afterAll, beforeEach, vi } from 'vitest';
-import { getBestMoveDetailed } from '../js/aiEngine.js';
-import { logger } from '../js/logger.js';
+import { getBestMoveDetailed } from "@schach9x9/aiEngine.js";
+import { logger } from "@schach9x9/logger.js";
 
 // Mock Worker class
 class MockWorker {
@@ -91,7 +91,7 @@ describe('AI Worker Message Handlers', () => {
 
   beforeAll(async () => {
     // Mock all aiEngine functions
-    vi.mock('../js/aiEngine.js', () => ({
+    vi.mock("@schach9x9/aiEngine.js", () => ({
       getBestMoveDetailed: vi
         .fn()
         .mockResolvedValue({ move: { from: { r: 1, c: 1 }, to: { r: 2, c: 2 } }, score: 50 }),
@@ -106,11 +106,11 @@ describe('AI Worker Message Handlers', () => {
       setProgressCallback: vi.fn(),
     }));
 
-    vi.mock('../js/config.js', () => ({
+    vi.mock("@schach9x9/config.js", () => ({
       setCurrentBoardShape: vi.fn(),
     }));
 
-    vi.mock('../js/logger.js', () => ({
+    vi.mock("@schach9x9/logger.js", () => ({
       logger: {
         info: vi.fn(),
         debug: vi.fn(),
@@ -143,7 +143,7 @@ describe('AI Worker Message Handlers', () => {
   });
 
   test('loadBook - should set opening book when data provided', async () => {
-    const { setOpeningBook } = await import('../js/aiEngine.js');
+    const { setOpeningBook } = await import("@schach9x9/aiEngine.js");
 
     await onmessageHandler({
       data: {
@@ -157,7 +157,7 @@ describe('AI Worker Message Handlers', () => {
   });
 
   test('loadBook - should warn when no book data provided', async () => {
-    const { logger } = await import('../js/logger.js');
+    const { logger } = await import("@schach9x9/logger.js");
 
     await onmessageHandler({
       data: {
@@ -171,7 +171,7 @@ describe('AI Worker Message Handlers', () => {
   });
 
   test('setBoardShape - should set board shape', async () => {
-    const { setCurrentBoardShape } = await import('../js/config.js');
+    const { setCurrentBoardShape } = await import("@schach9x9/config.js");
 
     await onmessageHandler({
       data: {
@@ -305,7 +305,7 @@ describe('AI Worker Message Handlers', () => {
   });
 
   test('unknown message type - should log warning', async () => {
-    const { logger } = await import('../js/logger.js');
+    const { logger } = await import("@schach9x9/logger.js");
 
     await onmessageHandler({
       data: {

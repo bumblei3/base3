@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { executeMove } from '../../js/move/MoveExecutor';
-import { Game } from '../../js/gameEngine';
+import { Game } from "@schach9x9/gameEngine";
 import { campaignManager } from '../../js/campaign/CampaignManager';
 import { notificationUI } from '../../js/ui/NotificationUI';
 
@@ -20,7 +20,7 @@ vi.mock('../../js/ui/NotificationUI', () => ({
   },
 }));
 
-vi.mock('../../js/ui', () => ({
+vi.mock("@schach9x9/ui", () => ({
   renderBoard: vi.fn(),
   animateMove: vi.fn().mockResolvedValue(undefined),
   updateCapturedUI: vi.fn(),
@@ -34,7 +34,7 @@ vi.mock('../../js/ui', () => ({
   showPromotionUI: vi.fn(),
 }));
 
-vi.mock('../../js/sounds', () => ({
+vi.mock("@schach9x9/sounds", () => ({
   soundManager: {
     playMove: vi.fn(),
     playCapture: vi.fn(),
@@ -42,7 +42,7 @@ vi.mock('../../js/sounds', () => ({
   },
 }));
 
-vi.mock('../../js/aiEngine', () => ({
+vi.mock("@schach9x9/aiEngine", () => ({
   evaluatePosition: vi.fn().mockReturnValue(0),
 }));
 
@@ -139,7 +139,7 @@ describe('MoveExecutor - Campaign Mechanics', () => {
     game.board[1][0] = { type: 'p', color: 'white' };
 
     // Mock showPromotionUI to trigger callback immediately
-    const uiModule = await import('../../js/ui');
+    const uiModule = await import("@schach9x9/ui");
     (uiModule.showPromotionUI as any).mockImplementation(
       (_g: any, _r: number, _c: number, _color: string, _rec: any, callback: () => void) => {
         // Callback simulates user selecting a piece

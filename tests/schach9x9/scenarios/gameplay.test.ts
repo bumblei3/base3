@@ -39,9 +39,9 @@ vi.mock('../../js/ui/BoardRenderer.js', () => ({
 })) as any;
 
 // Import what we need
-const { Game, PHASES } = await import('../../js/gameEngine.js');
-const { GameController } = await import('../../js/gameController.js');
-const { MoveController } = await import('../../js/moveController.js');
+const { Game, PHASES } = await import("@schach9x9/gameEngine.js");
+const { GameController } = await import("@schach9x9/gameController.js");
+const { MoveController } = await import("@schach9x9/moveController.js");
 
 describe('Gameplay Scenarios', () => {
   let game: any;

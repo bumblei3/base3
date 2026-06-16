@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest';
-import { AnalysisManager } from '../js/AnalysisManager.js';
+import { AnalysisManager } from "@schach9x9/AnalysisManager.js";
 
 describe('AnalysisManager', () => {
   let mockGame: any;
@@ -12,14 +12,14 @@ describe('AnalysisManager', () => {
     detectTacticalPatterns: vi.fn(),
   }));
 
-  vi.mock('../js/aiEngine.js', () => ({
+  vi.mock("@schach9x9/aiEngine.js", () => ({
     see: vi.fn(),
   }));
 
   beforeEach(async () => {
     // Reset mocks
     const TacticsDetector = await import('../js/tutor/TacticsDetector.js');
-    const aiEngine = await import('../js/aiEngine.js');
+    const aiEngine = await import("@schach9x9/aiEngine.js");
     vi.clearAllMocks();
 
     // Default implementations
@@ -64,7 +64,7 @@ describe('AnalysisManager', () => {
 
   test('should generate threat arrows correctly', async () => {
     const TacticsDetector = await import('../js/tutor/TacticsDetector.js');
-    const aiEngine = await import('../js/aiEngine.js');
+    const aiEngine = await import("@schach9x9/aiEngine.js");
 
     // Simulate Black Rook at (0,4) threatening White Queen at (4,4)
     mockGame.board[0][4] = { type: 'r', color: 'black' }; // Add attacker to board
@@ -111,7 +111,7 @@ describe('AnalysisManager', () => {
 
   test('should only show serious threats', async () => {
     const TacticsDetector = await import('../js/tutor/TacticsDetector.js');
-    const aiEngine = await import('../js/aiEngine.js');
+    const aiEngine = await import("@schach9x9/aiEngine.js");
 
     // Setup: Attacker exists on board
     mockGame.board[0][7] = { type: 'r', color: 'black' };

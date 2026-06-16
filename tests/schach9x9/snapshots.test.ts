@@ -1,9 +1,9 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest';
 import { setupJSDOM } from './test-utils.js';
-import { PHASES } from '../js/config.js';
+import { PHASES } from "@schach9x9/config.js";
 
 // Mock dependencies (we want to test UI logic so we use the real UI but mock sounds/controllers if needed)
-vi.mock('../js/sounds.js', () => ({
+vi.mock("@schach9x9/sounds.js", () => ({
   soundManager: {
     init: vi.fn(),
     playMove: vi.fn(),
@@ -13,8 +13,8 @@ vi.mock('../js/sounds.js', () => ({
 }));
 
 // Import UI and game
-const UI = await import('../js/ui.js');
-const { Game } = await import('../js/gameEngine.js');
+const UI = await import("@schach9x9/ui.js");
+const { Game } = await import("@schach9x9/gameEngine.js");
 
 describe('Visual DOM Snapshot Tests', () => {
   let game: any;

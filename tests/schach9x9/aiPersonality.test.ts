@@ -1,6 +1,6 @@
 import { describe, expect, test, beforeEach } from 'vitest';
-import { evaluatePosition } from '../js/aiEngine.js';
-import { BOARD_SIZE, type Piece } from '../js/gameEngine.js';
+import { evaluatePosition } from "@schach9x9/aiEngine.js";
+import { BOARD_SIZE, type Piece } from "@schach9x9/gameEngine.js";
 
 // Helper to create empty board
 function createEmptyBoard(): (Piece | null)[][] {

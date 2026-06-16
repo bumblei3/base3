@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest';
-vi.mock('../js/sounds.js', () => ({
+vi.mock("@schach9x9/sounds.js", () => ({
   soundManager: {
     init: vi.fn(),
     playMove: vi.fn(),
@@ -12,7 +12,7 @@ vi.mock('../js/sounds.js', () => ({
   },
 }));
 
-vi.mock('../js/ui.js', () => ({
+vi.mock("@schach9x9/ui.js", () => ({
   animateMove: vi.fn().mockResolvedValue(undefined),
   renderBoard: vi.fn(),
   updateStatus: vi.fn(),
@@ -36,15 +36,15 @@ vi.mock('../js/ui.js', () => ({
   showToast: vi.fn(),
 }));
 
-vi.mock('../js/aiEngine.js', () => ({
+vi.mock("@schach9x9/aiEngine.js", () => ({
   evaluatePosition: vi.fn(() => 0),
   findKing: vi.fn(() => ({ r: 0, c: 0 })),
   getBestMove: vi.fn().mockResolvedValue(null),
 }));
 
 // Dynamic imports required for mocked modules
-const { Game } = await import('../js/gameEngine.js');
-const { MoveController } = await import('../js/moveController.js');
+const { Game } = await import("@schach9x9/gameEngine.js");
+const { MoveController } = await import("@schach9x9/moveController.js");
 
 describe('Undo/Redo System Reproduction Tests', () => {
   let game: any;

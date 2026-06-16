@@ -3,8 +3,8 @@
  */
 
 import { describe, expect, test, beforeEach, vi } from 'vitest';
-import { getBestMove, evaluatePosition, getAllLegalMoves } from '../js/aiEngine';
-import { createEmptyBoard } from '../js/gameEngine';
+import { getBestMove, evaluatePosition, getAllLegalMoves } from "@schach9x9/aiEngine";
+import { createEmptyBoard } from "@schach9x9/gameEngine";
 import type { Board } from '../js/types/game';
 
 describe('AI Engine', () => {

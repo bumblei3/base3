@@ -113,7 +113,7 @@ vi.mock('three/examples/jsm/controls/OrbitControls.js', () => ({
   }),
 }));
 
-vi.mock('../js/pieces3D.js', () => ({
+vi.mock("@schach9x9/pieces3D.js", () => ({
   createPiece3D: vi.fn(() => ({
     position: { set: vi.fn() },
     userData: {},
@@ -121,7 +121,7 @@ vi.mock('../js/pieces3D.js', () => ({
   PIECE_COLORS: { white: 0xffffff, black: 0x000000 },
 }));
 
-vi.mock('../js/battleAnimations.js', () => ({
+vi.mock("@schach9x9/battleAnimations.js", () => ({
   BattleAnimator: vi.fn().mockImplementation(function () {
     return {
       playBattle: vi.fn(() => Promise.resolve()),
@@ -131,7 +131,7 @@ vi.mock('../js/battleAnimations.js', () => ({
 
 import { setupJSDOM } from './test-utils.js';
 
-const { BattleChess3D } = await import('../js/battleChess3D.js');
+const { BattleChess3D } = await import("@schach9x9/battleChess3D.js");
 
 describe('BattleChess3D Class', () => {
   let container: any;

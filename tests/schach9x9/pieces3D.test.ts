@@ -40,7 +40,7 @@ const mockThree = {
 
 vi.mock('three', () => mockThree);
 
-const { createPiece3D, SKIN_PRESETS } = await import('../js/pieces3D.js');
+const { createPiece3D, SKIN_PRESETS } = await import("@schach9x9/pieces3D.js");
 
 describe('pieces3D Module', () => {
   beforeEach(() => {

@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach, afterEach } from 'vitest';
-const { ArrowRenderer } = await import('../js/arrows.js');
+const { ArrowRenderer } = await import("@schach9x9/arrows.js");
 
 describe('ArrowRenderer', () => {
   let boardElement: any;

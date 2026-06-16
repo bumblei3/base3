@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { GameController } from '../../js/gameController';
-import { PHASES } from '../../js/gameEngine';
-import * as UI from '../../js/ui';
+import { GameController } from "@schach9x9/gameController";
+import { PHASES } from "@schach9x9/gameEngine";
+import * as UI from "@schach9x9/ui";
 import { campaignManager } from '../../js/campaign/CampaignManager';
 
-vi.mock('../../js/ui', () => ({
+vi.mock("@schach9x9/ui", () => ({
   initBoardUI: vi.fn(),
   updateStatus: vi.fn(),
   renderBoard: vi.fn(),
@@ -21,7 +21,7 @@ vi.mock('../../js/ui', () => ({
   showCampaignVictoryModal: vi.fn(),
 }));
 
-vi.mock('../../js/sounds', () => ({
+vi.mock("@schach9x9/sounds", () => ({
   soundManager: {
     init: vi.fn(),
     playMove: vi.fn(),
@@ -39,13 +39,13 @@ vi.mock('../../js/campaign/CampaignManager', () => ({
   },
 }));
 
-vi.mock('../../js/tutorial', () => ({
+vi.mock("@schach9x9/tutorial", () => ({
   Tutorial: vi.fn().mockImplementation(function () {
     return { show: vi.fn(), initUI: vi.fn() };
   }),
 }));
 
-vi.mock('../../js/statisticsManager', () => ({
+vi.mock("@schach9x9/statisticsManager", () => ({
   StatisticsManager: vi.fn().mockImplementation(function () {
     return { saveGame: vi.fn(), loadGame: vi.fn() };
   }),

@@ -1,8 +1,8 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest';
-import { Game, createEmptyBoard } from '../js/gameEngine.js';
+import { Game, createEmptyBoard } from "@schach9x9/gameEngine.js";
 
 // Mock UI and SoundManager modules
-vi.mock('../js/ui.js', () => ({
+vi.mock("@schach9x9/ui.js", () => ({
   renderBoard: vi.fn(),
   showModal: vi.fn(),
   showPromotionModal: vi.fn(),
@@ -21,7 +21,7 @@ vi.mock('../js/ui.js', () => ({
   renderEvalGraph: vi.fn(),
 }));
 
-vi.mock('../js/sounds.js', () => ({
+vi.mock("@schach9x9/sounds.js", () => ({
   soundManager: {
     playMove: vi.fn(),
     playCapture: vi.fn(),
@@ -62,7 +62,7 @@ global.localStorage = {
 global.alert = vi.fn();
 
 // Import MoveController AFTER mocking
-const { MoveController } = await import('../js/moveController.js');
+const { MoveController } = await import("@schach9x9/moveController.js");
 
 describe('Bug Reproduction: Rook transforming into King', () => {
   let game: any;

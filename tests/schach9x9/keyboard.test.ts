@@ -3,7 +3,7 @@ import { KeyboardManager } from '../js/input/KeyboardManager.js';
 import { setupJSDOM } from './test-utils.js';
 
 // Mock dependencies
-vi.mock('../js/ui.js', () => ({
+vi.mock("@schach9x9/ui.js", () => ({
   showToast: vi.fn(),
   closeModal: vi.fn(),
   renderBoard: vi.fn(),
@@ -14,7 +14,7 @@ vi.mock('../js/ui.js', () => ({
 let UI: any;
 
 beforeAll(async () => {
-  UI = await import('../js/ui.js');
+  UI = await import("@schach9x9/ui.js");
 });
 
 describe('KeyboardManager', () => {

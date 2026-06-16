@@ -1,21 +1,21 @@
 import { describe, expect, test, beforeEach, vi } from 'vitest';
-import { PHASES, BOARD_SIZE } from '../js/config.js';
+import { PHASES, BOARD_SIZE } from "@schach9x9/config.js";
 import { setupJSDOM, createMockGame } from './test-utils.js';
 
 // Mocks for ui.js dependencies are handled here
-vi.mock('../js/chess-pieces.js', () => ({
+vi.mock("@schach9x9/chess-pieces.js", () => ({
   PIECE_SVGS: {
     white: { p: 'wp', r: 'wr', n: 'wn', b: 'wb', q: 'wq', k: 'wk', e: 'we', a: 'wa', c: 'wc' },
     black: { p: 'bp', r: 'br', n: 'bn', b: 'bb', q: 'bq', k: 'bk', e: 'be', a: 'ba', c: 'bc' },
   },
 }));
 
-vi.mock('../js/utils.js', () => ({
+vi.mock("@schach9x9/utils.js", () => ({
   formatTime: vi.fn(t => `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`),
   debounce: vi.fn(fn => fn),
 }));
 
-vi.mock('../js/effects.js', () => ({
+vi.mock("@schach9x9/effects.js", () => ({
   particleSystem: {
     spawn: vi.fn(),
   },
@@ -27,7 +27,7 @@ vi.mock('../js/effects.js', () => ({
   confettiSystem: { spawn: vi.fn() },
 }));
 
-vi.mock('../js/sounds.js', () => ({
+vi.mock("@schach9x9/sounds.js", () => ({
   soundManager: {
     playPromotion: vi.fn(),
     playMove: vi.fn(),
@@ -39,7 +39,7 @@ vi.mock('../js/sounds.js', () => ({
 }));
 
 // Import UI module
-import * as UI from '../js/ui.js';
+import * as UI from "@schach9x9/ui.js";
 
 describe('UI Module', () => {
   let game: any;

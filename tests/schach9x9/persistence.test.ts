@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { Game } from '../js/gameEngine.js';
-import { storageManager } from '../js/storage.js';
-import { setCurrentBoardShape, getCurrentBoardShape, BOARD_SHAPES } from '../js/config.js';
+import { Game } from "@schach9x9/gameEngine.js";
+import { storageManager } from "@schach9x9/storage.js";
+import { setCurrentBoardShape, getCurrentBoardShape, BOARD_SHAPES } from "@schach9x9/config.js";
 
 // Mock localStorage
 const store: Record<string, string> = {};

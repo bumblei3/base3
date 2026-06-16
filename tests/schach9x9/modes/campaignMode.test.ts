@@ -4,10 +4,10 @@
  */
 import { describe, test, expect, beforeEach, vi } from 'vitest';
 import { CampaignModeStrategy } from '../../js/modes/strategies/CampaignMode.js';
-import { PHASES } from '../../js/config.js';
+import { PHASES } from "@schach9x9/config.js";
 
 // Mock UI module
-vi.mock('../../js/ui.js', () => ({
+vi.mock("@schach9x9/ui.js", () => ({
   updateShopUI: vi.fn(),
   updateStatus: vi.fn(),
   renderBoard: vi.fn(),
@@ -17,7 +17,7 @@ vi.mock('../../js/ui.js', () => ({
 }));
 
 // Mock logger
-vi.mock('../../js/logger.js', () => ({
+vi.mock("@schach9x9/logger.js", () => ({
   logger: {
     info: vi.fn(),
     debug: vi.fn(),
@@ -129,7 +129,7 @@ describe('CampaignModeStrategy', () => {
 
   describe('init()', () => {
     test('should warn if no currentLevelId is set', async () => {
-      const { logger } = await import('../../js/logger.js');
+      const { logger } = await import("@schach9x9/logger.js");
 
       strategy.init(mockGame, mockController, 0);
 
@@ -139,7 +139,7 @@ describe('CampaignModeStrategy', () => {
     });
 
     test('should not warn if currentLevelId is set', async () => {
-      const { logger } = await import('../../js/logger.js');
+      const { logger } = await import("@schach9x9/logger.js");
       mockGame.currentLevelId = 'level_1';
 
       strategy.init(mockGame, mockController, 0);
@@ -195,7 +195,7 @@ describe('CampaignModeStrategy', () => {
     });
 
     test('should show intro modal with level info', async () => {
-      const { showModal } = await import('../../js/ui.js');
+      const { showModal } = await import("@schach9x9/ui.js");
 
       strategy.startLevel(mockGame, mockController, 'level_1');
 

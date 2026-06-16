@@ -1,6 +1,6 @@
 import { describe, expect, test, beforeEach } from 'vitest';
-import { getBestMoveDetailed } from '../../js/aiEngine.js';
-import { type Piece } from '../../js/gameEngine.js';
+import { getBestMoveDetailed } from "@schach9x9/aiEngine.js";
+import { type Piece } from "@schach9x9/gameEngine.js";
 
 describe('AI Elo Scaling & Noise', () => {
   let uiBoard: (Piece | null)[][];

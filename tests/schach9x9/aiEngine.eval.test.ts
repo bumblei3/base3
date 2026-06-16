@@ -2,7 +2,7 @@ import { describe, test, expect, beforeEach } from 'vitest';
 // Minimal mock for dependencies if needed
 (global as any).BOARD_SIZE = 9;
 
-const { evaluatePosition } = await import('../js/aiEngine.js');
+const { evaluatePosition } = await import("@schach9x9/aiEngine.js");
 
 describe('AIEngine Deep Evaluation', () => {
   let board: any;

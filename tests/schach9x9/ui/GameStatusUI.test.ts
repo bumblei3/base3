@@ -1,7 +1,7 @@
 import { describe, expect, test, beforeEach, vi } from 'vitest';
 
 // Mock config
-vi.mock('../../js/config.js', () => ({
+vi.mock("@schach9x9/config.js", () => ({
   BOARD_SIZE: 9,
   PHASES: {
     PLAY: 'play',
@@ -16,11 +16,11 @@ vi.mock('../../js/config.js', () => ({
 }));
 
 // Mock BoardRenderer
-vi.mock('../../js/ui/BoardRenderer.js', () => ({
+vi.mock("@schach9x9/ui/BoardRenderer.js", () => ({
   renderBoard: vi.fn(),
 }));
 
-import * as GameStatusUI from '../../js/ui/GameStatusUI.js';
+import * as GameStatusUI from "@schach9x9/ui/GameStatusUI.js";
 
 describe('GameStatusUI Component', () => {
   let game: any;

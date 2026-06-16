@@ -1,11 +1,11 @@
 import { describe, expect, test, beforeEach, vi, type MockInstance } from 'vitest';
-import { PHASES } from '../js/config';
-import { GameController } from '../js/gameController';
-import { Game } from '../js/gameEngine';
+import { PHASES } from "@schach9x9/config";
+import { GameController } from "@schach9x9/gameController";
+import { Game } from "@schach9x9/gameEngine";
 import type { Piece } from '../js/types/game';
 
 // Mock dependencies
-vi.mock('../js/ui.js', () => ({
+vi.mock("@schach9x9/ui.js", () => ({
   renderBoard: vi.fn(),
   showModal: vi.fn(),
   showToast: vi.fn(),
@@ -23,7 +23,7 @@ vi.mock('../js/ui.js', () => ({
   animateCheck: vi.fn(),
 }));
 
-vi.mock('../js/sounds.js', () => ({
+vi.mock("@schach9x9/sounds.js", () => ({
   soundManager: {
     init: vi.fn(),
     playMove: vi.fn(),
@@ -34,7 +34,7 @@ vi.mock('../js/sounds.js', () => ({
   },
 }));
 
-vi.mock('../js/AnalysisController.js', () => ({
+vi.mock("@schach9x9/AnalysisController.js", () => ({
   AnalysisController: class {
     constructor(_gameController: any) {}
     enterAnalysisMode = vi.fn(() => true);
@@ -52,7 +52,7 @@ vi.mock('../js/ui/NotificationUI.js', () => ({
   },
 }));
 
-vi.mock('../js/tutorial.js', () => ({
+vi.mock("@schach9x9/tutorial.js", () => ({
   Tutorial: class {
     constructor() {}
     initUI() {}
@@ -63,7 +63,7 @@ vi.mock('../js/tutorial.js', () => ({
   },
 }));
 
-vi.mock('../js/gameEngine.js', () => {
+vi.mock("@schach9x9/gameEngine.js", () => {
   const ActualGame = vi.importActual('../js/gameEngine.js');
   return {
     ...ActualGame,
@@ -145,7 +145,7 @@ vi.mock('../js/gameEngine.js', () => {
 });
 
 // Import after mocks
-import { soundManager } from '../js/sounds';
+import { soundManager } from "@schach9x9/sounds";
 
 interface TestGame
   extends Omit<Game, 'log' | 'handlePlayClick' | 'getValidMoves' | 'selectedShopPiece'> {
@@ -172,7 +172,7 @@ describe('GameController', () => {
     // Our mock above defines Game class with properties we need.
     // Cast to unknown first to avoid strict compatibility checks with the "real" Game class
     // since we've mocked the module.
-    const MockGameClass = (await import('../js/gameEngine')).Game as unknown as new (
+    const MockGameClass = (await import("@schach9x9/gameEngine")).Game as unknown as new (
       p: number,
       m: string,
       ai: boolean

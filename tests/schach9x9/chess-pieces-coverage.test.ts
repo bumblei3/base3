@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import * as ChessPieces from '../js/chess-pieces.js';
+import * as ChessPieces from "@schach9x9/chess-pieces.js";
 
 describe('Chess Pieces Barrel File', () => {
   it('should export all required modules', () => {

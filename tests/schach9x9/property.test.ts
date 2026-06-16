@@ -1,17 +1,17 @@
 import { describe, test, expect, vi } from 'vitest';
-import { Game } from '../js/gameEngine.js';
+import { Game } from "@schach9x9/gameEngine.js";
 import { generateRandomBoard, createPRNG } from './test-utils.js';
-import { PHASES } from '../js/config.js';
+import { PHASES } from "@schach9x9/config.js";
 
 // Mock UI and sounds to avoid initialization issues
-vi.mock('../js/ui.js', () => ({
+vi.mock("@schach9x9/ui.js", () => ({
   renderBoard: vi.fn(),
   updateStatus: vi.fn(),
   updateCapturedUI: vi.fn(),
   updateMoveHistoryUI: vi.fn(),
 }));
 
-vi.mock('../js/sounds.js', () => ({
+vi.mock("@schach9x9/sounds.js", () => ({
   soundManager: { playMove: vi.fn(), playCapture: vi.fn() },
 }));
 

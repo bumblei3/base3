@@ -7,7 +7,7 @@
  */
 
 import { describe, test, expect, vi, beforeEach, afterEach, beforeAll } from 'vitest';
-import { SoundManager } from '../js/sounds';
+import { SoundManager } from "@schach9x9/sounds";
 
 // Mock Web Audio API
 declare global {

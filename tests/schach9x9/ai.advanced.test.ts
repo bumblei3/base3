@@ -4,7 +4,7 @@ import { describe, test, expect, beforeEach } from 'vitest';
 (global as any).BOARD_SIZE = 9;
 
 // Dynamic import
-const { evaluatePosition } = await import('../js/aiEngine.js');
+const { evaluatePosition } = await import("@schach9x9/aiEngine.js");
 
 describe('AI Advanced Evaluation Tests', () => {
   let board: any;

@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach } from 'vitest';
-import { StatisticsManager } from '../js/statisticsManager.js';
+import { StatisticsManager } from "@schach9x9/statisticsManager.js";
 
 describe('StatisticsManager - Tutor Points', () => {
   let statsManager: any;

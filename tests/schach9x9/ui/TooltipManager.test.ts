@@ -1,5 +1,5 @@
 import { describe, expect, test, beforeEach } from 'vitest';
-import { TooltipManager } from '../../js/ui/TooltipManager.js';
+import { TooltipManager } from "@schach9x9/ui/TooltipManager.js";
 
 describe('TooltipManager', () => {
   let tooltipManager: TooltipManager;

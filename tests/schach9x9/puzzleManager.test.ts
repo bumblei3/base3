@@ -1,8 +1,8 @@
 import { describe, expect, test, beforeEach, vi } from 'vitest';
-import { PuzzleManager, puzzleManager as _puzzleManager } from '../js/puzzleManager.js';
-import { PuzzleGenerator } from '../js/puzzleGenerator.js';
+import { PuzzleManager, puzzleManager as _puzzleManager } from "@schach9x9/puzzleManager.js";
+import { PuzzleGenerator } from "@schach9x9/puzzleGenerator.js";
 import { ProceduralGenerator } from '../js/puzzle/ProceduralGenerator.js';
-import { BOARD_SIZE } from '../js/config.js';
+import { BOARD_SIZE } from "@schach9x9/config.js";
 
 describe('PuzzleManager', () => {
   let game: any;

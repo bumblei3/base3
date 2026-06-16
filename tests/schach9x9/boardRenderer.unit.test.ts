@@ -1,9 +1,9 @@
 import { describe, expect, test, beforeEach, afterEach, vi } from 'vitest';
 import * as BoardRenderer from '../js/ui/BoardRenderer.js';
-import { particleSystem } from '../js/effects.js';
+import { particleSystem } from "@schach9x9/effects.js";
 
 // Mock dependencies
-vi.mock('../js/config.js', () => ({
+vi.mock("@schach9x9/config.js", () => ({
   BOARD_SIZE: 9,
   PHASES: {
     PLAY: 'play',
@@ -15,11 +15,11 @@ vi.mock('../js/config.js', () => ({
   },
 }));
 
-vi.mock('../js/utils.js', () => ({
+vi.mock("@schach9x9/utils.js", () => ({
   debounce: (fn: any) => fn, // No delay for tests
 }));
 
-vi.mock('../js/effects.js', () => ({
+vi.mock("@schach9x9/effects.js", () => ({
   particleSystem: { spawn: vi.fn() },
   floatingTextManager: { show: vi.fn() },
   shakeScreen: vi.fn(),

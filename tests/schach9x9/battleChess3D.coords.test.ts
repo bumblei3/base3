@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
-import { BattleChess3D } from '../js/battleChess3D.js';
+import { BattleChess3D } from "@schach9x9/battleChess3D.js";
 
 // Mock THREE
 vi.mock('three', () => {
@@ -70,7 +70,7 @@ vi.mock('three/examples/jsm/controls/OrbitControls.js', () => ({
 }));
 
 // Mock pieces3D
-vi.mock('../js/pieces3D.js', () => ({
+vi.mock("@schach9x9/pieces3D.js", () => ({
   createPiece3D: vi.fn(() => ({
     position: { set: vi.fn() },
     userData: {},
@@ -79,7 +79,7 @@ vi.mock('../js/pieces3D.js', () => ({
 }));
 
 // Mock battleAnimations
-vi.mock('../js/battleAnimations.js', () => ({
+vi.mock("@schach9x9/battleAnimations.js", () => ({
   BattleAnimator: vi.fn(() => ({
     playBattle: vi.fn().mockResolvedValue(undefined),
   })),

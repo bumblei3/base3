@@ -1,10 +1,10 @@
 import { describe, it, expect, beforeEach, vi, type MockInstance } from 'vitest';
-import { Game, createEmptyBoard } from '../js/gameEngine';
-import { PHASES } from '../js/config';
+import { Game, createEmptyBoard } from "@schach9x9/gameEngine";
+import { PHASES } from "@schach9x9/config";
 import { setupJSDOM } from './test-utils';
-import { MoveController } from '../js/moveController';
-import * as UIModule from '../js/ui';
-import { soundManager } from '../js/sounds';
+import { MoveController } from "@schach9x9/moveController";
+import * as UIModule from "@schach9x9/ui";
+import { soundManager } from "@schach9x9/sounds";
 
 // Define types for mocks
 type MockUI = {
@@ -55,7 +55,7 @@ interface TestGame
 }
 
 // Mock UI and SoundManager modules
-vi.mock('../js/ui.js', () => ({
+vi.mock("@schach9x9/ui.js", () => ({
   renderBoard: vi.fn(),
   showModal: vi.fn(),
   showPromotionModal: vi.fn(),
@@ -75,7 +75,7 @@ vi.mock('../js/ui.js', () => ({
   renderEvalGraph: vi.fn(),
 }));
 
-vi.mock('../js/sounds.js', () => ({
+vi.mock("@schach9x9/sounds.js", () => ({
   soundManager: {
     playMove: vi.fn(),
     playCapture: vi.fn(),
@@ -85,7 +85,7 @@ vi.mock('../js/sounds.js', () => ({
   },
 }));
 
-vi.mock('../js/aiEngine.js', () => ({
+vi.mock("@schach9x9/aiEngine.js", () => ({
   evaluatePosition: vi.fn(() => 0),
   findKing: vi.fn(() => ({ r: 0, c: 0 })),
   getBestMove: vi.fn().mockResolvedValue(null),

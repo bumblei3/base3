@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // Mock dependencies BEFORE importing DOMHandler
-vi.mock('../../js/ui.js', () => ({
+vi.mock("@schach9x9/ui.js", () => ({
   renderBoard: vi.fn(),
   updateStatus: vi.fn(),
   updateShopUI: vi.fn(),
@@ -10,7 +10,7 @@ vi.mock('../../js/ui.js', () => ({
   clearPieceCache: vi.fn(),
 }));
 
-vi.mock('../../js/sounds.js', () => ({
+vi.mock("@schach9x9/sounds.js", () => ({
   soundManager: {
     enabled: true,
     volume: 0.5,
@@ -21,11 +21,11 @@ vi.mock('../../js/sounds.js', () => ({
   },
 }));
 
-vi.mock('../../js/utils.js', () => ({
+vi.mock("@schach9x9/utils.js", () => ({
   debounce: (fn: any) => fn,
 }));
 
-vi.mock('../../js/chess-pieces.js', () => ({
+vi.mock("@schach9x9/chess-pieces.js", () => ({
   setPieceSkin: vi.fn(),
 }));
 

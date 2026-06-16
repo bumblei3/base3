@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeEach } from 'vitest';
 // Import chess-pieces
-const chessPieces = await import('../js/chess-pieces.js');
+const chessPieces = await import("@schach9x9/chess-pieces.js");
 const { PIECE_SETS, setPieceSkin } = chessPieces;
 
 describe('Chess Pieces', () => {
