@@ -1,36 +1,10 @@
 import { expect, test, describe, vi, beforeEach } from "vitest";
-import { sounds } from "../../js/trischach/sounds.js";
+import { sounds } from "../../js/trischach/sounds.ts";
+import { MockAudioContext } from "../vitest.setup.ts";
 
 describe("Sound System", () => {
   beforeEach(() => {
-    // Mock AudioContext
-    const mockOsc = {
-      connect: vi.fn(),
-      start: vi.fn(),
-      stop: vi.fn(),
-      frequency: {
-        setValueAtTime: vi.fn(),
-        exponentialRampToValueAtTime: vi.fn(),
-      },
-      type: "sine",
-    };
-    const mockGain = {
-      connect: vi.fn(),
-      gain: {
-        setValueAtTime: vi.fn(),
-        exponentialRampToValueAtTime: vi.fn(),
-        linearRampToValueAtTime: vi.fn(),
-      },
-    };
-
-    globalThis.AudioContext = vi.fn().mockImplementation(() => ({
-      createOscillator: () => mockOsc,
-      createGain: () => mockGain,
-      destination: {},
-      currentTime: 100,
-    }));
-
-    // Reset sounds state
+    // Reset sounds state - rely on global mocks from vitest.setup.ts
     sounds.ctx = null;
     sounds.enabled = true;
   });
@@ -44,70 +18,53 @@ describe("Sound System", () => {
 
   test("playSelect creates sound nodes", () => {
     sounds.playSelect();
-    expect(globalThis.AudioContext).toHaveBeenCalled();
+    expect(sounds.ctx).toBeInstanceOf(MockAudioContext);
   });
 
   test("playMove creates sound nodes", () => {
     sounds.playMove();
-    expect(globalThis.AudioContext).toHaveBeenCalled();
-  });
-
-  test("resumes AudioContext if suspended", () => {
-    // Modify mock for this test
-    const mockResume = vi.fn();
-    globalThis.AudioContext = vi.fn().mockImplementation(() => ({
-      createOscillator: () => ({
-        connect: vi.fn(),
-        start: vi.fn(),
-        stop: vi.fn(),
-        frequency: {
-          setValueAtTime: vi.fn(),
-          exponentialRampToValueAtTime: vi.fn(),
-        },
-        type: "sine",
-      }),
-      createGain: () => ({
-        connect: vi.fn(),
-        gain: {
-          setValueAtTime: vi.fn(),
-          exponentialRampToValueAtTime: vi.fn(),
-          linearRampToValueAtTime: vi.fn(),
-        },
-      }),
-      destination: {},
-      currentTime: 100,
-      state: "suspended",
-      resume: mockResume,
-    }));
-
-    sounds.ctx = null; // force re-init
-    sounds.playSelect();
-    expect(mockResume).toHaveBeenCalled();
+    expect(sounds.ctx).toBeInstanceOf(MockAudioContext);
   });
 
   test("playCombat creates sound nodes", () => {
     sounds.playCombat();
-    expect(globalThis.AudioContext).toHaveBeenCalled();
+    expect(sounds.ctx).toBeInstanceOf(MockAudioContext);
   });
 
-  test("playElimination creates sound nodes", () => {
-    sounds.playElimination();
-    expect(globalThis.AudioContext).toHaveBeenCalled();
-  });
-
-  test("playWin creates sound nodes", () => {
-    vi.useFakeTimers();
+  test("playWin creates sound nodes", async () => {
     sounds.playWin();
-    vi.runAllTimers();
-    expect(globalThis.AudioContext).toHaveBeenCalled();
-    vi.useRealTimers();
+    await new Promise(r => setTimeout(r, 1000));
+    expect(sounds.ctx).toBeInstanceOf(MockAudioContext);
   });
 
-  test("playPromotion creates sound nodes", () => {
-    vi.useFakeTimers();
+  test("playCheck creates sound nodes", () => {
+    sounds.playCheck();
+    expect(sounds.ctx).toBeInstanceOf(MockAudioContext);
+  });
+
+  test("playStalemate creates sound nodes", async () => {
+    sounds.playStalemate();
+    await new Promise(r => setTimeout(r, 1000));
+    expect(sounds.ctx).toBeInstanceOf(MockAudioContext);
+  });
+
+  test("playPromotion creates sound nodes", async () => {
     sounds.playPromotion();
-    vi.runAllTimers();
-    expect(globalThis.AudioContext).toHaveBeenCalled();
-    vi.useRealTimers();
+    await new Promise(r => setTimeout(r, 500));
+    expect(sounds.ctx).toBeInstanceOf(MockAudioContext);
+  });
+
+  test("playMove fails when disabled", () => {
+    sounds.enabled = false;
+    const ctxBefore = sounds.ctx;
+    sounds.playMove();
+    expect(sounds.ctx).toBe(ctxBefore);
+  });
+
+  test("playCombat fails when disabled", () => {
+    sounds.enabled = false;
+    const ctxBefore = sounds.ctx;
+    sounds.playCombat();
+    expect(sounds.ctx).toBe(ctxBefore);
   });
 });

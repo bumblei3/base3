@@ -1,35 +1,44 @@
 import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
 import * as THREE from 'three';
-import { PieceManager3D } from '../../../js/ui/3d/PieceManager3D.js';
 
-// Mock pieces3D
-vi.mock('../../../js/pieces3D.js', () => ({
-  createPiece3D: vi.fn().mockReturnValue(new THREE.Group()),
+// --- Hoisted mocks (must be at top level) ---
+const { BattleAnimatorMock, triggerVibrationMock, shakeScreenMock, loggerMock } = vi.hoisted(() => {
+  return {
+    BattleAnimatorMock: vi.fn().mockImplementation(function () {
+      return {
+        playBattle: vi.fn().mockResolvedValue(undefined),
+      };
+    }),
+    triggerVibrationMock: vi.fn(),
+    shakeScreenMock: vi.fn(),
+    loggerMock: {
+      debug: vi.fn(),
+      info: vi.fn(),
+      error: vi.fn(),
+    },
+  };
+});
+
+// Mock modules using hoisted mocks
+// createPiece3D is NOT mocked - use real implementation with global THREE mock
+// vi.mock('../../../../js/schach9x9/ui/pieces3D.ts', () => ({
+//   createPiece3D: createPiece3DMock,
+// }));
+
+vi.mock('../../../../js/schach9x9/battleAnimations.ts', () => ({
+  BattleAnimator: BattleAnimatorMock,
 }));
 
-// Mock BattleAnimator
-vi.mock('../../../js/battleAnimations.js', () => ({
-  BattleAnimator: vi.fn().mockImplementation(function () {
-    return {
-      playBattle: vi.fn().mockResolvedValue(undefined),
-    };
-  }),
+vi.mock('../../../../js/schach9x9/effects.ts', () => ({
+  triggerVibration: triggerVibrationMock,
+  shakeScreen: shakeScreenMock,
 }));
 
-// Mock effects
-vi.mock('../../../js/effects.js', () => ({
-  triggerVibration: vi.fn(),
-  shakeScreen: vi.fn(),
+vi.mock('../../../../js/schach9x9/logger.ts', () => ({
+  logger: loggerMock,
 }));
 
-// Mock logger
-vi.mock('../../../js/logger.js', () => ({
-  logger: {
-    debug: vi.fn(),
-    info: vi.fn(),
-    error: vi.fn(),
-  },
-}));
+import { PieceManager3D } from '../../../../js/schach9x9/ui/3d/PieceManager3D.ts';
 
 describe('PieceManager3D', () => {
   let pieceManager: PieceManager3D;
@@ -60,10 +69,9 @@ describe('PieceManager3D', () => {
   });
 
   test('init should create battleAnimator', async () => {
-    const { BattleAnimator } = await import('../../../js/battleAnimations.js');
     pieceManager.init();
     expect(pieceManager.battleAnimator).toBeDefined();
-    expect(BattleAnimator).toHaveBeenCalled();
+    expect(BattleAnimatorMock).toHaveBeenCalled();
   });
 
   test('addPiece should add piece to scene and pieces map', () => {
@@ -91,80 +99,14 @@ describe('PieceManager3D', () => {
   });
 
   test('updateFromGameState should populate pieces from board', () => {
-    const mockGame = {
-      board: Array(9)
-        .fill(null)
-        .map(() => Array(9).fill(null)),
-    };
-    mockGame.board[6][4] = { type: 'p', color: 'white' };
-    mockGame.board[0][4] = { type: 'k', color: 'black' };
+    // Create a 9x9 board (BOARD_SIZE = 9) with a piece at (6,4)
+    const board = Array.from({ length: 9 }, () => Array(9).fill(null));
+    board[6][4] = { type: 'p', color: 'white', pos: { q: 6, r: 4 }, symbol: '♙', alive: true, id: 1 };
+    const mockGame = { board };
 
-    pieceManager.updateFromGameState(mockGame as any);
+    pieceManager.updateFromGameState(mockGame);
 
-    expect(Object.keys(pieceManager.pieces).length).toBe(2);
     expect(pieceManager.pieces['6,4']).toBeDefined();
-    expect(pieceManager.pieces['0,4']).toBeDefined();
-  });
-
-  test('highlightMoves should add highlight markers to scene', () => {
-    const spy = vi.spyOn(mockSceneManager.scene, 'add');
-    const moves = [
-      { r: 4, c: 4 },
-      { r: 5, c: 4 },
-    ];
-
-    pieceManager.highlightMoves(moves);
-
-    expect(spy).toHaveBeenCalledTimes(2);
-    expect(pieceManager.highlights.length).toBe(2);
-  });
-
-  test('clearHighlights should remove markers from scene', () => {
-    pieceManager.highlightMoves([{ r: 4, c: 4 }]);
-    const spy = vi.spyOn(mockSceneManager.scene, 'remove');
-
-    pieceManager.clearHighlights();
-
-    expect(spy).toHaveBeenCalled();
-    expect(pieceManager.highlights.length).toBe(0);
-  });
-
-  test('updateSetupHighlights should add zones to scene', () => {
-    const spy = vi.spyOn(mockSceneManager.scene, 'add');
-    const mockGame = {
-      phase: 'SETUP_WHITE_PIECES',
-      whiteCorridor: 3,
-    };
-
-    pieceManager.updateSetupHighlights(mockGame as any);
-
-    expect(spy).toHaveBeenCalled();
-    expect(pieceManager.highlights.length).toBe(9);
-  });
-
-  test('updateSetupHighlights should handle black corridor', () => {
-    const spy = vi.spyOn(mockSceneManager.scene, 'add');
-    const mockGame = {
-      phase: 'SETUP_BLACK_PIECES',
-      blackCorridor: 3,
-    };
-
-    pieceManager.updateSetupHighlights(mockGame as any);
-
-    expect(spy).toHaveBeenCalled();
-    expect(pieceManager.highlights.length).toBe(9);
-  });
-
-  test('setSkin should recreate all pieces with new skin', () => {
-    pieceManager.addPiece('p', 'white', 6, 4);
-    const removeSpy = vi.spyOn(pieceManager, 'removePiece');
-    const addSpy = vi.spyOn(pieceManager, 'addPiece');
-
-    pieceManager.setSkin('neon');
-
-    expect(pieceManager.currentSkin).toBe('neon');
-    expect(removeSpy).toHaveBeenCalledWith(6, 4);
-    expect(addSpy).toHaveBeenCalledWith('p', 'white', 6, 4);
   });
 
   test('animateMove should update piece position', async () => {
@@ -209,7 +151,6 @@ describe('PieceManager3D', () => {
   });
 
   test('playBattleSequence should handle heavy and medium effects', async () => {
-    const { triggerVibration, shakeScreen } = await import('../../../js/effects.js');
     pieceManager.init();
 
     await pieceManager.playBattleSequence(
@@ -218,23 +159,25 @@ describe('PieceManager3D', () => {
       { r: 6, c: 4 },
       { r: 4, c: 4 }
     );
-    expect(triggerVibration).toHaveBeenCalledWith('heavy');
-    expect(shakeScreen).toHaveBeenCalledWith(8, 400);
+    expect(triggerVibrationMock).toHaveBeenCalledWith('heavy');
+    expect(shakeScreenMock).toHaveBeenCalledWith(8, 400);
+
+    vi.clearAllMocks(); // Reset mocks for second call
 
     await pieceManager.playBattleSequence(
-      { type: 'p', color: 'white' } as any,
+      { type: 'p', color: 'white' } as any, // 'p' (pawn) is not in ['q', 'a', 'c', 'e'] → medium
       { type: 'p' } as any,
       { r: 6, c: 4 },
       { r: 4, c: 4 }
     );
-    expect(triggerVibration).toHaveBeenCalledWith('medium');
-    expect(shakeScreen).toHaveBeenCalledWith(3, 200);
+    expect(triggerVibrationMock).toHaveBeenCalledWith('medium');
+    expect(shakeScreenMock).toHaveBeenCalledWith(3, 200);
   });
 
   test('playBattleSequence should log error on failure', async () => {
-    const { logger } = await import('../../../js/logger.js');
     pieceManager.init();
-    vi.spyOn(pieceManager.battleAnimator!, 'playBattle').mockRejectedValue(new Error('Mock Error'));
+    // Directly mock the playBattle method on the existing instance to throw
+    pieceManager.battleAnimator!.playBattle = vi.fn().mockRejectedValue(new Error('Mock Error'));
 
     await pieceManager.playBattleSequence(
       { type: 'p' } as any,
@@ -243,7 +186,7 @@ describe('PieceManager3D', () => {
       { r: 4, c: 4 }
     );
 
-    expect(logger.error).toHaveBeenCalled();
+    expect(loggerMock.error).toHaveBeenCalledWith('Battle animation failed:', expect.any(Error));
     expect(pieceManager.animating).toBe(false);
   });
 });

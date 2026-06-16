@@ -4,14 +4,14 @@
  */
 
 import * as THREE from 'three';
-import { createPiece3D } from '../../pieces3D.js';
-import { BattleAnimator } from '../../battleAnimations.js';
-import { triggerVibration, shakeScreen } from '../../effects.js';
-import { BOARD_SIZE, PHASES } from '../../config.js';
-import { logger } from '../../logger.js';
-import type { SceneManager3D } from './SceneManager3D.js';
-import type { Game } from '../../gameEngine.js';
-import type { Square, Piece } from '../../types/game.js';
+import { createPiece3D } from '../../pieces3D.ts';
+import { BattleAnimator } from '../../battleAnimations.ts';
+import { triggerVibration, shakeScreen } from '../../effects.ts';
+import { BOARD_SIZE, PHASES } from '../../config.ts';
+import { logger } from '../../logger.ts';
+import type { SceneManager3D } from './SceneManager3D.ts';
+import type { Game } from '../../gameEngine.ts';
+import type { Square, Piece } from '../../types/game.ts';
 
 export class PieceManager3D {
   public sceneManager: SceneManager3D;
