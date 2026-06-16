@@ -5,7 +5,7 @@
  * Decouples UI event logic from the main App bootstrapper.
  */
 
-import { debounce } from '../utils.js';
+import { debounce } from '@shared/utils';
 import * as UI from '../ui.js';
 import { clearPieceCache } from '../ui/BoardRenderer.js';
 import { showToast } from '../ui/OverlayManager.js';

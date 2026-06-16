@@ -9,6 +9,7 @@ import type { IGame, Piece, Faction, PieceType, Cell } from './types.ts';
 import { calculateBestMove, setAIDepth, setAIPersonality } from './ai.ts';
 import { boardHash, getBookMoves, OPENING_BOOK } from './opening-book.ts';
 import { isCheckmateInternal, isKingdomCheck } from './game-check.ts';
+import { indexedDBInstance } from '@shared/storage';
 
 // ─── Types ────────────────────────────────────────────────────────────────
 
@@ -469,25 +470,25 @@ export function abandonPuzzle(): void {
 
 // ─── Persistence ──────────────────────────────────────────────────────────
 
-export function savePuzzles(puzzles: Puzzle[]): void {
+export async function savePuzzles(puzzles: Puzzle[]): Promise<void> {
   try {
-    localStorage.setItem(PUZZLE_STORAGE_KEY, JSON.stringify(puzzles));
+    await indexedDBInstance.set(PUZZLE_STORAGE_KEY, puzzles);
   } catch (e) {
     console.warn('Failed to save puzzles:', e);
   }
 }
 
-export function loadPuzzles(): Puzzle[] {
+export async function loadPuzzles(): Promise<Puzzle[]> {
   try {
-    const data = localStorage.getItem(PUZZLE_STORAGE_KEY);
-    if (data) return JSON.parse(data);
+    const data = await indexedDBInstance.get<Puzzle[]>(PUZZLE_STORAGE_KEY);
+    return data ?? [];
   } catch (e) {
     console.warn('Failed to load puzzles:', e);
+    return [];
   }
-  return [];
 }
 
-export function saveProgress(): void {
+export async function saveProgress(): Promise<void> {
   try {
     const progress = {
       currentPuzzleId: puzzleState.currentPuzzle?.id,
@@ -498,20 +499,20 @@ export function saveProgress(): void {
       isFailed: puzzleState.isFailed,
       hintUsed: puzzleState.hintUsed,
     };
-    localStorage.setItem(PUZZLE_PROGRESS_KEY, JSON.stringify(progress));
+    await indexedDBInstance.set(PUZZLE_PROGRESS_KEY, progress);
   } catch (e) {
     console.warn('Failed to save puzzle progress:', e);
   }
 }
 
-export function loadProgress(): PuzzleState | null {
+export async function loadProgress(): Promise<PuzzleState | null> {
   try {
-    const data = localStorage.getItem(PUZZLE_PROGRESS_KEY);
-    if (data) return JSON.parse(data);
+    const data = await indexedDBInstance.get<PuzzleState>(PUZZLE_PROGRESS_KEY);
+    return data ?? null;
   } catch (e) {
     console.warn('Failed to load puzzle progress:', e);
+    return null;
   }
-  return null;
 }
 
 function updatePuzzleStats(solved: boolean): void {

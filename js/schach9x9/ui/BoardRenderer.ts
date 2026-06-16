@@ -3,7 +3,7 @@
  * @module BoardRenderer
  */
 import { BOARD_SIZE, PHASES, isBlockedCell } from '../config.js';
-import { debounce } from '../utils.js';
+import { debounce } from '@shared/utils';
 import { particleSystem, floatingTextManager, shakeScreen } from '../effects.js';
 import { updateLastMoveArrow, clearArrows } from './ArrowRenderer.js';
 import type { Piece, Player, PieceType, Square, GameLike } from '../types/game.js';

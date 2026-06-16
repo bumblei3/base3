@@ -1,4 +1,4 @@
-import { debounce } from './utils.js';
+import { debounce } from '@shared/utils';
 import {
   detectTacticalPatterns,
   detectPins,
