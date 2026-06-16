@@ -30,7 +30,7 @@ export default defineConfig({
         ? [['github'], ['html', { outputFolder: 'playwright-report/schach9x9', open: 'never' }]]
         : 'html',
       webServer: {
-        command: 'npx http-server dist/schach9x9 -p 3000 -s -c-1',
+        command: 'cp dist/schach9x9/index.schach9x9.html dist/schach9x9/index.html && npx http-server dist/schach9x9 -p 3000 -s -c-1',
         url: 'http://localhost:3000',
         reuseExistingServer: !process.env.CI,
         timeout: 180000,
