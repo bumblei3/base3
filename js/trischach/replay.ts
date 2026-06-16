@@ -11,7 +11,7 @@
  *   Special: =Q (promotion), x (capture), # (checkmate), + (check), !? (annotations)
  */
 
-export const REPLAY_VERSION = "1.0";
+export const REPLAY_VERSION = '1.0';
 
 // ─── Serialization ────────────────────────────────────────────────────────
 
@@ -20,30 +20,30 @@ export const REPLAY_VERSION = "1.0";
  */
 export function serializeGame(game, options = {}) {
   const {
-    event = "Casual Game",
-    site = "TriSchach",
-    round = "1",
+    event = 'Casual Game',
+    site = 'TriSchach',
+    round = '1',
     result = getResultString(game),
     rpsEnabled = game.rpsEnabled,
     includeComments = true,
   } = options;
 
   const lines = [];
-  const date = new Date().toISOString().split("T")[0];
+  const date = new Date().toISOString().split('T')[0];
 
   // Headers
   lines.push(`[Event "${escapePGN(event)}"]`);
   lines.push(`[Site "${escapePGN(site)}"]`);
   lines.push(`[Date "${date}"]`);
   lines.push(`[Round "${escapePGN(round)}"]`);
-  lines.push(`[Fire "Player 1"]`);
-  lines.push(`[Water "Player 2"]`);
-  lines.push(`[Nature "Player 3"]`);
+  lines.push('[Fire "Player 1"]');
+  lines.push('[Water "Player 2"]');
+  lines.push('[Nature "Player 3"]');
   lines.push(`[Result "${result}"]`);
-  lines.push(`[RPS "${rpsEnabled ? "on" : "off"}"]`);
-  lines.push(`[Variant "TriSchach"]`);
+  lines.push(`[RPS "${rpsEnabled ? 'on' : 'off'}"]`);
+  lines.push('[Variant "TriSchach"]');
   lines.push(`[Version "${REPLAY_VERSION}"]`);
-  lines.push("");
+  lines.push('');
 
   // Move list
   const moveLines = [];
@@ -58,12 +58,12 @@ export function serializeGame(game, options = {}) {
       moveBuffer.push(`${moveNumber}. ${notation}`);
     } else if (moveBuffer.length === 1) {
       moveBuffer.push(notation);
-      moveLines.push(moveBuffer.join(" "));
+      moveLines.push(moveBuffer.join(' '));
       moveBuffer = [];
       moveNumber++;
     } else {
       // Third faction in round - start new line
-      moveLines.push(moveBuffer.join(" ") + ` ${notation}`);
+      moveLines.push(moveBuffer.join(' ') + ` ${notation}`);
       moveBuffer = [];
       moveNumber++;
     }
@@ -71,7 +71,7 @@ export function serializeGame(game, options = {}) {
 
   // Flush remaining
   if (moveBuffer.length > 0) {
-    moveLines.push(moveBuffer.join(" "));
+    moveLines.push(moveBuffer.join(' '));
   }
 
   // Wrap lines at ~80 chars
@@ -79,7 +79,7 @@ export function serializeGame(game, options = {}) {
     lines.push(...wrapLine(line, 80));
   }
 
-  return lines.join("\n");
+  return lines.join('\n');
 }
 
 /**
@@ -90,8 +90,8 @@ export function formatMove(move, game, moveIndex) {
   const target = move.to;
 
   // Handle promotion-only entries (no target)
-  if (move.action === "promotion" || !target) {
-    return `${move.piece?.faction || "unknown"}_Promotion=Q`;
+  if (move.action === 'promotion' || !target) {
+    return `${move.piece?.faction || 'unknown'}_Promotion=Q`;
   }
 
   const piece = move.piece;
@@ -104,31 +104,31 @@ export function formatMove(move, game, moveIndex) {
   let notation = `${faction}_${pieceName}_${coord}`;
 
   // Add RPS result for captures
-  if (move.action === "combat" && move.rpsResult) {
+  if (move.action === 'combat' && move.rpsResult) {
     const rpsSymbol =
-      move.rpsResult === "advantage"
-        ? ">"
-        : move.rpsResult === "disadvantage"
-          ? "<"
-          : "=";
+      move.rpsResult === 'advantage'
+        ? '>'
+        : move.rpsResult === 'disadvantage'
+          ? '<'
+          : '=';
     notation += ` ${rpsSymbol}`;
   }
 
   // Add capture indicator (use _x_ before coordinates for clear parsing)
-  if (move.action === "combat") {
+  if (move.action === 'combat') {
     notation = notation.replace(`_${coord}`, `_x_${coord}`);
   }
 
   // Add promotion
   if (move.promotion) {
-    notation += "=Q";
+    notation += '=Q';
   }
 
   // Add check/checkmate
   if (move.checkmate) {
-    notation += "#";
+    notation += '#';
   } else if (move.inCheck) {
-    notation += "+";
+    notation += '+';
   }
 
   // Add elimination
@@ -143,25 +143,25 @@ export function formatMove(move, game, moveIndex) {
  * Get result string from game state.
  */
 export function getResultString(game) {
-  if (game.state !== "game_over") return "*";
+  if (game.state !== 'game_over') return '*';
 
   const winner = game.moveHistory[game.moveHistory.length - 1]?.winner_faction;
-  if (!winner) return "1/2-1/2-1/2"; // Draw (shouldn't happen in 3-player)
+  if (!winner) return '1/2-1/2-1/2'; // Draw (shouldn't happen in 3-player)
 
   // Map faction to result
   const results = {
-    fire: "1-0-0",
-    water: "0-1-0",
-    nature: "0-0-1",
+    fire: '1-0-0',
+    water: '0-1-0',
+    nature: '0-0-1',
   };
-  return results[winner] || "*";
+  return results[winner] || '*';
 }
 
 /**
  * Escape string for PGN header.
  */
 export function escapePGN(str) {
-  return str.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\n/g, " ");
+  return str.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, ' ');
 }
 
 /**
@@ -171,16 +171,16 @@ export function escapePGN(str) {
 export function wrapLine(line, maxLength) {
   if (line.length <= maxLength) return [line];
 
-  const words = line.split(" ");
+  const words = line.split(' ');
   const lines = [];
-  let current = "";
+  let current = '';
 
   for (const word of words) {
     // If a single word is longer than maxLength, put it on its own line
     if (word.length > maxLength) {
       if (current) {
         lines.push(current.trim());
-        current = "";
+        current = '';
       }
       lines.push(word);
       continue;
@@ -188,9 +188,9 @@ export function wrapLine(line, maxLength) {
 
     if ((current + word).length > maxLength) {
       lines.push(current.trim());
-      current = word + " ";
+      current = word + ' ';
     } else {
-      current += word + " ";
+      current += word + ' ';
     }
   }
   if (current) lines.push(current.trim());
@@ -205,11 +205,11 @@ export function wrapLine(line, maxLength) {
  * Returns { headers, moves, rawMoves }
  */
 export function parseTSPN(tspnString) {
-  const lines = tspnString.trim().split("\n");
+  const lines = tspnString.trim().split('\n');
   const headers = {};
   const moves = [];
   let inMoves = false;
-  let moveText = "";
+  let moveText = '';
 
   for (const line of lines) {
     const trimmed = line.trim();
@@ -219,11 +219,11 @@ export function parseTSPN(tspnString) {
       const match = trimmed.match(/^\[(\w+)\s+"([^"]*)"\]$/);
       if (match) {
         headers[match[1]] = match[2];
-      } else if (trimmed === "") {
+      } else if (trimmed === '') {
         inMoves = true;
       }
     } else {
-      moveText += " " + trimmed;
+      moveText += ' ' + trimmed;
     }
   }
 
@@ -242,7 +242,7 @@ export function parseTSPN(tspnString) {
  */
 export function parseMoveText(text) {
   // Remove move numbers (1., 2., etc.)
-  const cleaned = text.replace(/\d+\.\s*/g, "");
+  const cleaned = text.replace(/\d+\.\s*/g, '');
   const tokens = cleaned.split(/\s+/).filter((t) => t);
 
   const moves = [];
@@ -252,7 +252,7 @@ export function parseMoveText(text) {
     const token = tokens[i];
 
     // Skip comment annotations
-    if (token.startsWith("[") && token.endsWith("]")) {
+    if (token.startsWith('[') && token.endsWith(']')) {
       i++;
       continue;
     }
@@ -262,8 +262,8 @@ export function parseMoveText(text) {
     let fullToken = token;
     if (i + 1 < tokens.length) {
       const nextToken = tokens[i + 1];
-      if (nextToken === ">" || nextToken === "<" || nextToken === "=") {
-        fullToken = token + " " + nextToken;
+      if (nextToken === '>' || nextToken === '<' || nextToken === '=') {
+        fullToken = token + ' ' + nextToken;
         i++; // consume RPS symbol
       }
     }
@@ -289,7 +289,7 @@ export function parseMoveToken(token) {
   // Capture groups: faction, pieceName, isCapture, coord, rpsSymbol, promotion, check, comment
 
   // Remove trailing comments [...] - but save for raw
-  const cleanToken = token.replace(/\s*\[.*?\]\s*$/, "");
+  const cleanToken = token.replace(/\s*\[.*?\]\s*$/, '');
 
   // Handle promotions without coordinates first
   // Format: faction_PieceName_Promotion=Q OR faction_Promotion=Q
@@ -300,11 +300,11 @@ export function parseMoveToken(token) {
       san: cleanToken,
       raw: token,
       faction: promoMatch[1],
-      pieceName: pieceName === "promotion" ? "promotion" : pieceName,
+      pieceName: pieceName === 'promotion' ? 'promotion' : pieceName,
       target: null,
       rpsResult: null,
       promotion: true,
-      promotionType: "queen",
+      promotionType: 'queen',
       check: false,
       checkmate: false,
       isCapture: false,
@@ -318,11 +318,11 @@ export function parseMoveToken(token) {
       san: cleanToken,
       raw: token,
       faction: simplePromoMatch[1],
-      pieceName: "promotion",
+      pieceName: 'promotion',
       target: null,
       rpsResult: null,
       promotion: true,
-      promotionType: "queen",
+      promotionType: 'queen',
       check: false,
       checkmate: false,
       isCapture: false,
@@ -342,15 +342,15 @@ export function parseMoveToken(token) {
   }
 
   const [, faction, pieceName, coord, rpsSymbol, promotion, check] = match;
-  const [q, r] = coord.split(",").map(Number);
+  const [q, r] = coord.split(',').map(Number);
 
   const rpsResult =
-    rpsSymbol === ">"
-      ? "advantage"
-      : rpsSymbol === "<"
-        ? "disadvantage"
-        : rpsSymbol === "="
-          ? "neutral"
+    rpsSymbol === '>'
+      ? 'advantage'
+      : rpsSymbol === '<'
+        ? 'disadvantage'
+        : rpsSymbol === '='
+          ? 'neutral'
           : null;
 
   // Check if this is a capture (has _x before coordinates)
@@ -367,9 +367,9 @@ export function parseMoveToken(token) {
     target: { q: parseInt(q), r: parseInt(r) },
     rpsResult,
     promotion: !!promotion,
-    promotionType: promotion ? "queen" : null,
-    check: check === "+",
-    checkmate: check === "#",
+    promotionType: promotion ? 'queen' : null,
+    check: check === '+',
+    checkmate: check === '#',
     isCapture,
   };
 }
@@ -393,7 +393,7 @@ export function* replayGame(initialGame, moveHistory) {
       const result = game.handleCellClick(move.target);
 
       if (result.promotion && move.promotion) {
-        game.completePromotion(move.promotionType || "queen");
+        game.completePromotion(move.promotionType || 'queen');
       }
     }
 
@@ -420,7 +420,7 @@ export class ReplayController {
   }
 
   precomputeStates() {
-    let game = cloneGameForReplay(this.initialGame);
+    const game = cloneGameForReplay(this.initialGame);
     this.states = [cloneGameState(game)];
 
     for (const move of this.moveHistory) {
@@ -429,7 +429,7 @@ export class ReplayController {
         const result = game.handleCellClick(move.target);
 
         if (result.promotion && move.promotion) {
-          game.completePromotion(move.promotionType || "queen");
+          game.completePromotion(move.promotionType || 'queen');
         }
       }
       this.states.push(cloneGameState(game));
@@ -508,17 +508,17 @@ export class ReplayController {
     };
 
     const defaultHeaders = {
-      Event: "TriSchach Game",
-      Site: "Local",
-      Date: new Date().toISOString().split("T")[0],
-      Round: "1",
-      White: "Fire",
-      Black: "Water",
-      Green: "Nature",
-      Result: "*",
-      RPS: tempGame.rpsEnabled ? "on" : "off",
-      Variant: "TriSchach",
-      Version: "1.0",
+      Event: 'TriSchach Game',
+      Site: 'Local',
+      Date: new Date().toISOString().split('T')[0],
+      Round: '1',
+      White: 'Fire',
+      Black: 'Water',
+      Green: 'Nature',
+      Result: '*',
+      RPS: tempGame.rpsEnabled ? 'on' : 'off',
+      Variant: 'TriSchach',
+      Version: '1.0',
     };
 
     const allHeaders = { ...defaultHeaders, ...headers };
@@ -531,24 +531,24 @@ export class ReplayController {
       pieces: this.initialGame.pieces.map((p) => ({ ...p })),
       currentFaction: this.initialGame.currentFaction,
       currentFactionIdx: this.initialGame.currentFactionIdx,
-      state: "game_over",
+      state: 'game_over',
       eliminatedFactions: new Set(this.initialGame.eliminatedFactions),
       rpsEnabled: this.initialGame.rpsEnabled,
       moveHistory: this.moveHistory, // ALL moves
     };
 
     const defaultHeaders = {
-      Event: "TriSchach Game",
-      Site: "Local",
-      Date: new Date().toISOString().split("T")[0],
-      Round: "1",
-      White: "Fire",
-      Black: "Water",
-      Green: "Nature",
-      Result: "*",
-      RPS: tempGame.rpsEnabled ? "on" : "off",
-      Variant: "TriSchach",
-      Version: "1.0",
+      Event: 'TriSchach Game',
+      Site: 'Local',
+      Date: new Date().toISOString().split('T')[0],
+      Round: '1',
+      White: 'Fire',
+      Black: 'Water',
+      Green: 'Nature',
+      Result: '*',
+      RPS: tempGame.rpsEnabled ? 'on' : 'off',
+      Variant: 'TriSchach',
+      Version: '1.0',
     };
 
     const allHeaders = { ...defaultHeaders, ...headers };
@@ -602,7 +602,7 @@ export function reconstructGameFromTSPN(parsedTSPN, GameClass, boardCells) {
 
   // Apply RPS setting from headers
   const rpsHeader = parsedTSPN.headers?.RPS?.toLowerCase();
-  game.rpsEnabled = rpsHeader !== "off";
+  game.rpsEnabled = rpsHeader !== 'off';
 
   const controller = new ReplayController(game, parsedTSPN.moves);
 
@@ -616,10 +616,10 @@ export function reconstructGameFromTSPN(parsedTSPN, GameClass, boardCells) {
  */
 export function downloadGame(game, filename = null) {
   const tspn = serializeGame(game);
-  const blob = new Blob([tspn], { type: "text/plain" });
+  const blob = new Blob([tspn], { type: 'text/plain' });
   const url = URL.createObjectURL(blob);
 
-  const a = document.createElement("a");
+  const a = document.createElement('a');
   a.href = url;
   a.download =
     filename || `trischach-${new Date().toISOString().slice(0, 10)}.tspn`;

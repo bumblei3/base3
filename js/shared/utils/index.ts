@@ -8,7 +8,7 @@ export function uid(prefix = ''): string {
 }
 
 // Debounce function
-export function debounce<T extends (...args: unknown[]) => unknown>(
+export function debounce<T extends(...args: unknown[]) => unknown>(
   fn: T,
   delay: number
 ): T & { cancel: () => void } {
@@ -30,7 +30,7 @@ export function debounce<T extends (...args: unknown[]) => unknown>(
 }
 
 // Throttle function
-export function throttle<T extends (...args: unknown[]) => unknown>(
+export function throttle<T extends(...args: unknown[]) => unknown>(
   fn: T,
   limit: number
 ): T & { cancel: () => void } {
