@@ -28,6 +28,7 @@ export default tseslint.config(
       'e2e/**',
       'tests/trischach/**/*.js',
       'tests/vitest.setup.ts',
+      'vitest.ci.config.ts',
     ],
   },
   ...tseslint.configs.recommended,
