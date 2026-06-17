@@ -3,14 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Ein Schachspiel auf einem 9x9 Brett mit neuen Figuren und Regeln."
-    />
+    <meta name="description" content="Ein Schachspiel auf einem 9x9 Brett mit neuen Figuren und Regeln." />
     <meta name="theme-color" content="#0a0e27" />
     <title>Schach 9x9</title>
     <link rel="manifest" href="manifest.json" />
     <link rel="icon" type="image/png" href="/schach9x9/icon-192.png" />
+    <link rel="stylesheet" href="css/nav.css" />
     <link rel="stylesheet" href="style.css" />
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -19,10 +17,7 @@
     <link rel="stylesheet" href="css/menu.css" />
     <link rel="stylesheet" href="css/tutorial.css" />
     <link rel="stylesheet" href="css/skins.css" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet" />
 
     <!-- Import Map for Three.js (using jsDelivr CDN for better reliability) -->
     <script type="importmap">
@@ -33,11 +28,49 @@
         }
       }
     </script>
+    <style>
+      /* Game-specific overrides for nav */
+      .top-nav { z-index: 1000; }
+    </style>
   </head>
 
   <body>
     <!-- Hidden H1 for Accessibility -->
     <h1 class="hidden">Schach 9x9</h1>
+
+    <!-- Top Navigation -->
+    <nav class="top-nav" role="navigation" aria-label="Hauptnavigation">
+      <a href="/" class="nav-brand">
+        <span class="logo">♟</span>
+        <span>Base3</span>
+      </a>
+      <button class="nav-toggle" aria-label="Menü öffnen" aria-expanded="false">
+        ☰
+      </button>
+      <ul class="nav-links">
+        <li>
+          <a href="/">
+            <span class="icon">🏠</span>
+            <span>Start</span>
+          </a>
+        </li>
+        <li>
+          <a href="/schach9x9/" class="active" aria-current="page">
+            <span class="icon">♟️</span>
+            <span>Schach9x9</span>
+          </a>
+        </li>
+        <li>
+          <a href="/trischach/">
+            <span class="icon">⬡</span>
+            <span>Trischach</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Main Content (with nav offset) -->
+    <div class="main-content">
 
     <!-- Global SVG Assets (Hidden) -->
     <svg style="position: absolute; width: 0; height: 0; overflow: hidden" aria-hidden="true">
@@ -562,6 +595,8 @@
       <div id="side-panel-overlay" class="modal-overlay hidden"></div>
     </div>
 
+    </div><!-- end main-content -->
+
     <!-- Service Worker Registration -->
     <script type="module" src="/js/schach9x9/main.ts"></script>
     <script>
@@ -575,6 +610,22 @@
             .catch((error) => {
               console.warn('[PWA] Service Worker registration failed:', error);
             });
+        });
+      }
+
+      // Mobile menu toggle
+      const toggle = document.querySelector('.nav-toggle');
+      const navLinks = document.querySelector('.nav-links');
+      if (toggle && navLinks) {
+        toggle.addEventListener('click', () => {
+          const isOpen = navLinks.classList.toggle('open');
+          toggle.setAttribute('aria-expanded', isOpen);
+        });
+        navLinks.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', () => {
+            navLinks.classList.remove('open');
+            toggle.setAttribute('aria-expanded', 'false');
+          });
         });
       }
     </script>

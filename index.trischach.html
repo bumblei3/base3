@@ -22,9 +22,46 @@
       href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="css/nav.css" />
     <link rel="stylesheet" href="css/style.css" />
+    <style>
+      .top-nav { z-index: 100; }
+    </style>
   </head>
   <body>
+    <!-- Top Navigation -->
+    <nav class="top-nav" role="navigation" aria-label="Hauptnavigation">
+      <a href="/" class="nav-brand">
+        <span class="logo">♟</span>
+        <span>Base3</span>
+      </a>
+      <button class="nav-toggle" aria-label="Menü öffnen" aria-expanded="false">
+        ☰
+      </button>
+      <ul class="nav-links">
+        <li>
+          <a href="/">
+            <span class="icon">🏠</span>
+            <span>Start</span>
+          </a>
+        </li>
+        <li>
+          <a href="/schach9x9/">
+            <span class="icon">♟️</span>
+            <span>Schach9x9</span>
+          </a>
+        </li>
+        <li>
+          <a href="/trischach/" class="active" aria-current="page">
+            <span class="icon">⬡</span>
+            <span>Trischach</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
     <div id="app">
       <header id="header">
         <h1>⚔️ TriSchach</h1>
@@ -455,6 +492,26 @@
           if (installBtn) installBtn.style.display = "none";
         }
       });
+    </script>
+    </div><!-- end app -->
+    </div><!-- end main-content -->
+
+    <script>
+      // Mobile menu toggle
+      const toggle = document.querySelector('.nav-toggle');
+      const navLinks = document.querySelector('.nav-links');
+      if (toggle && navLinks) {
+        toggle.addEventListener('click', () => {
+          const isOpen = navLinks.classList.toggle('open');
+          toggle.setAttribute('aria-expanded', isOpen);
+        });
+        navLinks.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', () => {
+            navLinks.classList.remove('open');
+            toggle.setAttribute('aria-expanded', 'false');
+          });
+        });
+      }
     </script>
   </body>
 </html>
