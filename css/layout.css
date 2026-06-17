@@ -57,17 +57,15 @@
 #app-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: calc(100vh - 56px); /* Subtract nav height */
   max-width: 600px;
   margin: 0 auto;
   padding: 0 var(--spacing-md);
   position: relative;
   justify-content: space-between;
   overflow-y: auto;
-  /* Edge fix: allow container scrolling */
   overflow-x: hidden;
   padding-bottom: 40vh;
-  /* Ensure content can scroll above fixed bottom panels */
 }
 
 /* Mobile: Adjust app container for small screens */
@@ -87,36 +85,76 @@
   }
 }
 
-/* --- Header --- */
-.minimal-header {
+/* --- Game Header --- */
+.game-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--spacing-md) 0;
-  height: 50px;
+  padding: var(--space-sm) 0;
+  height: 48px;
   z-index: var(--elevation-z-ui);
+  flex-shrink: 0;
 }
 
-.logo {
-  font-weight: 800;
-  font-size: var(--typography-body-lg-font-size);
-  background: var(--colors-accent-gradient);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  letter-spacing: -0.5px;
+.game-header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.back-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+}
+
+.back-link:hover {
+  color: var(--color-text-primary);
+  background: var(--color-bg-glass-hover);
+}
+
+.game-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.game-icon {
+  font-size: 1.2rem;
+}
+
+.game-header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
 }
 
 .status-pill,
 .stat-pill {
-  font-size: var(--typography-label-caps-font-size);
-  color: var(--colors-text-main);
+  font-size: 0.75rem;
+  color: var(--color-text-primary);
   background: rgba(255, 255, 255, 0.05);
   padding: 4px 12px;
-  border-radius: var(--rounded-full);
+  border-radius: var(--radius-full);
   border: 1px solid rgba(255, 255, 255, 0.1);
   font-weight: 500;
-  backdrop-filter: blur(4px);
+  white-space: nowrap;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Legacy minimal-header override */
+.minimal-header {
+  display: none;
 }
 
 .stat-pill {
