@@ -33,7 +33,7 @@
 .toast-notification {
   pointer-events: auto;
   /* Re-enable clicks on toasts */
-  background: var(--colors-bg-panel);
+  background: var(--color-bg-secondary);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -45,7 +45,7 @@
   gap: var(--spacing-md);
   min-width: 300px;
   max-width: 400px;
-  color: var(--colors-text-main);
+  color: var(--color-text-primary);
   font-size: var(--typography-body-md-font-size);
   animation: toastSlideIn var(--motion-transition-bounce);
   transition: all var(--motion-transition-normal);
@@ -68,35 +68,35 @@
 
 /* --- Variants --- */
 .toast-success::before {
-  background-color: var(--colors-success);
+  background-color: var(--color-success);
 }
 
 .toast-success .toast-icon {
-  color: var(--colors-success);
+  color: var(--color-success);
 }
 
 .toast-error::before {
-  background-color: var(--colors-danger);
+  background-color: var(--color-danger);
 }
 
 .toast-error .toast-icon {
-  color: var(--colors-danger);
+  color: var(--color-danger);
 }
 
 .toast-warning::before {
-  background-color: var(--colors-warning);
+  background-color: var(--color-warning);
 }
 
 .toast-warning .toast-icon {
-  color: var(--colors-warning);
+  color: var(--color-warning);
 }
 
 .toast-info::before {
-  background-color: var(--colors-accent-primary);
+  background-color: var(--color-accent-primary);
 }
 
 .toast-info .toast-icon {
-  color: var(--colors-accent-primary);
+  color: var(--color-accent-primary);
 }
 
 .toast-icon {
@@ -120,13 +120,13 @@
 
 .toast-message {
   font-size: var(--typography-body-sm-font-size);
-  color: var(--colors-text-muted);
+  color: var(--color-text-secondary);
 }
 
 .toast-close {
   background: none;
   border: none;
-  color: var(--colors-text-muted);
+  color: var(--color-text-secondary);
   cursor: pointer;
   padding: var(--spacing-xs);
   margin-left: var(--spacing-sm);
@@ -136,20 +136,20 @@
 
 .toast-close:hover {
   opacity: 1;
-  color: var(--colors-text-main);
+  color: var(--color-text-primary);
 }
 
 /* --- Critical Error Modal --- */
 .critical-error-content {
   text-align: center;
   max-width: 500px;
-  border: 1px solid var(--colors-danger) !important;
+  border: 1px solid var(--color-danger) !important;
   box-shadow: 0 0 40px rgba(248, 113, 113, 0.2) !important;
 }
 
 .error-icon-large {
   font-size: var(--typography-h1-font-size);
-  color: var(--colors-danger);
+  color: var(--color-danger);
   margin-bottom: var(--spacing-md);
 }
 
@@ -157,11 +157,11 @@
   font-size: var(--typography-h3-font-size);
   font-weight: 800;
   margin-bottom: var(--spacing-sm);
-  color: var(--colors-text-main);
+  color: var(--color-text-primary);
 }
 
 .error-description {
-  color: var(--colors-text-muted);
+  color: var(--color-text-secondary);
   margin-bottom: var(--spacing-lg);
   line-height: 1.5;
 }
@@ -173,7 +173,7 @@
   text-align: left;
   font-family: var(--typography-font-mono);
   font-size: var(--typography-body-sm-font-size);
-  color: var(--colors-danger);
+  color: var(--color-danger);
   overflow: auto;
   max-height: 150px;
   margin-bottom: var(--spacing-lg);

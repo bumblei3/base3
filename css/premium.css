@@ -29,7 +29,7 @@
 
 .promotion-option:hover {
   background: rgba(255, 255, 255, 0.15);
-  border-color: var(--colors-accent-primary);
+  border-color: var(--color-accent-primary);
   transform: translateY(-5px) scale(1.05);
   box-shadow:
     0 10px 20px rgba(0, 0, 0, 0.2),
@@ -66,7 +66,7 @@
   margin-top: var(--spacing-sm);
   font-family: var(--typography-font-main);
   font-weight: 600;
-  color: var(--colors-text-main);
+  color: var(--color-text-primary);
   font-size: var(--typography-body-md-font-size);
   position: relative;
   z-index: 1;
@@ -74,13 +74,13 @@
 
 .promotion-option .piece-cost {
   font-size: var(--typography-body-sm-font-size);
-  color: var(--colors-text-muted);
+  color: var(--color-text-secondary);
   margin-top: var(--spacing-xs);
 }
 
 /* Modal Styling Override for Promotion */
 #promotion-overlay .modal-content {
-  background: var(--colors-bg-panel);
+  background: var(--color-bg-secondary);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
@@ -92,7 +92,7 @@
   text-align: center;
   font-size: var(--typography-h2-font-size);
   margin-bottom: var(--spacing-lg);
-  background: linear-gradient(135deg, var(--colors-text-main) 0%, var(--colors-text-muted) 100%);
+  background: linear-gradient(135deg, var(--color-text-primary) 0%, var(--color-text-secondary) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -118,7 +118,7 @@
   top: var(--spacing-sm);
   right: var(--spacing-sm);
   font-size: var(--typography-body-md-font-size);
-  color: var(--colors-warning);
+  color: var(--color-warning);
   text-shadow: 0 0 6px rgba(245, 158, 11, 0.6);
   z-index: 2;
   pointer-events: none;
@@ -131,7 +131,7 @@
 }
 
 .promotion-option:focus-visible {
-  outline: 2px solid var(--colors-accent-primary);
+  outline: 2px solid var(--color-accent-primary);
   outline-offset: 2px;
 }
 

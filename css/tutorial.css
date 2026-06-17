@@ -11,7 +11,7 @@
   width: 95%;
   max-width: 600px;
   max-height: 90vh;
-  background: var(--colors-bg-glass);
+  background: var(--color-bg-glass);
   border: 1px solid rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -48,7 +48,7 @@
 }
 
 .tutorial-step p {
-  color: var(--colors-text-muted);
+  color: var(--color-text-secondary);
   line-height: 1.6;
   margin-bottom: var(--spacing-md);
   font-size: var(--typography-body-lg-font-size);
@@ -58,7 +58,7 @@
 .tutorial-step ol {
   margin-left: var(--spacing-lg);
   margin-bottom: var(--spacing-md);
-  color: var(--colors-text-muted);
+  color: var(--color-text-secondary);
 }
 
 .tutorial-step li {
@@ -166,7 +166,7 @@
 }
 
 .close-icon-btn:hover {
-  color: var(--colors-text-main);
+  color: var(--color-text-primary);
 }
 
 /* Responsive adjustments */

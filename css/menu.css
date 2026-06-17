@@ -56,7 +56,7 @@
   font-size: var(--typography-h2-font-size);
   font-weight: var(--typography-h2-font-weight);
   margin-bottom: var(--spacing-xxl);
-  background: linear-gradient(135deg, var(--colors-text-main) 0%, var(--colors-text-muted) 100%);
+  background: linear-gradient(135deg, var(--color-text-primary) 0%, var(--color-text-secondary) 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -76,7 +76,7 @@
   border: none;
   text-align: left;
   padding: var(--spacing-md) var(--spacing-lg);
-  color: var(--colors-text-muted);
+  color: var(--color-text-secondary);
   font-family: var(--typography-font-main);
   font-size: var(--typography-body-lg-font-size);
   font-weight: 600;
@@ -89,15 +89,15 @@
 }
 
 .menu-tab-btn:hover {
-  color: var(--colors-text-main);
+  color: var(--color-text-primary);
   background: rgba(255, 255, 255, 0.05);
   transform: translateX(5px);
 }
 
 .menu-tab-btn.active {
-  color: var(--colors-text-main);
+  color: var(--color-text-primary);
   background: linear-gradient(90deg, rgba(59, 130, 246, 0.15), transparent);
-  border-left: 3px solid var(--colors-accent-primary);
+  border-left: 3px solid var(--color-accent-primary);
 }
 
 /* --- Content Area --- */
@@ -184,12 +184,12 @@
 .card-title {
   font-size: var(--typography-h3-font-size);
   font-weight: 700;
-  color: var(--colors-text-main);
+  color: var(--color-text-primary);
 }
 
 .card-desc {
   font-size: var(--typography-body-md-font-size);
-  color: var(--colors-text-muted);
+  color: var(--color-text-secondary);
   line-height: 1.5;
 }
 
@@ -205,7 +205,7 @@
 
 .tag-new {
   background: rgba(34, 197, 94, 0.2);
-  color: var(--colors-success);
+  color: var(--color-success);
 }
 
 .tag-hot {
@@ -223,11 +223,11 @@
   font-size: var(--typography-h2-font-size);
   font-weight: 700;
   margin-bottom: var(--spacing-sm);
-  color: var(--colors-text-main);
+  color: var(--color-text-primary);
 }
 
 .section-subtitle {
-  color: var(--colors-text-muted);
+  color: var(--color-text-secondary);
   margin-bottom: var(--spacing-xl);
   font-size: var(--typography-body-lg-font-size);
 }
@@ -247,7 +247,7 @@
 }
 
 .setting-group h3 {
-  color: var(--colors-accent-primary);
+  color: var(--color-accent-primary);
   margin-bottom: var(--spacing-md);
   font-size: var(--typography-body-lg-font-size);
 }

@@ -15,7 +15,7 @@
   left: 50%;
   transform: translateX(-50%);
 
-  background: var(--colors-bg-panel);
+  background: var(--color-bg-secondary);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
@@ -55,7 +55,7 @@
 
 .shop-points {
   font-weight: 700;
-  color: var(--colors-accent-primary);
+  color: var(--color-accent-primary);
 }
 
 .shop-grid {
@@ -87,7 +87,7 @@
 }
 
 .shop-item.selected {
-  border-color: var(--colors-accent-primary);
+  border-color: var(--color-accent-primary);
   background: rgba(99, 102, 241, 0.15);
   box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
 }
@@ -99,13 +99,13 @@
 
 .shop-cost {
   font-size: var(--typography-body-sm-font-size);
-  color: var(--colors-text-muted);
+  color: var(--color-text-secondary);
 }
 
 .shop-status {
   text-align: center;
   font-size: var(--typography-body-md-font-size);
-  color: var(--colors-text-muted);
+  color: var(--color-text-secondary);
   margin-bottom: var(--spacing-md);
   height: 1.2em;
 }
@@ -134,7 +134,7 @@
   padding: var(--spacing-sm);
   scroll-snap-type: x mandatory;
   scrollbar-width: thin;
-  scrollbar-color: var(--colors-accent-primary) transparent;
+  scrollbar-color: var(--color-accent-primary) transparent;
   margin-bottom: var(--spacing-md);
 }
 
@@ -148,7 +148,7 @@
 }
 
 .tutor-recommendations-container::-webkit-scrollbar-thumb {
-  background-color: var(--colors-accent-primary);
+  background-color: var(--color-accent-primary);
   border-radius: var(--rounded-sm);
 }
 
@@ -189,15 +189,15 @@
   left: 0;
   width: 4px;
   height: 100%;
-  background: var(--colors-warning);
+  background: var(--color-warning);
 }
 
 .recommended-badge {
   position: absolute;
   top: var(--spacing-sm);
   right: var(--spacing-sm);
-  background: var(--colors-warning);
-  color: var(--colors-bg-panel);
+  background: var(--color-warning);
+  color: var(--color-bg-secondary);
   font-size: var(--typography-label-caps-font-size);
   font-weight: 800;
   padding: 2px 8px;
@@ -217,12 +217,12 @@
   font-weight: bold;
   margin-bottom: var(--spacing-sm);
   font-size: var(--typography-body-md-font-size);
-  color: var(--colors-text-main);
+  color: var(--color-text-primary);
 }
 
 .template-description {
   font-size: var(--typography-body-sm-font-size);
-  color: var(--colors-text-muted);
+  color: var(--color-text-secondary);
   margin-bottom: var(--spacing-sm);
 }
 
@@ -233,7 +233,7 @@
   flex-wrap: wrap;
   margin-top: var(--spacing-sm);
   font-size: var(--typography-body-sm-font-size);
-  color: var(--colors-text-muted);
+  color: var(--color-text-secondary);
 }
 
 .template-piece-icon {
@@ -250,7 +250,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: var(--colors-bg-panel);
+  background: var(--color-bg-secondary);
   backdrop-filter: blur(16px);
   border-top: 1px solid rgba(99, 102, 241, 0.3);
   z-index: var(--elevation-z-ui);
@@ -279,12 +279,12 @@
 
 .puzzle-content h2 {
   font-size: var(--typography-h3-font-size);
-  color: var(--colors-accent-primary);
+  color: var(--color-accent-primary);
   margin: 0 0 var(--spacing-xs) 0;
 }
 
 .puzzle-content p {
-  color: var(--colors-text-muted);
+  color: var(--color-text-secondary);
   margin: 0;
   font-size: var(--typography-body-md-font-size);
 }
@@ -299,12 +299,12 @@
 
 .puzzle-status.success {
   background: rgba(34, 197, 94, 0.2);
-  color: var(--colors-success);
+  color: var(--color-success);
 }
 
 .puzzle-status.failed {
   background: rgba(239, 68, 68, 0.2);
-  color: var(--colors-danger);
+  color: var(--color-danger);
 }
 
 .puzzle-buttons {
@@ -333,7 +333,7 @@
 #puzzle-menu-overlay {
   z-index: var(--elevation-z-modal);
   /* Ensure on top of everything */
-  background: var(--colors-bg-panel);
+  background: var(--color-bg-secondary);
   /* Deep dark background */
   backdrop-filter: blur(16px);
 }
@@ -372,12 +372,12 @@
 .puzzle-card:hover {
   background: rgba(255, 255, 255, 0.08);
   transform: translateY(-4px);
-  border-color: var(--colors-accent-primary);
+  border-color: var(--color-accent-primary);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .puzzle-card.solved {
-  border-color: var(--colors-success);
+  border-color: var(--color-success);
   background: rgba(34, 197, 94, 0.05);
 }
 
@@ -393,7 +393,7 @@
 
 .puzzle-title {
   font-weight: 700;
-  color: var(--colors-text-main);
+  color: var(--color-text-primary);
   font-size: var(--typography-body-lg-font-size);
 }
 
@@ -409,28 +409,28 @@
   padding: 2px 8px;
   border-radius: var(--rounded-sm);
   background: rgba(255, 255, 255, 0.1);
-  color: var(--colors-text-muted);
+  color: var(--color-text-secondary);
   margin-bottom: var(--spacing-sm);
 }
 
 .puzzle-difficulty.einfach {
-  color: var(--colors-success);
+  color: var(--color-success);
   background: rgba(74, 222, 128, 0.1);
 }
 
 .puzzle-difficulty.mittel {
-  color: var(--colors-warning);
+  color: var(--color-warning);
   background: rgba(250, 204, 21, 0.1);
 }
 
 .puzzle-difficulty.schwer {
-  color: var(--colors-danger);
+  color: var(--color-danger);
   background: rgba(248, 113, 113, 0.1);
 }
 
 .puzzle-desc {
   font-size: var(--typography-body-md-font-size);
-  color: var(--colors-text-muted);
+  color: var(--color-text-secondary);
   line-height: 1.4;
   margin: 0;
 }

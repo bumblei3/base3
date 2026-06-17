@@ -1,49 +1,53 @@
-/* ===========================================
-   BASE.CSS - Design System Tokens (from DESIGN.md)
-   =========================================== */
+/* ============================================
+   BASE.CSS — Legacy Aliases & Backward Compatibility
+   ============================================
+   This file provides backward compatibility for
+   existing code that uses the old --colors-* tokens.
+   New code should use --color-* tokens from design-tokens.css.
+   ============================================ */
 
 :root {
-  /* --- Colors (from DESIGN.md colors) --- */
-  --colors-primary: #02040a;
-  --colors-secondary: #64748b;
-  --colors-tertiary: #6366f1;
-  --colors-accent: #ec4899;
-  --colors-success: #34d399;
-  --colors-danger: #fb7185;
-  --colors-warning: #fbbf24;
-  --colors-info: #60a5fa;
-  --colors-bg-app: #02040a;
-  --colors-bg-panel: #0f172a;
-  --colors-bg-glass: #0d1321;
-  --colors-bg-glass-hover: #111827;
-  --colors-board-square-dark: #1e293b;
-  --colors-board-square-light: #94a3b8;
-  --colors-board-square-accent: #6366f1;
+  /* ─── Legacy Color Aliases ─── */
+  --colors-primary: var(--color-bg-primary);
+  --colors-secondary: var(--color-text-secondary);
+  --colors-tertiary: var(--color-accent-primary);
+  --colors-accent: var(--color-accent-secondary);
+  --colors-success: var(--color-success);
+  --colors-danger: var(--color-danger);
+  --colors-warning: var(--color-warning);
+  --colors-info: var(--color-info);
+  --colors-bg-app: var(--color-bg-primary);
+  --colors-bg-panel: var(--color-bg-secondary);
+  --colors-bg-glass: var(--color-bg-glass);
+  --colors-bg-glass-hover: var(--color-bg-glass-hover);
+  --colors-board-square-dark: var(--color-board-dark);
+  --colors-board-square-light: var(--color-board-light);
+  --colors-board-square-accent: var(--color-board-accent);
   --colors-board-hex-dark: #1a1a1a;
   --colors-board-hex-mid: #374151;
   --colors-board-hex-fire: #ff4500;
   --colors-board-hex-nature: #10b981;
   --colors-board-hex-water: #3b82f6;
-  --colors-faction-fire: #ff4500;
-  --colors-faction-nature: #10b981;
-  --colors-faction-water: #3b82f6;
-  --colors-accent-primary: #6366f1;
-  --colors-accent-hover: #818cf8;
-  --colors-accent-secondary: #ec4899;
-  --colors-accent-tertiary: #10b981;
-  --colors-text-main: #f8fafc;
-  --colors-text-muted: #94a3b8;
-  --colors-text-dim: #64748b;
+  --colors-faction-fire: var(--color-faction-fire);
+  --colors-faction-nature: var(--color-faction-nature);
+  --colors-faction-water: var(--color-faction-water);
+  --colors-accent-primary: var(--color-accent-primary);
+  --colors-accent-hover: var(--color-accent-hover);
+  --colors-accent-secondary: var(--color-accent-secondary);
+  --colors-accent-tertiary: var(--color-accent-tertiary);
+  --colors-text-main: var(--color-text-primary);
+  --colors-text-muted: var(--color-text-secondary);
+  --colors-text-dim: var(--color-text-muted);
   --colors-text-on-fire: #ffffff;
   --colors-text-on-nature: #ffffff;
   --colors-text-on-water: #ffffff;
   --colors-text-on-dark: #f8fafc;
-  --colors-grid-line-square: #ffffff1a;
-  --colors-grid-line-hex: #ffffff26;
-  --colors-corridor-bg: #6366f126;
-  --colors-corridor-border: #6366f166;
-  --colors-corridor-bg-hover: #6366f140;
-  --colors-corridor-border-hover: #6366f199;
+  --colors-grid-line-square: var(--color-border);
+  --colors-grid-line-hex: rgba(255, 255, 255, 0.15);
+  --colors-corridor-bg: rgba(99, 102, 241, 0.15);
+  --colors-corridor-border: rgba(99, 102, 241, 0.4);
+  --colors-corridor-bg-hover: rgba(99, 102, 241, 0.25);
+  --colors-corridor-border-hover: rgba(99, 102, 241, 0.6);
   --colors-theme-blue-board-dark: #3b5998;
   --colors-theme-blue-board-light: #8b9dc3;
   --colors-theme-green-board-dark: #769656;
@@ -55,66 +59,35 @@
   --colors-theme-dark-board-dark: #1a1a1a;
   --colors-theme-dark-board-light: #404040;
 
-  /* --- Typography (from DESIGN.md typography) --- */
-  --typography-font-main: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --typography-font-mono: 'JetBrains Mono', monospace;
-  --typography-h1-font-family: 'Outfit';
-  --typography-h1-font-size: 3rem;
-  --typography-h1-font-weight: 800;
-  --typography-h1-line-height: 1.1;
-  --typography-h1-letter-spacing: -0.02em;
-  --typography-h2-font-family: 'Outfit';
-  --typography-h2-font-size: 2rem;
-  --typography-h2-font-weight: 700;
-  --typography-h2-line-height: 1.2;
-  --typography-h2-letter-spacing: -0.01em;
-  --typography-h3-font-family: 'Outfit';
-  --typography-h3-font-size: 1.5rem;
-  --typography-h3-font-weight: 600;
-  --typography-h3-line-height: 1.3;
-  --typography-body-lg-font-family: 'Outfit';
-  --typography-body-lg-font-size: 1.125rem;
-  --typography-body-lg-line-height: 1.5;
-  --typography-body-md-font-family: 'Outfit';
-  --typography-body-md-font-size: 1rem;
-  --typography-body-md-line-height: 1.5;
-  --typography-body-sm-font-family: 'Outfit';
-  --typography-body-sm-font-size: 0.875rem;
-  --typography-body-sm-line-height: 1.4;
-  --typography-label-caps-font-family: 'Outfit';
-  --typography-label-caps-font-size: 0.75rem;
-  --typography-label-caps-font-weight: 600;
-  --typography-label-caps-letter-spacing: 0.08em;
-  --typography-label-caps-text-transform: uppercase;
-  --typography-mono-sm-font-family: 'JetBrains Mono';
-  --typography-mono-sm-font-size: 0.75rem;
-  --typography-mono-sm-line-height: 1.4;
+  /* ─── Legacy Typography Aliases ─── */
+  --typography-font-main: var(--font-main);
+  --typography-font-mono: var(--font-mono);
 
-  /* --- Rounded (from DESIGN.md rounded) --- */
-  --rounded-xs: 4px;
-  --rounded-sm: 8px;
-  --rounded-md: 12px;
-  --rounded-lg: 16px;
-  --rounded-xl: 24px;
-  --rounded-full: 9999px;
-
-  /* --- Spacing (from DESIGN.md spacing) --- */
-  --spacing-xs: 4px;
-  --spacing-sm: 8px;
-  --spacing-md: 16px;
-  --spacing-lg: 24px;
-  --spacing-xl: 48px;
+  /* ─── Legacy Spacing Aliases ─── */
+  --spacing-xs: var(--space-xs);
+  --spacing-sm: var(--space-sm);
+  --spacing-md: var(--space-md);
+  --spacing-lg: var(--space-lg);
+  --spacing-xl: var(--space-xl);
   --spacing-xxl: 64px;
   --spacing-cell-size: min(8vw, 64px);
   --spacing-cell-gap: 2px;
   --spacing-hex-size: min(6vw, 48px);
   --spacing-hex-gap: 1px;
 
-  /* --- Motion (from DESIGN.md motion) --- */
-  --motion-transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  --motion-transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --motion-transition-slow: 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-  --motion-transition-bounce: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* ─── Legacy Rounded Aliases ─── */
+  --rounded-xs: 4px;
+  --rounded-sm: var(--radius-sm);
+  --rounded-md: var(--radius-md);
+  --rounded-lg: var(--radius-lg);
+  --rounded-xl: var(--radius-xl);
+  --rounded-full: var(--radius-full);
+
+  /* ─── Legacy Motion Aliases ─── */
+  --motion-transition-fast: var(--transition-fast);
+  --motion-transition-normal: var(--transition-normal);
+  --motion-transition-slow: var(--transition-slow);
+  --motion-transition-bounce: var(--transition-bounce);
   --motion-piece-move-duration: 500ms;
   --motion-piece-move-easing: cubic-bezier(0.4, 0, 0.2, 1);
   --motion-battle-enter: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -123,147 +96,20 @@
   --motion-modal-exit: 0.15s cubic-bezier(0.4, 0, 1, 1);
   --motion-reduced-transition: 0.01ms linear;
 
-  /* --- Elevation (from DESIGN.md elevation) --- */
-  --elevation-z-background: -1;
-  --elevation-z-board: 10;
-  --elevation-z-ui: 50;
-  --elevation-z-overlay: 100;
-  --elevation-z-modal: 200;
-  --elevation-z-tooltip: 300;
-  --elevation-z-toast: 400;
+  /* ─── Legacy Elevation Aliases ─── */
+  --elevation-z-background: var(--z-background);
+  --elevation-z-board: var(--z-board);
+  --elevation-z-ui: var(--z-ui);
+  --elevation-z-overlay: var(--z-overlay);
+  --elevation-z-modal: var(--z-modal);
+  --elevation-z-tooltip: var(--z-tooltip);
+  --elevation-z-toast: var(--z-toast);
 
-  /* --- Legacy aliases (backward compatibility) --- */
-  --bg-app: var(--colors-bg-app);
-  --glass-bg: var(--colors-bg-glass);
-  --glass-bg-hover: var(--colors-bg-glass-hover);
+  /* ─── Legacy Glass Aliases ─── */
+  --glass-bg: var(--color-bg-glass);
+  --glass-bg-hover: var(--color-bg-glass-hover);
   --glass-border: 1px solid rgba(255, 255, 255, 0.08);
   --glass-border-bright: 1px solid rgba(255, 255, 255, 0.15);
   --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.7);
   --glass-reflection: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, transparent 40%);
-  --bg-panel: var(--colors-bg-panel);
-  --bg-board-dark: var(--colors-board-square-dark);
-  --bg-board-light: var(--colors-board-square-light);
-  --cell-accent: rgba(99, 102, 241, 0.15);
-  --accent-primary: var(--colors-accent-primary);
-  --accent-secondary: var(--colors-accent-secondary);
-  --accent-tertiary: var(--colors-accent-tertiary);
-  --accent-hover: var(--colors-accent-hover);
-  --accent-glow: rgba(99, 102, 241, 0.5);
-  --accent-gradient: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
-  --accent-gradient-hover: linear-gradient(135deg, #818cf8 0%, #f472b6 100%);
-  --text-main: var(--colors-text-main);
-  --text-muted: var(--colors-text-muted);
-  --text-dim: var(--colors-text-dim);
-  --success: var(--colors-success);
-  --danger: var(--colors-danger);
-  --warning: var(--colors-warning);
-  --cell-size: var(--spacing-cell-size);
-  --radius-xl: var(--rounded-xl);
-  --radius-lg: var(--rounded-lg);
-  --radius-md: var(--rounded-md);
-  --radius-sm: var(--rounded-sm);
-  --transition-fast: var(--motion-transition-fast);
-  --transition-normal: var(--motion-transition-normal);
-  --transition-slow: var(--motion-transition-slow);
-  --transition-bounce: var(--motion-transition-bounce);
-  --font-main: var(--typography-font-main);
-  --grid-line-color: var(--colors-grid-line-square);
-  --z-background: var(--elevation-z-background);
-  --z-board: var(--elevation-z-board);
-  --z-ui: var(--elevation-z-ui);
-  --z-overlay: var(--elevation-z-overlay);
-  --z-modal: var(--elevation-z-modal);
-  --z-tooltip: var(--elevation-z-tooltip);
-}
-
-/* --- Reset --- */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* Mobile: Prevent double-tap zoom and improve touch performance */
-@media (pointer: coarse) {
-  * {
-    touch-action: manipulation;
-  }
-  
-  /* Disable text selection on touch devices for game elements */
-  #board, .cell, .piece-svg, .promotion-option {
-    -webkit-user-select: none;
-    user-select: none;
-  }
-}
-
-/* Safe area variables for notched devices */
-:root {
-  --safe-area-inset-top: env(safe-area-inset-top, 0);
-  --safe-area-inset-right: env(safe-area-inset-right, 0);
-  --safe-area-inset-bottom: env(safe-area-inset-bottom, 0);
-  --safe-area-inset-left: env(safe-area-inset-left, 0);
-}
-
-/* Mobile: Prevent zoom on input focus (iOS) */
-@media screen and (max-width: 768px) {
-  input, select, textarea {
-    font-size: 16px !important;
-  }
-}
-
-/* --- Body --- */
-body {
-  font-family: var(--font-main);
-  background-color: var(--bg-app);
-  /* Premium radial gradient background */
-  background-image:
-    radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
-    radial-gradient(circle at 90% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 40%),
-    radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.05) 0%, transparent 60%);
-  background-attachment: fixed;
-  color: var(--text-main);
-  height: 100vh;
-  margin: 0;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-}
-
-/* Noise Texture Overlay */
-body::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: url('data:image/svg+xml;utf8,<svg opacity="0.04" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)"/></svg>');
-  pointer-events: none;
-  z-index: var(--z-background);
-}
-
-/* --- Hidden Utility --- */
-.hidden {
-  display: none !important;
-}
-
-/* --- Scrollbars (Webkit) --- */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1);
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
 }

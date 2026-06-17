@@ -158,15 +158,15 @@
 }
 
 .stat-pill {
-  background: var(--colors-accent-glow);
-  border-color: var(--colors-accent-primary);
+  background: var(--color-accent-primary);
+  border-color: var(--color-accent-primary);
   font-weight: 600;
 }
 
 .icon-btn {
   background: none;
   border: none;
-  color: var(--colors-text-main);
+  color: var(--color-text-primary);
   cursor: pointer;
   padding: 8px;
   border-radius: var(--rounded-full);
@@ -314,7 +314,7 @@
   left: 0;
   height: 2px;
   width: 0%;
-  background: var(--colors-accent-gradient);
+  background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
   transition: width var(--motion-transition-slow) ease;
 }
 
@@ -329,11 +329,11 @@
 
 .player-avatar {
   margin-right: var(--spacing-md);
-  color: var(--colors-text-muted);
+  color: var(--color-text-secondary);
 }
 
 .player-info.active .player-avatar {
-  color: var(--colors-accent-primary);
+  color: var(--color-accent-primary);
 }
 
 .player-details {
@@ -372,18 +372,18 @@
   padding: 4px 12px;
   background: rgba(0, 0, 0, 0.2);
   border-radius: var(--rounded-sm);
-  color: var(--colors-text-dim);
+  color: var(--color-text-muted);
   transition: all var(--motion-transition-normal);
 }
 
 .clock-display.active {
-  color: var(--colors-text-main);
-  background: var(--colors-accent-gradient);
-  box-shadow: 0 0 15px var(--colors-accent-glow);
+  color: var(--color-text-primary);
+  background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+  box-shadow: 0 0 15px var(--color-accent-primary);
 }
 
 .clock-display.low-time {
-  background: var(--colors-danger);
+  background: var(--color-danger);
   animation: pulse-red 1s infinite;
 }
 
@@ -394,7 +394,7 @@
   align-items: center;
   gap: var(--spacing-sm);
   padding: var(--spacing-md);
-  background: var(--colors-bg-glass);
+  background: var(--color-bg-glass);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-radius: var(--rounded-xl);
@@ -441,7 +441,7 @@
 .action-icon-btn {
   background: transparent;
   border: 1px solid transparent;
-  color: var(--colors-text-muted);
+  color: var(--color-text-secondary);
   width: 48px;
   height: 48px;
   border-radius: 14px;
@@ -456,14 +456,14 @@
 .action-icon-btn:hover {
   background: rgba(255, 255, 255, 0.1);
   transform: translateY(-6px) scale(1.1);
-  color: var(--colors-text-main);
+  color: var(--color-text-primary);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .action-icon-btn.active {
-  background: var(--colors-accent-gradient);
-  color: var(--colors-text-main);
-  box-shadow: 0 0 15px var(--colors-accent-glow);
+  background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+  color: var(--color-text-primary);
+  box-shadow: 0 0 15px var(--color-accent-primary);
   transform: translateY(-4px);
 }
 
@@ -480,7 +480,7 @@
   top: -30px;
   left: 50%;
   transform: translateX(-50%);
-  background: var(--colors-bg-panel);
+  background: var(--color-bg-secondary);
   padding: 4px 8px;
   border-radius: var(--rounded-sm);
   font-size: 10px;
@@ -496,7 +496,7 @@
 .close-icon-btn {
   background: none;
   border: none;
-  color: var(--colors-text-muted);
+  color: var(--color-text-secondary);
   font-size: var(--typography-h3-font-size);
   cursor: pointer;
   padding: 4px;
@@ -505,7 +505,7 @@
 }
 
 .close-icon-btn:hover {
-  color: var(--colors-text-main);
+  color: var(--color-text-primary);
   transform: scale(1.1);
 }
 
@@ -515,7 +515,7 @@
   top: 80px;
   right: 20px;
   width: 280px;
-  background: var(--colors-bg-glass);
+  background: var(--color-bg-glass);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -524,7 +524,7 @@
   z-index: var(--elevation-z-modal);
   display: flex;
   flex-direction: column;
-  color: var(--colors-text-main);
+  color: var(--color-text-primary);
   transition: all var(--motion-transition-bounce);
 }
 
@@ -547,7 +547,7 @@
   font-size: var(--typography-body-sm-font-size);
   font-weight: 700;
   letter-spacing: 0.5px;
-  color: var(--colors-accent-primary);
+  color: var(--color-accent-primary);
 }
 
 .analysis-body {
@@ -566,7 +566,7 @@
 .eval-bar-container {
   flex: 1;
   height: 8px;
-  background: var(--colors-bg-panel);
+  background: var(--color-bg-secondary);
   border-radius: var(--rounded-sm);
   overflow: hidden;
   position: relative;
@@ -575,7 +575,7 @@
 .eval-bar {
   height: 100%;
   width: 50%;
-  background: var(--colors-accent-primary);
+  background: var(--color-accent-primary);
   transition: width var(--motion-transition-slow) ease;
 }
 
@@ -590,7 +590,7 @@
 .top-moves-section h4 {
   margin: 0 0 var(--spacing-sm) 0;
   font-size: var(--typography-label-caps-font-size);
-  color: var(--colors-text-muted);
+  color: var(--color-text-secondary);
   text-transform: var(--typography-label-caps-text-transform);
 }
 
@@ -614,17 +614,17 @@
 
 .top-move-item:hover {
   background: rgba(255, 255, 255, 0.1);
-  border-color: var(--colors-accent-primary);
+  border-color: var(--color-accent-primary);
 }
 
 .move-notation {
   font-weight: 600;
-  color: var(--colors-text-main);
+  color: var(--color-text-primary);
 }
 
 .move-eval {
   font-size: var(--typography-body-sm-font-size);
-  color: var(--colors-text-muted);
+  color: var(--color-text-secondary);
 }
 
 .analysis-controls {
@@ -633,20 +633,20 @@
   justify-content: space-between;
   align-items: center;
   font-size: var(--typography-label-caps-font-size);
-  color: var(--colors-text-muted);
+  color: var(--color-text-secondary);
 }
 
 .close-icon-btn {
   background: none;
   border: none;
-  color: var(--colors-text-muted);
+  color: var(--color-text-secondary);
   font-size: var(--typography-body-lg-font-size);
   cursor: pointer;
   padding: var(--spacing-xs);
 }
 
 .close-icon-btn:hover {
-  color: var(--colors-text-main);
+  color: var(--color-text-primary);
 }
 
 @media (max-width: 768px) {
@@ -665,7 +665,7 @@
   position: fixed;
   inset: 0;
   z-index: var(--elevation-z-overlay);
-  background: var(--colors-bg-app);
+  background: var(--color-bg-primary);
   display: flex;
   flex-direction: column;
   padding-top: 56px; /* Nav height */

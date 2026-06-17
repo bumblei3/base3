@@ -10,23 +10,23 @@
 :root {
   /* --- Colors (mapped to DESIGN.md) --- */
   /* Faction Colors (RPS) */
-  --fire: var(--colors-faction-fire);
-  --fire2: var(--colors-faction-fire);
-  --water: var(--colors-faction-water);
-  --water2: var(--colors-faction-water);
-  --nature: var(--colors-faction-nature);
-  --nature2: var(--colors-faction-nature);
+  --fire: var(--color-faction-fire);
+  --fire2: var(--color-faction-fire);
+  --water: var(--color-faction-water);
+  --water2: var(--color-faction-water);
+  --nature: var(--color-faction-nature);
+  --nature2: var(--color-faction-nature);
 
   /* Base Colors */
-  --bg: var(--colors-bg-app);
-  --bg2: var(--colors-bg-panel);
-  --surface: var(--colors-bg-glass);
+  --bg: var(--color-bg-primary);
+  --bg2: var(--color-bg-secondary);
+  --surface: var(--color-bg-glass);
   --border: 1px solid rgba(255, 255, 255, 0.08);
-  --text: var(--colors-text-main);
-  --text-dim: var(--colors-text-muted);
+  --text: var(--color-text-primary);
+  --text-dim: var(--color-text-secondary);
 
   /* Glass Effect */
-  --glass: var(--colors-bg-glass);
+  --glass: var(--color-bg-glass);
   --glass-border: 1px solid rgba(255, 255, 255, 0.08);
 
   /* Border Radius */
@@ -37,25 +37,25 @@
   --radius-full: var(--rounded-full);
 
   /* Header & Status */
-  --header-bg: var(--colors-bg-panel);
-  --status-info-bg: var(--colors-bg-glass);
-  --status-info-color: var(--colors-info);
-  --status-error-bg: var(--colors-bg-glass);
-  --status-error-color: var(--colors-danger);
-  --status-success-bg: var(--colors-bg-glass);
-  --status-success-color: var(--colors-success);
+  --header-bg: var(--color-bg-secondary);
+  --status-info-bg: var(--color-bg-glass);
+  --status-info-color: var(--color-info);
+  --status-error-bg: var(--color-bg-glass);
+  --status-error-color: var(--color-danger);
+  --status-success-bg: var(--color-bg-glass);
+  --status-success-color: var(--color-success);
 
   /* Slider */
-  --slider-track: var(--colors-bg-glass);
-  --slider-thumb: var(--colors-accent-primary);
+  --slider-track: var(--color-bg-glass);
+  --slider-thumb: var(--color-accent-primary);
 
   /* Eval & Move */
-  --eval-marker: var(--colors-text-main);
+  --eval-marker: var(--color-text-primary);
   --move-hover: var(--colors-bg-glass-hover);
   --move-current: var(--colors-corridor-bg);
 
   /* Buttons */
-  --btn-primary: var(--colors-accent-primary);
+  --btn-primary: var(--color-accent-primary);
   --btn-primary-hover: var(--colors-accent-hover);
 
   /* Spacing */
@@ -78,33 +78,33 @@
 }
 
 [data-theme="light"] {
-  --bg: var(--colors-bg-panel);
+  --bg: var(--color-bg-secondary);
   --bg2: var(--colors-bg-glass-hover);
   --surface: var(--colors-text-on-dark);
   --border: rgba(255, 255, 255, 0.1);
   --text: var(--colors-text-on-dark);
   --text-dim: var(--colors-text-dim);
-  --fire: var(--colors-danger);
+  --fire: var(--color-danger);
   --fire2: #ef4444;
   --water: #2563eb;
   --water2: #3b82f6;
-  --nature: var(--colors-success);
+  --nature: var(--color-success);
   --nature2: #22c55e;
   --glass: rgba(0, 0, 0, 0.04);
   --glass-border: rgba(0, 0, 0, 0.08);
-  --header-bg: var(--colors-bg-panel);
-  --status-info-bg: var(--colors-bg-glass);
-  --status-info-color: var(--colors-info);
-  --status-error-bg: var(--colors-bg-glass);
-  --status-error-color: var(--colors-danger);
-  --status-success-bg: var(--colors-bg-glass);
-  --status-success-color: var(--colors-success);
+  --header-bg: var(--color-bg-secondary);
+  --status-info-bg: var(--color-bg-glass);
+  --status-info-color: var(--color-info);
+  --status-error-bg: var(--color-bg-glass);
+  --status-error-color: var(--color-danger);
+  --status-success-bg: var(--color-bg-glass);
+  --status-success-color: var(--color-success);
   --slider-track: var(--colors-text-dim);
-  --slider-thumb: var(--colors-accent-primary);
+  --slider-thumb: var(--color-accent-primary);
   --eval-marker: var(--colors-text-on-dark);
   --move-hover: var(--colors-bg-glass-hover);
-  --move-current: var(--colors-bg-glass);
-  --btn-primary: var(--colors-accent-primary);
+  --move-current: var(--color-bg-glass);
+  --btn-primary: var(--color-accent-primary);
   --btn-primary-hover: var(--colors-accent-hover);
   --glass: rgba(0, 0, 0, 0.04);
   --glass-border: rgba(0, 0, 0, 0.08);
@@ -446,7 +446,7 @@ input:checked + .slider:before {
   font-family: monospace;
 }
 .move-type-combat {
-  color: var(--colors-danger);
+  color: var(--color-danger);
   font-weight: 800;
 }
 
@@ -614,7 +614,7 @@ input:checked + .slider:before {
   fill: #002a08;
 }
 .piece-symbol {
-  fill: var(--colors-text-main);
+  fill: var(--color-text-primary);
   font-weight: 600;
 }
 
@@ -692,13 +692,13 @@ input:checked + .slider:before {
 .combat-elimination {
   font-size: var(--typography-body-lg-font-size);
   margin-top: var(--spacing-sm);
-  color: var(--colors-danger);
+  color: var(--color-danger);
   font-weight: 800;
 }
 .combat-checkmate {
   font-size: var(--typography-body-lg-font-size);
   margin-top: var(--spacing-sm);
-  color: var(--colors-danger);
+  color: var(--color-danger);
   font-weight: 800;
 }
 .combat-stalemate {
@@ -736,7 +736,7 @@ input:checked + .slider:before {
 }
 .combat-stop-btn:hover {
   background: var(--fire);
-  color: var(--colors-text-main);
+  color: var(--color-text-primary);
   transform: translateY(-2px);
 }
 
@@ -1255,7 +1255,7 @@ input:checked + .slider:before {
 .puzzle-close-btn:hover {
   background: var(--fire);
   border-color: var(--fire);
-  color: var(--colors-text-main);
+  color: var(--color-text-primary);
   transform: rotate(90deg);
 }
 
@@ -1432,7 +1432,7 @@ input:checked + .slider:before {
 
 .puzzle-btn.primary {
   background: linear-gradient(135deg, var(--water), var(--nature));
-  color: var(--colors-text-main);
+  color: var(--color-text-primary);
 }
 
 .puzzle-btn.primary:hover {
@@ -1453,7 +1453,7 @@ input:checked + .slider:before {
 
 .puzzle-btn.danger {
   background: var(--fire);
-  color: var(--colors-text-main);
+  color: var(--color-text-primary);
 }
 
 .puzzle-btn.danger:hover {
@@ -1654,7 +1654,7 @@ input:checked + .slider:before {
 .settings-close-btn:hover {
   background: var(--fire);
   border-color: var(--fire);
-  color: var(--colors-text-main);
+  color: var(--color-text-primary);
   transform: rotate(90deg);
 }
 
@@ -1804,7 +1804,7 @@ input:checked + .slider:before {
   background: linear-gradient(135deg, var(--water), var(--water2));
   border: none;
   border-radius: var(--radius);
-  color: var(--colors-text-main);
+  color: var(--color-text-primary);
   font-size: var(--typography-body-md-font-size);
   font-weight: 700;
   cursor: pointer;
@@ -1922,18 +1922,18 @@ input:checked + .slider:before {
   min-width: 140px;
   padding: 0.75rem 1rem;
   background: var(--bg2);
-  border: 1px solid var(--colors-danger);
+  border: 1px solid var(--color-danger);
   border-radius: var(--radius);
-  color: var(--colors-danger);
+  color: var(--color-danger);
   font-size: var(--typography-body-sm-font-size);
   font-weight: 600;
   cursor: pointer;
   transition: all var(--transition-fast);
 }
 .btn-danger:hover {
-  background: var(--colors-danger);
-  color: var(--colors-text-main);
-  border-color: var(--colors-danger);
+  background: var(--color-danger);
+  color: var(--color-text-primary);
+  border-color: var(--color-danger);
 }
 
 /* Dark Mode Toggle Button */
@@ -1954,13 +1954,13 @@ input:checked + .slider:before {
 .toggle-btn:hover {
   background: var(--btn-primary);
   border-color: var(--btn-primary);
-  color: var(--colors-text-main);
+  color: var(--color-text-primary);
   transform: scale(1.1);
 }
 .toggle-btn.active {
   background: var(--btn-primary);
   border-color: var(--btn-primary);
-  color: var(--colors-text-main);
+  color: var(--color-text-primary);
 }
 
 @media (max-width: 600px) {

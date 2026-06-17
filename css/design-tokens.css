@@ -1,0 +1,76 @@
+/* ============================================
+   DESIGN TOKENS — Central CSS Custom Properties
+   ============================================
+   Single source of truth for all design tokens.
+   Import this file first in all CSS files.
+   ============================================ */
+
+:root {
+  /* ─── Colors ─── */
+  --color-bg-primary: #02040a;
+  --color-bg-secondary: #0f172a;
+  --color-bg-glass: rgba(13, 19, 33, 0.8);
+  --color-bg-glass-hover: rgba(17, 24, 39, 0.9);
+  --color-accent-primary: #6366f1;
+  --color-accent-hover: #818cf8;
+  --color-accent-secondary: #ec4899;
+  --color-accent-tertiary: #10b981;
+  --color-success: #34d399;
+  --color-danger: #fb7185;
+  --color-warning: #fbbf24;
+  --color-info: #60a5fa;
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-hover: rgba(255, 255, 255, 0.15);
+
+  /* ─── Faction Colors ─── */
+  --color-faction-fire: #ff4500;
+  --color-faction-nature: #10b981;
+  --color-faction-water: #3b82f6;
+
+  /* ─── Board Colors ─── */
+  --color-board-dark: #1e293b;
+  --color-board-light: #94a3b8;
+  --color-board-accent: #6366f1;
+
+  /* ─── Typography ─── */
+  --font-main: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* ─── Spacing ─── */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 48px;
+
+  /* ─── Border Radius ─── */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* ─── Transitions ─── */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
+  --transition-slow: 0.4s ease;
+  --transition-bounce: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ─── Shadows ─── */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
+
+  /* ─── Z-Index ─── */
+  --z-background: -1;
+  --z-board: 10;
+  --z-ui: 50;
+  --z-overlay: 100;
+  --z-modal: 200;
+  --z-tooltip: 300;
+  --z-toast: 400;
+  --z-nav: 100;
+}
