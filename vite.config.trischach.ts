@@ -4,6 +4,9 @@ import { resolve } from 'path';
 export default defineConfig({
   base: './',
   publicDir: 'public',
+  define: {
+    'import.meta.env.VITE_APP_VERSION': JSON.stringify(process.env.npm_package_version),
+  },
   build: {
     outDir: 'dist/trischach',
     rollupOptions: {

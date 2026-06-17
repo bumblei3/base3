@@ -7,6 +7,9 @@ export default defineConfig({
   worker: {
     format: 'es',
   },
+  define: {
+    'import.meta.env.VITE_APP_VERSION': JSON.stringify(process.env.npm_package_version),
+  },
   build: {
     outDir: 'dist/schach9x9',
     assetsDir: 'assets',
