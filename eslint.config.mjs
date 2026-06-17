@@ -29,6 +29,7 @@ export default tseslint.config(
       'tests/trischach/**/*.js',
       'tests/vitest.setup.ts',
       'vitest.ci.config.ts',
+      'tests/mocks/**',
     ],
   },
   ...tseslint.configs.recommended,
