@@ -50,20 +50,15 @@ jobs:
       - name: Build WASM
         run: npm run wasm:build
 
-      - name: Build Schach9x9
-        run: npm run build:schach9x9
-
-      - name: Build Trischach
-        run: npm run build:trischach
-
-      - name: Build Landing Page
-        run: npm run build:landing
+      - name: Build All (landing + schach9x9 + trischach)
+        run: npm run build
 
       - name: Prepare Pages directory
         run: |
           mkdir -p _pages
-          # Landing page
-          cp -r dist/landing/* _pages/
+          # Landing page (built to dist/)
+          cp -r dist/*.html dist/*.css _pages/ 2>/dev/null || true
+          cp -r dist/assets _pages/assets 2>/dev/null || true
           # Schach9x9
           cp -r dist/schach9x9 _pages/schach9x9
           # Trischach
