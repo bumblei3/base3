@@ -37,6 +37,13 @@ globalThis.fetch = vi.fn((url: string | URL | Request) => {
       text: () => Promise.resolve('/* mocked google fonts css */'),
     } as Response);
   }
+  // Mock local CSS/JS/TS requests (happy-dom tries to fetch from localhost:3000 in CI)
+  if (urlStr.includes('localhost:3000') && (urlStr.includes('.css') || urlStr.includes('/css/') || urlStr.includes('.js') || urlStr.includes('.ts') || urlStr.includes('/js/'))) {
+    return Promise.resolve({
+      ok: true,
+      text: () => Promise.resolve('/* mocked local asset */'),
+    } as Response);
+  }
   return Promise.resolve({
     ok: true,
     json: () => Promise.resolve({}),
