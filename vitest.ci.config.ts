@@ -7,9 +7,9 @@ export default defineConfig({
   test: {
     environment: 'happy-dom',
     globals: true,
-    pool: 'forks',
+    pool: 'threads',
     poolOptions: {
-      forks: { singleFork: true },
+      threads: { singleThread: true },
     },
     setupFiles: ['./tests/vitest.setup.ts'],
     include: ['tests/**/*.{test,unit.test,integration.test}.{js,ts}'],
