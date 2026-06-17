@@ -28,7 +28,7 @@ jobs:
       - run: pnpm run lint
       - run: pnpm run typecheck
       - name: Security audit
-        run: pnpm audit --audit-level=high --omit=dev
+        run: pnpm audit --audit-level=high --prod
 
   # ─── Phase 2: Tests (parallel) ────────────────────────────────────
   test-trischach:
