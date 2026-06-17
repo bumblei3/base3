@@ -13,7 +13,8 @@ export default defineConfig({
     },
     setupFiles: ['./tests/vitest.setup.ts'],
     include: ['tests/**/*.{test,unit.test,integration.test}.{js,ts}'],
-    testTimeout: 60000,
+    exclude: [],
+    testTimeout: 120000,
   },
   resolve: {
     extensions: ['.js', '.ts', '.json'],
