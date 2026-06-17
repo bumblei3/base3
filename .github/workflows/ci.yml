@@ -19,12 +19,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      - run: npm ci --legacy-peer-deps
-      - run: npm run lint
-      - run: npm run typecheck
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run lint
+      - run: pnpm run typecheck
       - name: Security audit
-        run: npm audit --audit-level=high --omit=dev
+        run: pnpm audit --audit-level=high --omit=dev
 
   # ─── Phase 2: Tests (parallel) ────────────────────────────────────
   test-trischach:
@@ -36,8 +36,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      - run: npm ci --legacy-peer-deps
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
       - run: npx vitest run tests/trischach
 
   test-schach9x9:
@@ -49,7 +49,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'pnpm'
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: wasm32-unknown-unknown
@@ -62,8 +62,8 @@ jobs:
             ~/.cargo/registry/cache
             ~/.cargo/git/db
           key: ${{ runner.os }}-cargo-${{ hashFiles('engine-wasm/Cargo.lock') }}
-      - run: npm ci --legacy-peer-deps
-      - run: npm run wasm:build
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run wasm:build
       - run: npx vitest run --config vitest.ci.config.ts tests/schach9x9/ArrowRenderer.test.ts tests/schach9x9/analysis.test.ts tests/schach9x9/pgnParser.test.ts tests/schach9x9/openingBook.test.ts tests/schach9x9/gameStateManager.test.ts tests/schach9x9/ui.test.ts tests/schach9x9/ui.settings.test.ts tests/schach9x9/keyboard.test.ts tests/schach9x9/keyboardManager.test.ts tests/schach9x9/ui/AnalysisUI.test.ts
 
   # ─── Phase 3: Build ───────────────────────────────────────────────
@@ -76,8 +76,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      - run: npm ci --legacy-peer-deps
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: wasm32-unknown-unknown
@@ -90,7 +90,7 @@ jobs:
             ~/.cargo/registry/cache
             ~/.cargo/git/db
           key: ${{ runner.os }}-cargo-${{ hashFiles('engine-wasm/Cargo.lock') }}
-      - run: npm run build
+      - run: pnpm run build
       - uses: actions/upload-artifact@v4
         with:
           name: dist
@@ -203,9 +203,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      - run: npm ci --legacy-peer-deps
-      - run: npm run docs:api
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run docs:api
       - name: Upload API Docs artifact
         uses: actions/upload-pages-artifact@v4
         with:
@@ -230,8 +230,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      - run: npm ci --legacy-peer-deps
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
       - name: Install Playwright browsers
         run: npx playwright install --with-deps ${{ matrix.browser }}
       - name: Download dist artifact
@@ -259,8 +259,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      - run: npm ci --legacy-peer-deps
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
       - name: Download dist artifact
@@ -290,8 +290,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      - run: npm ci --legacy-peer-deps
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
       - name: Publish to Chromatic
         uses: chromatic-com/storybook/action@1
         with:
