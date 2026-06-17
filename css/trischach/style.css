@@ -284,14 +284,14 @@ header h1 {
 
 .controls {
   display: flex;
-  gap: var(--spacing-sm);
-  margin-top: var(--spacing-md);
+  gap: var(--space-xs);
+  margin-top: var(--space-sm);
   flex-wrap: wrap;
   justify-content: center;
 }
 
 .controls button {
-  padding: 0.6rem 1.6rem;
+  padding: 0.5rem 1rem;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -2030,5 +2030,78 @@ input:checked + .slider:before {
   .puzzle-move-number {
     width: auto;
     margin-right: 0.5rem;
+  }
+}
+
+/* ============================================
+   Mobile Optimizations
+   ============================================ */
+@media (max-width: 768px) {
+  #header h1 {
+    font-size: 1.2rem;
+  }
+
+  #header .subtitle {
+    font-size: 0.8rem;
+  }
+
+  .controls {
+    gap: 4px;
+  }
+
+  .controls button {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+  }
+
+  .rps-toggle-container {
+    gap: 4px;
+  }
+
+  .toggle-label {
+    font-size: 0.7rem;
+  }
+
+  #depth-slider {
+    width: 60px;
+  }
+
+  #personality-select {
+    width: 90px;
+    font-size: 0.75rem;
+  }
+
+  .faction-panel {
+    padding: 6px;
+  }
+
+  .faction-header h2 {
+    font-size: 0.85rem;
+  }
+
+  .rps-hint {
+    font-size: 0.65rem;
+  }
+
+  #turn-bar {
+    font-size: 0.8rem;
+    padding: 6px;
+  }
+
+  #eval-bar {
+    height: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .controls button {
+    padding: 3px 6px;
+    font-size: 0.7rem;
+  }
+
+  .rps-toggle-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
   }
 }
