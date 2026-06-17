@@ -10,50 +10,55 @@ env:
   NODE_VERSION: '22'
 
 jobs:
-  lint:
-    name: Lint
+  # ─── Phase 1: Fast checks (parallel) ──────────────────────────────
+  quality:
+    name: Lint & Typecheck
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.2.0
-      - uses: actions/setup-node@v4.1.0
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
       - run: npm ci --legacy-peer-deps
       - run: npm run lint
-
-  typecheck:
-    name: Typecheck
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4.2.0
-      - uses: actions/setup-node@v4.1.0
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      - run: npm ci --legacy-peer-deps
       - run: npm run typecheck
 
+  # ─── Phase 2: Tests (parallel) ────────────────────────────────────
   test-trischach:
     name: Test Trischach
     runs-on: ubuntu-latest
-    needs: [lint, typecheck]
+    needs: quality
     steps:
-      - uses: actions/checkout@v4.2.0
-      - uses: actions/setup-node@v4.1.0
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
       - run: npm ci --legacy-peer-deps
       - run: npx vitest run tests/trischach
 
+  test-schach9x9:
+    name: Test Schach9x9
+    runs-on: ubuntu-latest
+    needs: quality
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - run: npm ci --legacy-peer-deps
+      - run: npx vitest run --config vitest.ci.config.ts tests/schach9x9/ArrowRenderer.test.ts tests/schach9x9/analysis.test.ts tests/schach9x9/pgnParser.test.ts tests/schach9x9/openingBook.test.ts tests/schach9x9/gameStateManager.test.ts tests/schach9x9/ui.test.ts tests/schach9x9/ui.settings.test.ts tests/schach9x9/keyboard.test.ts tests/schach9x9/keyboardManager.test.ts tests/schach9x9/ui/AnalysisUI.test.ts
+
+  # ─── Phase 3: Build ───────────────────────────────────────────────
   build:
     name: Build All
     runs-on: ubuntu-latest
-    needs: [test-trischach]
+    needs: [test-trischach, test-schach9x9]
     steps:
-      - uses: actions/checkout@v4.2.0
-      - uses: actions/setup-node@v4.1.0
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
@@ -77,6 +82,7 @@ jobs:
           path: dist/
           retention-days: 1
 
+  # ─── Phase 4: Deploy to GitHub Pages (only on push to main) ───────
   deploy:
     name: Deploy to GitHub Pages
     runs-on: ubuntu-latest
