@@ -185,3 +185,34 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  # ─── Phase 7: TypeDoc API Docs (only on push to main) ──────────────
+  docs-api:
+    name: Generate & Deploy API Docs
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}/docs/api/
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - run: npm ci --legacy-peer-deps
+      - run: npm run docs:api
+      - name: Upload API Docs artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: docs/api
+          name: api-docs
+      - name: Deploy API Docs to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: api-docs
