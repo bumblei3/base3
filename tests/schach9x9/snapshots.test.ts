@@ -3,7 +3,7 @@ import { setupJSDOM } from './test-utils.js';
 import { PHASES } from '@schach9x9/config.js';
 
 // Mock dependencies (we want to test UI logic so we use the real UI but mock sounds/controllers if needed)
-vi.mock('@schach9x9/sounds.js', () => ({
+vi.mock('@schach9x9/sounds', () => ({
   soundManager: {
     init: vi.fn(),
     playMove: vi.fn(),

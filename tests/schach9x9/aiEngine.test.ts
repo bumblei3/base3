@@ -5,7 +5,7 @@
 import { describe, expect, test, beforeEach, vi } from 'vitest';
 import { getBestMove, evaluatePosition, getAllLegalMoves } from '@schach9x9/aiEngine';
 import { createEmptyBoard } from '@schach9x9/gameEngine';
-import type { Board } from '../js/types/game';
+import type { Board } from '@schach9x9/types';
 
 describe('AI Engine', () => {
   let board: Board;

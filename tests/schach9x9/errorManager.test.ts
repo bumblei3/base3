@@ -1,6 +1,6 @@
 import { describe, expect, test, beforeEach, vi } from 'vitest';
-import { errorManager } from '../js/utils/ErrorManager.js';
-import { notificationUI } from '../js/ui/NotificationUI.js';
+import { errorManager } from '@schach9x9/utils';
+import { notificationUI } from '@schach9x9/ui/NotificationUI';
 import { logger } from '@schach9x9/logger.js';
 
 // Use spyOn for notificationUI

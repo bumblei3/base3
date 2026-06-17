@@ -4,20 +4,20 @@ import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
  */
 
 // Mock BoardRenderer
-vi.mock('@schach9x9/ui/BoardRenderer.js', () => ({
+vi.mock('@schach9x9/ui/BoardRenderer', () => ({
   renderBoard: vi.fn(),
 }));
 
 // Mock SoundManager
-vi.mock('@schach9x9/sounds.js', () => ({
+vi.mock('@schach9x9/sounds', () => ({
   soundManager: {
     playPromotion: vi.fn(),
     enabled: true,
   },
 }));
 
-const OverlayManager = await import('../../js/ui/OverlayManager.js');
-const { renderBoard } = await import('../../js/ui/BoardRenderer.js');
+const OverlayManager = await import('@schach9x9/ui/OverlayManager');
+const { renderBoard } = await import('@schach9x9/ui/BoardRenderer');
 
 describe('OverlayManager', () => {
   beforeEach(() => {

@@ -4,7 +4,7 @@ import { GameController } from '@schach9x9/gameController.js';
 import { MoveController } from '@schach9x9/moveController.js';
 
 // Mock UI
-vi.mock('@schach9x9/ui.js', () => ({
+vi.mock('@schach9x9/ui', () => ({
   renderBoard: vi.fn(),
   initBoardUI: vi.fn(),
   animateMove: vi.fn((_g: any, _f: any, _t: any, _p: any, cb?: any) => cb && cb()),
@@ -28,7 +28,7 @@ vi.mock('@schach9x9/ui.js', () => ({
   renderEvalGraph: vi.fn(),
 }));
 
-vi.mock('@schach9x9/sounds.js', () => ({
+vi.mock('@schach9x9/sounds', () => ({
   soundManager: {
     init: vi.fn(),
     playMove: vi.fn(),

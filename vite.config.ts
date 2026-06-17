@@ -10,10 +10,17 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
-    rollupOptions: {
-      input: {
-        main: resolve(__dirname, 'index.html'),
+    rolldownOptions: {
+      output: {
+        codeSplitting: true,
       },
+    },
+    rollupOptions: {
+      input: [
+        resolve(__dirname, 'index.html'),
+        resolve(__dirname, 'index.schach9x9.html'),
+        resolve(__dirname, 'index.trischach.html'),
+      ],
     },
   },
   resolve: {

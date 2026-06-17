@@ -1,9 +1,9 @@
 import { describe, test, expect, vi } from 'vitest';
 import { Game } from '@schach9x9/gameEngine.js';
-import * as HintGenerator from '../js/tutor/HintGenerator.js';
+import * as HintGenerator from '@schach9x9/tutor/HintGenerator';
 
 // Mock UI module to prevent errors when calling UI.renderBoard etc.
-vi.mock('@schach9x9/ui.js', () => ({
+vi.mock('@schach9x9/ui', () => ({
   renderBoard: vi.fn(),
   showTutorSuggestions: vi.fn(),
   updateShopUI: vi.fn(),

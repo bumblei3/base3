@@ -2,12 +2,12 @@ import { describe, test, expect, beforeEach, vi } from 'vitest';
 import { PHASES } from '@schach9x9/config.js';
 
 // Mock dependencies
-vi.mock('@schach9x9/utils.js', () => ({
+vi.mock('@schach9x9/utils', () => ({
   debounce: vi.fn(fn => fn),
   formatTime: vi.fn(t => `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`),
 }));
 
-vi.mock('@schach9x9/effects.js', () => ({
+vi.mock('@schach9x9/effects', () => ({
   particleSystem: {
     spawn: vi.fn(),
   },

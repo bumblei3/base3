@@ -5,7 +5,7 @@ import * as MoveExecutor from '../../js/move/MoveExecutor.js';
 import { getBestMove } from '@schach9x9/aiEngine.js';
 
 // --- MOCKS ---
-vi.mock('@schach9x9/ui.js', () => ({
+vi.mock('@schach9x9/ui', () => ({
   updateCapturedUI: vi.fn(),
   updateStatus: vi.fn(),
   updateMoveHistoryUI: vi.fn(),
@@ -22,7 +22,7 @@ vi.mock('@schach9x9/ui.js', () => ({
   showToast: vi.fn(),
 }));
 
-vi.mock('@schach9x9/sounds.js', () => ({
+vi.mock('@schach9x9/sounds', () => ({
   soundManager: {
     playSound: vi.fn(),
     playMove: vi.fn(),
@@ -34,13 +34,13 @@ vi.mock('@schach9x9/sounds.js', () => ({
   },
 }));
 
-vi.mock('@schach9x9/effects.js', () => ({
+vi.mock('@schach9x9/effects', () => ({
   particleSystem: { spawnParticles: vi.fn() },
   screenShake: vi.fn(),
   confettiSystem: { trigger: vi.fn() },
 }));
 
-vi.mock('@schach9x9/puzzleManager.js', () => ({
+vi.mock('@schach9x9/puzzleManager', () => ({
   puzzleManager: { active: false, checkMove: vi.fn() },
 }));
 

@@ -17,7 +17,7 @@ describe('AI Worker - Branch Coverage for Untested Paths', () => {
     vi.spyOn(logger, 'warn').mockImplementation(() => {});
     vi.spyOn(logger, 'error').mockImplementation(() => {});
 
-    vi.mock('@schach9x9/aiEngine.js', () => ({
+    vi.mock('@schach9x9/aiEngine', () => ({
       getBestMoveDetailed: vi.fn().mockResolvedValue({ 
         move: { from: { r: 1, c: 1 }, to: { r: 2, c: 2 } }, 
         score: 50 
@@ -37,12 +37,12 @@ describe('AI Worker - Branch Coverage for Untested Paths', () => {
       setProgressCallback: vi.fn(),
     }));
 
-    vi.mock('@schach9x9/config.js', () => ({
+    vi.mock('@schach9x9/config', () => ({
       setCurrentBoardShape: vi.fn(),
       getCurrentBoardShape: vi.fn(() => 'standard'),
     }));
 
-    vi.mock('@schach9x9/logger.js', () => ({
+    vi.mock('@schach9x9/logger', () => ({
       logger: {
         info: vi.fn(),
         debug: vi.fn(),
@@ -63,7 +63,7 @@ describe('AI Worker - Branch Coverage for Untested Paths', () => {
       writable: true,
     });
 
-    await import('../../js/ai/aiWorker.js');
+    await import('@schach9x9/ai/aiWorker');
     onmessageHandler = mockSelf.onmessage;
   });
 

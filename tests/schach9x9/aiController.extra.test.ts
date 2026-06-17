@@ -39,7 +39,7 @@ global.fetch = vi.fn(() =>
 );
 
 // Mocks
-vi.mock('@schach9x9/ui.js', () => ({
+vi.mock('@schach9x9/ui', () => ({
   updateStatus: vi.fn(),
   updateCapturedUI: vi.fn(),
   updateMoveHistoryUI: vi.fn(),
@@ -47,7 +47,7 @@ vi.mock('@schach9x9/ui.js', () => ({
   showModal: vi.fn(),
 }));
 
-vi.mock('@schach9x9/aiEngine.js', () => ({
+vi.mock('@schach9x9/aiEngine', () => ({
   evaluatePosition: vi.fn().mockResolvedValue(0),
   getBestMove: vi.fn(),
   getParamsForElo: vi.fn(() => ({ maxDepth: 4, elo: 2500 })),

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /**
  * Shared storage abstraction - LocalStorage / IndexedDB wrapper
  */

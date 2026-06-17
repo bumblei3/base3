@@ -3,10 +3,10 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
  * @jest-environment jsdom
  */
 
-import { KeyboardManager } from '../js/input/KeyboardManager.js';
+import { KeyboardManager } from '@schach9x9/input/KeyboardManager';
 
 // Mock dynamic import for ui.js
-vi.mock('@schach9x9/ui.js', () => ({
+vi.mock('@schach9x9/ui', () => ({
   showToast: vi.fn(),
   closeModal: vi.fn(),
   renderBoard: vi.fn(),

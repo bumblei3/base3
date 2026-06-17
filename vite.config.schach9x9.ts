@@ -14,6 +14,13 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'index.schach9x9.html'),
       },
+      output: {
+        manualChunks: (id: string) => {
+          if (id.includes('battleChess3D')) {
+            return 'battleChess3D';
+          }
+        },
+      },
     },
   },
   resolve: {

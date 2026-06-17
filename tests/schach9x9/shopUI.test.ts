@@ -1,7 +1,7 @@
 // Mock config
 import { describe, expect, test, beforeEach, vi } from 'vitest';
 
-vi.mock('@schach9x9/config.js', () => ({
+vi.mock('@schach9x9/config', () => ({
   PIECE_VALUES: { p: 100, n: 300, b: 300, r: 500, q: 900, k: 0, a: 800, c: 800, e: 1000 },
 }));
 
@@ -15,8 +15,8 @@ vi.mock('../js/ui/TutorUI.js', () => ({
   updateTutorRecommendations: vi.fn(),
 }));
 
-import * as ShopUI from '../js/ui/ShopUI.js';
-import { updateTutorRecommendations } from '../js/ui/TutorUI.js';
+import * as ShopUI from '@schach9x9/ui/ShopUI';
+import { updateTutorRecommendations } from '@schach9x9/ui/TutorUI';
 
 describe('ShopUI', () => {
   let game: any;

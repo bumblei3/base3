@@ -2,7 +2,7 @@ import { describe, test, expect, beforeEach, vi } from 'vitest';
 import { Game, createEmptyBoard } from '@schach9x9/gameEngine.js';
 
 // Mock UI and SoundManager modules
-vi.mock('@schach9x9/ui.js', () => ({
+vi.mock('@schach9x9/ui', () => ({
   renderBoard: vi.fn(),
   showModal: vi.fn(),
   showPromotionModal: vi.fn(),
@@ -21,7 +21,7 @@ vi.mock('@schach9x9/ui.js', () => ({
   renderEvalGraph: vi.fn(),
 }));
 
-vi.mock('@schach9x9/sounds.js', () => ({
+vi.mock('@schach9x9/sounds', () => ({
   soundManager: {
     playMove: vi.fn(),
     playCapture: vi.fn(),

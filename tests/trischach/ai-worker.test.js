@@ -3,12 +3,12 @@
  * Tests the worker message interface AND core AI functions (now exported for coverage)
  */
 import { expect, test, describe, vi } from "vitest";
-import { Hex } from "../../js/trischach/hex.js";
-import { FACTION, generateBoard } from "../../js/trischach/board.js";
-import { PIECE_STRENGTH, PIECE_TYPE, Piece } from "../../js/trischach/pieces.js";
-import { GAME_STATE } from "../../js/trischach/game.js";
+import { Hex } from "@trischach/hex";
+import { FACTION, generateBoard } from "@trischach/board";
+import { PIECE_STRENGTH, PIECE_TYPE, Piece } from "@trischach/pieces";
+import { GAME_STATE } from "@trischach/game";
 
-// Import exported core functions from ai-worker.js
+// Import exported core functions from ai.ts (used in Web Worker)
 import {
   getDynamicPieceValue,
   getMaterialValue,
@@ -28,10 +28,10 @@ import {
   deserializeGame,
   TURN_ORDER,
   AI_PERSONALITIES,
-} from "../../js/trischach/ai-worker.js";
+} from "@trischach/ai";
 
 // Mock opening-book to avoid needing full Game instance
-vi.mock("../js/opening-book.js", () => ({
+vi.mock("@trischach/opening-book", () => ({
   pickBookMove: vi.fn(() => null),
   buildOpeningBook: vi.fn(),
   inBook: vi.fn(() => false),

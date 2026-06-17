@@ -1,5 +1,6 @@
 /* ===========================================
    BOARD.CSS - Board, Cells, Pieces, Check/Mate
+   Uses DESIGN.md tokens (--colors-*, --spacing-*, --rounded-*, --motion-*, --elevation-*)
    =========================================== */
 
 /* --- Board Container --- */
@@ -10,7 +11,7 @@
   justify-content: center;
   align-items: center;
   position: relative;
-  padding: 0 0 30px 30px;
+  padding: 0 0 var(--spacing-lg) var(--spacing-lg);
 }
 
 /* Mobile: Clamp board to viewport with safe area insets */
@@ -41,17 +42,16 @@
   top: 0;
   width: 12px;
   height: calc(100% - 30px);
-  background: #222;
-  /* Black for opponent */
-  border-radius: 4px;
+  background: var(--colors-bg-panel);
+  border-radius: var(--rounded-sm);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  z-index: 15;
-  transition: opacity 0.3s ease;
+  z-index: var(--elevation-z-board);
+  transition: opacity var(--motion-transition-normal) ease;
 }
 
 .evaluation-bar.hidden {
@@ -62,10 +62,8 @@
 #eval-fill {
   width: 100%;
   height: 50%;
-  /* Initial 0.0 */
-  background: #eee;
-  /* White for player */
-  transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--colors-text-main);
+  transition: height var(--motion-transition-slow) var(--motion-piece-move-easing);
 }
 
 #eval-text {
@@ -75,7 +73,7 @@
   transform: translateX(-50%);
   font-size: 0.6rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--colors-text-main);
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
   pointer-events: none;
   z-index: 2;
@@ -97,11 +95,10 @@
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 20;
+  z-index: var(--elevation-z-ui);
   pointer-events: none;
-  /* Let clicks pass if hidden */
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity var(--motion-transition-normal) ease;
 }
 
 body.mode-3d #battle-chess-3d-container {
@@ -136,10 +133,10 @@ body.mode-3d #board-wrapper {
   grid-template-rows: repeat(9, 1fr);
   width: 100%;
   height: 100%;
-  border-radius: 4px;
+  border-radius: var(--rounded-sm);
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  z-index: 10;
+  z-index: var(--elevation-z-board);
 }
 
 /* --- Coordinate Labels --- */
@@ -149,7 +146,6 @@ body.mode-3d #board-wrapper {
   left: 0;
   width: 100%;
   display: grid;
-  /* grid-template-columns set dynamically by JS */
   text-align: center;
   pointer-events: none;
 }
@@ -160,7 +156,6 @@ body.mode-3d #board-wrapper {
   top: 0;
   height: 100%;
   display: grid;
-  /* grid-template-rows set dynamically by JS */
   align-items: center;
   text-align: right;
   pointer-events: none;
@@ -169,8 +164,9 @@ body.mode-3d #board-wrapper {
 .coord-label {
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--text-muted);
+  color: var(--colors-text-muted);
   text-transform: uppercase;
+  font-family: var(--typography-font-main);
 }
 
 /* --- 3x3 Grid Overlay (Thick Borders) --- */
@@ -195,18 +191,18 @@ body.mode-3d #board-wrapper {
   align-items: center;
   position: relative;
   transition:
-    transform 0.15s ease,
-    box-shadow 0.15s ease;
+    transform var(--motion-transition-fast) ease,
+    box-shadow var(--motion-transition-fast) ease;
 }
 
 .cell.light {
-  background-color: var(--bg-board-light);
-  color: var(--bg-board-dark);
+  background-color: var(--colors-board-square-light);
+  color: var(--colors-board-square-dark);
 }
 
 .cell.dark {
-  background-color: var(--bg-board-dark);
-  color: var(--bg-board-light);
+  background-color: var(--colors-board-square-dark);
+  color: var(--colors-board-square-light);
 }
 
 /* Blocked squares for cross-shaped board */
@@ -231,19 +227,19 @@ body.mode-3d #board-wrapper {
 }
 
 .cell.border-right {
-  border-right: 4px solid var(--grid-line-color);
+  border-right: 4px solid var(--colors-grid-line-square);
 }
 
 .cell.border-bottom {
-  border-bottom: 4px solid var(--grid-line-color);
+  border-bottom: 4px solid var(--colors-grid-line-square);
 }
 
 .cell.selected {
-  box-shadow: inset 0 0 0 4px var(--accent-primary);
+  box-shadow: inset 0 0 0 4px var(--colors-accent-primary);
 }
 
 .cell.last-move {
-  background-color: rgba(99, 102, 241, 0.4) !important;
+  background-color: var(--colors-warning) !important;
 }
 
 .cell.valid-move::after {
@@ -276,10 +272,10 @@ body.mode-3d #board-wrapper {
 }
 
 .cell.drag-over {
-  box-shadow: inset 0 0 0 4px var(--success);
+  box-shadow: inset 0 0 0 4px var(--colors-success);
   background-color: rgba(16, 185, 129, 0.25) !important;
   transform: scale(1.02);
-  transition: all 0.1s ease;
+  transition: all var(--motion-transition-fast) ease;
 }
 
 .cell.hover-move {
@@ -293,25 +289,25 @@ body.mode-3d #board-wrapper {
 /* --- Corridor Selection --- */
 .cell.selectable-corridor {
   box-shadow:
-    inset 0 0 0 100px var(--corridor-bg),
-    inset 0 0 0 1px var(--corridor-border) !important;
+    inset 0 0 0 100px var(--colors-corridor-bg),
+    inset 0 0 0 1px var(--colors-corridor-border) !important;
   cursor: pointer;
 }
 
 .cell.selectable-corridor:hover {
   box-shadow:
-    inset 0 0 0 100px var(--corridor-bg-hover),
-    inset 0 0 0 1px var(--corridor-border-hover) !important;
+    inset 0 0 0 100px var(--colors-corridor-bg-hover),
+    inset 0 0 0 1px var(--colors-corridor-border-hover) !important;
 }
 
 .cell.upgradable-piece {
-  box-shadow: inset 0 0 0 2px #22c55e !important;
+  box-shadow: inset 0 0 0 2px var(--colors-accent-tertiary) !important;
   cursor: pointer;
-  transition: box-shadow 0.3s ease;
+  transition: box-shadow var(--motion-transition-normal) ease;
 }
 
 .cell.upgradable-piece:hover {
-  box-shadow: inset 0 0 15px 4px #22c55e !important;
+  box-shadow: inset 0 0 15px 4px var(--colors-accent-tertiary) !important;
 }
 
 /* --- Pieces --- */
@@ -323,13 +319,13 @@ body.mode-3d #board-wrapper {
   background-position: center;
   cursor: grab;
   z-index: 2;
-  transition: transform 0.2s ease;
+  transition: transform var(--motion-transition-fast) ease;
 }
 
 .piece-svg {
   width: 90%;
   height: 90%;
-  transition: transform 0.2s ease;
+  transition: transform var(--motion-transition-fast) ease;
 }
 
 /* --- Check / Checkmate --- */
@@ -418,12 +414,12 @@ body.mode-3d #board-wrapper {
   justify-content: center;
   font-style: italic;
   font-size: 0.9rem;
-  color: #ccc;
-  transition: all 0.3s ease;
+  color: var(--colors-text-muted);
+  transition: all var(--motion-transition-normal) ease;
 }
 
 #opening-name {
   font-weight: bold;
-  color: var(--accent, #4f9cf9);
+  color: var(--colors-accent-primary);
   margin-left: 8px;
 }

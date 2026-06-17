@@ -3,11 +3,11 @@ import { animateCheck, animateCheckmate } from '@schach9x9/ui.js';
 import * as AIEngine from '@schach9x9/aiEngine.js';
 import { confettiSystem } from '@schach9x9/effects.js';
 
-vi.mock('@schach9x9/aiEngine.js', () => ({
+vi.mock('@schach9x9/aiEngine', () => ({
   findKing: vi.fn(),
 }));
 
-vi.mock('@schach9x9/effects.js', () => ({
+vi.mock('@schach9x9/effects', () => ({
   confettiSystem: {
     spawn: vi.fn(),
   },

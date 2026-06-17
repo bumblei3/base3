@@ -2,10 +2,10 @@ import { describe, expect, test, beforeEach, vi, type MockInstance } from 'vites
 import { PHASES } from '@schach9x9/config';
 import { GameController } from '@schach9x9/gameController';
 import { Game } from '@schach9x9/gameEngine';
-import type { Piece } from '../js/types/game';
+import type { Piece } from '@schach9x9/types';
 
 // Mock dependencies
-vi.mock('@schach9x9/ui.js', () => ({
+vi.mock('@schach9x9/ui', () => ({
   renderBoard: vi.fn(),
   showModal: vi.fn(),
   showToast: vi.fn(),
@@ -23,7 +23,7 @@ vi.mock('@schach9x9/ui.js', () => ({
   animateCheck: vi.fn(),
 }));
 
-vi.mock('@schach9x9/sounds.js', () => ({
+vi.mock('@schach9x9/sounds', () => ({
   soundManager: {
     init: vi.fn(),
     playMove: vi.fn(),
@@ -34,7 +34,7 @@ vi.mock('@schach9x9/sounds.js', () => ({
   },
 }));
 
-vi.mock('@schach9x9/AnalysisController.js', () => ({
+vi.mock('@schach9x9/AnalysisController', () => ({
   AnalysisController: class {
     constructor(_gameController: any) {}
     enterAnalysisMode = vi.fn(() => true);
@@ -52,7 +52,7 @@ vi.mock('../js/ui/NotificationUI.js', () => ({
   },
 }));
 
-vi.mock('@schach9x9/tutorial.js', () => ({
+vi.mock('@schach9x9/tutorial', () => ({
   Tutorial: class {
     constructor() {}
     initUI() {}
@@ -63,8 +63,8 @@ vi.mock('@schach9x9/tutorial.js', () => ({
   },
 }));
 
-vi.mock('@schach9x9/gameEngine.js', () => {
-  const ActualGame = vi.importActual('../js/gameEngine.js');
+vi.mock('@schach9x9/gameEngine', () => {
+  const ActualGame = vi.importActual('@schach9x9/gameEngine');
   return {
     ...ActualGame,
     Game: class {

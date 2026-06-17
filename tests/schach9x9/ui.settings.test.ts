@@ -2,7 +2,7 @@ import { describe, test, expect, beforeEach, vi } from 'vitest';
 import { setupJSDOM, createMockGame } from './test-utils.js';
 
 // Mock dependencies
-vi.mock('@schach9x9/chess-pieces.js', () => ({
+vi.mock('@schach9x9/chess-pieces', () => ({
   setPieceSkin: vi.fn(),
   PIECE_SVGS: {
     white: { p: 'wp' },

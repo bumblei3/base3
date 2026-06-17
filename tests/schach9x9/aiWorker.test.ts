@@ -91,7 +91,7 @@ describe('AI Worker Message Handlers', () => {
 
   beforeAll(async () => {
     // Mock all aiEngine functions
-    vi.mock('@schach9x9/aiEngine.js', () => ({
+    vi.mock('@schach9x9/aiEngine', () => ({
       getBestMoveDetailed: vi
         .fn()
         .mockResolvedValue({ move: { from: { r: 1, c: 1 }, to: { r: 2, c: 2 } }, score: 50 }),
@@ -106,11 +106,11 @@ describe('AI Worker Message Handlers', () => {
       setProgressCallback: vi.fn(),
     }));
 
-    vi.mock('@schach9x9/config.js', () => ({
+    vi.mock('@schach9x9/config', () => ({
       setCurrentBoardShape: vi.fn(),
     }));
 
-    vi.mock('@schach9x9/logger.js', () => ({
+    vi.mock('@schach9x9/logger', () => ({
       logger: {
         info: vi.fn(),
         debug: vi.fn(),
@@ -134,7 +134,7 @@ describe('AI Worker Message Handlers', () => {
     });
 
     // Import worker module - this sets self.onmessage
-    await import('../js/ai/aiWorker.js');
+    await import('@schach9x9/ai/aiWorker');
     onmessageHandler = mockSelf.onmessage;
   });
 

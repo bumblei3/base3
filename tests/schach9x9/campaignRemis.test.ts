@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach } from 'vitest';
-import { campaignManager } from '../js/campaign/CampaignManager.js';
+import { campaignManager } from '@schach9x9/campaign/CampaignManager';
 
 // Minimal mock for level data to test Mission 2 specifically
 const MISSION_2_ID = 'bandit_ambush';

@@ -119,7 +119,7 @@ describe('TacticsDetector - Additional Coverage', () => {
       mockGame.board[4][6] = { type: 'q', color: 'black' };
       mockGame.board[4][8] = { type: 'k', color: 'black' };
       
-      vi.mock('@schach9x9/config.js', () => ({
+      vi.mock('@schach9x9/config', () => ({
         isBlockedCell: vi.fn(() => true),
         getCurrentBoardShape: vi.fn(() => 'standard'),
       }));
@@ -300,7 +300,7 @@ describe('TacticsDetector - Additional Coverage', () => {
       mockGame.board[2][2] = { type: 'n', color: 'black' };
       mockGame.board[4][4] = { type: 'k', color: 'black' };
       
-      vi.mock('@schach9x9/config.js', () => ({
+      vi.mock('@schach9x9/config', () => ({
         isBlockedCell: vi.fn(() => true),
         getCurrentBoardShape: vi.fn(() => 'standard'),
       }));
@@ -605,7 +605,7 @@ describe('TacticsDetector - Additional Coverage', () => {
       mockGame.board[4][6] = { type: 'p', color: 'white' };
       mockGame.board[4][8] = { type: 'r', color: 'white' };
       
-      vi.mock('@schach9x9/config.js', () => ({
+      vi.mock('@schach9x9/config', () => ({
         isBlockedCell: vi.fn((r: number, c: number) => r === 4 && c === 6),
         getCurrentBoardShape: vi.fn(() => 'standard'),
       }));

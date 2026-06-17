@@ -1,7 +1,7 @@
 import { expect, test, describe } from "vitest";
-import { getValidMoves, PIECE_TYPE, Piece } from "../../js/trischach/pieces.js";
-import { Hex } from "../../js/trischach/hex.js";
-import { FACTION, generateBoard } from "../../js/trischach/board.js";
+import { getValidMoves, PIECE_TYPE, Piece } from "@trischach/pieces";
+import { Hex } from "@trischach/hex";
+import { FACTION, generateBoard } from "@trischach/board";
 
 function buildOccupied(allPieces) {
   const occupied = new Map();

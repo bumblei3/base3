@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars, @typescript-eslint/no-unused-vars */
 /**
  * TriSchach Puzzle Mode
  * Generates and manages "Mate in N" puzzles from Opening Book positions.

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { OpeningBook } from '../js/ai/OpeningBook.js';
-import type { Square, PieceType } from '../js/types/game.js';
+import { OpeningBook } from '@schach9x9/ai/OpeningBook';
+import type { Square, PieceType } from '@schach9x9/types';
 
 describe('Debug Hash', () => {
   it('should show hashes', () => {

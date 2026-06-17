@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import * as TacticsDetector from '../../js/tutor/TacticsDetector.js';
 import * as aiEngine from '@schach9x9/aiEngine.js';
 
-vi.mock('@schach9x9/aiEngine.js', () => ({
+vi.mock('@schach9x9/aiEngine', () => ({
   see: vi.fn(),
   isSquareAttacked: vi.fn(),
 }));

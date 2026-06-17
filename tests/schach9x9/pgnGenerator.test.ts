@@ -3,7 +3,7 @@
  */
 
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
-import { moveToNotation, generatePGN } from '../js/utils/PGNGenerator.js';
+import { moveToNotation, generatePGN } from '@schach9x9/utils';
 
 describe('PGNGenerator', () => {
   describe('moveToNotation', () => {
@@ -312,7 +312,7 @@ describe('PGNGenerator', () => {
     });
 
     it('should call navigator.clipboard.writeText', async () => {
-      const { copyPGNToClipboard } = await import('../js/utils/PGNGenerator.js');
+      const { copyPGNToClipboard } = await import('@schach9x9/utils');
       const mockWriteText = vi.fn().mockResolvedValue(true);
 
       // Safe navigator assignment for test env
@@ -337,7 +337,7 @@ describe('PGNGenerator', () => {
     });
 
     it('should return false on clipboard error', async () => {
-      const { copyPGNToClipboard } = await import('../js/utils/PGNGenerator.js');
+      const { copyPGNToClipboard } = await import('@schach9x9/utils');
 
       Object.defineProperty(navigator, 'clipboard', {
         value: { writeText: vi.fn().mockRejectedValue(new Error('fail')) },
@@ -350,7 +350,7 @@ describe('PGNGenerator', () => {
     });
 
     it('should trigger download', async () => {
-      const { downloadPGN } = await import('../js/utils/PGNGenerator.js');
+      const { downloadPGN } = await import('@schach9x9/utils');
 
       // Mock URL.createObjectURL and revokeObjectURL
       const mockCreateObjectURL = vi.fn().mockReturnValue('mock-url');

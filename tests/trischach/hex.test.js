@@ -9,7 +9,7 @@ import {
   pixelToHex,
   hexCorners,
   hexPolygonPoints,
-} from "../../js/trischach/hex.js";
+} from "@trischach/hex";
 
 describe("Hex coordinates", () => {
   test("constructor calculates s correctly", () => {

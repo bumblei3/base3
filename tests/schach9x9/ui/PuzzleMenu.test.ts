@@ -4,7 +4,7 @@ import { puzzleManager } from '@schach9x9/puzzleManager.js';
 import type { GameController } from '@schach9x9/gameController.js';
 
 // Mock puzzleManager
-vi.mock('@schach9x9/puzzleManager.js', () => ({
+vi.mock('@schach9x9/puzzleManager', () => ({
   puzzleManager: {
     getPuzzles: vi.fn().mockReturnValue([
       { id: 'p1', title: 'Puzzle 1', difficulty: 'Einfach', description: 'Test 1' },

@@ -23,9 +23,9 @@ const UI_MOCK = {
   closeModal: vi.fn(),
 };
 
-vi.mock('@schach9x9/ui.js', () => UI_MOCK);
+vi.mock('@schach9x9/ui', () => UI_MOCK);
 
-vi.mock('@schach9x9/sounds.js', () => ({
+vi.mock('@schach9x9/sounds', () => ({
   soundManager: {
     init: vi.fn(),
     playGameOver: vi.fn(),
@@ -35,11 +35,11 @@ vi.mock('@schach9x9/sounds.js', () => ({
   },
 }));
 
-vi.mock('@schach9x9/storage.js', () => ({
+vi.mock('@schach9x9/storage', () => ({
   storageManager: { saveGame: vi.fn(), loadGame: vi.fn(), loadStateIntoGame: vi.fn() },
 }));
 
-vi.mock('@schach9x9/aiEngine.js', () => ({
+vi.mock('@schach9x9/aiEngine', () => ({
   evaluatePosition: vi.fn(),
   see: vi.fn(() => 0),
   isSquareAttacked: vi.fn(() => false),

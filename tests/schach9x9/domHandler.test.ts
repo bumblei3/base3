@@ -1,7 +1,7 @@
 import { describe, expect, test, beforeEach, vi } from 'vitest';
 
 // Mock all internal dependencies of DOMHandler BEFORE importing it
-vi.mock('@schach9x9/ui.js', () => ({
+vi.mock('@schach9x9/ui', () => ({
   renderBoard: vi.fn(),
   showModal: vi.fn(),
   showToast: vi.fn(),
@@ -14,14 +14,14 @@ vi.mock('../js/utils/PGNGenerator.js', () => ({
   downloadPGN: vi.fn(),
 }));
 
-vi.mock('@schach9x9/sounds.js', () => ({
+vi.mock('@schach9x9/sounds', () => ({
   soundManager: {
     setEnabled: vi.fn(),
     setVolume: vi.fn(),
   },
 }));
 
-vi.mock('@schach9x9/chess-pieces.js', () => ({
+vi.mock('@schach9x9/chess-pieces', () => ({
   setPieceSkin: vi.fn(),
 }));
 
@@ -54,7 +54,7 @@ vi.mock('../js/ui/AnalysisUI.js', () => ({
 (global as any).URL.revokeObjectURL = vi.fn();
 
 // Now import DOMHandler (must be dynamic because of ESM mocks)
-const { DOMHandler } = await import('../js/ui/DOMHandler.js');
+const { DOMHandler } = await import('@schach9x9/ui/DOMHandler');
 
 describe('DOMHandler', () => {
   let app: any;

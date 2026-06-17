@@ -35,12 +35,12 @@ vi.mock('../js/campaign/campaignData.js', importOriginal => ({
 }));
 
 // Mock dependencies
-vi.mock('@schach9x9/storage.js', () => ({
+vi.mock('@schach9x9/storage', () => ({
   storageManager: {},
 }));
 
-import { CampaignManager } from '../js/campaign/CampaignManager.js';
-import { CAMPAIGN_LEVELS } from '../js/campaign/campaignData.js';
+import { CampaignManager } from '@schach9x9/campaign/CampaignManager';
+import { CAMPAIGN_LEVELS } from '@schach9x9/campaign/campaignData';
 
 describe('CampaignManager', () => {
   let manager: CampaignManager;

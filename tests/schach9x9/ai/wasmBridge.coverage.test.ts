@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import * as WasmBridge from '../../js/ai/wasmBridge.js';
 
-vi.mock('@schach9x9/logger.js', () => ({
+vi.mock('@schach9x9/logger', () => ({
   logger: {
     info: vi.fn(),
     error: vi.fn(),

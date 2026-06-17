@@ -268,7 +268,7 @@ describe('GameController Comprehensive Coverage', () => {
     it('should load next puzzle if available', () => {
       const mockPuzzle = { title: 'Puzzle 1' };
       // @ts-ignore - global mock
-      import('../../js/puzzleManager').then(m => {
+      import('@schach9x9/puzzleManager').then(m => {
         (m.puzzleManager.nextPuzzle as any) = vi.fn().mockReturnValue(mockPuzzle);
         controller.nextPuzzle();
         expect(UI.showPuzzleOverlay).toHaveBeenCalledWith(mockPuzzle);
@@ -277,7 +277,7 @@ describe('GameController Comprehensive Coverage', () => {
 
     it('should show success message if no more puzzles', () => {
       // @ts-ignore
-      import('../../js/puzzleManager').then(m => {
+      import('@schach9x9/puzzleManager').then(m => {
         (m.puzzleManager.nextPuzzle as any) = vi.fn().mockReturnValue(null);
         controller.nextPuzzle();
         expect(UI.updatePuzzleStatus).toHaveBeenCalledWith('success', expect.any(String));

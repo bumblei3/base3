@@ -5,7 +5,7 @@ import { PIECE_VALUES } from '@schach9x9/config.js';
 import * as UI from '@schach9x9/ui.js';
 
 // Mock UI dependencies
-vi.mock('@schach9x9/ui.js', () => ({
+vi.mock('@schach9x9/ui', () => ({
   updateShopUI: vi.fn(),
   showModal: vi.fn(),
   closeModal: vi.fn(),

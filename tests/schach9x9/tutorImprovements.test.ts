@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest';
-import * as TacticsDetector from '../js/tutor/TacticsDetector.js';
-import * as MoveAnalyzer from '../js/tutor/MoveAnalyzer.js';
+import * as TacticsDetector from '@schach9x9/tutor/TacticsDetector';
+import * as MoveAnalyzer from '@schach9x9/tutor/MoveAnalyzer';
 
 // Mock dependencies
 const mockGame = {

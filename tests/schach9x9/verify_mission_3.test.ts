@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { CAMPAIGN_LEVELS } from '../js/campaign/campaignData';
+import { CAMPAIGN_LEVELS } from '@schach9x9/campaign/campaignData';
 
 describe('Mission 3 Simplification Verification', () => {
   const mission3 = CAMPAIGN_LEVELS.find(l => l.id === 'skirmish_bridge');

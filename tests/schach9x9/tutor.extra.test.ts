@@ -15,7 +15,7 @@ import { PHASES } from '@schach9x9/config.js';
   },
 };
 
-vi.mock('@schach9x9/ui.js', () => ({
+vi.mock('@schach9x9/ui', () => ({
   showToast: vi.fn(),
   showModal: vi.fn(),
   renderBoard: vi.fn(),

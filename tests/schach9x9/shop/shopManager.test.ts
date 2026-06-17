@@ -7,7 +7,7 @@ import { ShopManager } from '../../js/shop/ShopManager.js';
 import { PHASES } from '@schach9x9/gameEngine.js';
 
 // Mock UI module
-vi.mock('@schach9x9/ui.js', () => ({
+vi.mock('@schach9x9/ui', () => ({
   updateShopUI: vi.fn(),
   showModal: vi.fn(),
   renderBoard: vi.fn(),

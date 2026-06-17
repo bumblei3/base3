@@ -7,7 +7,7 @@ import { CampaignModeStrategy } from '../../js/modes/strategies/CampaignMode.js'
 import { PHASES } from '@schach9x9/config.js';
 
 // Mock UI module
-vi.mock('@schach9x9/ui.js', () => ({
+vi.mock('@schach9x9/ui', () => ({
   updateShopUI: vi.fn(),
   updateStatus: vi.fn(),
   renderBoard: vi.fn(),
@@ -17,7 +17,7 @@ vi.mock('@schach9x9/ui.js', () => ({
 }));
 
 // Mock logger
-vi.mock('@schach9x9/logger.js', () => ({
+vi.mock('@schach9x9/logger', () => ({
   logger: {
     info: vi.fn(),
     debug: vi.fn(),
@@ -159,7 +159,7 @@ describe('CampaignModeStrategy', () => {
     });
 
     test('should setup level_1 with fixed board', async () => {
-      const { BoardFactory } = await import('../../js/campaign/BoardFactory.js');
+      const { BoardFactory } = await import('@schach9x9/campaign/BoardFactory');
 
       strategy.startLevel(mockGame, mockController, 'level_1');
 
@@ -173,7 +173,7 @@ describe('CampaignModeStrategy', () => {
     });
 
     test('should setup level_2 with fixed board', async () => {
-      const { BoardFactory } = await import('../../js/campaign/BoardFactory.js');
+      const { BoardFactory } = await import('@schach9x9/campaign/BoardFactory');
 
       strategy.startLevel(mockGame, mockController, 'level_2');
 

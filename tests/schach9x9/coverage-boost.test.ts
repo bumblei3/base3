@@ -2,14 +2,14 @@ import { describe, test, expect, beforeEach, vi, type MockedFunction } from 'vit
 import { PHASES } from '@schach9x9/config.js';
 
 // Mock dependencies
-vi.mock('@schach9x9/utils.js', () => ({
+vi.mock('@schach9x9/utils', () => ({
   debounce: vi.fn((fn: any) => fn),
   formatTime: vi.fn((t: number) => `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`),
   deepCopy: vi.fn((obj: any) => JSON.parse(JSON.stringify(obj))),
   parseFEN: vi.fn(() => ({ board: [], turn: 'white' })),
 }));
 
-vi.mock('@schach9x9/effects.js', () => ({
+vi.mock('@schach9x9/effects', () => ({
   particleSystem: {
     spawn: vi.fn(),
   },
@@ -21,7 +21,7 @@ vi.mock('@schach9x9/effects.js', () => ({
   confettiSystem: { spawn: vi.fn() },
 }));
 
-vi.mock('@schach9x9/sounds.js', () => ({
+vi.mock('@schach9x9/sounds', () => ({
   soundManager: {
     init: vi.fn(),
     playMove: vi.fn(),
@@ -33,7 +33,7 @@ vi.mock('@schach9x9/sounds.js', () => ({
   },
 }));
 
-vi.mock('@schach9x9/storage.js', () => ({
+vi.mock('@schach9x9/storage', () => ({
   storageManager: {
     loadGame: vi.fn(),
     loadStateIntoGame: vi.fn(),
@@ -42,7 +42,7 @@ vi.mock('@schach9x9/storage.js', () => ({
   },
 }));
 
-vi.mock('@schach9x9/statisticsManager.js', () => ({
+vi.mock('@schach9x9/statisticsManager', () => ({
   StatisticsManager: vi.fn().mockImplementation(function () {
     return {
       saveGame: vi.fn(),
@@ -51,7 +51,7 @@ vi.mock('@schach9x9/statisticsManager.js', () => ({
   }),
 }));
 
-vi.mock('@schach9x9/tutorial.js', () => ({
+vi.mock('@schach9x9/tutorial', () => ({
   Tutorial: vi.fn().mockImplementation(function () {
     return {
       init: vi.fn(),
@@ -59,7 +59,7 @@ vi.mock('@schach9x9/tutorial.js', () => ({
   }),
 }));
 
-vi.mock('@schach9x9/arrows.js', () => ({
+vi.mock('@schach9x9/arrows', () => ({
   ArrowRenderer: vi.fn().mockImplementation(function () {
     return {
       clear: vi.fn(),
@@ -67,7 +67,7 @@ vi.mock('@schach9x9/arrows.js', () => ({
   }),
 }));
 
-vi.mock('@schach9x9/puzzleManager.js', () => ({
+vi.mock('@schach9x9/puzzleManager', () => ({
   puzzleManager: {
     init: vi.fn(),
     loadPuzzle: vi.fn(),

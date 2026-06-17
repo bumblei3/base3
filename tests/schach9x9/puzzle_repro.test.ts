@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest';
-import { PuzzleMenu } from '../js/ui/PuzzleMenu.js';
+import { PuzzleMenu } from '@schach9x9/ui/PuzzleMenu';
 import { puzzleManager } from '@schach9x9/puzzleManager.js';
 
 describe('PuzzleMenu Reproduction Test', () => {

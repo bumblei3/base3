@@ -113,7 +113,7 @@ vi.mock('three/examples/jsm/controls/OrbitControls.js', () => ({
   }),
 }));
 
-vi.mock('@schach9x9/pieces3D.js', () => ({
+vi.mock('@schach9x9/pieces3D', () => ({
   createPiece3D: vi.fn(() => ({
     position: { set: vi.fn() },
     userData: {},
@@ -121,7 +121,7 @@ vi.mock('@schach9x9/pieces3D.js', () => ({
   PIECE_COLORS: { white: 0xffffff, black: 0x000000 },
 }));
 
-vi.mock('@schach9x9/battleAnimations.js', () => ({
+vi.mock('@schach9x9/battleAnimations', () => ({
   BattleAnimator: vi.fn().mockImplementation(function () {
     return {
       playBattle: vi.fn(() => Promise.resolve()),

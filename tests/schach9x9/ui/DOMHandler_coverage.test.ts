@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // Mock dependencies BEFORE importing DOMHandler
-vi.mock('@schach9x9/ui.js', () => ({
+vi.mock('@schach9x9/ui', () => ({
   renderBoard: vi.fn(),
   updateStatus: vi.fn(),
   updateShopUI: vi.fn(),
@@ -10,7 +10,7 @@ vi.mock('@schach9x9/ui.js', () => ({
   clearPieceCache: vi.fn(),
 }));
 
-vi.mock('@schach9x9/sounds.js', () => ({
+vi.mock('@schach9x9/sounds', () => ({
   soundManager: {
     enabled: true,
     volume: 0.5,
@@ -21,11 +21,11 @@ vi.mock('@schach9x9/sounds.js', () => ({
   },
 }));
 
-vi.mock('@schach9x9/utils.js', () => ({
+vi.mock('@schach9x9/utils', () => ({
   debounce: (fn: any) => fn,
 }));
 
-vi.mock('@schach9x9/chess-pieces.js', () => ({
+vi.mock('@schach9x9/chess-pieces', () => ({
   setPieceSkin: vi.fn(),
 }));
 
@@ -39,7 +39,7 @@ vi.mock('../../js/utils/PGNGenerator.js', () => ({
 global.URL.createObjectURL = vi.fn(() => 'blob:mock');
 global.URL.revokeObjectURL = vi.fn();
 
-const { DOMHandler } = await import('../../js/ui/DOMHandler.js');
+const { DOMHandler } = await import('@schach9x9/ui/DOMHandler');
 
 describe('DOMHandler Comprehensive Coverage', () => {
   let app: any;

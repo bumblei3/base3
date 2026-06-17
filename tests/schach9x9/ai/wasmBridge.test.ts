@@ -11,7 +11,7 @@ import {
 } from '../../js/ai/wasmBridge.js';
 
 // Mock logger
-vi.mock('@schach9x9/logger.js', () => ({
+vi.mock('@schach9x9/logger', () => ({
   logger: {
     info: vi.fn(),
     debug: vi.fn(),

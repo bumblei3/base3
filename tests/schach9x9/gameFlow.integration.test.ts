@@ -4,7 +4,7 @@ import { PHASES } from '@schach9x9/config.js';
 import { setupJSDOM } from './test-utils.js';
 
 // Mock UI dependencies
-vi.mock('@schach9x9/ui.js', async importOriginal => {
+vi.mock('@schach9x9/ui', async importOriginal => {
   const actual: any = await importOriginal();
   return {
     ...actual,
@@ -33,7 +33,7 @@ vi.mock('@schach9x9/ui.js', async importOriginal => {
   };
 });
 
-vi.mock('@schach9x9/sounds.js', () => ({
+vi.mock('@schach9x9/sounds', () => ({
   soundManager: {
     init: vi.fn(),
     playMove: vi.fn(),
@@ -46,7 +46,7 @@ vi.mock('@schach9x9/sounds.js', () => ({
   },
 }));
 
-vi.mock('@schach9x9/aiEngine.js', () => ({
+vi.mock('@schach9x9/aiEngine', () => ({
   evaluatePosition: vi.fn(() => 0),
   findKing: vi.fn(() => ({ r: 0, c: 0 })),
   getBestMove: vi.fn().mockResolvedValue(null),

@@ -2,7 +2,7 @@ import { describe, test, expect, vi, beforeEach } from 'vitest';
 import { PHASES } from '@schach9x9/config.js';
 
 // Mock dependencies
-vi.mock('@schach9x9/ui.js', () => ({
+vi.mock('@schach9x9/ui', () => ({
   renderBoard: vi.fn(),
   showModal: vi.fn((_title: any, _content: any, actions: any) => {
     if (actions) {
@@ -26,7 +26,7 @@ vi.mock('@schach9x9/ui.js', () => ({
   animateCheck: vi.fn(),
 }));
 
-vi.mock('@schach9x9/sounds.js', () => ({
+vi.mock('@schach9x9/sounds', () => ({
   soundManager: {
     init: vi.fn(),
     playMove: vi.fn(),
@@ -73,7 +73,7 @@ const MockGame = class {
 import { GameController } from '@schach9x9/gameController.js';
 import { Game } from '@schach9x9/gameEngine.js';
 // We need to mock TimeManager, Tutorial, etc?
-vi.mock('@schach9x9/TimeManager.js', () => ({
+vi.mock('@schach9x9/TimeManager', () => ({
   TimeManager: class {
     constructor() {}
     setTimeControl() {}
@@ -82,8 +82,8 @@ vi.mock('@schach9x9/TimeManager.js', () => ({
     stopClock() {}
   },
 }));
-vi.mock('@schach9x9/tutorial.js', () => ({ Tutorial: class {} }));
-vi.mock('@schach9x9/AnalysisController.js', () => ({
+vi.mock('@schach9x9/tutorial', () => ({ Tutorial: class {} }));
+vi.mock('@schach9x9/AnalysisController', () => ({
   AnalysisController: class {
     constructor() {}
     enterAnalysisMode() {}

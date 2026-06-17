@@ -1,34 +1,35 @@
 /* ===========================================
    PREMIUM.CSS - Premium Visual Features
    Dynamic Promotion, Visual Effects, Animations
+   Uses DESIGN.md tokens (--colors-*, --spacing-*, --rounded-*, --motion-*, --typography-*)
    =========================================== */
 
 /* --- Dynamic Promotion Modal --- */
 .promotion-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 15px;
-  padding: 20px;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
   perspective: 1000px;
 }
 
 .promotion-option {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 15px;
+  border-radius: var(--rounded-md);
+  padding: var(--spacing-md);
   display: flex;
   flex-direction: column;
   align-items: center;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all var(--motion-transition-bounce);
   position: relative;
   overflow: hidden;
 }
 
 .promotion-option:hover {
   background: rgba(255, 255, 255, 0.15);
-  border-color: var(--accent-primary, #6366f1);
+  border-color: var(--colors-accent-primary);
   transform: translateY(-5px) scale(1.05);
   box-shadow:
     0 10px 20px rgba(0, 0, 0, 0.2),
@@ -45,7 +46,7 @@
   height: 60px;
   background: radial-gradient(circle, rgba(99, 102, 241, 0.6) 0%, transparent 70%);
   transform: translate(-50%, -50%) scale(0);
-  transition: transform 0.3s ease;
+  transition: transform var(--motion-transition-normal);
   z-index: 0;
 }
 
@@ -62,24 +63,24 @@
 }
 
 .promotion-option .piece-name {
-  margin-top: 10px;
-  font-family: 'Outfit', sans-serif;
+  margin-top: var(--spacing-sm);
+  font-family: var(--typography-font-main);
   font-weight: 600;
-  color: var(--text-main, #fff);
-  font-size: 0.9rem;
+  color: var(--colors-text-main);
+  font-size: var(--typography-body-md-font-size);
   position: relative;
   z-index: 1;
 }
 
 .promotion-option .piece-cost {
-  font-size: 0.75rem;
-  color: var(--text-muted, #94a3b8);
-  margin-top: 4px;
+  font-size: var(--typography-body-sm-font-size);
+  color: var(--colors-text-muted);
+  margin-top: var(--spacing-xs);
 }
 
 /* Modal Styling Override for Promotion */
 #promotion-overlay .modal-content {
-  background: rgba(15, 23, 42, 0.95);
+  background: var(--colors-bg-panel);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
@@ -89,9 +90,9 @@
 
 #promotion-overlay h2 {
   text-align: center;
-  font-size: 1.8rem;
-  margin-bottom: 1.5rem;
-  background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+  font-size: var(--typography-h2-font-size);
+  margin-bottom: var(--spacing-lg);
+  background: linear-gradient(135deg, var(--colors-text-main) 0%, var(--colors-text-muted) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -114,10 +115,10 @@
 
 .promo-badge {
   position: absolute;
-  top: 6px;
-  right: 8px;
-  font-size: 0.85rem;
-  color: #f59e0b;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  font-size: var(--typography-body-md-font-size);
+  color: var(--colors-warning);
   text-shadow: 0 0 6px rgba(245, 158, 11, 0.6);
   z-index: 2;
   pointer-events: none;
@@ -130,7 +131,7 @@
 }
 
 .promotion-option:focus-visible {
-  outline: 2px solid var(--accent-primary, #6366f1);
+  outline: 2px solid var(--colors-accent-primary);
   outline-offset: 2px;
 }
 
@@ -138,14 +139,14 @@
 @media (max-width: 480px) {
   .promotion-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-    padding: 8px;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
   }
 
   .promotion-option {
-    padding: 12px;
-    min-height: 48px; /* Apple/Google touch target guideline: 48x48px */
-    min-width: 48px;
+    padding: var(--spacing-md);
+    min-height: var(--spacing-touch-target-min); /* Apple/Google touch target guideline: 48x48px */
+    min-width: var(--spacing-touch-target-min);
   }
 
   .promotion-option .piece-svg {
@@ -154,23 +155,23 @@
   }
 
   .promotion-option .piece-name {
-    font-size: 0.75rem;
+    font-size: var(--typography-body-sm-font-size);
   }
 
   .promotion-option .piece-cost {
-    font-size: 0.7rem;
+    font-size: var(--typography-label-caps-font-size);
   }
 
   #promotion-overlay h2 {
-    font-size: 1.2rem;
-    margin-bottom: 0.75rem;
+    font-size: var(--typography-body-lg-font-size);
+    margin-bottom: var(--spacing-md);
   }
 
   /* Ensure modal fits on small screens */
   #promotion-overlay .modal-content {
     max-width: calc(100vw - 24px) !important;
     width: calc(100vw - 24px) !important;
-    margin: 0 12px;
+    margin: 0 var(--spacing-md);
   }
 }
 
@@ -178,12 +179,12 @@
 @media (max-width: 360px) {
   .promotion-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 6px;
-    padding: 6px;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs);
   }
 
   .promotion-option {
-    padding: 10px;
+    padding: var(--spacing-sm);
     min-height: 44px;
   }
 
@@ -193,7 +194,7 @@
   }
 
   .promotion-option .piece-name {
-    font-size: 0.7rem;
+    font-size: var(--typography-label-caps-font-size);
   }
 }
 
@@ -203,9 +204,9 @@
   pointer-events: none;
   opacity: 0.4;
   transition:
-    opacity 0.5s ease-out,
-    transform 0.5s ease-out;
-  z-index: 5;
+    opacity var(--motion-transition-slow) ease-out,
+    transform var(--motion-transition-slow) ease-out;
+  z-index: var(--elevation-z-board);
   filter: sepia(100%) hue-rotate(190deg) saturate(300%) opacity(0.5);
 }
 
@@ -216,7 +217,7 @@
 
 /* --- King Flash Effect --- */
 .cell.king-check-flash {
-  animation: kingFlash 0.8s ease-out;
+  animation: kingFlash var(--motion-transition-slow) ease-out;
 }
 
 @keyframes kingFlash {
@@ -261,8 +262,8 @@
   background: linear-gradient(90deg, rgba(99, 102, 241, 0.8), rgba(255, 255, 255, 0));
   transform-origin: left center;
   pointer-events: none;
-  z-index: 15;
-  border-radius: 2px;
+  z-index: var(--elevation-z-board);
+  border-radius: var(--rounded-xs);
   box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
 }
 
@@ -284,10 +285,10 @@
 .cell.piece-veteran::after {
   content: '★';
   position: absolute;
-  top: 2px;
-  right: 2px;
-  font-size: 0.65rem;
-  color: #10b981;
+  top: var(--spacing-xs);
+  right: var(--spacing-xs);
+  font-size: var(--typography-label-caps-font-size);
+  color: var(--colors-accent-tertiary);
   text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
   pointer-events: none;
   z-index: 5;
@@ -300,9 +301,9 @@
 .cell.piece-elite::after {
   content: '★★';
   position: absolute;
-  top: 2px;
-  right: 2px;
-  font-size: 0.65rem;
+  top: var(--spacing-xs);
+  right: var(--spacing-xs);
+  font-size: var(--typography-label-caps-font-size);
   color: #8b5cf6;
   text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
   pointer-events: none;
@@ -330,11 +331,10 @@
   top: -5px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 0.8rem;
+  font-size: var(--typography-body-sm-font-size);
   z-index: 10;
   pointer-events: none;
 }
-
 
 /* --- Promotion UI Animation --- */
 #promotion-overlay {
@@ -343,7 +343,7 @@
   transform: translateY(20px);
 }
 #promotion-overlay.animate-in {
-  animation: fadeInUp 0.3s ease-out forwards;
+  animation: fadeInUp var(--motion-transition-fast) ease-out forwards;
 }
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(20px); }
@@ -354,7 +354,7 @@
 #promotion-overlay {
   opacity: 0;
   transform: scale(0.95);
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: opacity var(--motion-transition-fast) ease, transform var(--motion-transition-fast) ease;
 }
 #promotion-overlay.show {
   opacity: 1;

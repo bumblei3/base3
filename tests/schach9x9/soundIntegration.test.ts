@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { Game } from '@schach9x9/gameEngine';
-import { executeMove } from '../js/move/MoveExecutor';
+import { executeMove } from '@schach9x9/move/MoveExecutor';
 import { soundManager } from '@schach9x9/sounds';
 
 // Mock soundManager
@@ -17,7 +17,7 @@ vi.mock('@schach9x9/sounds', () => ({
 }));
 
 // Mock other dependencies that MoveExecutor might need
-vi.mock('@schach9x9/ui.js', () => ({
+vi.mock('@schach9x9/ui', () => ({
   // Note: ui.js is still JS, so keep extensions or let resolver handle it.
   default: {
     renderBoard: vi.fn(),

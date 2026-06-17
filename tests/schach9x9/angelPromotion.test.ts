@@ -51,12 +51,12 @@ import { describe, test, expect, beforeEach, vi } from 'vitest';
   },
 };
 
-vi.mock('@schach9x9/aiEngine.js', () => ({
+vi.mock('@schach9x9/aiEngine', () => ({
   evaluatePosition: vi.fn(() => Promise.resolve(0)),
   findKing: vi.fn(() => ({ r: 0, c: 0 })), // Mock findKing
 }));
 
-vi.mock('@schach9x9/ui.js', () => ({
+vi.mock('@schach9x9/ui', () => ({
   renderBoard: vi.fn(),
   showModal: vi.fn(),
   updateCapturedUI: vi.fn(),
@@ -78,7 +78,7 @@ vi.mock('@schach9x9/ui.js', () => ({
   flashSquare: vi.fn(),
 }));
 
-vi.mock('@schach9x9/sounds.js', () => ({
+vi.mock('@schach9x9/sounds', () => ({
   soundManager: {
     playMove: vi.fn(),
     playCapture: vi.fn(),
@@ -88,7 +88,7 @@ vi.mock('@schach9x9/sounds.js', () => ({
 }));
 
 const { Game, BOARD_SIZE } = await import('@schach9x9/gameEngine.js');
-const MoveExecutor = await import('../js/move/MoveExecutor.js');
+const MoveExecutor = await import('@schach9x9/move/MoveExecutor');
 
 describe('Angel Piece and Promotion', () => {
   let game: any;

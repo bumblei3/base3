@@ -4,7 +4,7 @@ import {
   calculateAccuracy,
   analyzeGame,
   MOVE_QUALITY,
-} from '../js/tutor/PostGameAnalyzer.js';
+} from '@schach9x9/tutor/PostGameAnalyzer';
 
 describe('PostGameAnalyzer', () => {
   describe('classifyMove', () => {

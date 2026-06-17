@@ -3,15 +3,15 @@ import { Game } from '@schach9x9/gameEngine.js';
 import { PHASES } from '@schach9x9/config.js';
 
 // Mock UI
-vi.mock('@schach9x9/ui.js', () => ({
+vi.mock('@schach9x9/ui', () => ({
   renderBoard: vi.fn(),
   updateShopUI: vi.fn(),
   showModal: vi.fn(),
   closeModal: vi.fn(),
 }));
 
-const { ShopManager } = await import('../js/shop/ShopManager.js');
-const { campaignManager } = await import('../js/campaign/CampaignManager.js');
+const { ShopManager } = await import('@schach9x9/shop/ShopManager');
+const { campaignManager } = await import('@schach9x9/campaign/CampaignManager');
 
 describe('Troop Upgrade Mode - Unit Tests', () => {
   let game: any;

@@ -1,8 +1,8 @@
 import { expect, test, describe, beforeEach } from "vitest";
 
 // Test the AI modules directly (not through main.js UI)
-import { Game, GAME_STATE } from "../../js/trischach/game.js";
-import { generateBoard, FACTION } from "../../js/trischach/board.js";
+import { Game, GAME_STATE } from "@trischach/game";
+import { generateBoard, FACTION } from "@trischach/board";
 import {
   calculateBestMove,
   evaluateBoard,
@@ -12,15 +12,15 @@ import {
   getPonderMove,
   isPondering,
   PonderState,
-} from "../../js/trischach/ai.js";
+} from "@trischach/ai";
 import {
   serializeGame,
   parseTSPN,
   downloadGame,
   copyGameToClipboard,
-} from "../../js/trischach/replay.js";
-import { PIECE_TYPE, Piece } from "../../js/trischach/pieces.js";
-import { Hex } from "../../js/trischach/hex.js";
+} from "@trischach/replay";
+import { PIECE_TYPE, Piece } from "@trischach/pieces";
+import { Hex } from "@trischach/hex";
 
 describe("AI Core: Dynamic Piece Values (RPS-aware)", () => {
   let game;

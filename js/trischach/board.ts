@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Hex, hexToPixel, hexPolygonPoints, hexCorners } from './hex.ts';
 import type { Faction, RPSResult, Cell, Zone, Piece } from './types.ts';
 

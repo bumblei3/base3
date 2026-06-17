@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import * as MoveAnalyzer from '../js/tutor/MoveAnalyzer.js';
+import * as MoveAnalyzer from '@schach9x9/tutor/MoveAnalyzer';
 
 describe('MoveAnalyzer Unit Tests', () => {
   const board = Array(9)

@@ -1,19 +1,19 @@
 import { describe, test, expect, vi } from 'vitest';
-vi.mock('@schach9x9/config.js', () => ({
+vi.mock('@schach9x9/config', () => ({
   BOARD_SIZE: 9,
   PHASES: { PLAY: 'play' },
 }));
-vi.mock('@schach9x9/effects.js', () => ({
+vi.mock('@schach9x9/effects', () => ({
   particleSystem: { spawn: vi.fn() },
   floatingTextManager: { show: vi.fn() },
   shakeScreen: vi.fn(),
   triggerVibration: vi.fn(),
 }));
-vi.mock('@schach9x9/utils.js', () => ({
+vi.mock('@schach9x9/utils', () => ({
   debounce: (fn: any) => fn,
 }));
 
-const { renderBoard } = await import('../js/ui/BoardRenderer.js');
+const { renderBoard } = await import('@schach9x9/ui/BoardRenderer');
 
 describe('BoardRenderer Touch Isolation', () => {
   test('renderBoard renders without error', () => {

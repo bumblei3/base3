@@ -1,9 +1,9 @@
 import { describe, expect, test, beforeEach, afterEach, vi, beforeAll } from 'vitest';
-import { KeyboardManager } from '../js/input/KeyboardManager.js';
+import { KeyboardManager } from '@schach9x9/input/KeyboardManager';
 import { setupJSDOM } from './test-utils.js';
 
 // Mock dependencies
-vi.mock('@schach9x9/ui.js', () => ({
+vi.mock('@schach9x9/ui', () => ({
   showToast: vi.fn(),
   closeModal: vi.fn(),
   renderBoard: vi.fn(),

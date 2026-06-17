@@ -7,7 +7,7 @@ import { Game } from '@schach9x9/gameEngine.js';
 import { PHASES } from '@schach9x9/config.js';
 
 // Mock UI module
-vi.mock('@schach9x9/ui.js', () => ({
+vi.mock('@schach9x9/ui', () => ({
   renderBoard: vi.fn(),
   showModal: vi.fn(),
   updateShopUI: vi.fn(),
@@ -16,7 +16,7 @@ vi.mock('@schach9x9/ui.js', () => ({
 }));
 
 // Mock sounds module
-vi.mock('@schach9x9/sounds.js', () => ({
+vi.mock('@schach9x9/sounds', () => ({
   soundManager: {
     playMove: vi.fn(),
     init: vi.fn(),

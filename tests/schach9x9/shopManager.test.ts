@@ -3,7 +3,7 @@
  */
 
 import { describe, expect, test, beforeEach, vi } from 'vitest';
-import { ShopManager } from '../js/shop/ShopManager.js';
+import { ShopManager } from '@schach9x9/shop/ShopManager';
 import { BOARD_SIZE, PHASES } from '@schach9x9/config.js';
 
 describe('ShopManager', () => {

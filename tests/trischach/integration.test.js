@@ -1,8 +1,8 @@
 import { expect, test, describe } from "vitest";
-import { Game } from "../../js/trischach/game.js";
-import { generateBoard } from "../../js/trischach/board.js";
-import { calculateBestMove } from "../../js/trischach/ai.js";
-import { PIECE_TYPE } from "../../js/trischach/pieces.js";
+import { Game } from "@trischach/game";
+import { generateBoard } from "@trischach/board";
+import { calculateBestMove } from "@trischach/ai";
+import { PIECE_TYPE } from "@trischach/pieces";
 
 describe("AI Simulation (Integration)", () => {
   test("AI can play a sequence of moves without crashing", () => {

@@ -1,5 +1,6 @@
 /* ===========================================
    ANIMATIONS.CSS - Keyframes & Transitions
+   Uses DESIGN.md tokens (--colors-*, --motion-*)
    =========================================== */
 
 /* --- Modal Pop Animation --- */
@@ -29,7 +30,7 @@
 /* --- Pulse Glow --- */
 @keyframes pulse-glow {
   0% {
-    box-shadow: 0 0 10px var(--accent-glow);
+    box-shadow: 0 0 10px var(--colors-accent-glow);
   }
 
   50% {
@@ -37,7 +38,7 @@
   }
 
   100% {
-    box-shadow: 0 0 10px var(--accent-glow);
+    box-shadow: 0 0 10px var(--colors-accent-glow);
   }
 }
 
@@ -139,7 +140,7 @@
 .btn-primary:active,
 .btn-secondary:active,
 .shop-item:active {
-  animation: spring-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: spring-pop var(--motion-transition-fast) var(--motion-transition-bounce);
   transform: translateY(0);
 }
 
@@ -158,23 +159,23 @@
 
 /* --- Entrance Animations --- */
 .game-area {
-  animation: fadeIn var(--transition-slow);
+  animation: fadeIn var(--motion-transition-slow);
 }
 
 #board-container {
-  animation: slide-up-fade 0.8s var(--transition-bounce);
+  animation: slide-up-fade 0.8s var(--motion-transition-bounce);
 }
 
 .player-info.opponent {
-  animation: slideInLeft 0.6s var(--transition-bounce) 0.1s both;
+  animation: slideInLeft 0.6s var(--motion-transition-bounce) 0.1s both;
 }
 
 .player-info.self {
-  animation: slideInLeft 0.6s var(--transition-bounce) 0.2s both;
+  animation: slideInLeft 0.6s var(--motion-transition-bounce) 0.2s both;
 }
 
 .action-bar {
-  animation: slide-up-fade 0.6s var(--transition-bounce) 0.3s both;
+  animation: slide-up-fade 0.6s var(--motion-transition-bounce) 0.3s both;
 }
 
 /* --- Simple Pulse (Tutor Thinking) --- */

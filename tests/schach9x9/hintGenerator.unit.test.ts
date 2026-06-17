@@ -3,7 +3,7 @@ import { Game } from '@schach9x9/gameEngine.js';
 import { PHASES } from '@schach9x9/config.js';
 
 // Mock UI
-vi.mock('@schach9x9/ui.js', () => ({
+vi.mock('@schach9x9/ui', () => ({
   showTutorSuggestions: vi.fn(),
   renderBoard: vi.fn(),
   updateShopUI: vi.fn(),
@@ -11,7 +11,7 @@ vi.mock('@schach9x9/ui.js', () => ({
   setTutorLoading: vi.fn(),
 }));
 
-vi.mock('@schach9x9/aiEngine.js', () => ({
+vi.mock('@schach9x9/aiEngine', () => ({
   getBestMoveDetailed: vi.fn(),
   getTopMoves: vi.fn(() => []),
   extractPV: vi.fn(() => []),
@@ -48,7 +48,7 @@ const {
   isTutorMove,
   showTutorSuggestions,
   updateBestMoves,
-} = await import('../js/tutor/HintGenerator.js');
+} = await import('@schach9x9/tutor/HintGenerator');
 
 describe('HintGenerator - Unit Tests', () => {
   let game: any;

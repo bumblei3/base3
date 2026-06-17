@@ -7,7 +7,7 @@
 import { describe, test, expect, beforeEach, vi, afterEach } from 'vitest';
 import * as AIEngine from '@schach9x9/aiEngine.js';
 import { createEmptyBoard } from '@schach9x9/gameEngine.js';
-import type { Board, PieceType, Player } from '../js/types/game.js';
+import type { Board, PieceType, Player } from '@schach9x9/types';
 import { EVAL_VALUES } from '@schach9x9/evaluate.js';
 
 // Make EVAL_VALUES available globally for quickEval in aiEngine.ts
@@ -246,7 +246,7 @@ describe('AI Engine - Coverage for Untested Paths', () => {
     });
 
     test('guaranteed fallback should return legal moves when search fails', async () => {
-      const wasmModule = await import('../js/ai/wasmBridge.js');
+      const wasmModule = await import('@schach9x9/ai/wasmBridge');
       vi.spyOn(wasmModule, 'getBestMoveWasm').mockRejectedValue(new Error('WASM failed'));
 
       const testBoard = createMinimalBoard();
@@ -285,7 +285,7 @@ describe('AI Engine - Coverage for Untested Paths', () => {
     });
 
     test('should handle WASM fallback failure and use JS', async () => {
-      const wasmModule = await import('../js/ai/wasmBridge.js');
+      const wasmModule = await import('@schach9x9/ai/wasmBridge');
       vi.spyOn(wasmModule, 'getBestMoveWasm').mockRejectedValue(new Error('WASM failed'));
 
       const testBoard = createMinimalBoard();
@@ -304,7 +304,7 @@ describe('AI Engine - Coverage for Untested Paths', () => {
 
   describe('JS Fallback Search', () => {
     test('should find move via JS search when WASM fails', async () => {
-      const wasmModule = await import('../js/ai/wasmBridge.js');
+      const wasmModule = await import('@schach9x9/ai/wasmBridge');
       vi.spyOn(wasmModule, 'getBestMoveWasm').mockRejectedValue(new Error('WASM failed'));
 
       const testBoard = createMinimalBoard();

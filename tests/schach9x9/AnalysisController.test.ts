@@ -6,7 +6,7 @@ import { AnalysisController } from '@schach9x9/AnalysisController.js';
 import * as UI from '@schach9x9/ui.js';
 
 // Mock dependencies
-vi.mock('@schach9x9/ui.js', () => ({
+vi.mock('@schach9x9/ui', () => ({
   renderBoard: vi.fn(),
   updateStatus: vi.fn(),
   renderEvalGraph: vi.fn(),

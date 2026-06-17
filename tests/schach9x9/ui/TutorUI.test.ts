@@ -1,7 +1,7 @@
 // Mock config
 import { describe, expect, test, beforeEach, vi } from 'vitest';
 
-vi.mock('@schach9x9/config.js', () => ({
+vi.mock('@schach9x9/config', () => ({
   BOARD_SIZE: 9,
   PHASES: {
     PLAY: 'PLAY',

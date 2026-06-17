@@ -2,7 +2,7 @@ import { describe, test, expect, beforeEach, afterEach } from 'vitest';
 /**
  * Unit tests for EvaluationBar
  */
-import { EvaluationBar } from '../js/ui/EvaluationBar.js';
+import { EvaluationBar } from '@schach9x9/ui';
 
 describe('EvaluationBar', () => {
   let container: any;

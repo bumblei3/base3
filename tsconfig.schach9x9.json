@@ -21,6 +21,7 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
     "types": ["node", "vitest", "happy-dom"],
     "incremental": true,
     "tsBuildInfoFile": ".tsbuildinfo.schach9x9",
@@ -34,7 +35,7 @@
   "include": [
     "js/schach9x9/**/*",
     "js/shared/**/*",
-    "tests/**/schach9x9/**/*",
+    "tests/schach9x9/**/*",
     "service-worker.ts"
   ],
   "exclude": ["node_modules", "dist", "engine-wasm"]

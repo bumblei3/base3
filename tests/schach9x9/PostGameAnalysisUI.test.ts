@@ -4,7 +4,7 @@
  */
 
 import { describe, test, expect, beforeEach, vi, afterEach } from 'vitest';
-import { showPostGameStats, hidePostGameStats } from '../js/ui/PostGameAnalysisUI.js';
+import { showPostGameStats, hidePostGameStats } from '@schach9x9/ui/PostGameAnalysisUI';
 
 // Mock dependencies at module level
 vi.mock('../js/tutor/PostGameAnalyzer.js', () => ({

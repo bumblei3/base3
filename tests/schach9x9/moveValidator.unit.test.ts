@@ -5,7 +5,7 @@ import {
   checkDraw,
   getBoardHash,
   calculateMaterialAdvantage,
-} from '../js/move/MoveValidator.js';
+} from '@schach9x9/move/MoveValidator';
 import { BOARD_SIZE } from '@schach9x9/config.js';
 
 describe('MoveValidator - Unit Tests', () => {

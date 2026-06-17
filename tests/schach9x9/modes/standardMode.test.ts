@@ -13,7 +13,7 @@ interface ModalAction {
 }
 
 // Mock UI module
-vi.mock('@schach9x9/ui.js', () => ({
+vi.mock('@schach9x9/ui', () => ({
   updateShopUI: vi.fn(),
   updateStatus: vi.fn(),
   renderBoard: vi.fn(),
@@ -26,14 +26,14 @@ vi.mock('@schach9x9/ui.js', () => ({
 }));
 
 // Mock sounds module
-vi.mock('@schach9x9/sounds.js', () => ({
+vi.mock('@schach9x9/sounds', () => ({
   soundManager: {
     playGameStart: vi.fn(),
   },
 }));
 
 // Mock logger
-vi.mock('@schach9x9/logger.js', () => ({
+vi.mock('@schach9x9/logger', () => ({
   logger: {
     info: vi.fn(),
     debug: vi.fn(),

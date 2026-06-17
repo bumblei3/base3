@@ -1,7 +1,7 @@
 import { describe, expect, test, beforeEach, vi } from 'vitest';
 
 // Mock config first
-vi.mock('@schach9x9/config.js', () => ({
+vi.mock('@schach9x9/config', () => ({
   BOARD_SIZE: 9,
   PHASES: { PLAY: 'play' },
   PIECE_VALUES: { p: 100, k: 0, r: 500, n: 300, b: 300, q: 900 },
@@ -9,7 +9,7 @@ vi.mock('@schach9x9/config.js', () => ({
 }));
 
 // Mock dependencies
-vi.mock('@schach9x9/effects.js', () => ({
+vi.mock('@schach9x9/effects', () => ({
   particleSystem: { spawn: vi.fn(), spawnTrail: vi.fn() },
   floatingTextManager: { show: vi.fn() },
   shakeScreen: vi.fn(),
@@ -17,7 +17,7 @@ vi.mock('@schach9x9/effects.js', () => ({
   confettiSystem: { spawn: vi.fn() },
 }));
 
-vi.mock('@schach9x9/utils.js', () => ({
+vi.mock('@schach9x9/utils', () => ({
   debounce: (fn: any) => fn,
 }));
 

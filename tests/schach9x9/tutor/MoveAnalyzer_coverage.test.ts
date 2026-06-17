@@ -10,7 +10,7 @@ vi.mock('../../js/tutor/TacticsDetector.js', () => ({
   detectTacticalPatterns: vi.fn().mockReturnValue([]),
 }));
 
-vi.mock('@schach9x9/aiEngine.js', () => ({
+vi.mock('@schach9x9/aiEngine', () => ({
   evaluatePosition: vi.fn(),
 }));
 

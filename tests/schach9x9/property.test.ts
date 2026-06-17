@@ -4,14 +4,14 @@ import { generateRandomBoard, createPRNG } from './test-utils.js';
 import { PHASES } from '@schach9x9/config.js';
 
 // Mock UI and sounds to avoid initialization issues
-vi.mock('@schach9x9/ui.js', () => ({
+vi.mock('@schach9x9/ui', () => ({
   renderBoard: vi.fn(),
   updateStatus: vi.fn(),
   updateCapturedUI: vi.fn(),
   updateMoveHistoryUI: vi.fn(),
 }));
 
-vi.mock('@schach9x9/sounds.js', () => ({
+vi.mock('@schach9x9/sounds', () => ({
   soundManager: { playMove: vi.fn(), playCapture: vi.fn() },
 }));
 

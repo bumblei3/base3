@@ -21,7 +21,7 @@ vi.mock('../../js/tutor/PostGameAnalyzer.js', () => ({
   QUALITY_METADATA: {},
 }));
 
-const { AnalysisUI } = await import('../../js/ui/AnalysisUI.js');
+const { AnalysisUI } = await import('@schach9x9/ui/AnalysisUI');
 
 describe('AnalysisUI', () => {
   let analysisUI: any;

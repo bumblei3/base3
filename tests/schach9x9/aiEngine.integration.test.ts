@@ -1,7 +1,7 @@
 import { describe, test, expect, beforeEach } from 'vitest';
 import * as AIEngine from '@schach9x9/aiEngine.js';
 import { Game } from '@schach9x9/gameEngine.js';
-import type { Piece } from '../js/types/game.js';
+import type { Piece } from '@schach9x9/types';
 
 describe('AIEngine Integration', () => {
   let game: Game;

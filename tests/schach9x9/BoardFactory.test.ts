@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { BoardFactory } from '../js/campaign/BoardFactory.js';
+import { BoardFactory } from '@schach9x9/campaign/BoardFactory';
 import { BOARD_SIZE } from '@schach9x9/config.js';
 
 describe('BoardFactory', () => {

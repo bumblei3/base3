@@ -4,7 +4,7 @@ import { PHASES } from '@schach9x9/gameEngine.js';
 import * as UI from '@schach9x9/ui.js';
 
 // Mock UI.js
-vi.mock('@schach9x9/ui.js', () => ({
+vi.mock('@schach9x9/ui', () => ({
   updateStatus: vi.fn(),
   showModal: vi.fn(),
   closeModal: vi.fn(),
@@ -16,7 +16,7 @@ vi.mock('@schach9x9/ui.js', () => ({
 
 // Mock aiEngine.js
 const mockEval = vi.fn().mockResolvedValue(0);
-vi.mock('@schach9x9/aiEngine.js', () => ({
+vi.mock('@schach9x9/aiEngine', () => ({
   evaluatePosition: (board: any, color: any) => mockEval(board, color),
   getBestMove: vi.fn(),
   getParamsForElo: vi.fn(() => ({ maxDepth: 4, elo: 2500 })),

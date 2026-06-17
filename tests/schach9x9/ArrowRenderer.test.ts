@@ -8,7 +8,7 @@ import {
   drawArrow,
   clearArrows,
   updateLastMoveArrow,
-} from '../js/ui/ArrowRenderer.js';
+} from '@schach9x9/arrows';
 
 // Helper to create mock DOM structure
 function createMockBoardContainer(): HTMLElement {

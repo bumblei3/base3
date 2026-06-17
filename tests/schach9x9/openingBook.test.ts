@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { setOpeningBook, queryOpeningBook, OpeningBook } from '../js/ai/OpeningBook.js';
+import { setOpeningBook, queryOpeningBook, OpeningBook } from '@schach9x9/ai/OpeningBook';
 import { logger } from '@schach9x9/logger.js';
 import { type Piece } from '@schach9x9/gameEngine.js';
 

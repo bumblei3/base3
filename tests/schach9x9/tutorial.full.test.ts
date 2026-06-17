@@ -6,7 +6,7 @@ import { describe, test, expect, beforeEach, vi } from 'vitest';
 };
 
 // Mock dependencies
-vi.mock('@schach9x9/chess-pieces.js', () => ({
+vi.mock('@schach9x9/chess-pieces', () => ({
   PIECE_SVGS: {
     white: {
       p: 'wp',

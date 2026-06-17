@@ -5,7 +5,7 @@ import {
   setCurrentBoardShape,
   BOARD_SHAPES,
 } from '@schach9x9/config.js';
-import * as MoveGenerator from '../js/ai/MoveGenerator.js';
+import * as MoveGenerator from '@schach9x9/ai/MoveGenerator';
 import {
   PIECE_ROOK,
   PIECE_KNIGHT,
@@ -18,7 +18,7 @@ import {
   WHITE_KING,
   WHITE_PAWN,
   BLACK_PAWN,
-} from '../js/ai/BoardDefinitions.js';
+} from '@schach9x9/ai/BoardDefinitions';
 import { Game } from '@schach9x9/gameEngine.js';
 import * as aiEngine from '@schach9x9/aiEngine.js';
 

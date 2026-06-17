@@ -55,7 +55,7 @@ interface TestGame
 }
 
 // Mock UI and SoundManager modules
-vi.mock('@schach9x9/ui.js', () => ({
+vi.mock('@schach9x9/ui', () => ({
   renderBoard: vi.fn(),
   showModal: vi.fn(),
   showPromotionModal: vi.fn(),
@@ -75,7 +75,7 @@ vi.mock('@schach9x9/ui.js', () => ({
   renderEvalGraph: vi.fn(),
 }));
 
-vi.mock('@schach9x9/sounds.js', () => ({
+vi.mock('@schach9x9/sounds', () => ({
   soundManager: {
     playMove: vi.fn(),
     playCapture: vi.fn(),
@@ -85,7 +85,7 @@ vi.mock('@schach9x9/sounds.js', () => ({
   },
 }));
 
-vi.mock('@schach9x9/aiEngine.js', () => ({
+vi.mock('@schach9x9/aiEngine', () => ({
   evaluatePosition: vi.fn(() => 0),
   findKing: vi.fn(() => ({ r: 0, c: 0 })),
   getBestMove: vi.fn().mockResolvedValue(null),

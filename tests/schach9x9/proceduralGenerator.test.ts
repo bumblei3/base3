@@ -1,10 +1,10 @@
 import { describe, test, expect, vi, beforeAll } from 'vitest';
 // Mock dependencies MUST be hoisted or defined before imports
-vi.mock('@schach9x9/config.js', () => ({
+vi.mock('@schach9x9/config', () => ({
   BOARD_SIZE: 9,
 }));
 
-vi.mock('@schach9x9/puzzleGenerator.js', () => ({
+vi.mock('@schach9x9/puzzleGenerator', () => ({
   PuzzleGenerator: {
     findMateSequence: vi.fn(),
     boardToString: vi.fn(() => 'mock_setup_string'),
@@ -20,7 +20,7 @@ describe('ProceduralGenerator', () => {
     const pgModule = await import('@schach9x9/puzzleGenerator.js');
     PuzzleGenerator = pgModule.PuzzleGenerator;
 
-    const procModule = await import('../js/puzzle/ProceduralGenerator.js');
+    const procModule = await import('@schach9x9/puzzle/ProceduralGenerator');
     ProceduralGenerator = procModule.ProceduralGenerator;
   });
 
