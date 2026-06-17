@@ -1,20 +1,16 @@
 import { defineConfig } from 'vitest/config';
-import tsconfigPaths from 'vite-tsconfig-paths';
 import { resolve } from 'path';
 import process from 'process';
 
 const isCI = !!process.env.CI;
 
 export default defineConfig({
-  plugins: [tsconfigPaths()],
   test: {
     environment: 'happy-dom',
     globals: true,
     pool: isCI ? 'forks' : 'threads',
-    poolOptions: {
-      forks: { singleFork: true },
-      threads: { singleThread: true },
-    },
+    threads: { singleThread: true },
+    forks: { singleFork: true },
     setupFiles: ['./tests/vitest.setup.ts'],
     include: ['tests/**/*.{test,unit.test,integration.test}.{js,ts}'],
     exclude: [
@@ -52,6 +48,7 @@ export default defineConfig({
   },
   resolve: {
     extensions: ['.js', '.ts', '.json'],
+    tsconfigPaths: true,
     alias: {
       '@trischach': resolve(__dirname, './js/trischach'),
       '@trischach/*': resolve(__dirname, './js/trischach/*'),
