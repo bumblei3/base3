@@ -31,28 +31,44 @@ jobs:
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
 
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Cache WASM build
+        uses: actions/cache@v4
+        with:
+          path: |
+            engine-wasm/target
+            ~/.cargo/bin
+            ~/.cargo/registry/index
+            ~/.cargo/registry/cache
+            ~/.cargo/git/db
+          key: ${{ runner.os }}-cargo-${{ hashFiles('engine-wasm/Cargo.lock') }}
+
+      - name: Build WASM
+        run: npm run wasm:build
+
       - name: Build Schach9x9
         run: npm run build:schach9x9
 
       - name: Build Trischach
         run: npm run build:trischach
 
+      - name: Build Landing Page
+        run: npm run build:landing
+
       - name: Prepare Pages directory
         run: |
           mkdir -p _pages
           # Landing page
-          cp index.html _pages/
+          cp -r dist/landing/* _pages/
           # Schach9x9
           cp -r dist/schach9x9 _pages/schach9x9
           # Trischach
           cp -r dist/trischach _pages/trischach
-          # CSS
-          cp -r css _pages/css
-          # JS (for landing page imports)
-          cp -r js _pages/js
-          # Public assets
-          cp -r public _pages/public 2>/dev/null || true
-          # Create .nojekyll to prevent GitHub Pages from ignoring files starting with _
+          # Create .nojekyll
           touch _pages/.nojekyll
 
       - name: Upload Pages artifact
