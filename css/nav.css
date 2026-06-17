@@ -160,6 +160,8 @@ body {
 @media (max-width: 768px) {
   .top-nav .nav-toggle {
     display: block;
+    min-width: 44px;
+    min-height: 44px;
   }
 
   .top-nav .nav-links {
@@ -176,6 +178,8 @@ body {
     opacity: 0;
     pointer-events: none;
     transition: all var(--transition-normal);
+    max-height: calc(100vh - 56px);
+    overflow-y: auto;
   }
 
   .top-nav .nav-links.open {
@@ -188,6 +192,7 @@ body {
     width: 100%;
     justify-content: flex-start;
     padding: var(--space-md);
+    min-height: 44px;
   }
 }
 
@@ -197,6 +202,27 @@ body {
 .main-content {
   padding-top: 56px; /* Height of top nav */
   min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile */
+}
+
+/* Safe Area Support for notched devices */
+@supports (padding: env(safe-area-inset-top)) {
+  .top-nav {
+    padding-top: env(safe-area-inset-top);
+    padding-left: calc(var(--space-lg) + env(safe-area-inset-left));
+    padding-right: calc(var(--space-lg) + env(safe-area-inset-right));
+  }
+
+  .main-content {
+    padding-top: calc(56px + env(safe-area-inset-top));
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  .footer {
+    padding-bottom: calc(var(--space-lg) + env(safe-area-inset-bottom));
+  }
 }
 
 /* ============================================

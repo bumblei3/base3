@@ -193,6 +193,11 @@ body.mode-3d #board-wrapper {
   transition:
     transform var(--motion-transition-fast) ease,
     box-shadow var(--motion-transition-fast) ease;
+  /* Touch optimization */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .cell.light {
@@ -326,6 +331,18 @@ body.mode-3d #board-wrapper {
   width: 90%;
   height: 90%;
   transition: transform var(--motion-transition-fast) ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Touch: Larger pieces on mobile */
+@media (max-width: 480px) {
+  .piece-svg {
+    width: 95%;
+    height: 95%;
+  }
 }
 
 /* --- Check / Checkmate --- */
@@ -403,6 +420,20 @@ body.mode-3d #board-wrapper {
     transform: scale(1);
     opacity: 1;
   }
+}
+
+/* --- Touch feedback --- */
+.cell.touch-active {
+  background-color: rgba(99, 102, 241, 0.3) !important;
+  transform: scale(0.95);
+}
+
+/* Prevent text selection on game elements */
+#board-container,
+.game-area,
+.action-bar {
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 /* Opening Name Styling */

@@ -643,6 +643,23 @@
           });
         });
       }
+
+      // Touch feedback for board cells
+      const board = document.getElementById('board');
+      if (board) {
+        board.addEventListener('touchstart', (e) => {
+          const cell = e.target.closest('.cell');
+          if (cell) cell.classList.add('touch-active');
+        }, { passive: true });
+
+        board.addEventListener('touchend', (e) => {
+          const cell = e.target.closest('.cell');
+          if (cell) cell.classList.remove('touch-active');
+        }, { passive: true });
+
+        // Prevent double-tap zoom on board
+        board.addEventListener('dblclick', (e) => e.preventDefault());
+      }
     </script>
   </body>
 </html>
