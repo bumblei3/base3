@@ -1,0 +1,49 @@
+{
+  "ci": {
+    "collect": {
+      "numberOfRuns": 3,
+      "startServerCommand": "npx serve dist -l 5173",
+      "url": [
+        "http://localhost:5173",
+        "http://localhost:5173/schach9x9/",
+        "http://localhost:5173/trischach/"
+      ],
+      "settings": {
+        "staticDistDir": "./dist",
+        "headless": true
+      }
+    },
+    "assert": {
+      "assertions": {
+        "categories:performance": ["error", { "minScore": 0.9 }],
+        "categories:accessibility": ["error", { "minScore": 1.0 }],
+        "categories:best-practices": ["error", { "minScore": 0.9 }],
+        "categories:seo": ["error", { "minScore": 1.0 }],
+        "first-contentful-paint": ["warn", { "maxNumericValue": 2500 }],
+        "largest-contentful-paint": ["warn", { "maxNumericValue": 4000 }],
+        "cumulative-layout-shift": ["warn", { "maxNumericValue": 0.1 }],
+        "total-blocking-time": ["warn", { "maxNumericValue": 300 }],
+        "interactive": ["warn", { "maxNumericValue": 3500 }],
+        "redirects": ["error", { "maxNumericValue": 0 }]
+      }
+    },
+    "upload": {
+      "target": "temporary-public-storage"
+    }
+  },
+  "budgets": [
+    {
+      "resourceSizes": [
+        { "resourceType": "total", "budget": 300 },
+        { "resourceType": "script", "budget": 150 },
+        { "resourceType": "css", "budget": 50 },
+        { "resourceType": "image", "budget": 50 },
+        { "resourceType": "font", "budget": 50 },
+        { "resourceType": "third-party", "budget": 50 }
+      ],
+      "resourceCounts": [
+        { "resourceType": "third-party", "budget": 10 }
+      ]
+    }
+  ]
+}

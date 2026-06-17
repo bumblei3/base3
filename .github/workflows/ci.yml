@@ -134,7 +134,26 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           artifact_name: preview-${{ github.event.number }}
 
-  # ─── Phase 5: Deploy to GitHub Pages (only on push to main) ───────
+  # ─── Phase 5: Lighthouse CI (PRs) ─────────────────────────────────
+  lighthouse:
+    name: Lighthouse CI
+    runs-on: ubuntu-latest
+    needs: preview
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v11
+        with:
+          urls: |
+            ${{ steps.deployment.outputs.page_url }}
+            ${{ steps.deployment.outputs.page_url }}schach9x9/
+            ${{ steps.deployment.outputs.page_url }}trischach/
+          budgetPath: ./lighthouse-budget.json
+          uploadArtifacts: true
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+  # ─── Phase 6: Deploy to GitHub Pages (only on push to main) ───────
   deploy:
     name: Deploy to GitHub Pages
     runs-on: ubuntu-latest
