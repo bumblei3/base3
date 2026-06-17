@@ -13,9 +13,20 @@ import { vi } from 'vitest';
  * Sets up a standard JSDOM environment for Schach 9x9 tests.
  */
 export function setupJSDOM(): void {
-  // Use process.cwd() to locate index.html generic to the project root
-  const htmlPath = path.resolve(process.cwd(), 'index.html');
-  const htmlContent = fs.readFileSync(htmlPath, 'utf8');
+  // Use process.cwd() to locate index.schach9x9.html for the game page
+  const htmlPath = path.resolve(process.cwd(), 'index.schach9x9.html');
+  let htmlContent = fs.readFileSync(htmlPath, 'utf8');
+  
+  // Strip Google Fonts links to avoid network requests in tests
+  htmlContent = htmlContent.replace(
+    /<link[^>]*fonts\.googleapis\.com[^>]*>/gi,
+    ''
+  );
+  htmlContent = htmlContent.replace(
+    /<link[^>]*preconnect[^>]*fonts\.googleapis\.com[^>]*>/gi,
+    ''
+  );
+  
   document.body.innerHTML = htmlContent;
 
   // Add 'j' (Jester) to match the expected Record<..., string> type

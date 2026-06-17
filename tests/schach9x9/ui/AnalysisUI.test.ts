@@ -2,7 +2,7 @@ import { describe, expect, test, beforeEach, vi } from 'vitest';
 import { setupJSDOM, createMockGame } from '../test-utils.js';
 
 // Mock UI module
-vi.mock('@schach9x9/ui.js', () => ({
+vi.mock('@schach9x9/ui', () => ({
   showModal: vi.fn(),
   closeModal: vi.fn(),
   showToast: vi.fn(),
@@ -11,7 +11,7 @@ vi.mock('@schach9x9/ui.js', () => ({
 }));
 
 // Mock PostGameAnalyzer
-vi.mock('../../js/tutor/PostGameAnalyzer.js', () => ({
+vi.mock('@schach9x9/tutor/PostGameAnalyzer', () => ({
   analyzeGame: vi.fn(() => ({
     accuracy: 90,
     counts: {
@@ -41,7 +41,7 @@ vi.mock('../../js/tutor/PostGameAnalyzer.js', () => ({
 }));
 
 // Mock logger
-vi.mock('@schach9x9/logger.js', () => ({
+vi.mock('@schach9x9/logger', () => ({
   logger: {
     info: vi.fn(),
     warn: vi.fn(),
@@ -51,7 +51,7 @@ vi.mock('@schach9x9/logger.js', () => ({
 }));
 
 import * as UI from '@schach9x9/ui.js';
-import '../../js/tutor/PostGameAnalyzer.js';
+import '@schach9x9/tutor/PostGameAnalyzer';
 import { AnalysisUI } from '@schach9x9/ui/AnalysisUI.js';
 
 describe('AnalysisUI', () => {

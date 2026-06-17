@@ -6,6 +6,7 @@ export default tseslint.config(
   {
     ignores: [
       'dist/**',
+      'coverage/**',
       'node_modules/**',
       'engine-wasm/**',
       '**/*.cjs',
@@ -49,7 +50,7 @@ export default tseslint.config(
         afterAll: 'readonly',
       },
       parserOptions: {
-        project: ['./tsconfig.schach9x9.json', './tsconfig.trischach.json'],
+        project: ['./tsconfig.json', './tsconfig.schach9x9.json', './tsconfig.trischach.json'],
         tsconfigRootDir: import.meta.dirname,
       },
     },
@@ -107,7 +108,15 @@ export default tseslint.config(
     },
   },
   {
-    files: ['vite.config.ts', 'vite.config.*.ts', 'vitest.config.ts', 'playwright.config.ts', 'service-worker.ts'],
+    files: ['tests/**/*.ts', 'tests/**/*.js', 'tests/**/*.tsx', 'tests/**/*.jsx', 'tests-e2e/**/*.ts', 'tests-e2e/**/*.js'],
+    rules: {
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
+    },
+  },
+  {
+    files: ['vite.config.ts', 'vite.config.*.ts', 'vitest.config.ts', 'playwright.config.ts', 'service-worker.ts', 'vite.landing.config.ts'],
     languageOptions: {
       parserOptions: {
         project: null,

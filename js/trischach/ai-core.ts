@@ -15,7 +15,7 @@ import { isKingdomCheck } from './game-check.ts';
 import {
   pickBookMove,
   buildOpeningBook,
-  inBook,
+  inBook as _inBook,
   learnFromGame,
   getLearnedData,
   loadLearnedData,
@@ -182,8 +182,8 @@ export function see(
     moveCount++;
 
     // Find best recapture for the defending side
-    const bestRecapture = -Infinity;
-    const recapturePiece: Piece | null = null;
+    const _bestRecapture = -Infinity;
+    const _recapturePiece: Piece | null = null;
 
     // In real SEE, we'd iterate all pieces of currentVictimFaction that can capture currentAttacker
     // Simplified: just use the victim's value as proxy for recapture quality
@@ -436,7 +436,7 @@ export const ZOBRIST_RPS_KEY = zobristRng.next();
 // TypeScript doesn't track array bounds, so we use these helpers for safe access
 
 // Get piece key from 3D array with bounds checking
-function getZobristPieceKey(
+function _getZobristPieceKey(
   ptIdx: number,
   facIdx: number,
   sqIdx: number,
@@ -757,7 +757,7 @@ export function hexDistFromCenter(hex: Hex): number {
 }
 
 export function buildPST(
-  calcFn: (hex: Hex, dist: number) => number,
+  calcFn: (_hex: Hex, _dist: number) => number,
 ): Map<string, number> {
   const table = new Map<string, number>();
   for (let q = -7; q <= 2; q++) {
@@ -772,9 +772,9 @@ export function buildPST(
 const KING_PST = buildPST((h, d) => d * 3);
 const QUEEN_PST = buildPST((h, d) => (6 - d) * 5);
 const ROOK_PST = buildPST((h, d) => (5 - d) * 4);
-const BISHOP_PST = buildPST((h, d) => (5 - d) * 4);
-const KNIGHT_PST = buildPST((h, d) => (6 - d) * 8);
-const PAWN_PST = buildPST((h, d) => {
+const BISHOP_PST = buildPST((_h, d) => (5 - d) * 4);
+const KNIGHT_PST = buildPST((_h, d) => (6 - d) * 8);
+const PAWN_PST = buildPST((h, _d) => {
   const advancement = Math.max(0, 5 - h.r);
   const centerCol = Math.max(0, 3 - Math.abs(h.q));
   return advancement * 6 + centerCol * 3;
@@ -2382,11 +2382,11 @@ export function isPondering(): boolean {
  * to receive depth/score updates during pondering.
  */
 export let reportPonderProgress:
-  | ((depth: number, score: number, nodes: number) => void)
+  | ((_depth: number, _score: number, _nodes: number) => void)
   | null = null;
 
 export function setPonderProgressCallback(
-  callback: (depth: number, score: number, nodes: number) => void,
+  callback: (_depth: number, _score: number, _nodes: number) => void,
 ): void {
   reportPonderProgress = callback;
 }
@@ -2397,7 +2397,6 @@ export { learnFromGame, getLearnedData, loadLearnedData };
 // ─── Game Serialization ────────────────────────────────────────────
 
 import { rebuildOccupiedMap } from './board.ts';
-import type { IGame } from './types.ts';
 
 export function deserializeGame(state: {
   pieces: Array<{

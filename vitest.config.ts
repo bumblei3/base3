@@ -1,5 +1,6 @@
 import { defineConfig } from 'vitest/config';
 import tsconfigPaths from 'vite-tsconfig-paths';
+import { resolve } from 'path';
 import process from 'process';
 
 const isCI = !!process.env.CI;
@@ -27,8 +28,6 @@ export default defineConfig({
         'tests/**',
         'tests-e2e/**',
         '*.config.*',
-        'schach9x9/**',
-        'trischach/**',
         'scripts/**',
         'public/**',
       ],
@@ -44,11 +43,16 @@ export default defineConfig({
       extensions: ['.js', '.ts', '.json'],
       mainFields: ['module', 'main'],
     },
-    deps: {
-      inline: [/@schach9x9|@trischach/],
-    },
   },
   resolve: {
     extensions: ['.js', '.ts', '.json'],
+    alias: {
+      '@trischach': resolve(__dirname, './js/trischach'),
+      '@trischach/*': resolve(__dirname, './js/trischach/*'),
+      '@schach9x9': resolve(__dirname, './js/schach9x9'),
+      '@schach9x9/*': resolve(__dirname, './js/schach9x9/*'),
+      '@shared': resolve(__dirname, './js/shared'),
+      '@shared/*': resolve(__dirname, './js/shared/*'),
+    },
   },
 });

@@ -1,32 +1,31 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest';
 import { AnalysisManager } from '@schach9x9/AnalysisManager.js';
+import * as TacticsDetectorModule from '@schach9x9/tutor/TacticsDetector';
+import * as aiEngineModule from '@schach9x9/aiEngine';
+
+vi.mock('@schach9x9/tutor/TacticsDetector', () => ({
+  getThreatenedPieces: vi.fn(),
+  countDefenders: vi.fn(),
+  detectTacticalPatterns: vi.fn(),
+}));
+
+vi.mock('@schach9x9/aiEngine', () => ({
+  see: vi.fn(),
+}));
 
 describe('AnalysisManager', () => {
   let mockGame: any;
   let analysisManager: any;
 
-  // Mock Dependencies
-  vi.mock('../js/tutor/TacticsDetector.js', () => ({
-    getThreatenedPieces: vi.fn(),
-    countDefenders: vi.fn(),
-    detectTacticalPatterns: vi.fn(),
-  }));
-
-  vi.mock('@schach9x9/aiEngine.js', () => ({
-    see: vi.fn(),
-  }));
-
   beforeEach(async () => {
     // Reset mocks
-    const TacticsDetector = await import('../js/tutor/TacticsDetector.js');
-    const aiEngine = await import('@schach9x9/aiEngine.js');
     vi.clearAllMocks();
 
     // Default implementations
-    (TacticsDetector.getThreatenedPieces as any).mockReturnValue([]);
-    (TacticsDetector.countDefenders as any).mockReturnValue(0);
-    (TacticsDetector.detectTacticalPatterns as any).mockReturnValue([]);
-    (aiEngine.see as any).mockReturnValue(0);
+    (TacticsDetectorModule.getThreatenedPieces as any).mockReturnValue([]);
+    (TacticsDetectorModule.countDefenders as any).mockReturnValue(0);
+    (TacticsDetectorModule.detectTacticalPatterns as any).mockReturnValue([]);
+    (aiEngineModule.see as any).mockReturnValue(0);
 
     mockGame = {
       boardSize: 9,
@@ -63,7 +62,7 @@ describe('AnalysisManager', () => {
   });
 
   test('should generate threat arrows correctly', async () => {
-    const TacticsDetector = await import('../js/tutor/TacticsDetector.js');
+    const TacticsDetector = await import('@schach9x9/tutor/TacticsDetector');
     const aiEngine = await import('@schach9x9/aiEngine.js');
 
     // Simulate Black Rook at (0,4) threatening White Queen at (4,4)
@@ -110,7 +109,7 @@ describe('AnalysisManager', () => {
   });
 
   test('should only show serious threats', async () => {
-    const TacticsDetector = await import('../js/tutor/TacticsDetector.js');
+    const TacticsDetector = await import('@schach9x9/tutor/TacticsDetector');
     const aiEngine = await import('@schach9x9/aiEngine.js');
 
     // Setup: Attacker exists on board
@@ -136,7 +135,7 @@ describe('AnalysisManager', () => {
     expect(arrows.length).toBe(1);
   });
   test('should generate opportunity arrows for high severity patterns (fork)', async () => {
-    const TacticsDetector = await import('../js/tutor/TacticsDetector.js');
+    const TacticsDetector = await import('@schach9x9/tutor/TacticsDetector');
 
     // Simulate finding a Fork
     (mockGame.getAllLegalMoves as any).mockReturnValue([
@@ -161,7 +160,7 @@ describe('AnalysisManager', () => {
   });
 
   test('should generate opportunity arrows for high severity patterns (pin)', async () => {
-    const TacticsDetector = await import('../js/tutor/TacticsDetector.js');
+    const TacticsDetector = await import('@schach9x9/tutor/TacticsDetector');
 
     // Simulate finding a Pin
     (mockGame.getAllLegalMoves as any).mockReturnValue([

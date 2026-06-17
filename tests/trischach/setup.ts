@@ -1,6 +1,34 @@
 // Global test setup - suppress opening book debug output
 import { vi } from 'vitest';
 
+// Mock Web Audio API
+class MockAudioContext {
+  state = 'running';
+  currentTime = 0;
+  destination = {};
+  createOscillator() {
+    return {
+      connect: vi.fn(),
+      start: vi.fn(),
+      stop: vi.fn(),
+      type: 'sine',
+      frequency: { setValueAtTime: vi.fn(), exponentialRampToValueAtTime: vi.fn() },
+    };
+  }
+  createGain() {
+    return {
+      connect: vi.fn(),
+      gain: { setValueAtTime: vi.fn(), exponentialRampToValueAtTime: vi.fn() },
+    };
+  }
+  resume() {
+    return Promise.resolve();
+  }
+}
+
+global.AudioContext = MockAudioContext as any;
+global.webkitAudioContext = MockAudioContext as any;
+
 const originalLog = console.log;
 const originalWarn = console.warn;
 

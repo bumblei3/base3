@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars, @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any */
 /**
  * TriSchach Main Entry Point - TypeScript
  * Main application logic, UI handling, AI worker management, replay system
@@ -21,12 +22,9 @@ import {
   evaluateBoard,
   setAIDepth,
   setAIPersonality,
-  getAIPersonalities,
-  buildOpeningBook,
   // Pondering
   startPondering,
   stopPondering,
-  isPondering,
 } from './ai.ts';
 import {
   learnFromGame,
@@ -41,13 +39,11 @@ import {
   downloadGame,
   copyGameToClipboard,
   loadGameFromFile,
-  parseTSPN,
   reconstructGameFromTSPN,
   ReplayController,
 } from './replay.ts';
 import {
   generatePuzzlesFromBook,
-  loadPuzzle,
   getPuzzleState,
   makePuzzleMove,
   requestHint,
@@ -55,8 +51,6 @@ import {
   abandonPuzzle,
   getDailyPuzzle,
   Puzzle,
-  PuzzleMove,
-  PuzzleState,
 } from './puzzle.ts';
 import { Hex } from './hex.ts';
 

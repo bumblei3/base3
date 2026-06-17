@@ -28,13 +28,21 @@ globalThis.TextDecoder = TextDecoder;
 globalThis.TextEncoder = TextEncoder;
 
 // --- Global Fetch Mock ---
-globalThis.fetch = vi.fn(() =>
-  Promise.resolve({
+globalThis.fetch = vi.fn((url: string | URL | Request) => {
+  const urlStr = url.toString();
+  // Mock Google Fonts CSS response
+  if (urlStr.includes('fonts.googleapis.com')) {
+    return Promise.resolve({
+      ok: true,
+      text: () => Promise.resolve('/* mocked google fonts css */'),
+    } as Response);
+  }
+  return Promise.resolve({
     ok: true,
     json: () => Promise.resolve({}),
     text: () => Promise.resolve(''),
-  } as Response)
-);
+  } as Response);
+});
 // --- AudioContext Mock (for trischach sounds) ---
 class MockAudioContext {
   state: 'suspended' | 'running' | 'closed' = 'suspended';
@@ -364,15 +372,71 @@ globalThis.matchMedia = vi.fn((query: string) => ({
   addListener: vi.fn(),
   removeListener: vi.fn(),
   addEventListener: vi.fn(),
-  removeEventListener: vi.fn(),
-  dispatchEvent: vi.fn(),
 }));
 
 // --- URL.createObjectURL / revokeObjectURL ---
 globalThis.URL.createObjectURL = vi.fn(() => 'blob:mock-url');
 globalThis.URL.revokeObjectURL = vi.fn();
 
+// --- SVGSVGElement Mock (for Trischach BoardRenderer) ---
+class MockSVGSVGElement {
+  addEventListener = vi.fn();
+  removeEventListener = vi.fn();
+  getElementById = vi.fn();
+  querySelector = vi.fn();
+  querySelectorAll = vi.fn(() => []);
+  removeChild = vi.fn();
+  appendChild = vi.fn();
+  style = { transform: '' };
+  id = '';
+}
+
+Object.defineProperty(globalThis, 'SVGSVGElement', {
+  writable: true,
+  value: MockSVGSVGElement,
+});
+
+// Ensure SVG elements are properly created
+const originalCreateElementNS = document.createElementNS.bind(document);
+document.createElementNS = vi.fn((namespace: string, qualifiedName: string) => {
+  if (namespace === 'http://www.w3.org/2000/svg') {
+    const el = originalCreateElementNS(namespace, qualifiedName) as HTMLElement & { addEventListener: vi.Mock; removeEventListener: vi.Mock };
+    el.addEventListener = vi.fn();
+    el.removeEventListener = vi.fn();
+    return el;
+  }
+  return originalCreateElementNS(namespace, qualifiedName);
+});
+
+// Override document.createElement to handle SVG
+const originalCreateElement = document.createElement.bind(document);
+document.createElement = vi.fn((tagName: string, options?: ElementCreationOptions) => {
+  if (tagName === 'svg' || (options && options.is === 'svg')) {
+    const el = originalCreateElementNS('http://www.w3.org/2000/svg', 'svg') as HTMLElement & { addEventListener: vi.Mock; removeEventListener: vi.Mock };
+    el.addEventListener = vi.fn();
+    el.removeEventListener = vi.fn();
+    return el;
+  }
+  return originalCreateElement(tagName, options);
+});
+
+// Override innerHTML setter for SVG handling
+const originalInnerHTMLDescriptor = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'innerHTML');
+if (originalInnerHTMLDescriptor) {
+  Object.defineProperty(HTMLElement.prototype, 'innerHTML', {
+    ...originalInnerHTMLDescriptor,
+    set: function(value: string) {
+      if (value && value.includes('<svg') && !value.includes('xmlns="http://www.w3.org/2000/svg"')) {
+        value = value.replace(/<svg([^>]*)>/gi, '<svg$1 xmlns="http://www.w3.org/2000/svg">');
+      }
+      originalInnerHTMLDescriptor.set.call(this, value);
+    },
+  });
+}
+
 // --- Clipboard API ---
+
+  // --- Clipboard API ---
 Object.defineProperty(navigator, 'clipboard', {
   value: {
     writeText: vi.fn(() => Promise.resolve()),

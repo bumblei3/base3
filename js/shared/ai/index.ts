@@ -8,29 +8,29 @@ import type { Move, Piece, GameState, TimeControl, SearchResult, AIPersonality, 
 export interface IGame {
   getCurrentTurn(): string;
   getLegalMoves(): Move[];
-  makeMove(move: Move): void;
+  makeMove(_move: Move): void;
   undoMove(): void;
   getBoard(): Piece[];
   getGameState(): GameState;
   clone(): IGame;
   getFen?(): string;
-  setFen?(fen: string): void;
+  setFen?(_fen: string): void;
 }
 
 // AI Engine interface
 export interface IAIEngine {
   // Configuration
-  setDepth(depth: number): void;
-  setPersonality(personality: AIPersonality | string): void;
-  setTimeControl(timeControl: TimeControl): void;
+  setDepth(_depth: number): void;
+  setPersonality(_personality: AIPersonality | string): void;
+  setTimeControl(_timeControl: TimeControl): void;
 
   // Search
-  findBestMove(game: IGame): Promise<SearchResult>;
-  findBestMoveSync(game: IGame): SearchResult;
+  findBestMove(_game: IGame): Promise<SearchResult>;
+  findBestMoveSync(_game: IGame): SearchResult;
 
   // Analysis
-  analyzePosition(game: IGame, depth?: number): Promise<SearchResult>;
-  evaluatePosition(game: IGame): number;
+  analyzePosition(_game: IGame, _depth?: number): Promise<SearchResult>;
+  evaluatePosition(_game: IGame): number;
 
   // Control
   stopSearch(): void;
@@ -44,8 +44,8 @@ export interface IAIEngine {
 
 // AI Factory for creating engines
 export interface IAIFactory {
-  createEngine(config?: AIConfig): IAIEngine;
-  createWorkerEngine(config?: AIConfig): IAIEngine;
+  createEngine(_config?: AIConfig): IAIEngine;
+  createWorkerEngine(_config?: AIConfig): IAIEngine;
 }
 
 export interface AIConfig {
@@ -114,10 +114,10 @@ export const PERSONALITIES: Record<string, AIPersonality> = {
 
 // Opening Book interface
 export interface IOpeningBook {
-  getMove(game: IGame): Move | null;
-  addMove(game: IGame, move: Move, weight?: number): void;
-  learnFromGame(game: IGame, result: GameResult): void;
-  getBookMoves(game: IGame): Move[];
+  getMove(_game: IGame): Move | null;
+  addMove(_game: IGame, _move: Move, _weight?: number): void;
+  learnFromGame(_game: IGame, _result: GameResult): void;
+  getBookMoves(_game: IGame): Move[];
   save(): Promise<void>;
   load(): Promise<void>;
   getStats(): { positions: number; moves: number; depth: number };
@@ -135,12 +135,12 @@ export interface TTEntry {
 
 // Transposition Table Interface
 export interface ITranspositionTable {
-  get(key: bigint): TTEntry | undefined;
-  set(entry: TTEntry): void;
+  get(_key: bigint): TTEntry | undefined;
+  set(_entry: TTEntry): void;
   clear(): void;
   size(): number;
   save(): string;
-  load(data: string): void;
+  load(_data: string): void;
 }
 
 // Search Parameters
@@ -162,9 +162,9 @@ export interface MoveScore {
 }
 
 export interface IMoveOrdering {
-  orderMoves(game: IGame, moves: Move[], ttMove?: Move, killerMoves?: Move[][]): MoveScore[];
-  updateKiller(move: Move, ply: number): void;
-  updateHistory(move: Move, depth: number, bonus: number): void;
+  orderMoves(_game: IGame, _moves: Move[], _ttMove?: Move, _killerMoves?: Move[][]): MoveScore[];
+  updateKiller(_move: Move, _ply: number): void;
+  updateHistory(_move: Move, _depth: number, _bonus: number): void;
   clearHistory(): void;
 }
 
@@ -181,8 +181,8 @@ export interface EvaluationComponents {
 }
 
 export interface IEvaluator {
-  evaluate(game: IGame): number;
-  evaluateComponents(game: IGame): EvaluationComponents;
+  evaluate(_game: IGame): number;
+  evaluateComponents(_game: IGame): EvaluationComponents;
 }
 
 // AI Worker communication

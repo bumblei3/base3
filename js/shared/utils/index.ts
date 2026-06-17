@@ -8,7 +8,7 @@ export function uid(prefix = ''): string {
 }
 
 // Debounce function
-export function debounce<T extends(...args: unknown[]) => unknown>(
+export function debounce<T extends(..._args: unknown[]) => unknown>(
   fn: T,
   delay: number
 ): T & { cancel: () => void } {
@@ -30,7 +30,7 @@ export function debounce<T extends(...args: unknown[]) => unknown>(
 }
 
 // Throttle function
-export function throttle<T extends(...args: unknown[]) => unknown>(
+export function throttle<T extends(..._args: unknown[]) => unknown>(
   fn: T,
   limit: number
 ): T & { cancel: () => void } {
@@ -194,6 +194,7 @@ export function unique<T>(array: T[]): T[] {
   return [...new Set(array)];
 }
 
+// eslint-disable-next-line no-unused-vars
 export function groupBy<T, K extends string | number>(array: T[], key: (item: T) => K): Record<K, T[]> {
   return array.reduce((acc, item) => {
     const k = key(item);

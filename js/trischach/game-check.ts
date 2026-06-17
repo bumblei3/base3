@@ -1,5 +1,5 @@
 import { PIECE_TYPE, getValidMoves } from './pieces.ts';
-import type { IGame, Faction, Piece, Hex, AIAction } from './types.ts';
+import type { IGame, Faction, Piece, Hex, AIAction as _AIAction } from './types.ts';
 
 /**
  * Get legal moves for a piece (moves + attacks that don't leave king in check).

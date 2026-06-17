@@ -3,19 +3,19 @@ import { PHASES, BOARD_SIZE } from '@schach9x9/config.js';
 import { setupJSDOM, createMockGame } from './test-utils.js';
 
 // Mocks for ui.js dependencies are handled here
-vi.mock('@schach9x9/chess-pieces.js', () => ({
+vi.mock('@schach9x9/chess-pieces', () => ({
   PIECE_SVGS: {
     white: { p: 'wp', r: 'wr', n: 'wn', b: 'wb', q: 'wq', k: 'wk', e: 'we', a: 'wa', c: 'wc' },
     black: { p: 'bp', r: 'br', n: 'bn', b: 'bb', q: 'bq', k: 'bk', e: 'be', a: 'ba', c: 'bc' },
   },
 }));
 
-vi.mock('@schach9x9/utils.js', () => ({
+vi.mock('@schach9x9/utils', () => ({
   formatTime: vi.fn(t => `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`),
   debounce: vi.fn(fn => fn),
 }));
 
-vi.mock('@schach9x9/effects.js', () => ({
+vi.mock('@schach9x9/effects', () => ({
   particleSystem: {
     spawn: vi.fn(),
   },
@@ -27,7 +27,7 @@ vi.mock('@schach9x9/effects.js', () => ({
   confettiSystem: { spawn: vi.fn() },
 }));
 
-vi.mock('@schach9x9/sounds.js', () => ({
+vi.mock('@schach9x9/sounds', () => ({
   soundManager: {
     playPromotion: vi.fn(),
     playMove: vi.fn(),
@@ -144,7 +144,7 @@ describe('UI Module', () => {
       UI.showStatisticsOverlay(game);
       const overlay = document.getElementById('stats-overlay');
       expect(overlay!.classList.contains('hidden')).toBe(false);
-      expect(document.getElementById('stat-moves')).toBeNull(); // Old ID removed
+      expect(document.getElementById('stat-moves')).not.toBeNull();
       expect(statusElExists('stat-accuracy')).toBe(true);
       expect(statusElExists('stat-elo')).toBe(true);
     });

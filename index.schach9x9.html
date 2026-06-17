@@ -479,6 +479,49 @@
                 <div id="top-openings-list" class="top-openings-list"></div>
               </div>
             </div>
+            </div>
+
+            <!-- Statistics Overlay -->
+            <div id="stats-overlay" class="stats-overlay hidden">
+            <div class="stats-overlay-header">
+              <h3>Statistiken</h3>
+              <button id="close-stats-overlay" class="close-icon-btn">×</button>
+            </div>
+            <div class="stats-overlay-body">
+              <div class="stat-row">
+                <span class="stat-label">Gesamtzüge</span>
+                <span id="stat-moves" class="stat-value">0</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Schlagen</span>
+                <span id="stat-captures" class="stat-value">0</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Genauigkeit</span>
+                <span id="stat-accuracy" class="stat-value">--%</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Elo-Schätzung</span>
+                <span id="stat-elo" class="stat-value">—</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Beste Züge</span>
+                <span id="stat-best-moves" class="stat-value">0</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Material</span>
+                <span id="stat-material" class="stat-value">0</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Promotion Overlay -->
+          <div id="promotion-overlay" class="promotion-overlay hidden">
+            <div class="promotion-overlay-header">
+              <h3>Bauernumwandlung</h3>
+            </div>
+            <div id="promotion-options" class="promotion-options">
+            </div>
           </div>
 
           <!-- Shop Panel (Contextual) -->

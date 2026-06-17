@@ -12,11 +12,11 @@ export interface Hex {
   readonly r: number;
   readonly s: number;
   readonly key: string;
-  equals(other: Hex): boolean;
-  add(other: Hex): Hex;
-  subtract(other: Hex): Hex;
-  scale(factor: number): Hex;
-  distance(other: Hex): number;
+  equals(_other: Hex): boolean;
+  add(_other: Hex): Hex;
+  subtract(_other: Hex): Hex;
+  scale(_factor: number): Hex;
+  distance(_other: Hex): number;
   rotateCW(): Hex;
   rotateCCW(): Hex;
   toString(): string;
@@ -295,11 +295,11 @@ export interface IGame {
   eliminatedFactions: Set<Faction>;
   moveHistory: GameResult[];
   onUpdate: (() => void) | null;
-  onCombat: ((result: GameResult) => void) | null;
-  onGameOver: ((winner: Faction | null) => void) | null;
-  onElimination: ((faction: Faction) => void) | null;
-  onDraw: ((type: 'repetition' | '50move') => void) | null;
-  onPromotion: ((piece: Piece) => void) | null;
+  onCombat: ((_result: GameResult) => void) | null;
+  onGameOver: ((_winner: Faction | null) => void) | null;
+  onElimination: ((_faction: Faction) => void) | null;
+  onDraw: ((_type: 'repetition' | '50move') => void) | null;
+  onPromotion: ((_piece: Piece) => void) | null;
   boardCells: Map<string, Cell> | null;
   rpsEnabled: boolean;
   capturedPieces: Record<Faction, Piece[]>;
@@ -310,27 +310,27 @@ export interface IGame {
   _halfmoveClock: number;
   _occupiedMap: Map<string, Piece> | null;
   _zobristHash?: bigint;
-  init(boardCells: Map<string, Cell>): void;
+  init(_boardCells: Map<string, Cell>): void;
   getAlivePieces(): Piece[];
-  getPieceAt(hex: Hex): Piece | null;
+  getPieceAt(_hex: Hex): Piece | null;
   _rebuildOccupiedMap(): void;
-  isKingInCheck(faction: Faction): boolean;
-  getLegalMoves(piece: Piece): { moves: Hex[]; attacks: Hex[] };
-  isCheckmate(faction: Faction): boolean;
-  isStalemate(faction: Faction): boolean;
-  isPromotion(piece: Piece, target: Hex): boolean;
-  completePromotion(newType: PieceType): GameResult | null;
-  handleCellClick(hex: Hex): GameResult | null;
-  _selectPiece(hex: Hex): GameResult;
-  _selectTarget(hex: Hex): GameResult;
+  isKingInCheck(_faction: Faction): boolean;
+  getLegalMoves(_piece: Piece): { moves: Hex[]; attacks: Hex[] };
+  isCheckmate(_faction: Faction): boolean;
+  isStalemate(_faction: Faction): boolean;
+  isPromotion(_piece: Piece, _target: Hex): boolean;
+  completePromotion(_newType: PieceType): GameResult | null;
+  handleCellClick(_hex: Hex): GameResult | null;
+  _selectPiece(_hex: Hex): GameResult;
+  _selectTarget(_hex: Hex): GameResult;
   _nextTurn(): void;
-  simulateMove(piece: Piece, target: Hex): AISnapshot;
-  undoMove(undo: AISnapshot): void;
+  simulateMove(_piece: Piece, _target: Hex): AISnapshot;
+  undoMove(_undo: AISnapshot): void;
   snapshot(): Snapshot;
-  restore(snap: Snapshot): void;
+  restore(_snap: Snapshot): void;
   undo(): Snapshot | null;
   _positionHash(): string;
-  _updateDrawState(wasCapture: boolean, wasPawnMove: boolean): boolean;
+  _updateDrawState(_wasCapture: boolean, _wasPawnMove: boolean): boolean;
 }
 
 // Export as Game for backward compatibility
@@ -560,11 +560,11 @@ export type RequiredFields<T, K extends keyof T> = T & Required<Pick<T, K>>;
 
 export interface GameCallbacks {
   onUpdate?: () => void;
-  onGameOver?: (winner: Faction | null) => void;
-  onElimination?: (faction: Faction) => void;
-  onPromotion?: (piece: Piece, newType: PieceType) => void;
-  onCheck?: (faction: Faction) => void;
-  onStalemate?: (faction: Faction) => void;
+  onGameOver?: (_winner: Faction | null) => void;
+  onElimination?: (_faction: Faction) => void;
+  onPromotion?: (_piece: Piece, _newType: PieceType) => void;
+  onCheck?: (_faction: Faction) => void;
+  onStalemate?: (_faction: Faction) => void;
 }
 
 // ─── Board Renderer ───────────────────────────────────────────────

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars, @typescript-eslint/no-explicit-any */
 /**
  * App.ts
  * Main application class handling lifecycle and initialization.
@@ -15,7 +16,20 @@ import type { TutorController } from './tutorController.js';
 import type { AnalysisManager } from './AnalysisManager.js';
 import type { UIEffects } from './ui/ui_effects.js';
 import type { KeyboardManager } from './input/KeyboardManager.js';
-import type { BattleChess3D } from './battleChess3D.js';
+// BattleChess3D is lazy-loaded - no static import to enable code-splitting
+// Minimal interface for type checking without importing the heavy Three.js module
+interface BattleChess3D {
+  init(): Promise<void>;
+  updateFromGameState(game: any): void;
+  enabled: boolean;
+  onWindowResize(): void;
+  scene?: any;
+  pieceManager?: any;
+  playBattleSequence?: (attacker: any, defender: any, from: any, to: any) => Promise<void>;
+  removePiece?: (r: number, c: number) => void;
+  animateMove?: (fromR: number, fromC: number, toR: number, toC: number) => Promise<void>;
+}
+
 import type * as UIImport from './ui.js';
 
 // Global variable for UI since it's used in many places but we want to avoid static import
@@ -33,8 +47,8 @@ export class App {
   public keyboardManager: KeyboardManager | null = null;
   public battleChess3D: BattleChess3D | null = null; // BattleChess3D instance (loaded lazily)
   public domHandler: DOMHandler;
-  public battleChess3D_Class: typeof BattleChess3D | null = null; // BattleChess3D constructor (loaded lazily)
-  public Game_Class: typeof Game | null = null;
+  public battleChess3D_Class: { new (...args: any[]): BattleChess3D } | null = null; // BattleChess3D constructor (loaded lazily)
+  public Game_Class: { new (...args: any[]): Game } | null = null;
 
   constructor() {
     errorManager.init();
@@ -219,7 +233,7 @@ export class App {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const app = this;
     // Game prototype for delegate methods (dynamically patched)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const GP = (this.Game_Class as typeof Game).prototype as any;
 
     // GameController delegations
