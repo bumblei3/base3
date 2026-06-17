@@ -8,12 +8,12 @@ export default defineConfig({
     outDir: 'dist/trischach',
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'index.trischach.html'),
+        index: resolve(__dirname, 'index.trischach.html'),
       },
       output: {
-        entryFileNames: '[name].js',
-        chunkFileNames: '[name].js',
-        assetFileNames: '[name].[ext]',
+        entryFileNames: 'js/[name].js',
+        chunkFileNames: 'js/[name].js',
+        assetFileNames: 'assets/[name].[ext]',
         inlineDynamicImports: false,
         format: 'es',
       },

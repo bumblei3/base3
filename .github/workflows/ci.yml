@@ -113,6 +113,12 @@ jobs:
           name: dist
           path: _pages
 
+      - name: Move landing page to root
+        run: |
+          # Move landing page files from dist/landing/ to root
+          cp -r _pages/landing/* _pages/
+          rm -rf _pages/landing
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:

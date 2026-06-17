@@ -12,9 +12,12 @@ export default defineConfig({
     assetsDir: 'assets',
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'index.schach9x9.html'),
+        index: resolve(__dirname, 'index.schach9x9.html'),
       },
       output: {
+        entryFileNames: 'js/[name].js',
+        chunkFileNames: 'js/[name].js',
+        assetFileNames: 'assets/[name].[ext]',
         manualChunks: (id: string) => {
           if (id.includes('battleChess3D')) {
             return 'battleChess3D';
