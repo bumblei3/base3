@@ -1,9 +1,7 @@
 import { defineConfig } from 'vitest/config';
-import tsconfigPaths from 'vite-tsconfig-paths';
 import { resolve } from 'path';
 
 export default defineConfig({
-  plugins: [tsconfigPaths()],
   test: {
     environment: 'happy-dom',
     globals: true,
@@ -16,6 +14,7 @@ export default defineConfig({
   },
   resolve: {
     extensions: ['.js', '.ts', '.json'],
+    tsconfigPaths: true,
     alias: {
       '@trischach': resolve(__dirname, './js/trischach'),
       '@trischach/*': resolve(__dirname, './js/trischach/*'),
@@ -23,8 +22,6 @@ export default defineConfig({
       '@schach9x9/*': resolve(__dirname, './js/schach9x9/*'),
       '@shared': resolve(__dirname, './js/shared'),
       '@shared/*': resolve(__dirname, './js/shared/*'),
-      // Mock WASM module for CI tests (engine-wasm not built in test job)
-      '../../../engine-wasm/pkg/schach9x9.js': resolve(__dirname, './tests/mocks/wasm-mock.js'),
     },
   },
 });

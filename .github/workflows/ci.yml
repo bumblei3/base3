@@ -48,7 +48,20 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: actions/cache@v4
+        with:
+          path: |
+            engine-wasm/target
+            ~/.cargo/bin
+            ~/.cargo/registry/index
+            ~/.cargo/registry/cache
+            ~/.cargo/git/db
+          key: ${{ runner.os }}-cargo-${{ hashFiles('engine-wasm/Cargo.lock') }}
       - run: npm ci --legacy-peer-deps
+      - run: npm run wasm:build
       - run: npx vitest run --config vitest.ci.config.ts tests/schach9x9/ArrowRenderer.test.ts tests/schach9x9/analysis.test.ts tests/schach9x9/pgnParser.test.ts tests/schach9x9/openingBook.test.ts tests/schach9x9/gameStateManager.test.ts tests/schach9x9/ui.test.ts tests/schach9x9/ui.settings.test.ts tests/schach9x9/keyboard.test.ts tests/schach9x9/keyboardManager.test.ts tests/schach9x9/ui/AnalysisUI.test.ts
 
   # ─── Phase 3: Build ───────────────────────────────────────────────
