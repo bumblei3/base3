@@ -10,15 +10,18 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/nav.css">
   <style>
-    /* Landing Page Specific Styles */
+    /* ============================================
+       Landing Page — Phase 2 Redesign
+       ============================================ */
+
     body {
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       background-image:
-        radial-gradient(ellipse at 20% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
-        radial-gradient(ellipse at 80% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 40%),
-        radial-gradient(ellipse at 50% 50%, rgba(16, 185, 129, 0.05) 0%, transparent 60%);
+        radial-gradient(ellipse at 20% 20%, rgba(99, 102, 241, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(236, 72, 153, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(16, 185, 129, 0.08) 0%, transparent 60%);
       background-attachment: fixed;
     }
 
@@ -27,46 +30,79 @@
       content: '';
       position: fixed;
       inset: 0;
-      background: url('data:image/svg+xml;utf8,<svg opacity="0.04" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)"/></svg>');
+      background: url('data:image/svg+xml;utf8,<svg opacity="0.03" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)"/></svg>');
       pointer-events: none;
       z-index: -1;
     }
 
+    /* ============================================
+       Hero Section
+       ============================================ */
     .hero {
       flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: var(--space-xl);
+      padding: calc(var(--space-xl) * 2) var(--space-xl);
       text-align: center;
     }
 
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      padding: var(--space-xs) var(--space-md);
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      color: var(--color-accent-primary);
+      margin-bottom: var(--space-lg);
+      animation: fadeInUp 0.5s ease forwards;
+    }
+
+    .hero-badge .dot {
+      width: 6px;
+      height: 6px;
+      background: var(--color-accent-primary);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
     .hero h1 {
-      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-size: clamp(2.5rem, 7vw, 4.5rem);
       font-weight: 800;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-      margin-bottom: var(--space-md);
-      background: linear-gradient(135deg, var(--color-text-primary) 0%, var(--color-text-secondary) 100%);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: var(--space-lg);
+      background: linear-gradient(135deg, var(--color-text-primary) 0%, var(--color-text-secondary) 50%, var(--color-accent-primary) 100%);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
+      animation: fadeInUp 0.5s ease 0.1s forwards;
+      opacity: 0;
     }
 
     .hero .subtitle {
-      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      font-size: clamp(1rem, 2.5vw, 1.3rem);
       color: var(--color-text-secondary);
       font-weight: 300;
       margin-bottom: var(--space-xl);
-      max-width: 600px;
+      max-width: 560px;
+      line-height: 1.6;
+      animation: fadeInUp 0.5s ease 0.2s forwards;
+      opacity: 0;
     }
 
+    /* ============================================
+       Games Grid
+       ============================================ */
     .games-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
       gap: var(--space-lg);
-      max-width: 900px;
+      max-width: 920px;
       width: 100%;
       margin: 0 auto;
     }
@@ -75,13 +111,18 @@
       background: var(--color-bg-glass);
       border: 1px solid var(--color-border);
       border-radius: var(--radius-xl);
-      padding: var(--space-lg);
+      padding: var(--space-xl);
       text-align: center;
       transition: all var(--transition-normal);
       position: relative;
       overflow: hidden;
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(12px);
+      animation: fadeInUp 0.5s ease forwards;
+      opacity: 0;
     }
+
+    .game-card:nth-child(1) { animation-delay: 0.3s; }
+    .game-card:nth-child(2) { animation-delay: 0.4s; }
 
     .game-card::before {
       content: '';
@@ -94,9 +135,7 @@
       transition: opacity var(--transition-normal);
     }
 
-    .game-card:hover::before {
-      opacity: 1;
-    }
+    .game-card:hover::before { opacity: 1; }
 
     .game-card:hover {
       transform: translateY(-8px);
@@ -113,11 +152,58 @@
       background: linear-gradient(135deg, #ff4500, #10b981, #3b82f6);
     }
 
-    .game-icon {
-      font-size: 3.5rem;
-      margin-bottom: var(--space-md);
-      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+    /* Game Preview Board */
+    .game-preview {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto var(--space-lg);
+      position: relative;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
     }
+
+    .game-preview.schach9x9-preview {
+      background:
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 13px,
+          rgba(255,255,255,0.03) 13px,
+          rgba(255,255,255,0.03) 14px
+        ),
+        repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 13px,
+          rgba(255,255,255,0.03) 13px,
+          rgba(255,255,255,0.03) 14px
+        ),
+        var(--color-bg-secondary);
+    }
+
+    .game-preview.trischach-preview {
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255, 69, 0, 0.1) 0%, transparent 30%),
+        radial-gradient(circle at 20% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 30%),
+        radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 30%),
+        var(--color-bg-secondary);
+    }
+
+    .game-preview .piece-icon {
+      position: absolute;
+      font-size: 1.8rem;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    }
+
+    .game-preview.schach9x9-preview .piece-icon:nth-child(1) { top: 15%; left: 20%; }
+    .game-preview.schach9x9-preview .piece-icon:nth-child(2) { top: 45%; left: 50%; }
+    .game-preview.schach9x9-preview .piece-icon:nth-child(3) { top: 75%; left: 70%; }
+
+    .game-preview.trischach-preview .piece-icon:nth-child(1) { top: 20%; left: 50%; color: #ff4500; }
+    .game-preview.trischach-preview .piece-icon:nth-child(2) { top: 60%; left: 20%; color: #10b981; }
+    .game-preview.trischach-preview .piece-icon:nth-child(3) { top: 60%; left: 75%; color: #3b82f6; }
 
     .game-card h2 {
       font-size: 1.5rem;
@@ -128,7 +214,7 @@
     .game-card .tagline {
       color: var(--color-text-secondary);
       font-size: 0.95rem;
-      margin-bottom: var(--space-md);
+      margin-bottom: var(--space-lg);
       line-height: 1.5;
     }
 
@@ -138,7 +224,7 @@
       margin-bottom: var(--space-lg);
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: var(--space-sm);
+      gap: var(--space-sm) var(--space-md);
       font-size: 0.85rem;
       color: var(--color-text-secondary);
     }
@@ -163,7 +249,7 @@
       display: inline-flex;
       align-items: center;
       gap: var(--space-sm);
-      padding: var(--space-md) var(--space-lg);
+      padding: var(--space-md) var(--space-xl);
       border-radius: var(--radius-lg);
       font-weight: 700;
       font-size: 1rem;
@@ -195,15 +281,69 @@
       box-shadow: 0 8px 24px rgba(255, 69, 0, 0.4);
     }
 
-    @media (max-width: 640px) {
-      .features-list {
-        grid-template-columns: 1fr;
-      }
-      .game-card {
-        padding: var(--space-md);
-      }
+    /* ============================================
+       Stats Section
+       ============================================ */
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: var(--space-xl);
+      padding: var(--space-xl);
+      margin-top: var(--space-xl);
+      border-top: 1px solid var(--color-border);
+      animation: fadeInUp 0.5s ease 0.5s forwards;
+      opacity: 0;
     }
 
+    .stat {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--color-accent-primary);
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      margin-top: var(--space-xs);
+    }
+
+    /* ============================================
+       Footer
+       ============================================ */
+    .footer {
+      margin-top: auto;
+      padding: var(--space-lg);
+      border-top: 1px solid var(--color-border);
+      text-align: center;
+      color: var(--color-text-muted);
+      font-size: 0.85rem;
+    }
+
+    .footer a {
+      color: var(--color-accent-primary);
+      text-decoration: none;
+      transition: color var(--transition-fast);
+    }
+
+    .footer a:hover {
+      color: var(--color-accent-hover);
+      text-decoration: underline;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: var(--space-lg);
+      margin-bottom: var(--space-sm);
+    }
+
+    /* ============================================
+       Animations
+       ============================================ */
     @keyframes fadeInUp {
       from {
         opacity: 0;
@@ -215,17 +355,32 @@
       }
     }
 
-    .game-card {
-      animation: fadeInUp 0.5s ease forwards;
-      opacity: 0;
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
     }
 
-    .game-card:nth-child(1) {
-      animation-delay: 0.1s;
-    }
+    /* ============================================
+       Responsive
+       ============================================ */
+    @media (max-width: 768px) {
+      .hero {
+        padding: var(--space-xl) var(--space-md);
+      }
 
-    .game-card:nth-child(2) {
-      animation-delay: 0.2s;
+      .games-grid {
+        grid-template-columns: 1fr;
+        max-width: 400px;
+      }
+
+      .features-list {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        flex-direction: column;
+        gap: var(--space-lg);
+      }
     }
   </style>
 </head>
@@ -265,16 +420,23 @@
   <!-- Main Content -->
   <main class="main-content">
     <section class="hero">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        Zwei Spiele, eine Plattform
+      </div>
       <h1>Base3 Chess Platform</h1>
       <p class="subtitle">
-        Zwei einzigartige Schachvarianten. Eine Plattform.
-        Wähle dein Spiel.
+        Entdecke zwei einzigartige Schachvarianten — vom klassischen 9×9 Brett mit Feenfiguren bis zum strategischen 3-Spieler-Hex-Schach.
       </p>
 
       <div class="games-grid">
         <!-- Schach9x9 -->
         <article class="game-card schach9x9">
-          <div class="game-icon">♟️</div>
+          <div class="game-preview schach9x9-preview">
+            <span class="piece-icon">♞</span>
+            <span class="piece-icon">♛</span>
+            <span class="piece-icon">♜</span>
+          </div>
           <h2>Schach9x9</h2>
           <p class="tagline">9×9 Brett mit Feenfiguren. Nightrider, Chancellor, Archbishop, Angel.</p>
           <ul class="features-list">
@@ -290,7 +452,11 @@
 
         <!-- Trischach -->
         <article class="game-card trischach">
-          <div class="game-icon">⬡</div>
+          <div class="game-preview trischach-preview">
+            <span class="piece-icon">🔥</span>
+            <span class="piece-icon">🌿</span>
+            <span class="piece-icon">🌊</span>
+          </div>
           <h2>Trischach</h2>
           <p class="tagline">3-Spieler Hexagonales Schach. Stein-Schere-Papier Kampfmechanik.</p>
           <ul class="features-list">
@@ -303,6 +469,26 @@
           </ul>
           <a href="/trischach/" class="play-btn">Spielen →</a>
         </article>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-value">2</div>
+          <div class="stat-label">Spiele</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">9×9</div>
+          <div class="stat-label">Schach9x9 Brett</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">3</div>
+          <div class="stat-label">Fraktionen</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">∞</div>
+          <div class="stat-label">Möglichkeiten</div>
+        </div>
       </div>
     </section>
   </main>
@@ -326,7 +512,6 @@
       toggle.setAttribute('aria-expanded', isOpen);
     });
 
-    // Close menu on link click
     navLinks.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', () => {
         navLinks.classList.remove('open');
