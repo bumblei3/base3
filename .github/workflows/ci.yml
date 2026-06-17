@@ -276,3 +276,29 @@ jobs:
         run: npx playwright test --project=chromium --grep @accessibility
         env:
           PLAYWRIGHT_BASE_URL: http://localhost:5173
+
+  # ─── Phase 10: Visual Regression (Chromatic) ────────────────────────
+  chromatic:
+    name: Visual Regression (Chromatic)
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - run: npm ci --legacy-peer-deps
+      - name: Publish to Chromatic
+        uses: chromatic-com/storybook/action@1
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          buildScriptName: build-storybook
+          storybookBuildDir: storybook-static
+          autoAcceptChanges: main
+        env:
+          # Skip if Chromatic token not configured
+          CHROMATIC_SKIP_IF_NO_TOKEN: 'true'
