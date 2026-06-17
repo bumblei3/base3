@@ -16,7 +16,7 @@ export function setupJSDOM(): void {
   // Use process.cwd() to locate index.schach9x9.html for the game page
   const htmlPath = path.resolve(process.cwd(), 'index.schach9x9.html');
   let htmlContent = fs.readFileSync(htmlPath, 'utf8');
-  
+
   // Strip Google Fonts links to avoid network requests in tests
   htmlContent = htmlContent.replace(
     /<link[^>]*fonts\.googleapis\.com[^>]*>/gi,
@@ -26,7 +26,21 @@ export function setupJSDOM(): void {
     /<link[^>]*preconnect[^>]*fonts\.googleapis\.com[^>]*>/gi,
     ''
   );
-  
+  // Strip ALL local CSS links (happy-dom tries to fetch from localhost:3000 in CI)
+  htmlContent = htmlContent.replace(
+    /<link[^>]*rel="stylesheet"[^>]*href="css\/[^"]*"[^>]*>/gi,
+    ''
+  );
+  htmlContent = htmlContent.replace(
+    /<link[^>]*href="css\/[^"]*"[^>]*rel="stylesheet"[^>]*>/gi,
+    ''
+  );
+  // Strip local JS module script (happy-dom tries to fetch from localhost:3000 in CI)
+  htmlContent = htmlContent.replace(
+    /<script[^>]*type="module"[^>]*src="js\/[^"]*"[^>]*><\/script>/gi,
+    ''
+  );
+
   document.body.innerHTML = htmlContent;
 
   // Add 'j' (Jester) to match the expected Record<..., string> type
