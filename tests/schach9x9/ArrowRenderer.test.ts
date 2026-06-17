@@ -52,7 +52,8 @@ describe('ArrowRenderer', () => {
       const renderer = new ArrowRenderer(board);
       const svg = boardContainer.querySelector('#arrow-layer');
       expect(svg).not.toBeNull();
-      expect(svg).toBeInstanceOf(SVGSVGElement);
+      expect(svg!.tagName).toBe('svg');
+      expect(svg!.id).toBe('arrow-layer');
     });
 
     test('should create arrowhead markers', () => {
@@ -65,6 +66,11 @@ describe('ArrowRenderer', () => {
     });
 
     test('should set cell size from first cell', () => {
+      // Mock offsetWidth for cells (JSDOM returns 0)
+      const cells = board.querySelectorAll('.cell');
+      cells.forEach((cell) => {
+        Object.defineProperty(cell, 'offsetWidth', { value: 50, configurable: true });
+      });
       const renderer = new ArrowRenderer(board);
       expect(renderer.cellSize).toBe(50);
     });

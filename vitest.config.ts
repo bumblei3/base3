@@ -20,6 +20,8 @@ export default defineConfig({
     exclude: [
       // Exclude all schach9x9 tests (import path issues, need separate fix)
       'tests/schach9x9/**',
+      // Exclude e2e tests (require Playwright)
+      'tests-e2e/**',
     ],
     testTimeout: 60000,
     coverage: {

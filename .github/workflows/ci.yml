@@ -60,7 +60,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
       - run: npm ci --legacy-peer-deps
-      - run: npx vitest run tests/schach9x9/ArrowRenderer.test.ts tests/schach9x9/analysis.test.ts tests/schach9x9/pgnParser.test.ts tests/schach9x9/openingBook.test.ts tests/schach9x9/gameStateManager.test.ts tests/schach9x9/ui.test.ts tests/schach9x9/ui.settings.test.ts tests/schach9x9/keyboard.test.ts tests/schach9x9/keyboardManager.test.ts tests/schach9x9/ui/AnalysisUI.test.ts
+      - run: npx vitest run --config vitest.ci.config.ts tests/schach9x9/ArrowRenderer.test.ts tests/schach9x9/analysis.test.ts tests/schach9x9/pgnParser.test.ts tests/schach9x9/openingBook.test.ts tests/schach9x9/gameStateManager.test.ts tests/schach9x9/ui.test.ts tests/schach9x9/ui.settings.test.ts tests/schach9x9/keyboard.test.ts tests/schach9x9/keyboardManager.test.ts tests/schach9x9/ui/AnalysisUI.test.ts
 
   # ─── Phase 3: Build ───────────────────────────────────────────────
   build:
