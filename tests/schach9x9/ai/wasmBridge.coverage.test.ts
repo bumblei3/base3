@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import * as WasmBridge from '../../js/ai/wasmBridge.js';
+import * as WasmBridge from '@schach9x9/ai/wasmBridge';
 
 vi.mock('@schach9x9/logger', () => ({
   logger: {

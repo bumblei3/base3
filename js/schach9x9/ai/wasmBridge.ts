@@ -20,7 +20,8 @@ export async function ensureWasmInitialized(): Promise<boolean> {
   initPromise = (async () => {
     try {
       // Dynamic import of WASM module - use alias for Vite/Vitest compatibility
-      const module = await import('@engine-wasm/schach9x9.js');
+      // @vite-ignore tells Vite to skip static analysis of this dynamic import
+      const module = await import(/* @vite-ignore */ '@engine-wasm/schach9x9.js');
 
       // Check if we're in Node.js
       // @ts-ignore - Node.js globals only available at runtime
