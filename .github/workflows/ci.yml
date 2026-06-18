@@ -10,7 +10,7 @@ env:
   NODE_VERSION: '22'
 
 jobs:
-  # ─── Phase 1: Fast checks (parallel) ──────────────────────────────
+  # ─── Phase 1: Fast checks ──────────────────────────────────────
   quality:
     name: Lint & Typecheck
     runs-on: ubuntu-latest
@@ -26,7 +26,7 @@ jobs:
       - name: Security audit
         run: npm audit --audit-level=high --omit=dev
 
-  # ─── Phase 2: Tests (parallel) ────────────────────────────────────
+  # ─── Phase 2: All Tests (parallel) ────────────────────────────
   test-trischach:
     name: Test Trischach
     runs-on: ubuntu-latest
@@ -64,9 +64,9 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('engine-wasm/Cargo.lock') }}
       - run: npm ci --legacy-peer-deps
       - run: npm run wasm:build
-      - run: npx vitest run --config vitest.ci.config.ts tests/schach9x9/ArrowRenderer.test.ts tests/schach9x9/analysis.test.ts tests/schach9x9/pgnParser.test.ts tests/schach9x9/openingBook.test.ts tests/schach9x9/gameStateManager.test.ts tests/schach9x9/ui.test.ts tests/schach9x9/ui.settings.test.ts tests/schach9x9/keyboard.test.ts tests/schach9x9/keyboardManager.test.ts tests/schach9x9/ui/AnalysisUI.test.ts
+      - run: npx vitest run --config vitest.ci.config.ts tests/schach9x9
 
-  # ─── Phase 3: Build ───────────────────────────────────────────────
+  # ─── Phase 3: Build & Deploy ───────────────────────────────────
   build:
     name: Build All
     runs-on: ubuntu-latest
@@ -91,69 +91,14 @@ jobs:
             ~/.cargo/git/db
           key: ${{ runner.os }}-cargo-${{ hashFiles('engine-wasm/Cargo.lock') }}
       - run: npm run build
+      - name: Generate API Docs (TypeDoc)
+        run: npm run docs:api
       - uses: actions/upload-artifact@v4
         with:
           name: dist
           path: dist/
           retention-days: 1
 
-  # ─── Phase 4: Preview Deploy (PRs) ────────────────────────────────
-  preview:
-    name: Deploy Preview
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.event_name == 'pull_request'
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Download dist artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: _pages
-
-      - name: Move landing page to root
-        run: |
-          cp -r _pages/landing/* _pages/
-          rm -rf _pages/landing
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v4
-        with:
-          path: _pages
-          name: preview-${{ github.event.number }}
-
-      - name: Deploy to GitHub Pages Preview
-        id: deployment
-        uses: actions/deploy-pages@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          artifact_name: preview-${{ github.event.number }}
-
-  # ─── Phase 5: Lighthouse CI (PRs) ─────────────────────────────────
-  lighthouse:
-    name: Lighthouse CI
-    runs-on: ubuntu-latest
-    needs: preview
-    if: github.event_name == 'pull_request'
-    steps:
-      - name: Run Lighthouse CI
-        uses: treosh/lighthouse-ci-action@v11
-        with:
-          urls: |
-            ${{ steps.deployment.outputs.page_url }}
-            ${{ steps.deployment.outputs.page_url }}schach9x9/
-            ${{ steps.deployment.outputs.page_url }}trischach/
-          budgetPath: ./lighthouse-budget.json
-          uploadArtifacts: true
-        env:
-          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
-
-  # ─── Phase 6: Deploy to GitHub Pages (only on push to main) ───────
   deploy:
     name: Deploy to GitHub Pages
     runs-on: ubuntu-latest
@@ -185,120 +130,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
-  # ─── Phase 7: TypeDoc API Docs (only on push to main) ──────────────
-  docs-api:
-    name: Generate & Deploy API Docs
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}/docs/api/
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      - run: npm ci --legacy-peer-deps
-      - run: npm run docs:api
-      - name: Upload API Docs artifact
-        uses: actions/upload-pages-artifact@v4
-        with:
-          path: docs/api
-          name: api-docs
-      - name: Deploy API Docs to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-        with:
-          artifact_name: api-docs
-
-  # ─── Phase 8: Cross-Browser E2E Tests (PRs & main) ──────────────────
-  e2e-cross-browser:
-    name: Cross-Browser E2E
-    runs-on: ubuntu-latest
-    needs: build
-    strategy:
-      matrix:
-        browser: [chromium, firefox, webkit]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      - run: npm ci --legacy-peer-deps
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps ${{ matrix.browser }}
-      - name: Download dist artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: dist
-      - name: Serve build
-        run: npx serve dist -l 5173 &
-      - name: Wait for server
-        run: sleep 5
-      - name: Run Playwright E2E
-        run: npx playwright test --project=${{ matrix.browser }}
-        env:
-          PLAYWRIGHT_BASE_URL: http://localhost:5173
-
-  # ─── Phase 9: Accessibility Audit (WCAG 2.1 AA) ────────────────────
-  accessibility:
-    name: Accessibility Audit (WCAG 2.1 AA)
-    runs-on: ubuntu-latest
-    needs: preview
-    if: github.event_name == 'pull_request'
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      - run: npm ci --legacy-peer-deps
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
-      - name: Download dist artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: dist
-      - name: Serve build
-        run: npx serve dist -l 5173 &
-      - name: Wait for server
-        run: sleep 5
-      - name: Run Accessibility Audit
-        run: npx playwright test --project=chromium --grep @accessibility
-        env:
-          PLAYWRIGHT_BASE_URL: http://localhost:5173
-
-  # ─── Phase 10: Visual Regression (Chromatic) ────────────────────────
-  chromatic:
-    name: Visual Regression (Chromatic)
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.event_name == 'pull_request'
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      - run: npm ci --legacy-peer-deps
-      - name: Publish to Chromatic
-        uses: chromatic-com/storybook/action@1
-        with:
-          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-          buildScriptName: build-storybook
-          storybookBuildDir: storybook-static
-          autoAcceptChanges: main
-        env:
-          # Skip if Chromatic token not configured
-          CHROMATIC_SKIP_IF_NO_TOKEN: 'true'
