@@ -25,19 +25,19 @@ Two chess variants in one repository:
 ## Quick Start
 
 ```bash
-# Install dependencies (uses pnpm)
-pnpm install
+# Install dependencies
+npm install
 
 # Build both games (includes WASM compilation for Schach9x9)
-pnpm run build
+npm run build
 
 # Or build individually
-pnpm run build:schach9x9
-pnpm run build:trischach
+npm run build:schach9x9
+npm run build:trischach
 
 # Development servers
-pnpm run dev:schach9x9   # http://localhost:5173
-pnpm run dev:trischach   # http://localhost:5173
+npm run dev:schach9x9   # http://localhost:5173
+npm run dev:trischach   # http://localhost:5173
 ```
 
 ---
@@ -76,22 +76,21 @@ base3/
 
 | Script | Description |
 |--------|-------------|
-| `pnpm install` | Install all dependencies |
-| `pnpm run build` | Build WASM + both games + landing |
-| `pnpm run build:schach9x9` | Build only Schach9x9 |
-| `pnpm run build:trischach` | Build only Trischach |
-| `pnpm run build:landing` | Build only landing page |
-| `pnpm run wasm:build` | Compile Rust WASM engine |
-| `pnpm run dev:schach9x9` | Dev server for Schach9x9 |
-| `pnpm run dev:trischach` | Dev server for Trischach |
-| `pnpm run test` | Run unit tests (342 Trischach + 143 Schach9x9) |
-| `pnpm run test:e2e` | Run Playwright E2E tests (Schach9x9) |
-| `pnpm run lint` | ESLint (0 errors, 0 warnings) |
-| `pnpm run typecheck` | TypeScript strict type checking |
-| `pnpm run format` | Prettier formatting |
-| `pnpm run train:schach9x9` | Train opening book (500 games) |
-| `pnpm run train:schach9x9:fast` | Quick training (50 games) |
-| `pnpm run tournament:trischach` | Run AI tournament |
+| `npm install` | Install all dependencies |
+| `npm run build` | Build WASM + both games + landing |
+| `npm run build:schach9x9` | Build only Schach9x9 |
+| `npm run build:trischach` | Build only Trischach |
+| `npm run build:landing` | Build only landing page |
+| `npm run wasm:build` | Compile Rust WASM engine |
+| `npm run dev:schach9x9` | Dev server for Schach9x9 |
+| `npm run dev:trischach` | Dev server for Trischach |
+| `npm run test` | Run all unit tests |
+| `npm run lint` | ESLint |
+| `npm run typecheck` | TypeScript strict type checking |
+| `npm run format` | Prettier formatting |
+| `npm run train:schach9x9` | Train opening book (500 games) |
+| `npm run train:schach9x9:fast` | Quick training (50 games) |
+| `npm run tournament:trischach` | Run AI tournament |
 
 ---
 
@@ -127,23 +126,25 @@ base3/
 - **WASM**: Rust + wasm-pack (Schach9x9 engine, compiled in CI)
 - **3D**: Three.js via jsDelivr CDN (Schach9x9 battle animations)
 - **PWA**: Service worker + manifest (offline-capable)
-- **Package Manager**: pnpm 11 (lockfile committed)
+- **Package Manager**: npm (lockfile committed)
 
 ---
 
 ## CI/CD Pipeline
 
 ```yaml
-# .github/workflows/ci.yml (single workflow)
-1. quality     → lint + typecheck (parallel)
-2. test-trischach → 342 unit tests
-   test-schach9x9  → 143 unit tests + WASM build
-3. build       → WASM + 3 Vite builds (landing, schach9x9, trischach)
-4. deploy      → GitHub Pages (on push to main)
+# .github/workflows/ci.yml
+1. setup       → cache + deps + WASM build
+2. quality     → lint + typecheck
+3. test-trischach → 342 unit tests
+   test-schach9x9  → ~1700 unit tests (4 shards, parallel)
+4. build       → WASM + 3 Vite builds (landing, schach9x9, trischach)
+5. deploy      → GitHub Pages (on push to main)
 ```
 
 - **Branch**: `main` (protected), auto-deploy on push
-- **Node**: 22 LTS
+- **Node**: 24 LTS
+- **Actions**: checkout@v5, setup-node@v5, cache@v5
 - **Cache**: npm + cargo for fast builds
 
 ---
@@ -158,23 +159,17 @@ tsconfig.schach9x9.json    # Schach9x9 project (composite)
 tsconfig.trischach.json    # Trischach project (composite)
 ```
 
-Run `pnpm run typecheck` to verify both projects.
+Run `npm run typecheck` to verify both projects.
 
 ---
 
-## Development Notes
+## Testing
 
-### Audio / Sound (local dev)
-- Sound BlasterX AE-5 Plus (CA0132, ALSA card 1)
-- PipeWire 1.6.2 + EasyEffects 8.1.2
-- Default sink: `easyeffects_sink`
-- Preset: **Bass-Plus** (~/hermes/config.yaml dokumentiert)
-
-### Testing
-- Happy-dom environment (no browser needed)
-- Localhost asset fetches mocked in `tests/vitest.setup.ts`
-- WASM mocked in CI test job, real build in `test-schach9x9` job
-- `pnpm run test` runs Vitest with coverage thresholds (80%)
+- ~2000 unit tests across both games (Vitest + happy-dom)
+- 4-way sharded Schach9x9 tests for CI parallelism
+- E2E tests via Playwright (Schach9x9)
+- WASM mocked in CI test job, real build in setup job
+- Coverage thresholds: 80% lines/branches/functions/statements
 
 ---
 
