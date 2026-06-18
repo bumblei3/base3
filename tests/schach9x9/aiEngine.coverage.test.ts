@@ -23,14 +23,10 @@ function createMinimalBoard(): Board {
 }
 
 describe('AI Engine - Coverage for Untested Paths', () => {
-  beforeEach(() => {
-    vi.useFakeTimers();
-    // Ensure EVAL_VALUES is available
-    (globalThis as Record<string, unknown>).EVAL_VALUES = EVAL_VALUES;
-  });
+  // EVAL_VALUES is set globally for quickEval in aiEngine.ts
+  (globalThis as Record<string, unknown>).EVAL_VALUES = EVAL_VALUES;
 
   afterEach(() => {
-    vi.useRealTimers();
     vi.restoreAllMocks();
     (globalThis as Record<string, unknown>).EVAL_VALUES = originalEvalValues;
   });
