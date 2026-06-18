@@ -29,8 +29,8 @@ const { PuzzleManager } = await import('@schach9x9/puzzleManager.js');
 const { Game } = await import('@schach9x9/gameEngine.js');
 
 describe('PuzzleMode', () => {
-  let puzzleManager: any;
-  let game: any;
+  let puzzleManager: PuzzleManager;
+  let game: Game;
 
   beforeEach(() => {
     puzzleManager = new PuzzleManager();

@@ -8,18 +8,18 @@ declare const globalThis: typeof globalThis & {
   fetch: typeof fetch;
   AudioContext: typeof AudioContext;
   webkitAudioContext: typeof AudioContext;
-  OffscreenCanvas: any;
+  OffscreenCanvas: typeof OffscreenCanvas;
   requestAnimationFrame: typeof requestAnimationFrame;
   cancelAnimationFrame: typeof cancelAnimationFrame;
   localStorage: Storage;
   sessionStorage: Storage;
   indexedDB: IDBFactory;
-  ResizeObserver: any;
-  IntersectionObserver: any;
-  matchMedia: any;
+  ResizeObserver: typeof ResizeObserver;
+  IntersectionObserver: typeof IntersectionObserver;
+  matchMedia: typeof matchMedia;
   URL: URL;
-  navigator: Navigator & { clipboard: any };
-  Worker: any;
+  navigator: Navigator & { clipboard: Clipboard };
+  Worker: typeof Worker;
   console: Console;
 };
 
@@ -292,7 +292,7 @@ const mockWebGLContext: WebGLRenderingContext = {
 } as unknown as WebGLRenderingContext;
 
 // HTMLCanvasElement.prototype.getContext mock
-HTMLCanvasElement.prototype.getContext = vi.fn((contextType: string, _attributes?: any) => {
+HTMLCanvasElement.prototype.getContext = vi.fn((contextType: string, _attributes?: CanvasRenderingContext2DSettings | WebGLContextAttributes) => {
   if (contextType === '2d') return mockCanvasContext2D;
   if (contextType === 'webgl' || contextType === 'webgl2' || contextType === 'experimental-webgl') return mockWebGLContext;
   if (contextType === 'bitmaprenderer') return {} as ImageBitmapRenderingContext;
@@ -468,7 +468,7 @@ globalThis.Worker = vi.fn().mockImplementation(() => ({
 vi.mock('three', () => {
   const createMockClass = <T extends object>(methods: Partial<T> = {}) => {
     // Return a constructor function that can be used with `new`
-    const MockConstructor = vi.fn().mockImplementation(function(this: any, ...args: any[]) {
+    const MockConstructor = vi.fn().mockImplementation(function(this: Record<string, unknown>, ...args: unknown[]) {
       Object.assign(this, methods);
       this.add = vi.fn();
       this.remove = vi.fn();

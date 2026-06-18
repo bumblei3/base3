@@ -19,7 +19,7 @@ const mockThree = {
       },
     };
   }),
-  Vector3: vi.fn().mockImplementation(function (this: any, x = 0, y = 0, z = 0) {
+  Vector3: vi.fn().mockImplementation(function (this: { x: number; y: number; z: number }, x = 0, y = 0, z = 0) {
     this.x = x;
     this.y = y;
     this.z = z;
@@ -72,7 +72,7 @@ mockThree.Vector3.prototype = {
   lerp: vi.fn(),
   lerpVectors: vi.fn(),
   length: vi.fn(() => 1),
-  normalize: vi.fn(function (this: any) {
+  normalize: vi.fn(function (this: { x: number; y: number; z: number }) {
     return this;
   }),
 };
@@ -82,7 +82,9 @@ vi.mock('three', () => mockThree);
 const { BattleAnimator } = await import('@schach9x9/battleAnimations.js');
 
 describe('BattleAnimator Class', () => {
-  let scene: any, camera: any, animator: any;
+  let scene: InstanceType<typeof mockThree.Scene>;
+  let camera: InstanceType<typeof mockThree.PerspectiveCamera>;
+  let animator: BattleAnimator;
 
   beforeEach(() => {
     scene = new mockThree.Scene();
