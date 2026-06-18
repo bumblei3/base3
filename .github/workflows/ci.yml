@@ -38,7 +38,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
       - run: npm ci --legacy-peer-deps
-      - run: npx vitest run tests/trischach
+      - run: npx vitest run --config vitest.ci.config.ts tests/trischach
 
   test-schach9x9:
     name: Test Schach9x9
