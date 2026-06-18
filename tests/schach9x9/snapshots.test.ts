@@ -48,6 +48,12 @@ describe('Visual DOM Snapshot Tests', () => {
   });
 
   test('Game over overlay snapshot', () => {
+    // The HTML doesn't include winner-text by default, add it
+    document.body.innerHTML += `
+      <div id="game-over-overlay" class="hidden">
+        <div id="winner-text"></div>
+      </div>
+    `;
     game.phase = PHASES.GAME_OVER;
     UI.initBoardUI(game);
     UI.updateStatus(game);

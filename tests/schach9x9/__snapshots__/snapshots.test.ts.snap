@@ -1,313 +1,571 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`Visual DOM Snapshot Tests > Game over overlay snapshot 1`] = `
+"
+        <div id="winner-text">Weiß gewinnt!</div>
+      "
+`;
+
 exports[`Visual DOM Snapshot Tests > Initial setup phase snapshot 1`] = `
 "<!DOCTYPE html>
 <html lang="de">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Base3 Chess Platform</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --colors-bg-app: #02040a;
-      --colors-bg-panel: #0f172a;
-      --colors-bg-glass: #0d1321;
-      --colors-bg-glass-hover: #111827;
-      --colors-accent-primary: #6366f1;
-      --colors-accent-hover: #818cf8;
-      --colors-accent-secondary: #ec4899;
-      --colors-accent-tertiary: #10b981;
-      --colors-faction-fire: #ff4500;
-      --colors-faction-nature: #10b981;
-      --colors-faction-water: #3b82f6;
-      --colors-text-main: #f8fafc;
-      --colors-text-muted: #94a3b8;
-      --colors-text-dim: #64748b;
-      --colors-grid-line-square: #ffffff1a;
-      --rounded-xl: 24px;
-      --rounded-lg: 16px;
-      --rounded-md: 12px;
-      --rounded-sm: 8px;
-      --rounded-full: 9999px;
-      --spacing-xs: 4px;
-      --spacing-sm: 8px;
-      --spacing-md: 16px;
-      --spacing-lg: 24px;
-      --spacing-xl: 48px;
-      --spacing-xxl: 64px;
-      --motion-transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      --motion-transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      --motion-transition-bounce: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-      --elevation-z-modal: 200;
-      --elevation-z-overlay: 100;
-      --typography-font-main: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Ein Schachspiel auf einem 9x9 Brett mit neuen Figuren und Regeln.">
+    <meta name="theme-color" content="#0a0e27">
+    <title>Schach 9x9</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="/schach9x9/icon-192.png">
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <!-- Google Fonts -->
+    
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    
+    
+    
+    
+    
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: var(--typography-font-main);
-      background: var(--colors-bg-app);
-      color: var(--colors-text-main);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: var(--spacing-xl);
-      background-image:
-        radial-gradient(ellipse at 20% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
-        radial-gradient(ellipse at 80% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 40%),
-        radial-gradient(ellipse at 50% 50%, rgba(16, 185, 129, 0.05) 0%, transparent 60%);
-      background-attachment: fixed;
-    }
+    <!-- Import Map for Three.js (using jsDelivr CDN for better reliability) -->
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js",
+          "three/examples/jsm/controls/OrbitControls.js": "https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/controls/OrbitControls.js"
+        }
+      }
+    </script>
+    <style>
+      /* Game-specific overrides for nav */
+      .top-nav { z-index: 1000; }
+    </style>
+  </head>
 
-    /* Noise overlay */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: url('data:image/svg+xml;utf8,<svg opacity="0.04" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)"/></svg>');
-      pointer-events: none;
-      z-index: -1;
-    }
+  <body>
+    <!-- Hidden H1 for Accessibility -->
+    <h1 class="hidden">Schach 9x9</h1>
 
-    .container {
-      width: 100%;
-      max-width: 900px;
-      text-align: center;
-    }
+    <!-- Top Navigation -->
+    <nav class="top-nav" role="navigation" aria-label="Hauptnavigation">
+      <a href="/" class="nav-brand">
+        <span class="logo">♟</span>
+        <span>Base3</span>
+      </a>
+      <button class="nav-toggle" aria-label="Menü öffnen" aria-expanded="false">
+        ☰
+      </button>
+      <ul class="nav-links">
+        <li>
+          <a href="/">
+            <span class="icon">🏠</span>
+            <span>Start</span>
+          </a>
+        </li>
+        <li>
+          <a href="/schach9x9/" class="active" aria-current="page">
+            <span class="icon">♟️</span>
+            <span>Schach9x9</span>
+          </a>
+        </li>
+        <li>
+          <a href="/trischach/">
+            <span class="icon">⬡</span>
+            <span>Trischach</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
 
-    h1 {
-      font-size: clamp(2.5rem, 6vw, 4rem);
-      font-weight: 800;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-      margin-bottom: var(--spacing-md);
-      background: linear-gradient(135deg, var(--colors-text-main) 0%, var(--colors-text-muted) 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+    <!-- Main Content (with nav offset) -->
+    <div class="main-content">
 
-    .subtitle {
-      font-size: clamp(1rem, 2.5vw, 1.25rem);
-      color: var(--colors-text-muted);
-      font-weight: 300;
-      margin-bottom: var(--spacing-xxl);
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
+    <!-- Global SVG Assets (Hidden) -->
+    <svg style="position: absolute; width: 0; height: 0; overflow: hidden" aria-hidden="true">
+      <defs>
+        <!-- Neon White Glow -->
+        <filter id="filter-neon-glow-white">
+          <feGaussianBlur stdDeviation="2" result="coloredBlur"></feGaussianBlur>
+          <feMerge>
+            <feMergeNode in="coloredBlur"></feMergeNode>
+            <feMergeNode in="SourceGraphic"></feMergeNode>
+          </feMerge>
+        </filter>
+        <!-- Neon Black Glow -->
+        <filter id="filter-neon-glow-black">
+          <feGaussianBlur stdDeviation="2" result="coloredBlur"></feGaussianBlur>
+          <feMerge>
+            <feMergeNode in="coloredBlur"></feMergeNode>
+            <feMergeNode in="SourceGraphic"></feMergeNode>
+          </feMerge>
+        </filter>
+      </defs>
+    </svg>
 
-    .games-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: var(--spacing-xl);
-      margin-top: var(--spacing-xl);
-    }
+    <!-- TOP LAYER: System-level notifications, errors, and loading -->
+    <div id="top-layer">
+      <!-- Toast Notifications Container -->
+      <div id="toast-container"></div>
 
-    .game-card {
-      background: var(--colors-bg-glass);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: var(--rounded-xl);
-      padding: var(--spacing-xl);
-      text-align: center;
-      transition: all var(--motion-transition-normal);
-      position: relative;
-      overflow: hidden;
-    }
+      <!-- Spinner Overlay -->
+      <div id="spinner-overlay" class="modal-overlay hidden">
+        <div class="ai-thinking-panel">
+          <div class="spinner"></div>
+          <div style="margin-top: 16px; font-size: 1.2em; font-weight: 600">KI denkt nach...</div>
+          <div class="ai-status">
+            <div id="ai-depth">Calculating...</div>
+            <div id="ai-nodes">0 Positionen</div>
+            <div id="ai-best-move"></div>
+          </div>
+          <div class="progress-bar-container">
+            <div id="progress-fill"></div>
+          </div>
+        </div>
+      </div>
 
-    .game-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 4px;
-      background: var(--accent-gradient);
-      opacity: 0;
-      transition: opacity var(--motion-transition-normal);
-    }
+      <!-- Error Overlay -->
+      <div id="error-overlay" class="modal-overlay hidden">
+        <div class="critical-error-content">
+          <h2>Ein Fehler ist aufgetreten</h2>
+          <div id="error-message"></div>
+          <button class="btn-primary" onclick="location.reload()">Neustarten</button>
+        </div>
+      </div>
 
-    .game-card:hover::before { opacity: 1; }
-    .game-card:hover {
-      transform: translateY(-8px);
-      background: rgba(255, 255, 255, 0.06);
-      border-color: rgba(255, 255, 255, 0.15);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-    }
-
-    .game-card.schach9x9::before { background: linear-gradient(135deg, #6366f1, #ec4899); }
-    .game-card.trischach::before { background: linear-gradient(135deg, #ff4500, #10b981, #3b82f6); }
-
-    .game-icon {
-      font-size: 4rem;
-      margin-bottom: var(--spacing-lg);
-      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
-    }
-
-    .game-card h2 {
-      font-size: 1.75rem;
-      font-weight: 700;
-      margin-bottom: var(--spacing-sm);
-      color: var(--colors-text-main);
-    }
-
-    .game-card .tagline {
-      color: var(--colors-text-muted);
-      font-size: 1rem;
-      margin-bottom: var(--spacing-lg);
-      line-height: 1.5;
-    }
-
-    .features-list {
-      list-style: none;
-      text-align: left;
-      margin-bottom: var(--spacing-xl);
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: var(--spacing-sm) var(--spacing-md);
-      font-size: 0.9rem;
-      color: var(--colors-text-muted);
-    }
-
-    .features-list li {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-sm);
-    }
-
-    .features-list li::before {
-      content: '✦';
-      color: var(--colors-accent-primary);
-      font-size: 0.7rem;
-    }
-
-    .game-card.trischach .features-list li::before {
-      color: var(--colors-faction-water);
-    }
-
-    .play-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--spacing-sm);
-      padding: var(--spacing-md) var(--spacing-xl);
-      border-radius: var(--rounded-lg);
-      font-weight: 700;
-      font-size: 1rem;
-      text-decoration: none;
-      transition: all var(--motion-transition-fast);
-      border: none;
-      cursor: pointer;
-    }
-
-    .game-card.schach9x9 .play-btn {
-      background: linear-gradient(135deg, #6366f1, #ec4899);
-      color: white;
-    }
-
-    .game-card.schach9x9 .play-btn:hover {
-      background: linear-gradient(135deg, #818cf8, #f472b6);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
-    }
-
-    .game-card.trischach .play-btn {
-      background: linear-gradient(135deg, #ff4500, #10b981, #3b82f6);
-      color: white;
-    }
-
-    .game-card.trischach .play-btn:hover {
-      background: linear-gradient(135deg, #ff6b35, #34d399, #60a5fa);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(255, 69, 0, 0.4);
-    }
-
-    .footer {
-      margin-top: var(--spacing-xxl);
-      padding-top: var(--spacing-xl);
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-      color: var(--colors-text-dim);
-      font-size: 0.85rem;
-    }
-
-    .footer a {
-      color: var(--colors-accent-primary);
-      text-decoration: none;
-    }
-
-    .footer a:hover { text-decoration: underline; }
-
-    @media (max-width: 640px) {
-      .features-list { grid-template-columns: 1fr; }
-      .game-card { padding: var(--spacing-lg); }
-    }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .game-card {
-      animation: fadeInUp var(--motion-transition-bounce) forwards;
-      opacity: 0;
-    }
-    .game-card:nth-child(1) { animation-delay: 0.1s; }
-    .game-card:nth-child(2) { animation-delay: 0.2s; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <header>
-      <h1>Base3 Chess Platform</h1>
-      <p class="subtitle">
-        Zwei einzigartige Schachvarianten. Eine Plattform.
-        Wähle dein Spiel.
-      </p>
-    </header>
-
-    <div class="games-grid">
-      <!-- Schach9x9 -->
-      <article class="game-card schach9x9">
-        <div class="game-icon">♟️</div>
-        <h2>Schach9x9</h2>
-        <p class="tagline">9×9 Brett mit Feenfiguren. Nightrider, Chancellor, Archbishop, Angel.</p>
-        <ul class="features-list">
-          <li>Klassisch & Setup-Mode</li>
-          <li>Upgrade-Mode (Bauern → Engel)</li>
-          <li>Kampagnen & Puzzles</li>
-          <li>KI mit Opening Book</li>
-          <li>3D Battle-Chess View</li>
-          <li>Interaktives Tutorial</li>
-        </ul>
-        <a href="/index.schach9x9.html" class="play-btn">Spielen →</a>
-      </article>
-
-      <!-- Trischach -->
-      <article class="game-card trischach">
-        <div class="game-icon">⬡</div>
-        <h2>Trischach</h2>
-        <p class="tagline">3-Spieler Hexagonales Schach. Stein-Schere-Papier Kampfmechanik.</p>
-        <ul class="features-list">
-          <li>Drei Fraktionen (Feuer/Natur/Wasser)</li>
-          <li>RPS Combat (Feuer > Natur > Wasser > Feuer)</li>
-          <li>Replay-System (TSPN Format)</li>
-          <li>Opening Book & Puzzles</li>
-          <li>Auto-Battle Turniere</li>
-          <li>KI mit Lernfähigkeit</li>
-        </ul>
-        <a href="/index.trischach.html" class="play-btn">Spielen →</a>
-      </article>
+      <!-- Skeleton Loading Screen -->
+      <div id="skeleton-overlay" class="skeleton-overlay">
+        <div class="skeleton-header">
+          <div class="skeleton-line skeleton-logo"></div>
+          <div class="skeleton-line skeleton-status"></div>
+          <div class="skeleton-line skeleton-menu"></div>
+        </div>
+        <div class="skeleton-game-area">
+          <div class="skeleton-player"></div>
+          <div class="skeleton-board">
+            <div class="skeleton-grid">
+              <div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div>
+              <div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div>
+              <div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div>
+              <div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div>
+              <div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div>
+              <div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div>
+              <div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div>
+              <div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div>
+              <div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div>
+            </div>
+          </div>
+          <div class="skeleton-player"></div>
+          <div class="skeleton-actions">
+            <div class="skeleton-btn"></div>
+            <div class="skeleton-btn"></div>
+            <div class="skeleton-btn"></div>
+            <div class="skeleton-btn"></div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <footer class="footer">
-      Base3 Chess Platform — Open Source ·
-      <a href="https://github.com/nousresearch/hermes-agent" target="_blank">Hermes Agent</a> ·
-      <a href="#">DESIGN.md Spec</a>
-    </footer>
-  </div>
-</body>
+    <!-- GAME LAYER: Main board and game controls -->
+    <div id="game-layer" class="hidden">
+      <div id="app-container">
+        <!-- Game Header -->
+        <header class="game-header">
+          <div class="game-header-left">
+            <a href="/" class="back-link" aria-label="Zurück zur Startseite">
+              <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
+                <path d="M19 12H5M12 19l-7-7 7-7"></path>
+              </svg>
+            </a>
+            <div class="game-title">
+              <span class="game-icon">♟️</span>
+              <span>Schach 9x9</span>
+            </div>
+          </div>
+          <div id="status-display" data-testid="status-display" class="status-pill">Weiß: Wähle einen Korridor für den König</div>
+          <div class="game-header-right">
+            <button id="menu-btn" class="icon-btn" aria-label="Menü öffnen">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+        </header>
+
+        <!-- Main Game Area -->
+        <div class="game-area" role="main">
+          <!-- Opponent Info / Clock -->
+          <div class="player-info opponent">
+            <div class="player-details">
+              <div style="display: flex; align-items: center">
+                <div class="player-avatar">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 8V4H8"></path>
+                    <rect width="16" height="12" x="4" y="8" rx="2"></rect>
+                    <path d="M2 14h2"></path>
+                    <path d="M20 14h2"></path>
+                    <path d="M15 13v2"></path>
+                    <path d="M9 13v2"></path>
+                  </svg>
+                </div>
+                <div>
+                  <div class="player-name" id="opponent-name">Gegner</div>
+                  <div class="captured-pieces" id="captured-white"></div>
+                </div>
+              </div>
+            </div>
+            <div class="clock-display" id="clock-black">5:00</div>
+          </div>
+
+          <!-- Opening Name Display -->
+          <div id="opening-name-container" class="hidden">
+            Eröffnung: <span id="opening-name">...</span>
+          </div>
+
+          <!-- Chess Board -->
+          <div id="board-container">
+            <!-- 3D Battle Chess Container -->
+            <div id="battle-chess-3d-container"></div>
+
+            <div id="board-wrapper" aria-label="Schachbrett" role="region">
+              <div id="board" data-testid="board" class="board-9x9" style="grid-template-columns: repeat(9, 1fr); grid-template-rows: repeat(9, 1fr);"><div class="cell light" data-r="0" data-c="0"></div><div class="cell dark" data-r="0" data-c="1"></div><div class="cell light border-right" data-r="0" data-c="2"></div><div class="cell dark" data-r="0" data-c="3"></div><div class="cell light" data-r="0" data-c="4"></div><div class="cell dark border-right" data-r="0" data-c="5"></div><div class="cell light" data-r="0" data-c="6"></div><div class="cell dark" data-r="0" data-c="7"></div><div class="cell light" data-r="0" data-c="8"></div><div class="cell dark" data-r="1" data-c="0"></div><div class="cell light" data-r="1" data-c="1"></div><div class="cell dark border-right" data-r="1" data-c="2"></div><div class="cell light" data-r="1" data-c="3"></div><div class="cell dark" data-r="1" data-c="4"></div><div class="cell light border-right" data-r="1" data-c="5"></div><div class="cell dark" data-r="1" data-c="6"></div><div class="cell light" data-r="1" data-c="7"></div><div class="cell dark" data-r="1" data-c="8"></div><div class="cell light border-bottom" data-r="2" data-c="0"></div><div class="cell dark border-bottom" data-r="2" data-c="1"></div><div class="cell light border-right border-bottom" data-r="2" data-c="2"></div><div class="cell dark border-bottom" data-r="2" data-c="3"></div><div class="cell light border-bottom" data-r="2" data-c="4"></div><div class="cell dark border-right border-bottom" data-r="2" data-c="5"></div><div class="cell light border-bottom" data-r="2" data-c="6"></div><div class="cell dark border-bottom" data-r="2" data-c="7"></div><div class="cell light border-bottom" data-r="2" data-c="8"></div><div class="cell dark" data-r="3" data-c="0"></div><div class="cell light" data-r="3" data-c="1"></div><div class="cell dark border-right" data-r="3" data-c="2"></div><div class="cell light" data-r="3" data-c="3"></div><div class="cell dark" data-r="3" data-c="4"></div><div class="cell light border-right" data-r="3" data-c="5"></div><div class="cell dark" data-r="3" data-c="6"></div><div class="cell light" data-r="3" data-c="7"></div><div class="cell dark" data-r="3" data-c="8"></div><div class="cell light" data-r="4" data-c="0"></div><div class="cell dark" data-r="4" data-c="1"></div><div class="cell light border-right" data-r="4" data-c="2"></div><div class="cell dark" data-r="4" data-c="3"></div><div class="cell light" data-r="4" data-c="4"></div><div class="cell dark border-right" data-r="4" data-c="5"></div><div class="cell light" data-r="4" data-c="6"></div><div class="cell dark" data-r="4" data-c="7"></div><div class="cell light" data-r="4" data-c="8"></div><div class="cell dark border-bottom" data-r="5" data-c="0"></div><div class="cell light border-bottom" data-r="5" data-c="1"></div><div class="cell dark border-right border-bottom" data-r="5" data-c="2"></div><div class="cell light border-bottom" data-r="5" data-c="3"></div><div class="cell dark border-bottom" data-r="5" data-c="4"></div><div class="cell light border-right border-bottom" data-r="5" data-c="5"></div><div class="cell dark border-bottom" data-r="5" data-c="6"></div><div class="cell light border-bottom" data-r="5" data-c="7"></div><div class="cell dark border-bottom" data-r="5" data-c="8"></div><div class="cell light" data-r="6" data-c="0"></div><div class="cell dark" data-r="6" data-c="1"></div><div class="cell light border-right" data-r="6" data-c="2"></div><div class="cell dark" data-r="6" data-c="3"></div><div class="cell light" data-r="6" data-c="4"></div><div class="cell dark border-right" data-r="6" data-c="5"></div><div class="cell light" data-r="6" data-c="6"></div><div class="cell dark" data-r="6" data-c="7"></div><div class="cell light" data-r="6" data-c="8"></div><div class="cell dark" data-r="7" data-c="0"></div><div class="cell light" data-r="7" data-c="1"></div><div class="cell dark border-right" data-r="7" data-c="2"></div><div class="cell light" data-r="7" data-c="3"></div><div class="cell dark" data-r="7" data-c="4"></div><div class="cell light border-right" data-r="7" data-c="5"></div><div class="cell dark" data-r="7" data-c="6"></div><div class="cell light" data-r="7" data-c="7"></div><div class="cell dark" data-r="7" data-c="8"></div><div class="cell light" data-r="8" data-c="0"></div><div class="cell dark" data-r="8" data-c="1"></div><div class="cell light border-right" data-r="8" data-c="2"></div><div class="cell dark" data-r="8" data-c="3"></div><div class="cell light" data-r="8" data-c="4"></div><div class="cell dark border-right" data-r="8" data-c="5"></div><div class="cell light" data-r="8" data-c="6"></div><div class="cell dark" data-r="8" data-c="7"></div><div class="cell light" data-r="8" data-c="8"></div></div>
+            <div class="col-labels" style="grid-template-columns: repeat(9, 1fr);"><span class="coord-label">a</span><span class="coord-label">b</span><span class="coord-label">c</span><span class="coord-label">d</span><span class="coord-label">e</span><span class="coord-label">f</span><span class="coord-label">g</span><span class="coord-label">h</span><span class="coord-label">i</span></div><div class="row-labels" style="grid-template-rows: repeat(9, 1fr);"><span class="coord-label">9</span><span class="coord-label">8</span><span class="coord-label">7</span><span class="coord-label">6</span><span class="coord-label">5</span><span class="coord-label">4</span><span class="coord-label">3</span><span class="coord-label">2</span><span class="coord-label">1</span></div></div>
+          </div>
+
+          <!-- Evaluation Graph -->
+          <div id="eval-graph-container" class="eval-graph-container hidden">
+            <svg id="eval-graph" preserveAspectRatio="none" viewBox="0 0 1000 100"></svg>
+          </div>
+
+          <!-- Player Info / Clock -->
+          <div class="player-info self">
+            <div class="player-details">
+              <div style="display: flex; align-items: center">
+                <div class="player-avatar">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                </div>
+                <div>
+                  <div class="player-name">Du</div>
+                  <div class="captured-pieces" id="captured-black"></div>
+                </div>
+              </div>
+            </div>
+            <div class="clock-display" id="clock-white">5:00</div>
+          </div>
+
+          <!-- Action Bar -->
+          <div class="action-bar">
+            <button id="undo-btn" class="action-icon-btn" title="Rückgängig (U)">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none">
+                <path d="M3 7v6h6"></path>
+                <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"></path>
+              </svg>
+            </button>
+            <button id="hint-btn" class="action-icon-btn" title="Tipps anzeigen (H)">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none">
+                <path d="M9.663 17h4.673M12 3v1M6.343 4.343l-.707-.707M17.657 4.343l.707-.707M4 12h1M19 12h1M12 21a9 9 0 0 0 9-9c0-4.97-4.03-9-9-9s-9 4.03-9 9a9 9 0 0 0 9 9z"></path>
+              </svg>
+            </button>
+            <button id="best-move-btn" class="action-icon-btn" title="Besten Zug anzeigen (B)">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="#22c55e" stroke-width="2" fill="none">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </button>
+            <button id="threats-btn" class="action-icon-btn" title="Drohungen visualisieren (T)">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="#ef4444" stroke-width="2" fill="none">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+            </button>
+            <button id="opportunities-btn" class="action-icon-btn" title="Chancen anzeigen (O)">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="#f59e0b" stroke-width="2" fill="none">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+            </button>
+            <button id="toggle-analysis-btn" class="action-icon-btn" title="Engine Analyse (A)">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="var(--accent-primary)" stroke-width="2" fill="none">
+                <path d="M12 20v-8m-4 8v-4m8 4v-6m-12 6h16"></path>
+              </svg>
+            </button>
+            <button id="toggle-opening-book-btn" class="action-icon-btn" title="Eröffnungsbuch (O)">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="#9f5fef" stroke-width="2" fill="none">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 17H20"></path>
+                <path d="M12.5 17V10.5"></path>
+                <path d="M9 13h7"></path>
+                <path d="M9 17h7"></path>
+              </svg>
+            </button>
+            <button id="toggle-3d-btn" class="action-icon-btn" title="3D Battle Modus (3)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+              </svg>
+            </button>
+            <select id="skin-selector" class="skin-selector" title="Figuren-Skin auswählen" aria-label="Figuren-Skin auswählen">
+              <option value="classic">Klassisch</option>
+              <option value="modern">Modern</option>
+              <option value="pixel">Pixel</option>
+              <option value="infernale">Infernale</option>
+              <option value="wood">Holz</option>
+              <option value="neon">Neon</option>
+              <option value="minimalist">Minimalistisch</option>
+              <option value="frost">Frost</option>
+            </select>
+            <button id="info-toggle-btn" class="action-icon-btn" title="Info / Log">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+            </button>
+            <button id="fullscreen-btn" class="action-icon-btn" title="Vollbild (F)">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none">
+                <path d="M8 3H5a2 2 0 0 0-2 2v3"></path>
+                <path d="M21 8V5a2 2 0 0 0-2-2h-3"></path>
+                <path d="M3 16v3a2 2 0 0 0 2 2h3"></path>
+                <path d="M16 21h3a2 2 0 0 0 2-2v-3"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- PANEL LAYER: Contextual side/top panels -->
+        <div id="panel-layer">
+          <!-- Analysis Panel (Deep Analysis) -->
+          <div id="analysis-panel" class="analysis-panel hidden">
+            <div class="analysis-header">
+              <h3>Deep Analysis</h3>
+              <button id="close-analysis-btn" class="close-icon-btn">×</button>
+            </div>
+            <div class="analysis-body">
+              <div class="eval-section">
+                <div class="eval-bar-container">
+                  <div id="eval-bar" class="eval-bar"></div>
+                </div>
+                <div id="eval-score" class="eval-score">0.00</div>
+              </div>
+              <div class="top-moves-section">
+                <h4>Top Züge</h4>
+                <div id="top-moves-content" class="top-moves-list">
+                  <!-- Top moves injected by JS -->
+                </div>
+              </div>
+              <div class="analysis-controls">
+                <div class="analysis-info" id="analysis-engine-info">Tiefe: - | Knoten: -</div>
+                <button id="continuous-analysis-btn" class="btn-secondary small-btn">
+                  🔄 Kontinuierlich
+                </button>
+              </div>
+             
+              <!-- Live Search Progress -->
+              <div class="live-search-progress" style="margin-top: 1rem; padding: 0.75rem; background: rgba(0,0,0,0.2); border-radius: 8px; font-size: 0.85rem;">
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin-bottom: 0.5rem;">
+                  <div><strong>Tiefe:</strong> <span id="live-depth">-</span></div>
+                  <div><strong>Knoten:</strong> <span id="live-nodes">-</span></div>
+                  <div><strong>Bewertung:</strong> <span id="live-score">-</span></div>
+                  <div><strong>Zeit:</strong> <span id="live-time">-</span></div>
+                </div>
+                <div style="margin-top: 0.5rem;">
+                  <strong>Hauptvariante:</strong> <span id="live-pv" style="color: var(--accent-primary); font-family: monospace;">-</span>
+                </div>
+              </div>
+             
+            </div>
+          </div>
+
+          <!-- Opening Book Panel -->
+          <div id="opening-book-panel" class="opening-book-panel hidden">
+            <div class="opening-book-header">
+              <h3>Eröffnungsbuch</h3>
+              <button id="close-opening-book-btn" class="close-icon-btn">×</button>
+            </div>
+            <div class="opening-book-body">
+              <!-- Current Opening Display -->
+              <div id="current-opening-display" class="current-opening-section hidden">
+                <h4>Aktuelle Eröffnung</h4>
+                <div class="current-opening-info">
+                  <div class="current-opening-name-row">
+                    <span id="current-opening-name" class="current-opening-name"></span>
+                    <span id="current-opening-eco" class="current-opening-eco"></span>
+                  </div>
+                  <span id="current-opening-category" class="current-opening-category"></span>
+                  <div id="current-opening-stats" class="current-opening-stats"></div>
+                  <div id="current-opening-moves" class="current-opening-moves"></div>
+                  <p id="current-opening-description" class="current-opening-description"></p>
+                </div>
+              </div>
+
+              <!-- Book Move Suggestion -->
+              <div class="book-move-section">
+                <h4>Buchzug-Vorschlag</h4>
+                <div id="book-moves-list" class="book-moves-list"></div>
+              </div>
+
+              <!-- Opening Database Browser -->
+              <div class="opening-browser-section">
+                <div class="browser-controls">
+                  <input type="text" id="opening-search" class="opening-search-input" placeholder="Eröffnung suchen (Name, ECO, Kategorie)...">
+                  <select id="opening-category-filter" class="opening-category-filter">
+                    <option value="all">Alle Kategorien</option>
+                  </select>
+                </div>
+                <div id="opening-search-results" class="opening-search-results"></div>
+                <div id="top-openings-list" class="top-openings-list"></div>
+              </div>
+            </div>
+            </div>
+
+            <!-- Statistics Overlay -->
+            <div id="stats-overlay" class="stats-overlay hidden">
+            <div class="stats-overlay-header">
+              <h3>Statistiken</h3>
+              <button id="close-stats-overlay" class="close-icon-btn">×</button>
+            </div>
+            <div class="stats-overlay-body">
+              <div class="stat-row">
+                <span class="stat-label">Gesamtzüge</span>
+                <span id="stat-moves" class="stat-value">0</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Schlagen</span>
+                <span id="stat-captures" class="stat-value">0</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Genauigkeit</span>
+                <span id="stat-accuracy" class="stat-value">--%</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Elo-Schätzung</span>
+                <span id="stat-elo" class="stat-value">—</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Beste Züge</span>
+                <span id="stat-best-moves" class="stat-value">0</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">Material</span>
+                <span id="stat-material" class="stat-value">0</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Promotion Overlay -->
+          <div id="promotion-overlay" class="promotion-overlay hidden">
+            <div class="promotion-overlay-header">
+              <h3>Bauernumwandlung</h3>
+            </div>
+            <div id="promotion-options" class="promotion-options">
+            </div>
+          </div>
+
+          <!-- Shop Panel (Contextual) -->
+          <div id="shop-panel" class="shop-panel hidden">
+            <div class="shop-header">
+              <h2>Truppen anheuern</h2>
+              <div class="shop-points">
+                <span id="points-display" data-testid="points-display">15</span> Pkt
+              </div>
+            </div>
+
+            <!-- Tutor Recommendations Section -->
+            <div id="tutor-recommendations-section" class="tutor-recommendations-section">
+              <button id="toggle-tutor-recommendations" class="btn-secondary full-width" style="padding: 8px; font-size: 0.9rem; margin-bottom: 1rem">
+                💡 KI-Vorlagen anzeigen
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIDE PANEL: Menu, Settings, Info -->
+      <aside id="side-panel" class="side-panel hidden">
+        <div class="side-panel-header">
+          <h2>Menü</h2>
+          <button id="close-side-panel-btn" class="close-icon-btn">×</button>
+        </div>
+        <div id="side-panel-content" class="side-panel-content">
+          <!-- Content injected by JS -->
+        </div>
+      </aside>
+
+      <!-- Modal Overlay for Side Panel -->
+      <div id="side-panel-overlay" class="modal-overlay hidden"></div>
+    </div>
+
+    </div><!-- end main-content -->
+
+    <!-- Service Worker Registration -->
+    
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker
+            .register('/service-worker.ts')
+            .then((registration) => {
+              console.log('[PWA] Service Worker registered:', registration.scope);
+            })
+            .catch((error) => {
+              console.warn('[PWA] Service Worker registration failed:', error);
+            });
+        });
+      }
+
+      // Mobile menu toggle
+      const toggle = document.querySelector('.nav-toggle');
+      const navLinks = document.querySelector('.nav-links');
+      if (toggle && navLinks) {
+        toggle.addEventListener('click', () => {
+          const isOpen = navLinks.classList.toggle('open');
+          toggle.setAttribute('aria-expanded', isOpen);
+        });
+        navLinks.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', () => {
+            navLinks.classList.remove('open');
+            toggle.setAttribute('aria-expanded', 'false');
+          });
+        });
+      }
+
+      // Touch feedback for board cells
+      const board = document.getElementById('board');
+      if (board) {
+        board.addEventListener('touchstart', (e) => {
+          const cell = e.target.closest('.cell');
+          if (cell) cell.classList.add('touch-active');
+        }, { passive: true });
+
+        board.addEventListener('touchend', (e) => {
+          const cell = e.target.closest('.cell');
+          if (cell) cell.classList.remove('touch-active');
+        }, { passive: true });
+
+        // Prevent double-tap zoom on board
+        board.addEventListener('dblclick', (e) => e.preventDefault());
+      }
+    </script>
+  </body>
 </html>"
 `;
 

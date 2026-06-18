@@ -594,10 +594,9 @@ describe('MoveController', () => {
         difficulty: 'medium',
       };
 
-      (Storage.prototype.getItem as unknown as MockInstance).mockReturnValue(
-        JSON.stringify(savedState)
-      );
-
+      // Mock localStorage.getItem to return our saved state
+      vi.spyOn(localStorage, 'getItem').mockReturnValue(JSON.stringify(savedState));
+  
       // Explicitly mock getElementById for this test to avoid leakage issues
       document.getElementById = vi.fn((id: string) => {
         if (id === 'ai-toggle') return { checked: false, addEventListener: vi.fn() } as any;
@@ -634,14 +633,13 @@ describe('MoveController', () => {
     });
 
     it('should handle corrupt save data', () => {
-      (Storage.prototype.getItem as unknown as MockInstance).mockReturnValue('invalid-json');
-      const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-
+      // Mock localStorage to return invalid JSON
+      vi.spyOn(localStorage, 'getItem').mockReturnValue('invalid-json');
+      
       const success = moveController.loadGame();
 
       expect(success).toBe(false);
-      expect(game.log).toHaveBeenCalledWith(expect.stringContaining('Fehler'));
-      errorSpy.mockRestore();
+      expect(game.log).toHaveBeenCalledWith(expect.stringContaining('Fehler beim Laden'));
     });
   });
 
@@ -821,8 +819,8 @@ describe('MoveController', () => {
     });
 
     it('setTheme should update theme and localStorage', () => {
-      // Spy on the mock function directly
-      const setItemSpy = Storage.prototype.setItem;
+      // Spy on localStorage.setItem
+      const setItemSpy = vi.spyOn(localStorage, 'setItem');
 
       // Mock document.body.setAttribute
       document.body.setAttribute = vi.fn();

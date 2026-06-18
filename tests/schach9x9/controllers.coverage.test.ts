@@ -80,6 +80,20 @@ describe('Controllers Coverage Expansion', () => {
 
   beforeEach(() => {
     setupJSDOM();
+    // Add missing DOM elements that are created dynamically by the app
+    document.body.innerHTML += `
+      <div id="game-over-overlay" class="hidden">
+        <div id="winner-text"></div>
+      </div>
+      <div id="tutorial-overlay" class="hidden">
+        <div id="tutorial-steps"></div>
+        <button id="tutorial-prev">Zurück</button>
+        <button id="tutorial-next">Weiter</button>
+        <button id="tutorial-close">×</button>
+        <span id="tutorial-current-step">1</span>
+        <span id="tutorial-total-steps">5</span>
+      </div>
+    `;
     game = createMockGame();
     gc = new GameController(game);
     ac = new AIController(game);

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { Game } from '@schach9x9/gameEngine.js';
-import { generatePGN } from '@schach9x9/utils';
+import { generatePGN } from '@schach9x9/utils/PGNGenerator.js';
 
 describe('PGN Generator - Cross Mode', () => {
   it('should include Variant: Cross and FEN headers for cross mode games', () => {

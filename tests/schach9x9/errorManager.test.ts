@@ -1,5 +1,5 @@
 import { describe, expect, test, beforeEach, vi } from 'vitest';
-import { errorManager } from '@schach9x9/utils';
+import { errorManager } from '@schach9x9/utils/ErrorManager';
 import { notificationUI } from '@schach9x9/ui/NotificationUI';
 import { logger } from '@schach9x9/logger.js';
 
@@ -73,7 +73,10 @@ describe('ErrorManager', () => {
   test('should use alert fallback if overlay is missing', () => {
     // Remove overlay
     document.body.innerHTML = '';
-    const alertSpy = vi.spyOn(window, 'alert').mockImplementation(function () {});
+    
+    // Ensure window.alert exists and is a mock
+    window.alert = vi.fn();
+    const alertSpy = vi.spyOn(window, 'alert');
 
     const error = new Error('Critical No UI');
     errorManager.handleError(error, { critical: true });
