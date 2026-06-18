@@ -4,8 +4,8 @@
 
 import { logger } from '../logger.js';
 
-// Dynamic import for WASM module - use alias for Vite compatibility
-let wasmModule: typeof import('@engine-wasm/schach9x9.js') | null = null;
+// Wasm module - use lazy dynamic import to avoid Vite static analysis
+let wasmModule: ReturnType<typeof import> | null = null;
 let initPromise: Promise<boolean> | null = null;
 let nodesEvaluated = 0;
 
@@ -19,9 +19,10 @@ export async function ensureWasmInitialized(): Promise<boolean> {
 
   initPromise = (async () => {
     try {
-      // Dynamic import of WASM module - use alias for Vite/Vitest compatibility
-      // @vite-ignore tells Vite to skip static analysis of this dynamic import
-      const module = await import(/* @vite-ignore */ '@engine-wasm/schach9x9.js');
+      // Truly dynamic import - construct path at runtime so Vite can't analyze it
+      // This prevents "Failed to resolve import" errors during test transforms
+      const modulePath = '../../../engine-wasm/pkg/schach9x9.js';
+      const module = await import(/* @vite-ignore */ modulePath);
 
       // Check if we're in Node.js
       // @ts-ignore - Node.js globals only available at runtime
