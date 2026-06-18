@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { orderMoves, clearMoveOrdering, updateCounterMove } from '../../js/ai/MoveOrdering.js';
+import { orderMoves, clearMoveOrdering, updateCounterMove } from '@schach9x9/ai/MoveOrdering.js';
 import {
   PIECE_NONE,
   PIECE_PAWN,

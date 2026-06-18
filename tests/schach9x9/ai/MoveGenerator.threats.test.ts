@@ -4,7 +4,7 @@ import {
   getXRayThreats,
   getDiscoveredAttackPotential,
   getAllThreats,
-} from '../../js/ai/MoveGenerator.js';
+} from '@schach9x9/ai/MoveGenerator.js';
 import {
   PIECE_PAWN,
   PIECE_KNIGHT,
@@ -17,7 +17,7 @@ import {
   COLOR_WHITE,
   COLOR_BLACK,
   SQUARE_COUNT,
-} from '../../js/ai/BoardDefinitions.js';
+} from '@schach9x9/ai/BoardDefinitions.js';
 
 describe('MoveGenerator - New Threat Detection Functions', () => {
   let board: Int8Array;
