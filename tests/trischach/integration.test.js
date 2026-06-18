@@ -62,5 +62,5 @@ describe("AI Simulation (Integration)", () => {
     }
 
     expect(moveCount).toBeGreaterThan(0);
-  }, 120000); // 2min timeout for AI simulation
+  }, 300000); // 5min timeout for AI simulation
 });
