@@ -173,6 +173,34 @@ Run `npm run typecheck` to verify both projects.
 
 ---
 
+## AAA Quality Roadmap
+
+> **Ziel**: Production-ready, barrierefrei, performant, wartbar — "AAA" Standard für Web-Games
+
+Die vollständige Roadmap mit 8 Phasen liegt in [`ROADMAP_AAA.md`](ROADMAP_AAA.md).
+
+**Aktueller Stand (2026-07):**
+
+| Phase | Status | Hinweis |
+|-------|--------|---------|
+| 1. Fundament | 🟡 In Progress | Tests grün, Lint 0 errors, Typecheck ✅ |
+| 2. E2E | 🔲 Geplant | Playwright CI, visuelle Regression |
+| 3. Performance | 🔲 Geplant | Bundle < 200KB, 3D lazy-load |
+| 4. Accessibility | 🔲 Geplant | WCAG 2.1 AA Audit |
+| 5. Security | 🔲 Geplant | CSP, Dependabot, npm audit clean |
+| 6. Observability | 🔲 Geplant | Sentry, Web Vitals |
+| 7. DX/Docs | 🔲 Geplant | Storybook, API Docs, Contributing Guide |
+| 8. Polish | 🔲 Geplant | PWA, i18n, 500+ Puzzles |
+
+**Quick Wins:**
+1. Restliche fehlerhafte Tests fixen
+2. Coverage Report prüfen, Lücken schließen
+3. Bundle Analyse → 3D Chunk lazy laden
+4. A11y Audit (`@axe-core/playwright`)
+5. `npm audit fix` + CSP Header
+
+---
+
 ## License
 
 ISC
