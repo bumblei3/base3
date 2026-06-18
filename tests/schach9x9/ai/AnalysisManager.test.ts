@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { AnalysisManager } from '../../js/ai/AnalysisManager.js';
+import { AnalysisManager } from '@schach9x9/ai/AnalysisManager.js';
 
 describe('AnalysisManager', () => {
   const mockGame = {
