@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach } from 'vitest';
-import { see } from '../../js/ai/MoveGenerator.js';
+import { see } from '@schach9x9/ai/MoveGenerator';
 import {
   SQUARE_COUNT,
   PIECE_NONE,
@@ -13,7 +13,7 @@ import {
   BLACK_ROOK,
   BLACK_QUEEN,
   coordsToIndex,
-} from '../../js/ai/BoardDefinitions.js';
+} from '@schach9x9/ai/BoardDefinitions';
 
 describe('Static Exchange Evaluation (SEE)', () => {
   let board: any;

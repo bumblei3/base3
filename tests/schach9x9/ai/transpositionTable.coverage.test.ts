@@ -4,13 +4,13 @@
  */
 
 import { describe, test, expect, beforeEach } from 'vitest';
-import { TranspositionTable, computeZobristHash } from '../../js/ai/transpositionTable.js';
+import { TranspositionTable, computeZobristHash } from '@schach9x9/ai/transpositionTable';
 import {
   SQUARE_COUNT,
   PIECE_NONE,
   COLOR_WHITE,
   COLOR_BLACK,
-} from '../../js/ai/BoardDefinitions.js';
+} from '@schach9x9/ai/BoardDefinitions';
 
 describe('TranspositionTable - Branch Coverage', () => {
   let tt: TranspositionTable;
