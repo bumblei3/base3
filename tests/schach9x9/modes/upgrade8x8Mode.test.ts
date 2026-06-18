@@ -1,5 +1,5 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest';
-import { PHASES } from '@schach9x9/config.js';
+import { PHASES } from '@schach9x9/config';
 
 // Mock dependencies (same as upgradeMode.test.js)
 vi.mock('@schach9x9/ui', () => ({
@@ -37,7 +37,7 @@ vi.mock('@schach9x9/sounds', () => ({
   },
 }));
 
-vi.mock('../../js/campaign/CampaignManager.js', () => ({
+vi.mock('@schach9x9/campaign/CampaignManager', () => ({
   campaignManager: {
     isRewardUnlocked: vi.fn(() => true),
     getLevel: vi.fn(),
@@ -53,6 +53,7 @@ vi.mock('@schach9x9/TimeManager', () => ({
     stopClock() {}
   },
 }));
+
 vi.mock('@schach9x9/tutorial', () => ({ Tutorial: class {} }));
 vi.mock('@schach9x9/AnalysisController', () => ({
   AnalysisController: class {
@@ -61,19 +62,19 @@ vi.mock('@schach9x9/AnalysisController', () => ({
     exitAnalysisMode() {}
   },
 }));
-vi.mock('../../js/ui/AnalysisUI.js', () => ({
+vi.mock('@schach9x9/ui/AnalysisUI', () => ({
   AnalysisUI: class {
     constructor() {}
   },
 }));
-vi.mock('../../js/ui/PuzzleMenu.js', () => ({
+vi.mock('@schach9x9/ui/PuzzleMenu', () => ({
   PuzzleMenu: class {
     constructor() {}
   },
 }));
 
-import { GameController } from '@schach9x9/gameController.js';
-import { Game } from '@schach9x9/gameEngine.js';
+import { GameController } from '@schach9x9/gameController';
+import { Game } from '@schach9x9/gameEngine';
 
 describe('8x8 Upgrade Mode', () => {
   let game: any;

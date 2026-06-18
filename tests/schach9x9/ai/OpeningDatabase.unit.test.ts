@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { getOpeningName } from '../../js/ai/OpeningDatabase.js';
+import { getOpeningName } from '@schach9x9/ai/OpeningDatabase';
 
 describe('OpeningDatabase', () => {
   test('getOpeningName should return correct name for known hash', () => {

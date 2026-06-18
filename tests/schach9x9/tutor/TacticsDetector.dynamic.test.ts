@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeEach } from 'vitest';
-import { Game, BOARD_SIZE } from '@schach9x9/gameEngine.js';
-import { detectTacticalPatterns, detectBattery } from '../../js/tutor/TacticsDetector.js';
+import { Game, BOARD_SIZE } from '@schach9x9/gameEngine';
+import { detectTacticalPatterns, detectBattery } from '@schach9x9/tutor/TacticsDetector';
 
 describe('TacticsDetector Dynamic', () => {
   let game: any;

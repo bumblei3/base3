@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { SetupModeStrategy } from '../../js/modes/strategies/SetupMode';
+import { SetupModeStrategy } from '@schach9x9/modes/strategies/SetupMode';
 import { PHASES } from '@schach9x9/config';
 import * as UI from '@schach9x9/ui';
 

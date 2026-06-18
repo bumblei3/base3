@@ -3,8 +3,8 @@
  * Coverage target: 81% -> 90%+
  */
 import { describe, test, expect, beforeEach, vi } from 'vitest';
-import { ShopManager } from '../../js/shop/ShopManager.js';
-import { PHASES } from '@schach9x9/gameEngine.js';
+import { ShopManager } from '@schach9x9/shop/ShopManager';
+import { PHASES } from '@schach9x9/gameEngine';
 
 // Mock UI module
 vi.mock('@schach9x9/ui', () => ({
@@ -15,7 +15,7 @@ vi.mock('@schach9x9/ui', () => ({
 }));
 
 // Mock campaignManager
-vi.mock('../../js/campaign/CampaignManager.js', () => ({
+vi.mock('@schach9x9/campaign/CampaignManager', () => ({
   campaignManager: {
     isRewardUnlocked: vi.fn().mockReturnValue(true),
   },

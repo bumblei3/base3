@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { ClassicModeStrategy } from '../../js/modes/strategies/ClassicMode';
+import { ClassicModeStrategy } from '@schach9x9/modes/strategies/ClassicMode';
 import { PHASES } from '@schach9x9/config';
 import * as UI from '@schach9x9/ui';
 

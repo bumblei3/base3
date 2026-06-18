@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach } from 'vitest';
-import { getAllLegalMoves, makeMove, undoMove } from '../../js/ai/MoveGenerator.js';
+import { getAllLegalMoves, makeMove, undoMove } from '@schach9x9/ai/MoveGenerator';
 import {
   SQUARE_COUNT,
   PIECE_NONE,
@@ -8,7 +8,7 @@ import {
   WHITE_KING,
   BLACK_KING,
   PIECE_PAWN,
-} from '../../js/ai/BoardDefinitions.js';
+} from '@schach9x9/ai/BoardDefinitions';
 
 function perft(board: Int8Array, depth: number, color: number): number {
   if (depth === 0) return 1;

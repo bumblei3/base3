@@ -1,4 +1,4 @@
-import { getAllLegalMoves, makeMove, undoMove, isInCheck } from '../../js/ai/MoveGenerator.js';
+import { getAllLegalMoves, makeMove, undoMove, isInCheck } from '@schach9x9/ai/MoveGenerator';
 import {
   SQUARE_COUNT,
   PIECE_NONE,
@@ -14,7 +14,7 @@ import {
   PIECE_CHANCELLOR,
   PIECE_ANGEL,
   TYPE_MASK,
-} from '../../js/ai/BoardDefinitions.js';
+} from '@schach9x9/ai/BoardDefinitions';
 
 /**
  * Basic Fuzz Test for the Rules Engine

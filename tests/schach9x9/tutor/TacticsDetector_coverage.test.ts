@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import * as TacticsDetector from '../../js/tutor/TacticsDetector.js';
-import * as aiEngine from '@schach9x9/aiEngine.js';
+import * as TacticsDetector from '@schach9x9/tutor/TacticsDetector';
+import * as aiEngine from '@schach9x9/aiEngine';
 
 vi.mock('@schach9x9/aiEngine', () => ({
   see: vi.fn(),

@@ -3,8 +3,8 @@
  * Coverage target: 58% -> 80%+
  */
 import { describe, test, expect, beforeEach, vi } from 'vitest';
-import { CampaignModeStrategy } from '../../js/modes/strategies/CampaignMode.js';
-import { PHASES } from '@schach9x9/config.js';
+import { CampaignModeStrategy } from '@schach9x9/modes/strategies/CampaignMode';
+import { PHASES } from '@schach9x9/config';
 
 // Mock UI module
 vi.mock('@schach9x9/ui', () => ({
@@ -27,7 +27,7 @@ vi.mock('@schach9x9/logger', () => ({
 }));
 
 // Mock campaignManager
-vi.mock('../../js/campaign/CampaignManager.js', () => ({
+vi.mock('@schach9x9/campaign/CampaignManager', () => ({
   campaignManager: {
     getLevel: vi.fn((levelId: string) => {
       if (levelId === 'level_1') {
@@ -73,7 +73,7 @@ vi.mock('../../js/campaign/CampaignManager.js', () => ({
 }));
 
 // Mock BoardFactory
-vi.mock('../../js/campaign/BoardFactory.js', () => ({
+vi.mock('@schach9x9/campaign/BoardFactory', () => ({
   BoardFactory: {
     fromFEN: vi.fn(() =>
       Array(9)
@@ -91,7 +91,7 @@ vi.mock('../../js/campaign/BoardFactory.js', () => ({
 // Mock SetupModeStrategy as a proper class
 const mockSetupHandleInteraction = vi.fn().mockResolvedValue(true);
 const mockSetupOnPhaseEnd = vi.fn();
-vi.mock('../../js/modes/strategies/SetupMode.ts', () => ({
+vi.mock('@schach9x9/modes/strategies/SetupMode', () => ({
   SetupModeStrategy: class MockSetupModeStrategy {
     handleInteraction = mockSetupHandleInteraction;
     onPhaseEnd = mockSetupOnPhaseEnd;

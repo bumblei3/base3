@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach } from 'vitest';
-import { orderMoves } from '../../js/ai/MoveOrdering.js';
+import { orderMoves } from '@schach9x9/ai/MoveOrdering';
 import {
   SQUARE_COUNT,
   PIECE_NONE,
@@ -8,7 +8,7 @@ import {
   WHITE_ROOK,
   BLACK_QUEEN,
   coordsToIndex,
-} from '../../js/ai/BoardDefinitions.js';
+} from '@schach9x9/ai/BoardDefinitions';
 
 describe('AI Strategy - Move Ordering', () => {
   let board: Int8Array;

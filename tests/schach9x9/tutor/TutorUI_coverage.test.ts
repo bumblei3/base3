@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import * as TutorUI from '../../js/ui/TutorUI.js';
+import * as TutorUI from '@schach9x9/ui/TutorUI';
 
-vi.mock('../../js/ui/ShopUI.js', () => ({
+vi.mock('@schach9x9/ui/ShopUI', () => ({
   updateShopUI: vi.fn(),
 }));
 
@@ -102,7 +102,8 @@ describe('TutorUI Coverage', () => {
       await TutorUI.showTutorSuggestions(mockGame);
 
       // Spy on confirm
-      vi.spyOn(window, 'confirm').mockReturnValue(true);
+      window.confirm = vi.fn().mockReturnValue(true);
+      const confirmSpy = vi.spyOn(window, 'confirm');
 
       const overlay = document.getElementById('tutor-overlay');
       expect(overlay).not.toBeNull();
@@ -113,6 +114,7 @@ describe('TutorUI Coverage', () => {
       card.click();
 
       expect(mockGame.tutorController.applySetupTemplate).toHaveBeenCalledWith('defensive');
+      confirmSpy.mockRestore();
     });
   });
 

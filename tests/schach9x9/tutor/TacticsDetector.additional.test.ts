@@ -8,8 +8,8 @@
  */
 
 import { describe, test, expect, beforeEach, vi, afterEach } from 'vitest';
-import * as TacticsDetector from '../../js/tutor/TacticsDetector.js';
-import * as aiEngine from '@schach9x9/aiEngine.js';
+import * as TacticsDetector from '@schach9x9/tutor/TacticsDetector';
+import * as aiEngine from '@schach9x9/aiEngine';
 
 describe('TacticsDetector - Additional Coverage', () => {
   let mockGame: any;

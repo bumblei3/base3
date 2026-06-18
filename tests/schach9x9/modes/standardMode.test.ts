@@ -3,8 +3,8 @@
  * Coverage target: 38% -> 80%+
  */
 import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
-import { StandardModeStrategy } from '../../js/modes/strategies/StandardMode.js';
-import { PHASES } from '@schach9x9/config.js';
+import { StandardModeStrategy } from '@schach9x9/modes/strategies/StandardMode';
+import { PHASES } from '@schach9x9/config';
 
 interface ModalAction {
   text: string;

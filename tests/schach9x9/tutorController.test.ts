@@ -1,7 +1,7 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest';
-import { Game } from '@schach9x9/gameEngine.js';
-import { PHASES } from '@schach9x9/config.js';
-import * as aiEngine from '@schach9x9/aiEngine.js';
+import { Game } from '@schach9x9/gameEngine';
+import { PHASES } from '@schach9x9/config';
+import * as aiEngine from '@schach9x9/aiEngine';
 
 // Mock UI module
 vi.mock('@schach9x9/ui', () => ({
@@ -89,7 +89,7 @@ vi.mock('@schach9x9/aiEngine', () => ({
 }));
 
 // Import after mocking
-const { TutorController } = await import('@schach9x9/tutorController.js');
+const { TutorController } = await import('@schach9x9/tutorController');
 
 describe('TutorController', () => {
   let game: any;

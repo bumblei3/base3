@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { ShopManager } from '../../js/shop/ShopManager.js';
-import { PHASES } from '@schach9x9/gameEngine.js';
-import { PIECE_VALUES } from '@schach9x9/config.js';
-import * as UI from '@schach9x9/ui.js';
+import { ShopManager } from '@schach9x9/shop/ShopManager';
+import { PHASES } from '@schach9x9/gameEngine';
+import { PIECE_VALUES } from '@schach9x9/config';
+import * as UI from '@schach9x9/ui';
 
 // Mock UI dependencies
 vi.mock('@schach9x9/ui', () => ({
@@ -13,7 +13,7 @@ vi.mock('@schach9x9/ui', () => ({
 }));
 
 // Mock Campaign Manager
-vi.mock('../../js/campaign/CampaignManager.js', () => ({
+vi.mock('@schach9x9/campaign/CampaignManager', () => ({
   campaignManager: {
     isRewardUnlocked: vi.fn().mockReturnValue(true), // Default unlock all
   },

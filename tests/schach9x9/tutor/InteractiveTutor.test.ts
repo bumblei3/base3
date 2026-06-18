@@ -2,10 +2,10 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { GameController } from '@schach9x9/gameController';
 import { Game } from '@schach9x9/gameEngine';
 import { PHASES } from '@schach9x9/gameEngine';
-import { notificationUI } from '../../js/ui/NotificationUI';
+import { notificationUI } from '@schach9x9/ui/NotificationUI';
 
 // Mock UI dependencies
-vi.mock('../../js/ui/NotificationUI', () => ({
+vi.mock('@schach9x9/ui/NotificationUI', () => ({
   notificationUI: {
     show: vi.fn(),
   },

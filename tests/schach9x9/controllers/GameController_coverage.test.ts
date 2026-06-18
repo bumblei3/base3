@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { GameController } from '@schach9x9/gameController';
 import { PHASES } from '@schach9x9/gameEngine';
 import * as UI from '@schach9x9/ui';
-import { campaignManager } from '../../js/campaign/CampaignManager';
+import { campaignManager } from '@schach9x9/campaign/CampaignManager';
 
 vi.mock('@schach9x9/ui', () => ({
   initBoardUI: vi.fn(),
@@ -19,6 +19,8 @@ vi.mock('@schach9x9/ui', () => ({
   hidePuzzleOverlay: vi.fn(),
   updatePuzzleStatus: vi.fn(),
   showCampaignVictoryModal: vi.fn(),
+  updateCapturedUI: vi.fn(),
+  updatePuzzleStatus: vi.fn(),
 }));
 
 vi.mock('@schach9x9/sounds', () => ({
@@ -30,7 +32,7 @@ vi.mock('@schach9x9/sounds', () => ({
   },
 }));
 
-vi.mock('../../js/campaign/CampaignManager', () => ({
+vi.mock('@schach9x9/campaign/CampaignManager', () => ({
   campaignManager: {
     getLevel: vi.fn(),
     completeLevel: vi.fn(),
@@ -51,7 +53,7 @@ vi.mock('@schach9x9/statisticsManager', () => ({
   }),
 }));
 
-vi.mock('../../js/shop/ShopManager', () => ({
+vi.mock('@schach9x9/shop/ShopManager', () => ({
   ShopManager: vi.fn().mockImplementation(function () {
     return {
       selectShopPiece: vi.fn(),
@@ -62,7 +64,7 @@ vi.mock('../../js/shop/ShopManager', () => ({
   }),
 }));
 
-vi.mock('../../js/ui/NotificationUI', () => ({
+vi.mock('@schach9x9/ui/NotificationUI', () => ({
   notificationUI: {
     show: vi.fn(),
   },

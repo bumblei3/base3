@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { evaluate } from '@schach9x9/aiEngine.js';
+import { evaluate } from '@schach9x9/aiEngine';
 import {
   SQUARE_COUNT,
   PIECE_NONE,
@@ -18,7 +18,7 @@ import {
   COLOR_WHITE,
   COLOR_BLACK,
   coordsToIndex,
-} from '../../js/ai/BoardDefinitions.js';
+} from '@schach9x9/ai/BoardDefinitions';
 
 // Helper: create empty board
 function emptyBoard(): Int8Array {

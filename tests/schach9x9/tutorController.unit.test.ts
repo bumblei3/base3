@@ -1,7 +1,7 @@
 // Mock the sub-modules
 import { describe, expect, test, beforeEach, vi } from 'vitest';
 
-vi.mock('../js/tutor/TacticsDetector.js', () => ({
+vi.mock('@schach9x9/tutor/TacticsDetector', () => ({
   getThreatenedPieces: vi.fn(),
   detectTacticalPatterns: vi.fn(),
   detectPins: vi.fn(),
@@ -13,7 +13,7 @@ vi.mock('../js/tutor/TacticsDetector.js', () => ({
   getDefendedPieces: vi.fn(),
 }));
 
-vi.mock('../js/tutor/MoveAnalyzer.js', () => ({
+vi.mock('@schach9x9/tutor/MoveAnalyzer', () => ({
   getMoveNotation: vi.fn(() => 'e4'),
   getPieceName: vi.fn(() => 'Bauer'),
   analyzeStrategicValue: vi.fn(),
@@ -24,7 +24,7 @@ vi.mock('../js/tutor/MoveAnalyzer.js', () => ({
   showBlunderWarning: vi.fn(),
 }));
 
-vi.mock('../js/tutor/HintGenerator.js', () => ({
+vi.mock('@schach9x9/tutor/HintGenerator', () => ({
   updateBestMoves: vi.fn(),
   isTutorMove: vi.fn(),
   getTutorHints: vi.fn(() => []),
@@ -50,9 +50,9 @@ vi.mock('@schach9x9/gameEngine', () => ({
 import * as TacticsDetector from '@schach9x9/tutor/TacticsDetector';
 import * as MoveAnalyzer from '@schach9x9/tutor/MoveAnalyzer';
 import * as HintGenerator from '@schach9x9/tutor/HintGenerator';
-import '../js/utils.js';
-import { TutorController } from '@schach9x9/tutorController.js';
-import { Game } from '@schach9x9/gameEngine.js';
+import '@schach9x9/utils';
+import { TutorController } from '@schach9x9/tutorController';
+import { Game } from '@schach9x9/gameEngine';
 
 describe('TutorController', () => {
   let game: any;
