@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars, @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any */
+/* eslint-disable no-unused-vars, @typescript-eslint/no-unused-vars */
 /**
  * TriSchach Main Entry Point - TypeScript
  * Main application logic, UI handling, AI worker management, replay system
@@ -315,7 +315,7 @@ function serializeGameForWorker(game: Game): GameStateForWorker {
 // ─── Global State ───────────────────────────────────────────────────
 
 let autoBattleActive = false;
-let autoBattleTimer: any = null;
+let autoBattleTimer: ReturnType<typeof setTimeout> | null = null;
 let currentBoardRotation = 0;
 
 // Track opening book moves for learning
@@ -1369,7 +1369,7 @@ function initEventListeners(): void {
   }
 
   function updateReplayUI(): void {
-    const controller = window.replayController as any;
+    const controller = window.replayController as ReplayController;
     if (!controller) return;
 
     const moveInfo = document.getElementById('replay-move-info') as HTMLElement;
@@ -1479,7 +1479,7 @@ function initEventListeners(): void {
     if (replayPause) replayPause.style.display = 'none';
   }
 
-  function applyGameState(state: any): void {
+  function applyGameState(state: Game): void {
     const boardGroup = document.getElementById('board-group');
     if (boardGroup) {
       boardGroup.querySelectorAll('.piece').forEach((el) => el.remove());
@@ -1488,7 +1488,7 @@ function initEventListeners(): void {
 
     for (const p of state.pieces) {
       if (p.alive) {
-        const piece = game.pieces.find((pc: any) => pc.id === p.id);
+        const piece = game.pieces.find((pc: Piece) => pc.id === p.id);
         if (piece) {
           Object.assign(piece, p);
           renderer.renderPiece(piece);
@@ -1502,13 +1502,13 @@ function initEventListeners(): void {
     game.eliminatedFactions = new Set(state.eliminatedFactions);
     game.capturedPieces = {
       fire: (state.capturedPieces.fire || [])
-        .map((id: string) => game.pieces.find((p: any) => p.id === id))
+        .map((id: string) => game.pieces.find((p: Piece) => p.id === id))
         .filter(Boolean),
       water: (state.capturedPieces.water || [])
-        .map((id: string) => game.pieces.find((p: any) => p.id === id))
+        .map((id: string) => game.pieces.find((p: Piece) => p.id === id))
         .filter(Boolean),
       nature: (state.capturedPieces.nature || [])
-        .map((id: string) => game.pieces.find((p: any) => p.id === id))
+        .map((id: string) => game.pieces.find((p: Piece) => p.id === id))
         .filter(Boolean),
     };
 
@@ -2480,7 +2480,7 @@ function initEventListeners(): void {
                 // Learn from this game
                 let winnerFaction: 'fire' | 'water' | 'nature' | null = null;
                 if (game.state === 'game_over') {
-                  const alive = game.pieces.filter((p: any) => p.alive);
+                  const alive = game.pieces.filter((p: Piece) => p.alive);
                   if (alive.length === 1) {
                     const winner = alive[0];
                     if (winner) {
@@ -2558,10 +2558,10 @@ function initEventListeners(): void {
           });
         }
 
-        function boardHash(g: any): string {
+        function boardHash(g: Game): string {
           const pieces = g.pieces
-            .filter((p: any) => p.alive)
-            .map((p: any) => `${p.faction[0]}${p.type[0]}${p.pos.q},${p.pos.r}`)
+            .filter((p: Piece) => p.alive)
+            .map((p: Piece) => `${p.faction[0]}${p.type[0]}${p.pos.q},${p.pos.r}`)
             .sort()
             .join('|');
           return `${pieces}#${g.currentFactionIdx}`;
@@ -2673,7 +2673,7 @@ function initEventListeners(): void {
                 // Learn from this game
                 let winnerFaction: 'fire' | 'water' | 'nature' | null = null;
                 if (game.state === 'game_over') {
-                  const alive = game.pieces.filter((p: any) => p.alive);
+                  const alive = game.pieces.filter((p: Piece) => p.alive);
                   if (alive.length === 1) {
                     const winner = alive[0];
                     if (winner) {
@@ -2747,10 +2747,10 @@ function initEventListeners(): void {
           });
         }
 
-        function boardHash(g: any): string {
+        function boardHash(g: Game): string {
           const pieces = g.pieces
-            .filter((p: any) => p.alive)
-            .map((p: any) => `${p.faction[0]}${p.type[0]}${p.pos.q},${p.pos.r}`)
+            .filter((p: Piece) => p.alive)
+            .map((p: Piece) => `${p.faction[0]}${p.type[0]}${p.pos.q},${p.pos.r}`)
             .sort()
             .join('|');
           return `${pieces}#${g.currentFactionIdx}`;

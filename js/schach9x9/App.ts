@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars, @typescript-eslint/no-explicit-any */
+/* eslint-disable no-unused-vars */
 /**
  * App.ts
  * Main application class handling lifecycle and initialization.
@@ -20,15 +20,18 @@ import type { KeyboardManager } from './input/KeyboardManager.js';
 // Minimal interface for type checking without importing the heavy Three.js module
 interface BattleChess3D {
   init(): Promise<void>;
-  updateFromGameState(game: any): void;
+  updateFromGameState(game: Game): void;
   enabled: boolean;
   onWindowResize(): void;
-  scene?: any;
-  pieceManager?: any;
-  playBattleSequence?: (attacker: any, defender: any, from: any, to: any) => Promise<void>;
+  scene?: unknown;
+  pieceManager?: unknown;
+  playBattleSequence?: (attacker: Piece, defender: Piece, from: Square, to: Square) => Promise<void>;
   removePiece?: (r: number, c: number) => void;
   animateMove?: (fromR: number, fromC: number, toR: number, toC: number) => Promise<void>;
 }
+
+type BattleChess3DConstructor = new (container: HTMLElement) => BattleChess3D;
+type GameConstructor = new (initialPoints?: number, mode?: GameMode) => Game;
 
 import type * as UIImport from './ui.js';
 
@@ -47,8 +50,8 @@ export class App {
   public keyboardManager: KeyboardManager | null = null;
   public battleChess3D: BattleChess3D | null = null; // BattleChess3D instance (loaded lazily)
   public domHandler: DOMHandler;
-  public battleChess3D_Class: { new (...args: any[]): BattleChess3D } | null = null; // BattleChess3D constructor (loaded lazily)
-  public Game_Class: { new (...args: any[]): Game } | null = null;
+  public battleChess3D_Class: BattleChess3DConstructor | null = null; // BattleChess3D constructor (loaded lazily)
+  public Game_Class: GameConstructor | null = null;
 
   constructor() {
     errorManager.init();
@@ -234,7 +237,7 @@ export class App {
     const app = this;
     // Game prototype for delegate methods (dynamically patched)
      
-    const GP = (this.Game_Class as typeof Game).prototype as any;
+    const GP = (this.Game_Class as typeof Game).prototype as Game;
 
     // GameController delegations
     GP.placeKing = function (r: number, c: number, color: Player) {
