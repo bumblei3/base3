@@ -19,6 +19,14 @@ export default defineConfig({
         assetFileNames: 'assets/[name].[ext]',
         inlineDynamicImports: false,
         format: 'es',
+        manualChunks: (id: string) => {
+          if (id.includes('opening-book.ts') || id.includes('opening-book.compiled')) {
+            return 'opening-book';
+          }
+          if (id.includes('ai-core.ts')) {
+            return 'ai-core';
+          }
+        },
       },
     },
     sourcemap: true,
