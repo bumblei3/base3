@@ -10,7 +10,7 @@ import {
   PIECE_KING,
   COLOR_WHITE,
   COLOR_BLACK,
-} from '../../js/ai/BoardDefinitions.js';
+} from '@schach9x9/ai/BoardDefinitions.js';
 
 describe('MoveOrdering - Comprehensive Tests', () => {
   beforeEach(() => {
