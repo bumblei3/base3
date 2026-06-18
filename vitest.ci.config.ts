@@ -6,10 +6,10 @@ export default defineConfig({
     environment: 'happy-dom',
     globals: true,
     pool: 'threads',
-    threads: { singleThread: true },
+    minThreads: 2,
+    maxThreads: 4,
     setupFiles: ['./tests/vitest.setup.ts'],
     include: ['tests/**/*.{test,unit.test,integration.test}.{js,ts}'],
-    exclude: [],
     testTimeout: 120000,
   },
   resolve: {
