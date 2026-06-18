@@ -26,7 +26,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: wasm32-unknown-unknown
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         id: cache-cargo
         name: Cache Cargo
         with:
@@ -39,7 +39,7 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('engine-wasm/Cargo.lock') }}
       - name: Cache npm
         id: cache-node-modules
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: node_modules
           key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}-${{ hashFiles('pnpm-lock.yaml') }}
@@ -61,7 +61,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
       - name: Restore node_modules
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: node_modules
           key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}-${{ hashFiles('pnpm-lock.yaml') }}
@@ -82,12 +82,12 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
       - name: Restore node_modules
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: node_modules
           key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}-${{ hashFiles('pnpm-lock.yaml') }}
       - name: Restore WASM
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: engine-wasm/target
           key: ${{ runner.os }}-cargo-${{ hashFiles('engine-wasm/Cargo.lock') }}
@@ -104,12 +104,12 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
       - name: Restore node_modules
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: node_modules
           key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}-${{ hashFiles('pnpm-lock.yaml') }}
       - name: Restore WASM
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: engine-wasm/target
           key: ${{ runner.os }}-cargo-${{ hashFiles('engine-wasm/Cargo.lock') }}
@@ -126,12 +126,12 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
       - name: Restore node_modules
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: node_modules
           key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}-${{ hashFiles('pnpm-lock.yaml') }}
       - name: Restore WASM
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: engine-wasm/target
           key: ${{ runner.os }}-cargo-${{ hashFiles('engine-wasm/Cargo.lock') }}
@@ -148,12 +148,12 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
       - name: Restore node_modules
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: node_modules
           key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}-${{ hashFiles('pnpm-lock.yaml') }}
       - name: Restore WASM
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: engine-wasm/target
           key: ${{ runner.os }}-cargo-${{ hashFiles('engine-wasm/Cargo.lock') }}
@@ -170,12 +170,12 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
       - name: Restore node_modules
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: node_modules
           key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}-${{ hashFiles('pnpm-lock.yaml') }}
       - name: Restore WASM
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: engine-wasm/target
           key: ${{ runner.os }}-cargo-${{ hashFiles('engine-wasm/Cargo.lock') }}
@@ -193,12 +193,12 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
       - name: Restore node_modules
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: node_modules
           key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}-${{ hashFiles('pnpm-lock.yaml') }}
       - name: Restore WASM
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: engine-wasm/target
           key: ${{ runner.os }}-cargo-${{ hashFiles('engine-wasm/Cargo.lock') }}
