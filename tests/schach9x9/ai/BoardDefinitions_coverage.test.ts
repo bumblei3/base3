@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import * as BoardDefinitions from '../../js/ai/BoardDefinitions.js';
+import * as BoardDefinitions from '@schach9x9/ai/BoardDefinitions.js';
 
 describe('BoardDefinitions Types and Helpers', () => {
   it('isWhite / isBlack checks', () => {

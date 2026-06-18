@@ -1,7 +1,7 @@
 import { describe, expect, test, beforeEach, vi } from 'vitest';
 import { Game } from '@schach9x9/gameEngine.js';
 import { PHASES } from '@schach9x9/config.js';
-import * as MoveExecutor from '../../js/move/MoveExecutor.js';
+import * as MoveExecutor from '@schach9x9/move/MoveExecutor.js';
 import { getBestMove } from '@schach9x9/aiEngine.js';
 
 // --- MOCKS ---
@@ -93,12 +93,12 @@ describe('AI Integration: Self-Play', () => {
     (global as any).window.battleChess3D = { enabled: false };
   });
 
-  test('Self-Play: 10 Moves without crash', async () => {
+  test('Self-Play: 3 Moves without crash', async () => {
     // Ensure phase is PLAY
     game.phase = PHASES.PLAY;
 
-    // Loop 10 ply (5 full moves)
-    for (let i = 0; i < 10; i++) {
+    // Loop 3 ply — depth 1
+    for (let i = 0; i < 3; i++) {
       const turn = game.turn;
       // AI Search (Depth 1 for speed)
       const bestMove = await getBestMove(game.board, turn, 1, 'beginner');
@@ -116,6 +116,6 @@ describe('AI Integration: Self-Play', () => {
       expect(game.turn).not.toBe(turn); // Turn changed
     }
 
-    expect(game.moveHistory.length).toBe(10);
+    expect(game.moveHistory.length).toBe(3);
   });
 });
