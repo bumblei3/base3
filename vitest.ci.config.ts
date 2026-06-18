@@ -22,6 +22,8 @@ export default defineConfig({
       '@schach9x9/*': resolve(__dirname, './js/schach9x9/*'),
       '@shared': resolve(__dirname, './js/shared'),
       '@shared/*': resolve(__dirname, './js/shared/*'),
+      '@engine-wasm': resolve(__dirname, './engine-wasm/pkg'),
+      '@engine-wasm/*': resolve(__dirname, './engine-wasm/pkg/*'),
     },
   },
 });

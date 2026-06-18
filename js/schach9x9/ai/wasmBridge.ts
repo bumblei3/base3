@@ -4,8 +4,8 @@
 
 import { logger } from '../logger.js';
 
-// Dynamic import for WASM module
-let wasmModule: typeof import('../../../engine-wasm/pkg/schach9x9.js') | null = null;
+// Dynamic import for WASM module - use alias for Vite compatibility
+let wasmModule: typeof import('@engine-wasm/schach9x9.js') | null = null;
 let initPromise: Promise<boolean> | null = null;
 let nodesEvaluated = 0;
 
@@ -19,8 +19,8 @@ export async function ensureWasmInitialized(): Promise<boolean> {
 
   initPromise = (async () => {
     try {
-      // Dynamic import of WASM module
-      const module = await import('../../../engine-wasm/pkg/schach9x9.js');
+      // Dynamic import of WASM module - use alias for Vite/Vitest compatibility
+      const module = await import('@engine-wasm/schach9x9.js');
 
       // Check if we're in Node.js
       // @ts-ignore - Node.js globals only available at runtime

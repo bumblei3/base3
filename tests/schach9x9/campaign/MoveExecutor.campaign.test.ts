@@ -1,11 +1,11 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { executeMove } from '../../js/move/MoveExecutor';
+import { executeMove } from '@schach9x9/move/MoveExecutor';
 import { Game } from '@schach9x9/gameEngine';
-import { campaignManager } from '../../js/campaign/CampaignManager';
-import { notificationUI } from '../../js/ui/NotificationUI';
+import { campaignManager } from '@schach9x9/campaign/CampaignManager';
+import { notificationUI } from '@schach9x9/ui/NotificationUI';
 
 // Mock dependencies
-vi.mock('../../js/campaign/CampaignManager', () => ({
+vi.mock('@schach9x9/campaign/CampaignManager', () => ({
   campaignManager: {
     isTalentUnlocked: vi.fn(),
     addGold: vi.fn(),
@@ -14,7 +14,7 @@ vi.mock('../../js/campaign/CampaignManager', () => ({
   },
 }));
 
-vi.mock('../../js/ui/NotificationUI', () => ({
+vi.mock('@schach9x9/ui/NotificationUI', () => ({
   notificationUI: {
     show: vi.fn(),
   },
