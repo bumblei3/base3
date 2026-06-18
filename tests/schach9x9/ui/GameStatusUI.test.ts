@@ -215,7 +215,7 @@ describe('GameStatusUI Component', () => {
       const idx = parseInt((p as HTMLElement).dataset.index || '0');
       if (idx >= 0) handleClick(idx);
     });
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     void handleClick.mock.calls.length;
 
     game.gameController.jumpToMove = handleClick;

@@ -5,7 +5,7 @@
 import { logger } from '../logger.js';
 
 // Wasm module - use lazy dynamic import to avoid Vite static analysis
-let wasmModule: ReturnType<typeof import> | null = null;
+let wasmModule: unknown = null;
 let initPromise: Promise<boolean> | null = null;
 let nodesEvaluated = 0;
 
