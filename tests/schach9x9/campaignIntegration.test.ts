@@ -100,7 +100,7 @@ const localStorageMock = (() => {
 })();
 Object.defineProperty(global, 'localStorage', { value: localStorageMock });
 
-vi.mock('../js/campaign/campaignData.js', () => ({
+vi.mock('@schach9x9/campaign/campaignData', () => ({
   CAMPAIGN_LEVELS: MOCK_CAMPAIGN_LEVELS,
 }));
 

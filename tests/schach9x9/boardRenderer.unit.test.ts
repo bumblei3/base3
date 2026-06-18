@@ -15,7 +15,7 @@ vi.mock('@schach9x9/config', () => ({
   },
 }));
 
-vi.mock('@schach9x9/utils', () => ({
+vi.mock('@shared/utils', () => ({
   debounce: (fn: any) => fn, // No delay for tests
 }));
 

@@ -6,20 +6,15 @@ vi.mock('@schach9x9/config', () => ({
 }));
 
 // Mock BoardRenderer
-vi.mock('../js/ui/BoardRenderer.js', () => ({
-  getPieceText: (piece: any) => `Piece(${piece.type}, ${piece.color})`,
-}));
-
-// Mock TutorUI
-vi.mock('../js/ui/TutorUI.js', () => ({
-  updateTutorRecommendations: vi.fn(),
+vi.mock('@schach9x9/ui/BoardRenderer', () => ({
+  getPieceText: (piece: any) => `${piece.type === 'p' ? '♙' : piece.type} (${piece.color})`,
 }));
 
 import * as ShopUI from '@schach9x9/ui/ShopUI';
-import { updateTutorRecommendations } from '@schach9x9/ui/TutorUI';
 
 describe('ShopUI', () => {
   let game: any;
+  let updateTutorRecommendationsSpy: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
     document.body.innerHTML = `
@@ -44,7 +39,8 @@ describe('ShopUI', () => {
       phase: 'SETUP_WHITE_PIECES', // Default phase
     };
 
-    (window as any).updateTutorRecommendations = updateTutorRecommendations;
+    updateTutorRecommendationsSpy = vi.fn();
+    (window as any).updateTutorRecommendations = updateTutorRecommendationsSpy;
 
     vi.clearAllMocks();
   });
@@ -69,19 +65,17 @@ describe('ShopUI', () => {
     expect(items[0].classList.contains('disabled')).toBe(false); // cost 100 < 200
     expect(items[1].classList.contains('disabled')).toBe(true); // cost 500 > 200
 
-    expect(updateTutorRecommendations).toHaveBeenCalledWith(game);
+    expect(updateTutorRecommendationsSpy).toHaveBeenCalledWith(game);
   });
 
   test('updateShopUI reflects selected piece', () => {
     game.selectedShopPiece = 'p';
     ShopUI.updateShopUI(game);
-    expect(document.getElementById('selected-piece-display')?.textContent).toContain(
-      'Piece(p, white)'
-    );
+    expect(document.getElementById('selected-piece-display')?.textContent).toContain('♙');
 
     game.selectedShopPiece = null;
     ShopUI.updateShopUI(game);
-    expect(document.getElementById('selected-piece-display')?.textContent).toBe(
+    expect(document.getElementById('selected-piece-display')!.textContent).toBe(
       'Wähle eine Figur zum Kaufen'
     );
   });

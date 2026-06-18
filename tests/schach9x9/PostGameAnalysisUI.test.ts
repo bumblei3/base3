@@ -7,7 +7,7 @@ import { describe, test, expect, beforeEach, vi, afterEach } from 'vitest';
 import { showPostGameStats, hidePostGameStats } from '@schach9x9/ui/PostGameAnalysisUI';
 
 // Mock dependencies at module level
-vi.mock('../js/tutor/PostGameAnalyzer.js', () => ({
+vi.mock('@schach9x9/tutor/PostGameAnalyzer', () => ({
   analyzeGame: (_moveHistory: unknown[], _color: 'white' | 'black') => ({
     accuracy: 85,
     totalMoves: 20,
@@ -36,11 +36,11 @@ vi.mock('../js/tutor/PostGameAnalyzer.js', () => ({
   },
 }));
 
-vi.mock('../js/ui/AnalysisUI.js', () => ({
+vi.mock('@schach9x9/ui/AnalysisUI', () => ({
   AnalysisUI: class MockAnalysisUI {
     constructor(_app: unknown) {}
     showSummaryModal = vi.fn();
-  }
+  },
 }));
 
 describe('PostGameAnalysisUI', () => {

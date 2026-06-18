@@ -46,7 +46,7 @@ vi.mock('@schach9x9/AnalysisController', () => ({
   },
 }));
 
-vi.mock('../js/ui/NotificationUI.js', () => ({
+vi.mock('@schach9x9/ui/NotificationUI', () => ({
   notificationUI: {
     show: vi.fn(),
   },
@@ -444,7 +444,8 @@ describe('GameController', () => {
 
   describe('Save and Load', () => {
     test('should handle corrupt save data', () => {
-      (Storage.prototype.getItem as unknown as MockInstance).mockReturnValueOnce('invalid');
+      // Mock localStorage.getItem to return invalid JSON for the save key
+      vi.spyOn(localStorage, 'getItem').mockReturnValueOnce('invalid');
       gameController.loadGame();
       expect(game.log).toHaveBeenCalledWith(expect.stringContaining('Fehler'));
     });

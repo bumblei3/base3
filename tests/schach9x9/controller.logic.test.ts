@@ -146,8 +146,8 @@ describe('Controller Logic Deep Dive', () => {
 
   describe('State Persistence (Save/Load)', () => {
     test('should save and load state correctly via localStorage', () => {
-      const spySet = vi.spyOn(Storage.prototype, 'setItem');
-      const spyGet = vi.spyOn(Storage.prototype, 'getItem');
+      const spySet = vi.spyOn(localStorage, 'setItem');
+      const spyGet = vi.spyOn(localStorage, 'getItem');
 
       game.points = 10;
       gameController.saveGame();
@@ -161,9 +161,6 @@ describe('Controller Logic Deep Dive', () => {
       game.points = 0;
       gameController.loadGame();
       expect(game.points).toBe(10);
-
-      spySet.mockRestore();
-      spyGet.mockRestore();
     });
   });
 

@@ -25,7 +25,7 @@ const { mockLevels } = vi.hoisted(() => ({
   ],
 }));
 
-vi.mock('../js/campaign/campaignData.js', importOriginal => ({
+vi.mock('@schach9x9/campaign/campaignData', importOriginal => ({
   ...importOriginal,
   CAMPAIGN_LEVELS: mockLevels,
   CAMPAIGN_PERKS: [
