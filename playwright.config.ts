@@ -60,9 +60,9 @@ export default defineConfig({
       workers: process.env.CI ? 1 : undefined,
       reporter: [['html', { outputFolder: 'playwright-report/trischach', open: 'never' }], ['json', { outputFile: 'test-results/trischach-results.json' }]],
       webServer: {
-        command: 'npx vite preview --port 4173 --host',
+        command: 'cp dist/trischach/index.trischach.html dist/trischach/index.html && npx http-server dist/trischach -p 4173 -s -c-1',
         url: 'http://localhost:4173',
-        reuseExistingServer: !process.env.CI,
+        reuseExistingServer: false,
         timeout: 180000,
       },
     },
