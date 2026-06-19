@@ -21,6 +21,11 @@ export default defineConfig({
         resolve(__dirname, 'index.schach9x9.html'),
         resolve(__dirname, 'index.trischach.html'),
       ],
+      output: {
+        manualChunks: {
+          'three': ['three'],
+        },
+      },
     },
   },
   resolve: {

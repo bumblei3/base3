@@ -300,7 +300,7 @@ function serializeGameForWorker(game: Game): GameStateForWorker {
     })),
     currentFactionIdx: game.currentFactionIdx,
     currentFaction: game.currentFaction,
-    state: game.state,
+    state: (game.state as string),
     eliminatedFactions: Array.from(game.eliminatedFactions),
     rpsEnabled: game.rpsEnabled,
     capturedPieces: {
@@ -412,7 +412,7 @@ function updateUI(): void {
     turnEl.style.color = fc.primary;
   }
 
-  if (game.state === GAME_STATE.GAME_OVER) {
+  if ((game.state as string) === GAME_STATE.GAME_OVER) {
     // keep existing game over text
   } else if (game.isKingInCheck(f)) {
     if (statusEl) {
@@ -422,7 +422,7 @@ function updateUI(): void {
   } else {
     if (statusEl) {
       statusEl.textContent =
-        game.state === GAME_STATE.SELECT_PIECE
+        (game.state as string) === GAME_STATE.SELECT_PIECE
           ? 'Wähle eine Figur'
           : 'Wähle ein Ziel';
       statusEl.style.color = '';
@@ -552,7 +552,7 @@ renderer.onCellClick = (hex: { q: number; r: number }) => {
     if (result.piece) renderer.renderPiece(result.piece);
 
     // Start pondering for AI after human move
-    if (game.state !== GAME_STATE.GAME_OVER) {
+    if ((game.state as string) !== GAME_STATE.GAME_OVER) {
       startPondering(game, game.currentFaction);
     }
 
@@ -566,7 +566,7 @@ renderer.onCellClick = (hex: { q: number; r: number }) => {
     showCombat(result);
 
     // Start pondering for AI after combat
-    if (game.state !== GAME_STATE.GAME_OVER) {
+    if ((game.state as string) !== GAME_STATE.GAME_OVER) {
       startPondering(game, game.currentFaction);
     }
   }
@@ -590,7 +590,7 @@ renderer.onPieceLongPress = (
   piece: Piece,
   position: { clientX: number; clientY: number },
 ) => {
-  if (game.state === GAME_STATE.GAME_OVER) return;
+  if ((game.state as string) === GAME_STATE.GAME_OVER) return;
   if (piece.faction !== game.currentFaction) return;
 
   contextMenuPiece = piece;
@@ -747,9 +747,9 @@ function hideContextMenu(): void {
 function triggerAutoMove(): void {
   if (autoBattleTimer) clearTimeout(autoBattleTimer);
   autoBattleTimer = setTimeout(async () => {
-    if (!autoBattleActive || game.state === 'game_over') return;
+    if (!autoBattleActive || (game.state as string) === 'game_over') return;
 
-    if (game.state === 'select_target' && game.selectedPiece) {
+    if ((game.state as string) === 'select_target' && game.selectedPiece) {
       game.handleCellClick(game.selectedPiece.pos);
     }
 
@@ -826,7 +826,7 @@ function triggerAutoMove(): void {
 
           // Start pondering for next AI move
           // @ts-expect-error - GameState union comparison with string literal
-          if (game.state !== 'game_over') {
+          if ((game.state as string) !== 'game_over') {
             startPondering(game, game.currentFaction);
           }
           triggerAutoMove();
@@ -835,7 +835,7 @@ function triggerAutoMove(): void {
 
           // Start pondering for next AI move
           // @ts-expect-error - GameState union comparison with string literal
-          if (game.state !== 'game_over') {
+          if ((game.state as string) !== 'game_over') {
             startPondering(game, game.currentFaction);
           }
           triggerAutoMove();
@@ -861,7 +861,7 @@ function triggerAutoMove(): void {
         FACTION.NATURE,
       ].filter((f) => !game.eliminatedFactions.has(f));
       if (aliveFactions.length <= 1) {
-        game.state = 'game_over';
+        (game.state as string) = 'game_over';
         updateUI();
       } else {
         game._nextTurn();
@@ -1153,14 +1153,14 @@ function initEventListeners(): void {
     'auto-battle-btn',
   ) as HTMLButtonElement;
   autoBattleBtn?.addEventListener('click', () => {
-    if (game.state === 'game_over') return;
+    if ((game.state as string) === 'game_over') return;
     autoBattleActive = !autoBattleActive;
     if (autoBattleActive) {
       autoBattleBtn.textContent = '⏹ Auto Battle Stoppen';
       autoBattleBtn.classList.add('active');
       // Start pondering for first auto-move
       // @ts-expect-error - GameState union comparison with string literal
-      if (game.state !== 'game_over') {
+      if ((game.state as string) !== 'game_over') {
         startPondering(game, game.currentFaction);
       }
       triggerAutoMove();
@@ -1289,7 +1289,7 @@ function initEventListeners(): void {
 
   const puzzleBtn = document.getElementById('puzzle-btn') as HTMLButtonElement;
   puzzleBtn?.addEventListener('click', () => {
-    if (game.state === 'game_over') return;
+    if ((game.state as string) === 'game_over') return;
     showPuzzleMenu();
   });
 
@@ -1498,7 +1498,7 @@ function initEventListeners(): void {
 
     game.currentFaction = state.currentFaction;
     game.currentFactionIdx = state.currentFactionIdx;
-    game.state = state.state;
+    (game.state as string) = state.state;
     game.eliminatedFactions = new Set(state.eliminatedFactions);
     game.capturedPieces = {
       fire: (state.capturedPieces.fire || [])
@@ -2116,7 +2116,6 @@ function initEventListeners(): void {
 
       game.currentFactionIdx = factionIdx % 3;
       const factions = ['fire', 'water', 'nature'] as const;
-      // @ts-expect-error - index is always valid (0, 1, 2)
       game.currentFaction = factions[game.currentFactionIdx];
       game._rebuildOccupiedMap();
 
@@ -2476,10 +2475,10 @@ function initEventListeners(): void {
             let moveCount = 0;
 
             function makeMove() {
-              if (game.state === 'game_over' || moveCount >= maxMoves) {
+              if ((game.state as string) === 'game_over' || moveCount >= maxMoves) {
                 // Learn from this game
                 let winnerFaction: 'fire' | 'water' | 'nature' | null = null;
-                if (game.state === 'game_over') {
+                if ((game.state as string) === 'game_over') {
                   const alive = game.pieces.filter((p: Piece) => p.alive);
                   if (alive.length === 1) {
                     const winner = alive[0];
@@ -2669,10 +2668,10 @@ function initEventListeners(): void {
             let moveCount = 0;
 
             function makeMove() {
-              if (game.state === 'game_over' || moveCount >= maxMoves) {
+              if ((game.state as string) === 'game_over' || moveCount >= maxMoves) {
                 // Learn from this game
                 let winnerFaction: 'fire' | 'water' | 'nature' | null = null;
-                if (game.state === 'game_over') {
+                if ((game.state as string) === 'game_over') {
                   const alive = game.pieces.filter((p: Piece) => p.alive);
                   if (alive.length === 1) {
                     const winner = alive[0];

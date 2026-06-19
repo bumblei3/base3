@@ -274,10 +274,8 @@ async function searchForcedMate(
         testGame,
         getNextFaction(testGame, currentFaction)!,
       );
-      // @ts-expect-error - GameState union comparison
-      const isGameOver = testGame.state === GAME_STATE.GAME_OVER;
-      // @ts-expect-error - GameState union comparison with string literal
-      const isMate = testGame.state === GAME_STATE.GAME_OVER;
+      const isGameOver = (testGame.state as string) === GAME_STATE.GAME_OVER;
+      const isMate = (testGame.state as string) === GAME_STATE.GAME_OVER;
 
       solutionMoves.push({
         pieceId: piece.id,
@@ -294,8 +292,7 @@ async function searchForcedMate(
         san: formatSAN(piece, target, isCapture, checkResult, isGameOver),
       });
 
-      // @ts-expect-error - GameState union comparison with string literal
-      if (testGame.state === GAME_STATE.GAME_OVER) {
+      if ((testGame.state as string) === GAME_STATE.GAME_OVER) {
         return solutionMoves;
       }
     } else {
@@ -588,8 +585,7 @@ function formatSAN(
   isCheck: boolean,
   isMate: boolean,
 ): string {
-  // @ts-expect-error - piece.type is always a valid string
-  const pieceLetter = piece.type === 'pawn' ? '' : piece.type[0].toUpperCase();
+  const pieceLetter = piece.type === 'pawn' ? '' : (piece.type as string)[0].toUpperCase();
   const capture = isCapture ? 'x' : '';
   const check = isMate ? '#' : isCheck ? '+' : '';
   return `${pieceLetter}${piece.pos.q},${piece.pos.r}${capture}${target.q},${target.r}${check}`;
@@ -600,8 +596,7 @@ function serializePosition(game: Game): string {
     .getAlivePieces()
     .map(
       (p) =>
-        // @ts-expect-error - p.faction is always a valid string
-        `${p.faction[0].toUpperCase()}${p.type[0]}${p.pos.q},${p.pos.r}`,
+        `${(p.faction as string)[0].toUpperCase()}${p.type[0]}${p.pos.q},${p.pos.r}`,
     )
     .join('|');
   return `${pieces}#${game.currentFactionIdx}`;
@@ -616,7 +611,6 @@ function shuffleArray<T>(array: T[]): void {
     const j = Math.floor(Math.random() * (i + 1));
     const temp = array[i];
     array[i] = array[j]!;
-    // @ts-expect-error - indices are always valid
     array[j] = temp;
   }
 }
