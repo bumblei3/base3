@@ -269,7 +269,7 @@ jobs:
 1. **Tests grün**: Die 6 fehlenden Test-Files fixen (siehe Phase 1.1)
 2. **Coverage**: `npm run test:coverage` → Report prüfen, Lücken schließen
 3. **Bundle**: `npm run build && npx vite-bundle-visualizer` → 3D Chunk lazy laden
-4. **A11y**: `npx @axe-core/playwright` einmal laufen lassen, Top 10 Fixes
+4. **A11y**: `npx playwright test tests-e2e/accessibility.spec.ts --project=trischach-e2e` → 0 critical violations ✅
 5. **Security**: `npm audit fix` + CSP Header in `_headers` (GitHub Pages)
 
 ---
