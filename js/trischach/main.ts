@@ -2447,7 +2447,6 @@ function initEventListeners(): void {
 
       try {
         const { calculateBestMove, setAIDepth, setAIPersonality } = await import('./ai-core.ts');
-        const { Game } = await import('./game.ts');
         const { generateBoard } = await import('./board.ts');
         const { learnFromGame, getLearnedData } = await import('./opening-book.ts');
 
@@ -2643,7 +2642,6 @@ function initEventListeners(): void {
 
       try {
         const { calculateBestMove, setAIDepth, setAIPersonality } = await import('./ai-core.ts');
-        const { Game } = await import('./game.ts');
         const { generateBoard } = await import('./board.ts');
         const { learnFromGame, getLearnedData } = await import('./opening-book.ts');
 

@@ -9,6 +9,8 @@ import type { GameLike } from '../types/game.js';
 // Removed top-level await preventing circular dependency
 // const { updateTutorRecommendations } = (await import('./TutorUI.js')) as any;
 
+type GameWithSelectedPiece = GameLike & { selectedShopPiece?: string | null };
+
 /**
  * Zeigt oder verbirgt das Shop-Panel.
  * @param game - Die Game-Instanz
@@ -85,8 +87,9 @@ export function updateShopUI(game: GameLike): void {
     if (tutorSection) tutorSection.classList.remove('hidden');
 
     if (statusDisplay) {
-      if (game.selectedShopPiece) {
-        statusDisplay.textContent = `Platziere: ${getPieceText({ type: game.selectedShopPiece, color: game.turn })} (${PIECE_VALUES[game.selectedShopPiece as keyof typeof PIECE_VALUES]} Pkt)`;
+      const selected = (game as GameWithSelectedPiece).selectedShopPiece;
+      if (selected) {
+        statusDisplay.textContent = `Platziere: ${getPieceText({ type: selected, color: game.turn })} (${PIECE_VALUES[selected as keyof typeof PIECE_VALUES]} Pkt)`;
       } else {
         statusDisplay.textContent = 'Wähle eine Figur zum Kaufen';
       }
@@ -94,18 +97,13 @@ export function updateShopUI(game: GameLike): void {
   }
 
   // Check if UI module is available globally (from App.ts)
-  const globalUI = window.UI as { updateTutorRecommendations?: (..._args: unknown[]) => void } | undefined;
+  const globalUI = window.UI as { updateTutorRecommendations?: (game: GameLike) => void } | undefined;
   if (globalUI?.updateTutorRecommendations) {
     globalUI.updateTutorRecommendations(game);
   } else {
-    const legacyUpdate = window.updateTutorRecommendations as ((..._args: unknown[]) => void) | undefined;
+    const legacyUpdate = window.updateTutorRecommendations as ((game: GameLike) => void) | undefined;
     if (legacyUpdate) {
       legacyUpdate(game);
-    } else {
-      // Dynamic import fallback
-      import('./TutorUI.js').then((module: { updateTutorRecommendations?: (..._args: unknown[]) => void }) => {
-        if (module.updateTutorRecommendations) module.updateTutorRecommendations(game);
-      });
     }
   }
 }
