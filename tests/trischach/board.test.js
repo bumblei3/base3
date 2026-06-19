@@ -157,4 +157,11 @@ describe("BoardRenderer (DOM)", () => {
     );
     expect(p2).toBeUndefined();
   });
+
+  test("highlightCheck and clearCheck work without errors", () => {
+    // renderer is already created with SVG in parent describe
+    renderer.render();
+    expect(() => renderer.highlightCheck(new Hex(0, 0))).not.toThrow();
+    expect(() => renderer.clearCheck()).not.toThrow();
+  });
 });
