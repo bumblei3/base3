@@ -24,14 +24,14 @@
 ## 📋 Phase 1: Fundament stabilisieren (Woche 1-2)
 
 ### 1.1 Tests komplett grün
-- [ ] **Schach9x9 Rest-Tests fixen** (errorManager, controllers.coverage, pgn_crossMode, fullGame, snapshots, moveController)
+- [x] **Schach9x9 Rest-Tests fixen** (errorManager, controllers.coverage, pgn_crossMode, fullGame, snapshots, moveController) ✅ 2026-06-19 — alle 112 Files, 1270 Tests grün (Exclude in lokaler vitest.config.ts entfernt)
   - `errorManager.test.ts`: NotificationUI mock in happy-dom
   - `controllers.coverage.test.ts`: Strategie-Mocks, Phasen-Übergänge
   - `pgn_crossMode.test.ts`: Cross-Board PGN Export
   - `fullGame.test.ts`: Echte Spiel-Flüsse (Setup → Play → End)
   - `snapshots.test.ts`: Visuelle Regression (Pixelmatch)
   - `moveController.test.ts`: Save/Load, Theme, Replay
-- [ ] **Trischach Test-Suite vollständig** (alle 16 Files)
+- [x] **Trischach Test-Suite vollständig** (alle 16 Files) ✅ 342 Tests
 - [ ] **Coverage-Thresholds durchsetzen** (lines/branches/functions/statements ≥ 80%)
 
 ### 1.2 TypeScript strict Mode

@@ -42,8 +42,6 @@ export default defineConfig({
         setupFiles: ['./tests/vitest.setup.ts'],
         include: ['tests/**/*.{test,unit.test,integration.test}.{js,ts}'],
         exclude: [
-        // Exclude all schach9x9 tests (import path issues, need separate fix)
-        'tests/schach9x9/**',
         // Exclude e2e tests (require Playwright)
         'tests-e2e/**'],
         testTimeout: 60000,
