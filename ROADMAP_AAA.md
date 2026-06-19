@@ -32,7 +32,7 @@
   - `snapshots.test.ts`: Visuelle Regression (Pixelmatch)
   - `moveController.test.ts`: Save/Load, Theme, Replay
 - [x] **Trischach Test-Suite vollständig** (alle 16 Files) ✅ 342 Tests
-- [ ] **Coverage-Thresholds durchsetzen** (lines/branches/functions/statements ≥ 80%)
+- [ ] **Coverage-Thresholds durchsetzen** (lines/branches/functions/statements ≥ 80%) — 2026-06-19: Trischach 6/13 below 80%, Schach9x9 42/68 below 80%. Scripts/coverage-report.py erstellt.
 
 ### 1.2 TypeScript strict Mode
 ```json
