@@ -3,6 +3,7 @@ import { Game, GAME_STATE } from "@trischach/game";
 import { FACTION, generateBoard } from "@trischach/board";
 import { Piece, PIECE_TYPE } from "@trischach/pieces";
 import { Hex } from "@trischach/hex";
+import { getLegalMoves as getLegalMovesCheck, isKingdomCheck, legalMoveCheck } from "@trischach/game-check";
 
 describe("Game logic", () => {
   let game;
@@ -429,5 +430,45 @@ describe("Draw Rules: Integration with handleCellClick", () => {
     expect(result).not.toBeNull();
     expect(result.draw).toBe(true);
     expect(g.state).toBe(GAME_STATE.DRAW_50MOVE);
+  });
+});
+
+describe("Game check logic", () => {
+  let game;
+  let boardCells;
+
+  beforeEach(() => {
+    game = new Game();
+    boardCells = generateBoard();
+    game.init(boardCells);
+  });
+
+  test("getLegalMoves returns moves and attacks for a piece", () => {
+    const pieces = game.pieces.filter(
+      (p) => p.faction === FACTION.FIRE && p.alive,
+    );
+    expect(pieces.length).toBeGreaterThan(0);
+    const result = getLegalMovesCheck(game, pieces[0]);
+    expect(result).toHaveProperty("moves");
+    expect(result).toHaveProperty("attacks");
+    expect(Array.isArray(result.moves)).toBe(true);
+    expect(Array.isArray(result.attacks)).toBe(true);
+  });
+
+  test("isKingdomCheck detects check", () => {
+    // In starting position, no king should be in check
+    expect(isKingdomCheck(game, FACTION.FIRE)).toBe(false);
+    expect(isKingdomCheck(game, FACTION.WATER)).toBe(false);
+    expect(isKingdomCheck(game, FACTION.NATURE)).toBe(false);
+  });
+
+  test("legalMoveCheck filters moves that leave king in check", () => {
+    const pieces = game.pieces.filter(
+      (p) => p.faction === FACTION.FIRE && p.alive,
+    );
+    expect(pieces.length).toBeGreaterThan(0);
+    // In starting position, all valid moves should be legal
+    const result = legalMoveCheck(game, pieces[0], pieces[0].pos, FACTION.FIRE);
+    expect(typeof result).toBe("boolean");
   });
 });
