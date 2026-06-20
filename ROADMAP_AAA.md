@@ -253,7 +253,7 @@ jobs:
 | Phase | Aufwand | Risiko | Blocker | Status |
 |-------|---------|--------|---------|--------|
 | 1. Tests grün + Coverage + Lint | 2W | Niedrig | Keine | ✅ 2026-06-20 |
-| 2. E2E | 2W | Mittel | Playwright CI Zeit | 🔄 15/15 Trischach ✅ |
+| 2. E2E | 2W | Mittel | Playwright CI Zeit | 🔄 15/15 Trischach ✅, Schach9x9 8 Tests erstellt (webServer Bug) |
 | 3. Performance | 1W | Mittel | WASM/Worker Stabilität | ⬜ |
 | 4. A11y | 1W | Niedrig | Design Token Audit | ⬜ |
 | 5. Security | 1W | Niedrig | CSP Testing | ⬜ |
