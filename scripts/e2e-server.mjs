@@ -1,13 +1,17 @@
 import { createServer } from 'http';
 import { readFileSync, existsSync, copyFileSync } from 'fs';
-import { join, extname } from 'path';
+import { join, extname, resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-const root = process.argv[2] || '.';
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const rootArg = process.argv[2]
+  ? resolve(process.cwd(), process.argv[2])
+  : resolve(__dirname, '..', 'dist', 'schach9x9');
 const port = parseInt(process.argv[3] || '3000', 10);
 
 // Copy index.{game}.html to index.html if needed
-const indexHtml = join(root, 'index.html');
-const gameHtml = join(root, 'index.schach9x9.html');
+const indexHtml = join(rootArg, 'index.html');
+const gameHtml = join(rootArg, 'index.schach9x9.html');
 if (!existsSync(indexHtml) && existsSync(gameHtml)) {
   copyFileSync(gameHtml, indexHtml);
 }
@@ -29,7 +33,7 @@ const mimeTypes = {
 };
 
 const server = createServer((req, res) => {
-  let filePath = join(root, req.url === '/' ? 'index.html' : req.url);
+  let filePath = join(rootArg, req.url === '/' ? 'index.html' : req.url);
 
   if (!existsSync(filePath)) {
     res.writeHead(404);
@@ -58,5 +62,5 @@ const server = createServer((req, res) => {
 });
 
 server.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  console.log(`Server running at http://localhost:${port} (root: ${rootArg})`);
 });
