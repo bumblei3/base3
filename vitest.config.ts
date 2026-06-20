@@ -24,10 +24,10 @@ export default defineConfig({
       exclude: ['node_modules/**', 'dist/**', 'tests/**', 'tests-e2e/**', '*.config.*', 'scripts/**', 'public/**', 'js/trischach/ai.ts'],
       thresholds: {
         global: {
-          lines: 55,
-          branches: 50,
-          functions: 55,
-          statements: 55
+          lines: 75,
+          branches: 65,
+          functions: 70,
+          statements: 75
         }
       }
     },
