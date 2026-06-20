@@ -97,11 +97,11 @@ export function updateShopUI(game: GameLike): void {
   }
 
   // Check if UI module is available globally (from App.ts)
-  const globalUI = window.UI as { updateTutorRecommendations?: (game: GameLike) => void } | undefined;
+  const globalUI = window.UI as { updateTutorRecommendations?: (_game: GameLike) => void } | undefined;
   if (globalUI?.updateTutorRecommendations) {
     globalUI.updateTutorRecommendations(game);
   } else {
-    const legacyUpdate = window.updateTutorRecommendations as ((game: GameLike) => void) | undefined;
+    const legacyUpdate = window.updateTutorRecommendations as ((_game: GameLike) => void) | undefined;
     if (legacyUpdate) {
       legacyUpdate(game);
     }
