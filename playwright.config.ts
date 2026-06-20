@@ -30,9 +30,9 @@ export default defineConfig({
         ? [['github'], ['html', { outputFolder: 'playwright-report/schach9x9', open: 'never' }]]
         : 'html',
       webServer: {
-        command: 'cp -f dist/schach9x9/index.schach9x9.html dist/schach9x9/index.html && npx http-server dist/schach9x9 -p 3000 -s -c-1 &',
+        command: 'cp -f dist/schach9x9/index.schach9x9.html dist/schach9x9/index.html && nohup npx http-server dist/schach9x9 -p 3000 -s -c-1 > /dev/null 2>&1 &',
         url: 'http://localhost:3000',
-        reuseExistingServer: false,
+        reuseExistingServer: true,
         timeout: 180000,
       },
     },
@@ -62,7 +62,7 @@ export default defineConfig({
       webServer: {
         command: 'cp -f dist/trischach/index.trischach.html dist/trischach/index.html && nohup npx http-server dist/trischach -p 4173 -s -c-1 > /dev/null 2>&1 &',
         url: 'http://localhost:4173',
-        reuseExistingServer: false,
+        reuseExistingServer: true,
         timeout: 180000,
       },
     },
