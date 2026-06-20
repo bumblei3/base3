@@ -30,9 +30,9 @@ export default defineConfig({
         ? [['github'], ['html', { outputFolder: 'playwright-report/schach9x9', open: 'never' }]]
         : 'html',
       webServer: {
-        command: 'node scripts/e2e-server.mjs dist/schach9x9 3000',
+        command: 'cp -f dist/schach9x9/index.schach9x9.html dist/schach9x9/index.html && npx http-server dist/schach9x9 -p 3000 -s -c-1 &',
         url: 'http://localhost:3000',
-        reuseExistingServer: true,
+        reuseExistingServer: false,
         timeout: 180000,
       },
     },
@@ -60,7 +60,7 @@ export default defineConfig({
       workers: process.env.CI ? 1 : undefined,
       reporter: [['html', { outputFolder: 'playwright-report/trischach', open: 'never' }], ['json', { outputFile: 'test-results/trischach-results.json' }]],
       webServer: {
-        command: 'cp dist/trischach/index.trischach.html dist/trischach/index.html && npx http-server dist/trischach -p 4173 -s -c-1',
+        command: 'cp -f dist/trischach/index.trischach.html dist/trischach/index.html && nohup npx http-server dist/trischach -p 4173 -s -c-1 > /dev/null 2>&1 &',
         url: 'http://localhost:4173',
         reuseExistingServer: false,
         timeout: 180000,
