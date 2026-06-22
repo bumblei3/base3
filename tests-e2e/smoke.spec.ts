@@ -1,6 +1,12 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('TriSchach Smoke Tests', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem('disable_animations', 'true');
+    });
+  });
+
   test('page loads without JS errors', async ({ page }) => {
     const errors: string[] = [];
     page.on('pageerror', (err) => errors.push(err.message));
@@ -8,7 +14,7 @@ test.describe('TriSchach Smoke Tests', () => {
       if (msg.type() === 'error') errors.push(msg.text());
     });
 
-    await page.goto('/', { timeout: 30000 });
+    await page.goto('/trischach/index.trischach.html', { timeout: 30000 });
     await page.waitForTimeout(3000);
 
     // Check no critical JS errors (ignore font/asset 404s)
@@ -24,16 +30,16 @@ test.describe('TriSchach Smoke Tests', () => {
   });
 
   test('board SVG is rendered', async ({ page }) => {
-    await page.goto('/', { timeout: 30000 });
+    await page.goto('/trischach/index.trischach.html', { timeout: 30000 });
     await page.waitForTimeout(3000);
 
-    // Check if board-svg exists (even if not visible yet)
+    // Check if board-svg exists
     const boardExists = await page.evaluate(() => !!document.getElementById('board-svg'));
     expect(boardExists).toBe(true);
   });
 
   test('pieces are rendered', async ({ page }) => {
-    await page.goto('/', { timeout: 30000 });
+    await page.goto('/trischach/index.trischach.html', { timeout: 30000 });
     await page.waitForTimeout(3000);
 
     const pieceCount = await page.evaluate(

@@ -2,7 +2,10 @@ import { test, expect } from '@playwright/test';
 
 test.describe('TriSchach - Critical User Flows', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
+    await page.addInitScript(() => {
+      localStorage.setItem('disable_animations', 'true');
+    });
+    await page.goto('/trischach/index.trischach.html');
     // Wait for board to render and pieces to appear
     await page.waitForSelector('#board-svg', { timeout: 15000 });
     await page.waitForSelector('#board-svg .piece', { timeout: 15000 });
