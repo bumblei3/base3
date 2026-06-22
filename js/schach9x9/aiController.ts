@@ -16,8 +16,9 @@ import {
   type ShopPieceConfig,
 } from './config.js';
 import { logger } from './logger.js';
-import { renderBoard, drawEngineArrow } from './ui/BoardRenderer.js';
+import * as UI from './ui.js';
 import * as aiEngine from './aiEngine.js';
+import type { MoveResult, SearchResult } from './aiEngine.js';
 import { AI_PERSONALITIES } from './ai/personalities.js';
 import { AnalysisUI } from './ui/AnalysisUI.js';
 
@@ -101,7 +102,7 @@ export class AIController {
     if (this.game.gameController) {
       this.game.gameController.placeKing(1, randomCol + 1, 'black');
     }
-    renderBoard(this.game);
+    UI.renderBoard(this.game);
   }
 
   public aiSetupPieces(): void {
@@ -665,8 +666,8 @@ export class AIController {
       bestMoveEl.textContent = `Bester Zug: ${from}-${to}`;
 
       // Show engine arrow
-      if (drawEngineArrow) {
-        drawEngineArrow(data.bestMove.from, data.bestMove.to);
+      if (UI.drawEngineArrow) {
+        UI.drawEngineArrow(data.bestMove.from, data.bestMove.to);
       }
     }
 

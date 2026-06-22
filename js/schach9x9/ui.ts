@@ -69,9 +69,9 @@ export { showAchievementsPanel, hideAchievementsPanel, addAchievementsButton } f
 // ArrowRenderer
 export { drawArrow, clearArrows, updateLastMoveArrow } from './ui/ArrowRenderer.js';
 
- import type { Player, GameLike } from './types/game.js';
- import * as AIEngine from './aiEngine.js';
- import { confettiSystem } from './effects.js';
+import type { Player, GameLike } from './types/game.js';
+import * as AIEngine from './aiEngine.js';
+import { confettiSystem } from './effects.js';
 
 /**
  * Animation für den Schach-Zustand.

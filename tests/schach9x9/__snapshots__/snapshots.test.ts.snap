@@ -149,7 +149,7 @@ exports[`Visual DOM Snapshot Tests > Initial setup phase snapshot 1`] = `
       </div>
 
       <!-- Skeleton Loading Screen -->
-      <div id="skeleton-overlay" class="skeleton-overlay">
+      <div id="skeleton-overlay" class="skeleton-overlay hidden">
         <div class="skeleton-header">
           <div class="skeleton-line skeleton-logo"></div>
           <div class="skeleton-line skeleton-status"></div>
@@ -178,6 +178,85 @@ exports[`Visual DOM Snapshot Tests > Initial setup phase snapshot 1`] = `
             <div class="skeleton-btn"></div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- MAIN MENU: Fullscreen overlay with game mode selection -->
+    <div id="main-menu" class="active">
+      <div class="menu-container">
+        <nav class="menu-sidebar">
+          <div class="menu-logo">
+            <span>♟️</span> Schach 9x9
+          </div>
+          <div class="menu-nav">
+            <button class="menu-tab-btn active" data-tab="play">Spielen</button>
+            <button class="menu-tab-btn" data-tab="campaign">Kampagne</button>
+            <button class="menu-tab-btn" data-tab="puzzle">Puzzle</button>
+            <button class="menu-tab-btn" data-tab="settings">Einstellungen</button>
+            <button id="main-menu-continue-btn" class="menu-tab-btn hidden" data-tab="continue">Fortsetzen</button>
+          </div>
+        </nav>
+        <div class="menu-content-area">
+          <div id="view-play" class="menu-view active">
+            <h2 class="section-title">Spielmodus wählen</h2>
+            <p class="section-subtitle">Wähle einen Spielmodus um zu beginnen</p>
+            <div class="gamemode-grid">
+              <button id="classic-mode-btn" class="gamemode-card" data-mode="classic">
+                <span class="card-icon">♟️</span>
+                <span class="card-title">Klassisch 9x9</span>
+                <span class="card-desc">Das klassische Schach auf einem 9x9 Brett mit neuen Figuren.</span>
+              </button>
+              <button id="standard-8x8-btn" class="gamemode-card" data-mode="standard8x8">
+                <span class="card-icon">♜</span>
+                <span class="card-title">Standard 8x8</span>
+                <span class="card-desc">Traditionelles Schach auf einem 8x8 Brett.</span>
+              </button>
+              <button id="upgrade-8x8-btn" class="gamemode-card" data-mode="upgrade8x8">
+                <span class="card-icon">⬆️</span>
+                <span class="card-title">8x8 + Upgrades</span>
+                <span class="card-desc">Standard-Schach mit Upgrade-Optionen für Figuren.</span>
+              </button>
+              <button id="campaign-start-btn" class="gamemode-card" data-mode="campaign">
+                <span class="card-icon">⚔️</span>
+                <span class="card-title">Kampagne</span>
+                <span class="card-desc">Spiele durch die Story-Missionen.</span>
+              </button>
+              <button id="puzzle-start-btn" class="gamemode-card" data-mode="puzzle">
+                <span class="card-icon">🧩</span>
+                <span class="card-title">Puzzle</span>
+                <span class="card-desc">Löse Schachpuzzles und verbessere dich.</span>
+              </button>
+              <button id="start-tutorial-btn" class="gamemode-card" data-mode="tutorial">
+                <span class="card-icon">📖</span>
+                <span class="card-title">Tutorial</span>
+                <span class="card-desc">Lerne die Regeln und besonderen Figuren.</span>
+              </button>
+            </div>
+          </div>
+          <div id="view-campaign" class="menu-view">
+            <h2 class="section-title">Kampagne</h2>
+            <p class="section-subtitle">Wähle einen Level</p>
+            <div id="campaign-levels-list"></div>
+          </div>
+          <div id="view-puzzle" class="menu-view">
+            <h2 class="section-title">Puzzle</h2>
+            <p class="section-subtitle">Wähle ein Puzzle</p>
+          </div>
+          <div id="view-settings" class="menu-view">
+            <h2 class="section-title">Einstellungen</h2>
+            <div class="settings-grid">
+              <div class="setting-group">
+                <h3>Ton</h3>
+                <button id="sound-toggle-btn" class="btn-secondary">Ton an/aus</button>
+              </div>
+              <div class="setting-group">
+                <h3>Animationen</h3>
+                <button id="animations-toggle-btn" class="btn-secondary">Animationen an/aus</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button id="menu-close-btn" class="close-icon-btn" style="position:absolute;top:1rem;right:1rem;">×</button>
       </div>
     </div>
 

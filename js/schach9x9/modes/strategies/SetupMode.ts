@@ -1,10 +1,7 @@
 import type { GameModeStrategy } from '../GameModeStrategy.js';
 import type { GameExtended, GameController } from '../../gameController.js';
 import { PHASES, AI_DELAY_MS } from '../../config.js';
-import { renderBoard } from '../../ui/BoardRenderer.js';
-import { updateStatus, updateStatistics } from '../../ui/GameStatusUI.js';
-import { updateShopUI } from '../../ui/ShopUI.js';
-import { showModal } from '../../ui/OverlayManager.js';
+import * as UI from '../../ui.js';
 import { soundManager } from '../../sounds.js';
 import { logger } from '../../logger.js';
 
@@ -18,13 +15,13 @@ export class SetupModeStrategy implements GameModeStrategy {
     game.points = initialPoints;
 
     // Initialize UI
-    updateStatus(game);
-    updateShopUI(game);
+    UI.updateStatus(game);
+    UI.updateShopUI(game);
     // Show shop for Setup Mode
     controller.showShop(true);
 
     // Render board to show corridor highlighting
-    renderBoard(game);
+    UI.renderBoard(game);
 
     logger.info('SetupModeStrategy initialized with', initialPoints, 'points');
   }
@@ -128,8 +125,8 @@ export class SetupModeStrategy implements GameModeStrategy {
       } else if (game.phase === PHASES.SETUP_BLACK_UPGRADES) {
         this.startGame(game, controller);
       }
-      updateStatus(game);
-      renderBoard(game);
+      UI.updateStatus(game);
+      UI.renderBoard(game);
     };
 
     // Handle "Unused Points" modal logic (moved from GameController)
@@ -144,7 +141,7 @@ export class SetupModeStrategy implements GameModeStrategy {
         return;
       }
 
-      showModal(
+      UI.showModal(
         'Ungenutzte Punkte',
         `Du hast noch ${game.points} Punkte übrig! Möchtest du wirklich fortfahren?`,
         [
@@ -178,7 +175,7 @@ export class SetupModeStrategy implements GameModeStrategy {
     game.log('Spiel beginnt! Weiß ist am Zug.');
     if (game.updateBestMoves) game.updateBestMoves();
     controller.startClock();
-    updateStatistics(game);
+    UI.updateStatistics(game);
     soundManager.playGameStart();
     controller.autoSave();
   }

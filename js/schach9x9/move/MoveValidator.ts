@@ -1,6 +1,5 @@
 import { PHASES, PIECE_VALUES } from '../gameEngine.js';
-import { renderBoard } from '../ui/BoardRenderer.js';
-import { updateStatus } from '../ui/GameStatusUI.js';
+import * as UI from '../ui.js';
 import type { Game } from '../gameEngine.js';
 import { campaignManager } from '../campaign/CampaignManager.js';
 
@@ -13,8 +12,8 @@ import { campaignManager } from '../campaign/CampaignManager.js';
 export function checkDraw(game: Game): boolean {
   if (game.halfMoveClock >= 100) {
     game.phase = PHASES.GAME_OVER as unknown as (typeof PHASES)[keyof typeof PHASES];
-    renderBoard(game);
-    updateStatus(game);
+    UI.renderBoard(game);
+    UI.updateStatus(game);
     game.log('Unentschieden (50-Züge-Regel)');
     const overlay = document.getElementById('game-over-overlay');
     const winnerText = document.getElementById('winner-text');
@@ -36,8 +35,8 @@ export function checkDraw(game: Game): boolean {
   const occurrences = game.positionHistory.filter(h => h === currentHash).length;
   if (occurrences >= 3) {
     game.phase = PHASES.GAME_OVER as unknown as (typeof PHASES)[keyof typeof PHASES];
-    renderBoard(game);
-    updateStatus(game);
+    UI.renderBoard(game);
+    UI.updateStatus(game);
     game.log('Unentschieden (Stellungswiederholung)');
     const overlay = document.getElementById('game-over-overlay');
     const winnerText = document.getElementById('winner-text');
@@ -57,8 +56,8 @@ export function checkDraw(game: Game): boolean {
 
   if (isInsufficientMaterial(game)) {
     game.phase = PHASES.GAME_OVER as unknown as (typeof PHASES)[keyof typeof PHASES];
-    renderBoard(game);
-    updateStatus(game);
+    UI.renderBoard(game);
+    UI.updateStatus(game);
     game.log('Unentschieden (Ungenügendes Material)');
     const overlay = document.getElementById('game-over-overlay');
     const winnerText = document.getElementById('winner-text');

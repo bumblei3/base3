@@ -3,9 +3,7 @@ import type { GameExtended, GameController } from '../../gameController.js';
 import type { Player } from '../../types/game.js';
 import type { PieceWithMoved } from '../../gameEngine.js';
 import { PHASES } from '../../config.js';
-import { renderBoard } from '../../ui/BoardRenderer.js';
-import { updateStatus } from '../../ui/GameStatusUI.js';
-import { showModal } from '../../ui/OverlayManager.js';
+import * as UI from '../../ui.js';
 import { logger } from '../../logger.js';
 import { campaignManager } from '../../campaign/CampaignManager.js';
 import { BoardFactory } from '../../campaign/BoardFactory.js';
@@ -79,9 +77,9 @@ export class CampaignModeStrategy implements GameModeStrategy {
     }
 
     // UI Updates
-    initBoardUI(game);
-    updateStatus(game);
-    renderBoard(game);
+    UI.initBoardUI(game);
+    UI.updateStatus(game);
+    UI.renderBoard(game);
 
     logger.info(`Started Campaign Level: ${level.title}`);
 
@@ -143,7 +141,7 @@ export class CampaignModeStrategy implements GameModeStrategy {
       </div>
     `;
 
-    showModal(level.title, desc, [
+    UI.showModal(level.title, desc, [
       { text: 'Mission starten', class: 'btn-primary', callback: () => {} },
     ]);
   }

@@ -13,10 +13,7 @@ import {
 } from './gameEngine.js';
 import type { PuzzleState } from './types/game.js';
 import { storageManager } from './storage.js';
-import { renderBoard, initBoardUI } from './ui/BoardRenderer.js';
-import { updateStatus, updateStatistics, updateCapturedUI, updateMoveHistoryUI, updateClockUI, updateClockDisplay } from './ui/GameStatusUI.js';
-import { showShop, updateShopUI } from './ui/ShopUI.js';
-import { showPuzzleOverlay, hidePuzzleOverlay, updatePuzzleStatus, showCampaignVictoryModal } from './ui/OverlayManager.js';
+import * as UI from './ui.js';
 import { soundManager } from './sounds.js';
 import { logger } from './logger.js';
 import { Tutorial } from './tutorial.js';
@@ -146,8 +143,8 @@ export class GameController {
     this.game.initialPoints = initialPoints;
 
     // Initialize basic stuff common to all
-    initBoardUI(this.game);
-    updateStatus(this.game);
+    UI.initBoardUI(this.game);
+    UI.updateStatus(this.game);
 
     // Delegate to Strategy
     if (this.currentModeStrategy) {
@@ -156,7 +153,7 @@ export class GameController {
       // Legacy Puzzle initialization
       this.puzzleMenu.show();
       this.game.mode = 'puzzle';
-      renderBoard(this.game);
+      UI.renderBoard(this.game);
     }
 
     // Initialize helpers common to all
@@ -207,7 +204,7 @@ export class GameController {
     if (this.currentModeStrategy) {
       const handled = await this.currentModeStrategy.handleInteraction(this.game, this, r, c);
       if (handled) {
-        renderBoard(this.game);
+        UI.renderBoard(this.game);
         return;
       }
     }
@@ -219,7 +216,7 @@ export class GameController {
       }
     }
 
-    renderBoard(this.game);
+    UI.renderBoard(this.game);
   }
 
   // Helper methods made public for Strategies
@@ -263,7 +260,7 @@ export class GameController {
       } else {
         this.game.phase = PHASES.SETUP_BLACK_KING;
         this.game.log('Weißer König platziert. Schwarz ist dran.');
-        updateStatus(this.game);
+        UI.updateStatus(this.game);
 
         if (this.game.isAI) {
           setTimeout(() => {
@@ -277,11 +274,11 @@ export class GameController {
       this.game.blackCorridor = colStart;
       this.game.phase = PHASES.SETUP_WHITE_PIECES;
       this.game.points = this.game.initialPoints;
-      updateStatus(this.game);
+      UI.updateStatus(this.game);
       this.showShop(true);
       this.game.log('Weiß kauft ein.');
     }
-    updateStatus(this.game);
+    UI.updateStatus(this.game);
   }
 
   selectShopPiece(pieceType: string): void {
@@ -345,11 +342,11 @@ export class GameController {
   }
 
   showShop(show: boolean): void {
-    showShop(this.game, show);
+    UI.showShop(this.game, show);
   }
 
   updateShopUI(): void {
-    updateShopUI(this.game);
+    UI.updateShopUI(this.game);
   }
 
   undoMove(): void {
@@ -373,8 +370,8 @@ export class GameController {
     const winningColor = resigningColor === 'white' ? 'black' : 'white';
 
     this.game.phase = PHASES.GAME_OVER;
-    renderBoard(this.game);
-    updateStatus(this.game);
+    UI.renderBoard(this.game);
+    UI.updateStatus(this.game);
 
     const message =
       resigningColor === 'white'
@@ -456,8 +453,8 @@ export class GameController {
       overlay.classList.add('hidden');
     }
 
-    renderBoard(this.game);
-    updateStatus(this.game);
+    UI.renderBoard(this.game);
+    UI.updateStatus(this.game);
     this.game.log('Remis vereinbart!');
 
     const gameOverOverlay = document.getElementById('game-over-overlay');
@@ -531,18 +528,18 @@ export class GameController {
     }
 
     // Re-initialize UI components
-    renderBoard(this.game);
-    updateStatus(this.game);
-    updateShopUI(this.game);
-    updateStatistics(this.game);
-    updateClockUI(this.game);
-    updateClockDisplay(this.game);
+    UI.renderBoard(this.game);
+    UI.updateStatus(this.game);
+    UI.updateShopUI(this.game);
+    UI.updateStatistics(this.game);
+    UI.updateClockUI(this.game);
+    UI.updateClockDisplay(this.game);
 
     // Restore captured pieces display
-    updateCapturedUI(this.game);
+    UI.updateCapturedUI(this.game);
 
     // Restore move history display
-    updateMoveHistoryUI(this.game);
+    UI.updateMoveHistoryUI(this.game);
 
     // Sync UI elements (Difficulty, AI Toggle, Panels)
     const aiToggle = document.getElementById('ai-toggle') as HTMLInputElement;
@@ -606,9 +603,9 @@ export class GameController {
     const puzzle = puzzleManager.loadPuzzle(this.game, index);
     if (puzzle && typeof puzzle !== 'boolean') {
       this.game.currentPuzzle = puzzle as unknown as PuzzleState;
-      showPuzzleOverlay(puzzle);
-      renderBoard(this.game);
-      updateStatus(this.game);
+      UI.showPuzzleOverlay(puzzle);
+      UI.renderBoard(this.game);
+      UI.updateStatus(this.game);
 
       // Update 3D board if active
       if (window.battleChess3D && window.battleChess3D.enabled) {
@@ -624,21 +621,21 @@ export class GameController {
   nextPuzzle(): void {
     const puzzle = puzzleManager.nextPuzzle(this.game);
     if (puzzle && typeof puzzle !== 'boolean') {
-      showPuzzleOverlay(puzzle);
-      renderBoard(this.game);
-      updateStatus(this.game);
+      UI.showPuzzleOverlay(puzzle);
+      UI.renderBoard(this.game);
+      UI.updateStatus(this.game);
 
       if (window.battleChess3D && window.battleChess3D.enabled) {
         window.battleChess3D.updateFromGameState(this.game);
       }
     } else {
-      updatePuzzleStatus('success', 'Alle Puzzles gelöst!');
+      UI.updatePuzzleStatus('success', 'Alle Puzzles gelöst!');
     }
   }
 
   exitPuzzleMode(): void {
     this.game.puzzleMode = false;
-    hidePuzzleOverlay();
+    UI.hidePuzzleOverlay();
     // Return to main menu or restart
     this.reloadPage();
   }
@@ -924,7 +921,7 @@ export class GameController {
           const summary = await analysisManager.runPostGameAnalysis();
           const advice = analysisManager.getMentorAdvice(summary);
 
-          showCampaignVictoryModal(
+          UI.showCampaignVictoryModal(
             levelBefore.title,
             starsEarned,
             [

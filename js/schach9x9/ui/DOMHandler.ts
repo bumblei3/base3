@@ -6,7 +6,7 @@
  */
 
 import { debounce } from '@shared/utils';
-import { renderBoard } from '../ui/BoardRenderer.js';
+import * as UI from '../ui.js';
 import { clearPieceCache } from '../ui/BoardRenderer.js';
 import { showToast } from '../ui/OverlayManager.js';
 import { generatePGN, copyPGNToClipboard, downloadPGN } from '../utils/PGNGenerator.js';
@@ -704,7 +704,7 @@ export class DOMHandler {
         clearPieceCache();
         if (this.game) {
           this.game._forceFullRender = true;
-          renderBoard(this.game);
+          UI.renderBoard(this.game);
         }
 
         if (this.app.battleChess3D && this.app.battleChess3D.pieceManager) {

@@ -1,8 +1,7 @@
 import type { GameModeStrategy } from '../GameModeStrategy.js';
 import type { GameExtended, GameController } from '../../gameController.js';
 import { PHASES } from '../../config.js';
-import { renderBoard } from '../../ui/BoardRenderer.js';
-import { updateStatistics, updateClockUI, updateClockDisplay } from '../../ui/GameStatusUI.js';
+import * as UI from '../../ui.js';
 import { logger } from '../../logger.js';
 
 export class ClassicModeStrategy implements GameModeStrategy {
@@ -46,10 +45,10 @@ export class ClassicModeStrategy implements GameModeStrategy {
   private startGame(game: GameExtended, controller: GameController): void {
     controller.gameStartTime = Date.now();
     controller.startClock();
-    updateStatistics(game);
-    updateClockUI(game);
-    updateClockDisplay(game);
-    renderBoard(game);
+    UI.updateStatistics(game);
+    UI.updateClockUI(game);
+    UI.updateClockDisplay(game);
+    UI.renderBoard(game);
 
     // Initialize Arrow Renderer if needed (usually handled in initGame common logic, but good to ensure)
     // controller.initArrowRenderer() // If we move that method
