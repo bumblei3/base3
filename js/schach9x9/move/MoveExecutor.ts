@@ -1,6 +1,9 @@
 import { PHASES, type Game } from '../gameEngine.js';
 import type { Phase } from '../config.js';
-import * as UI from '../ui.js';
+import { renderBoard, animateMove, flashSquare } from '../ui/BoardRenderer.js';
+import { updateStatus, updateStatistics, updateCapturedUI, updateMoveHistoryUI, updateClockUI, updateClockDisplay, renderEvalGraph } from '../ui/GameStatusUI.js';
+import { showPromotionUI, showToast, updatePuzzleStatus } from '../ui/OverlayManager.js';
+import { animateCheck, animateCheckmate } from '../ui.js';
 import { soundManager } from '../sounds.js';
 import { puzzleManager } from '../puzzleManager.js';
 import { evaluatePosition } from '../aiEngine.js';
@@ -105,7 +108,7 @@ export async function executeMove(
 
   // Animate move BEFORE updating board state
   if (game.phase === PHASES.PLAY) {
-    await UI.animateMove(game, from, to, piece);
+    await animateMove(game, from, to, piece);
   }
 
   // Move the piece
@@ -113,7 +116,7 @@ export async function executeMove(
   game.board[from.r][from.c] = null;
   piece.hasMoved = true;
 
-  UI.renderBoard(game);
+  renderBoard(game);
 
   // Sound effects
   if (targetPiece || moveRecord.isEnPassant) {
@@ -127,7 +130,7 @@ export async function executeMove(
   if (targetPiece) {
     const capturerColor = piece.color;
     game.capturedPieces[capturerColor].push(targetPiece);
-    UI.updateCapturedUI(game);
+    updateCapturedUI(game);
 
     // Talent: Scavenger (Pawn)
     // Erhalte 1-2 Gold beim Schlagen von Figuren.
@@ -141,7 +144,7 @@ export async function executeMove(
   } else if (moveRecord.specialMove && moveRecord.specialMove.type === 'enPassant') {
     const capturerColor = piece.color;
     game.capturedPieces[capturerColor].push(moveRecord.specialMove!.capturedPawn as Piece);
-    UI.updateCapturedUI(game);
+    updateCapturedUI(game);
   }
 
   // Award XP in Campaign Mode
@@ -210,7 +213,7 @@ export async function executeMove(
         if (isHuman) {
           console.log('[MoveExecutor] Triggering Promotion UI');
           // Pause and show promotion UI
-          UI.showPromotionUI(game, to.r, to.c, piece.color, moveRecord, () => {
+          showPromotionUI(game, to.r, to.c, piece.color, moveRecord, () => {
             // Update moveRecord validation
             const actualType = game.board[to.r][to.c]?.type || 'q'; // Fallback
             if (actualType !== 'p') {
@@ -270,8 +273,8 @@ export async function completeMoveExecution(
 
   // Add move to history
   game.moveHistory.push(moveRecord);
-  UI.updateMoveHistoryUI(game);
-  UI.updateStatus(game);
+  updateMoveHistoryUI(game);
+  updateStatus(game);
 
   // Blunder Detection
   if (game.tutorController?.checkBlunder) {
@@ -299,14 +302,14 @@ export async function completeMoveExecution(
     if (result === 'wrong') {
       setTimeout(() => {
         moveController.undoMove();
-        UI.updatePuzzleStatus('error', 'Falscher Zug!');
+        updatePuzzleStatus('error', 'Falscher Zug!');
         soundManager.playError();
       }, 500);
     } else if (result === 'solved') {
-      UI.updatePuzzleStatus('success', 'Richtig! Puzzle gelöst!');
+      updatePuzzleStatus('success', 'Richtig! Puzzle gelöst!');
       soundManager.playSuccess();
     } else {
-      UI.updatePuzzleStatus('neutral', 'Richtig... weiter!');
+      updatePuzzleStatus('neutral', 'Richtig... weiter!');
 
       // Auto-play opponent move if available
       const nextIndex = game.puzzleState ? game.puzzleState.currentMoveIndex : 0;
@@ -327,8 +330,8 @@ export async function completeMoveExecution(
   // Check for insufficient material
   if (MoveValidator.isInsufficientMaterial(game)) {
     game.phase = PHASES.GAME_OVER as Phase;
-    UI.renderBoard(game);
-    UI.updateStatus(game);
+    renderBoard(game);
+    updateStatus(game);
 
     game.log('Unentschieden durch unzureichendes Material.');
     const overlay = document.getElementById('game-over-overlay');
@@ -379,7 +382,7 @@ export function finishMove(game: Game, lastTo?: Square): void {
 
     // Triple Flash Effect on capture (+ screen shake already in animateMove)
     if (UI.flashSquare && lastTo) {
-      UI.flashSquare(lastTo.r, lastTo.c, 'mate');
+      flashSquare(lastTo.r, lastTo.c, 'mate');
     }
 
     const overlay = document.getElementById('game-over-overlay');
@@ -391,8 +394,8 @@ export function finishMove(game: Game, lastTo?: Square): void {
     soundManager.playGameOver(isPlayerWin);
     if (isPlayerWin) confettiSystem.spawn();
 
-    UI.renderBoard(game);
-    UI.updateStatus(game);
+    renderBoard(game);
+    updateStatus(game);
 
     if (game.gameController) {
       const winnerColor: Player = !whiteKingExists ? 'black' : 'white';
@@ -404,7 +407,7 @@ export function finishMove(game: Game, lastTo?: Square): void {
   // Switch turns
   game.turn = game.turn === 'white' ? 'black' : 'white';
 
-  UI.updateStatistics(game);
+  updateStatistics(game);
 
   if (game.clockEnabled) {
     const previousPlayer = game.turn === 'white' ? 'black' : 'white';
@@ -413,8 +416,8 @@ export function finishMove(game: Game, lastTo?: Square): void {
     } else {
       game.blackTime += game.timeControl.increment;
     }
-    UI.updateClockDisplay(game);
-    UI.updateClockUI(game);
+    updateClockDisplay(game);
+    updateClockUI(game);
   }
 
   // Add position to repetition history
@@ -452,12 +455,12 @@ export function finishMove(game: Game, lastTo?: Square): void {
   const opponentColor = game.turn;
   if (game.isCheckmate(opponentColor)) {
     game.phase = PHASES.GAME_OVER as Phase;
-    UI.renderBoard(game);
-    UI.updateStatus(game);
+    renderBoard(game);
+    updateStatus(game);
     const winner = opponentColor === 'white' ? 'Schwarz' : 'Weiß';
     game.log(`SCHACHMATT! ${winner} gewinnt!`);
 
-    UI.animateCheckmate(game, opponentColor);
+    animateCheckmate(game, opponentColor);
 
     const overlay = document.getElementById('game-over-overlay');
     const winnerText = document.getElementById('winner-text');
@@ -481,8 +484,8 @@ export function finishMove(game: Game, lastTo?: Square): void {
     return;
   } else if (game.isStalemate(opponentColor)) {
     game.phase = PHASES.GAME_OVER as Phase;
-    UI.renderBoard(game);
-    UI.updateStatus(game);
+    renderBoard(game);
+    updateStatus(game);
     game.log('PATT! Unentschieden.');
     const overlay = document.getElementById('game-over-overlay');
     const winnerText = document.getElementById('winner-text');
@@ -498,18 +501,18 @@ export function finishMove(game: Game, lastTo?: Square): void {
   } else if (game.isInCheck(opponentColor)) {
     game.log(`SCHACH! ${opponentColor === 'white' ? 'Weiß' : 'Schwarz'} steht im Schach.`);
     soundManager.playCheck();
-    UI.animateCheck(game, opponentColor);
+    animateCheck(game, opponentColor);
   }
 
-  UI.updateStatus(game);
-  UI.renderEvalGraph(game);
+  updateStatus(game);
+  renderEvalGraph(game);
 
   // Auto-save every 5 moves
   if (game.moveHistory.length > 0 && game.moveHistory.length % 5 === 0) {
     try {
       if (game.gameController && game.gameController.saveGame) {
         game.gameController.saveGame();
-        UI.showToast('Spiel automatisch gespeichert', 'success');
+        showToast('Spiel automatisch gespeichert', 'success');
       }
     } catch (e) {
       console.warn('Auto-save failed:', e);

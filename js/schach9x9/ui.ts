@@ -3,14 +3,71 @@
  * Importiert und re-exportiert Funktionen aus spezialisierten UI-Modulen.
  * @module ui
  */
-export * from './ui/BoardRenderer.js';
-export * from './ui/ShopUI.js';
-export * from './ui/TutorUI.js';
-export * from './ui/OverlayManager.js';
-export * from './ui/GameStatusUI.js';
-export * from './ui/OpeningBookUI.js';
-export * from './ui/EvaluationBar.js';
-export * from './utils/PGNGenerator.js';
+// BoardRenderer
+export {
+  renderBoard,
+  initBoardUI,
+  getPieceSymbol,
+  getPieceText,
+  clearPieceCache,
+  animateMove,
+  showMoveQuality,
+  drawGhostTrail,
+  flashSquare,
+  drawEngineArrow,
+} from './ui/BoardRenderer.js';
+
+// ShopUI
+export { showShop, updateShopUI } from './ui/ShopUI.js';
+
+// TutorUI
+export { setTutorLoading, updateTutorRecommendations, showTutorSuggestions } from './ui/TutorUI.js';
+
+// OverlayManager
+export {
+  showModal,
+  closeModal,
+  showPromotionUI,
+  showPuzzleOverlay,
+  hidePuzzleOverlay,
+  updatePuzzleStatus,
+  showToast,
+  showCampaignVictoryModal,
+} from './ui/OverlayManager.js';
+
+// GameStatusUI
+export {
+  updateMoveHistoryUI,
+  updateCapturedUI,
+  updateStatus,
+  updateOpeningUI,
+  updateClockUI,
+  updateClockDisplay,
+  renderEvalGraph,
+  updateStatistics,
+  showStatisticsOverlay,
+  updateReplayUI,
+  enterReplayMode,
+  exitReplayMode,
+} from './ui/GameStatusUI.js';
+
+// EvaluationBar
+export { EvaluationBar } from './ui/EvaluationBar.js';
+
+// OpeningBookUI
+export { OpeningBookUI, openingBookUI } from './ui/OpeningBookUI.js';
+
+// PGNGenerator
+export { generatePGN, copyPGNToClipboard, downloadPGN } from './utils/PGNGenerator.js';
+
+// PostGameAnalysisUI
+export { showPostGameStats, hidePostGameStats } from './ui/PostGameAnalysisUI.js';
+
+// AchievementUI
+export { showAchievementsPanel, hideAchievementsPanel, addAchievementsButton } from './ui/AchievementUI.js';
+
+// ArrowRenderer
+export { drawArrow, clearArrows, updateLastMoveArrow } from './ui/ArrowRenderer.js';
 
  import type { Player, GameLike } from './types/game.js';
  import * as AIEngine from './aiEngine.js';

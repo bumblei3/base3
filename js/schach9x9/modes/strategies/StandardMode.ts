@@ -1,7 +1,10 @@
 import type { GameModeStrategy } from '../GameModeStrategy.js';
 import type { GameExtended, GameController } from '../../gameController.js';
 import { PHASES, type Phase } from '../../config.js';
-import * as UI from '../../ui.js';
+import { renderBoard } from '../../ui/BoardRenderer.js';
+import { updateStatus, updateStatistics } from '../../ui/GameStatusUI.js';
+import { updateShopUI } from '../../ui/ShopUI.js';
+import { showModal } from '../../ui/OverlayManager.js';
 import { soundManager } from '../../sounds.js';
 import { logger } from '../../logger.js';
 
@@ -11,11 +14,11 @@ export class StandardModeStrategy implements GameModeStrategy {
 
     if (initialPoints > 0) {
       game.phase = PHASES.SETUP_WHITE_UPGRADES;
-      UI.updateShopUI(game);
+      updateShopUI(game);
       controller.showShop(true);
       // Ensure UI updates happen
-      UI.updateStatus(game);
-      UI.renderBoard(game);
+      updateStatus(game);
+      renderBoard(game);
     } else {
       game.phase = PHASES.PLAY as Phase;
       this.startGame(game, controller);
@@ -61,8 +64,8 @@ export class StandardModeStrategy implements GameModeStrategy {
       } else if (game.phase === PHASES.SETUP_BLACK_UPGRADES) {
         this.startGame(game, controller);
       }
-      UI.updateStatus(game);
-      UI.renderBoard(game);
+      updateStatus(game);
+      renderBoard(game);
     };
 
     if (game.points > 0) {
@@ -73,7 +76,7 @@ export class StandardModeStrategy implements GameModeStrategy {
         return;
       }
 
-      UI.showModal(
+      showModal(
         'Ungenutzte Punkte',
         `Du hast noch ${game.points} Punkte übrig! Möchtest du wirklich fortfahren?`,
         [
@@ -100,7 +103,7 @@ export class StandardModeStrategy implements GameModeStrategy {
     game.log('Spiel beginnt! Weiß ist am Zug.');
     if (game.updateBestMoves) game.updateBestMoves();
     controller.startClock();
-    UI.updateStatistics(game);
+    updateStatistics(game);
     soundManager.playGameStart();
     controller.autoSave();
 
@@ -111,7 +114,7 @@ export class StandardModeStrategy implements GameModeStrategy {
     const quickActions = document.getElementById('quick-actions');
     if (quickActions) quickActions.classList.remove('hidden');
 
-    UI.updateStatus(game);
-    UI.renderBoard(game);
+    updateStatus(game);
+    renderBoard(game);
   }
 }

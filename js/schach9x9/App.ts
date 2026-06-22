@@ -105,8 +105,8 @@ export class App {
 
     // Make controllers accessible to each other (circular dependencies)
     this.aiController = this.game.aiController as AIController | null;
-    this.gameController = this.game.gameController as GameController | null;
     this.moveController = this.game.moveController as MoveController | null;
+    this.game.gameController = this.gameController;
 
     this.aiController!.game = this.game;
     this.gameController!.game = this.game;

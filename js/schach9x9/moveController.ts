@@ -28,7 +28,8 @@ import {
   reconstructBoardAtMove as reconstructBoardAtMoveFromManager,
   undoMoveForReplay as undoMoveForReplayFromManager,
 } from './move/GameStateManager.js';
-import * as UI from './ui.js';
+import { renderBoard } from './ui/BoardRenderer.js';
+import { showPromotionUI } from './ui/OverlayManager.js';
 import { animateMove as animateMoveFromBoardRenderer } from './ui/BoardRenderer.js';
 
 /**
@@ -52,7 +53,7 @@ export class MoveController {
     if (isCurrentPlayersPiece) {
       this.game.selectedSquare = { r, c };
       this.game.validMoves = this.game.getValidMoves(r, c, clickedPiece);
-      UI.renderBoard(this.game);
+      renderBoard(this.game);
       return;
     }
 
@@ -104,14 +105,14 @@ export class MoveController {
     if (clickedPiece) {
       this.game.selectedSquare = { r, c };
       this.game.validMoves = this.game.getValidMoves(r, c, clickedPiece);
-      UI.renderBoard(this.game);
+      renderBoard(this.game);
       return;
     }
 
     // 4. Otherwise deselect
     this.game.selectedSquare = null;
     this.game.validMoves = null;
-    UI.renderBoard(this.game);
+    renderBoard(this.game);
   }
 
   /**
@@ -168,7 +169,7 @@ export class MoveController {
    * Shows the promotion UI
    */
   public showPromotionUI(r: number, c: number, color: string, moveRecord: MoveHistoryEntry): void {
-    UI.showPromotionUI(this.game, r, c, color as Player, moveRecord, () => this.finishMove());
+    showPromotionUI(this.game, r, c, color as Player, moveRecord, () => this.finishMove());
   }
 
   /**
@@ -328,7 +329,7 @@ export class MoveController {
     if (next) next.disabled = this.game.replayPosition === this.game.moveHistory.length - 1;
     if (last) last.disabled = this.game.replayPosition === this.game.moveHistory.length - 1;
 
-    UI.renderBoard(this.game);
+    renderBoard(this.game);
   }
 
   public reconstructBoardAtMove(moveIndex: number): void {

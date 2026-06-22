@@ -18,7 +18,7 @@ test.describe('Schach9x9 - Critical User Flows', () => {
 
   test('Can make a valid move', async ({ page }) => {
     // Click on a piece (e.g. row 6, col 0 = a2 pawn)
-    await helper.clickCell(6, 0);
+    await helper.clickCell(7, 0);
 
     // Check that valid moves are highlighted
     await expect(page.locator('.cell.valid-move').first()).toBeVisible();
@@ -32,7 +32,7 @@ test.describe('Schach9x9 - Critical User Flows', () => {
 
   test('AI responds to player move', async ({ page }) => {
     // Make a move
-    await helper.clickCell(6, 0);
+    await helper.clickCell(7, 0);
     await helper.clickCell(5, 0);
 
     // Wait for AI to respond
@@ -44,7 +44,7 @@ test.describe('Schach9x9 - Critical User Flows', () => {
 
   test('New Game resets the board', async ({ page }) => {
     // Make a move
-    await helper.clickCell(6, 0);
+    await helper.clickCell(7, 0);
     await helper.clickCell(5, 0);
 
     // Click new game via menu
@@ -57,7 +57,7 @@ test.describe('Schach9x9 - Critical User Flows', () => {
 
   test('Undo button works', async ({ page }) => {
     // Make a move
-    await helper.clickCell(6, 0);
+    await helper.clickCell(7, 0);
     const validMoves = page.locator('.cell.valid-move');
     await validMoves.first().click();
 

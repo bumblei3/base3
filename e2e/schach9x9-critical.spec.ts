@@ -35,8 +35,8 @@ test.describe('Schach9x9 - Critical User Flows', () => {
     }
     await expect(page.locator('[data-testid="board"]')).toBeVisible({ timeout: 10000 });
 
-    // Click on a white pawn (row 6, col 0 = a2)
-    const pawn = page.locator('.cell[data-r="6"][data-c="0"]');
+    // Click on a white pawn (row 7, col 0 = a2)
+    const pawn = page.locator('.cell[data-r="7"][data-c="0"]');
     await pawn.click();
     await page.waitForTimeout(300);
 

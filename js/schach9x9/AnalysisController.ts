@@ -1,6 +1,7 @@
 import { PHASES, type Player, type Square, type PieceWithMoved, type MoveHistoryEntry, type LastMoveInfo } from './gameEngine.js';
 import type { GameController, GameExtended } from './gameController.js';
-import * as UI from './ui.js';
+import { updateStatus, renderEvalGraph } from './ui/GameStatusUI.js';
+import { renderBoard } from './ui/BoardRenderer.js';
 
 interface AnalysisBasePosition {
   board: (PieceWithMoved | null)[][];
@@ -67,9 +68,9 @@ export class AnalysisController {
       analysisPanel.classList.remove('hidden');
     }
 
-    UI.updateStatus(this.game);
-    UI.renderBoard(this.game);
-    UI.renderEvalGraph(this.game);
+    updateStatus(this.game);
+    renderBoard(this.game);
+    renderEvalGraph(this.game);
 
     this.game.log('🔍 Analyse-Modus aktiviert. Züge lösen keine KI-Reaktion aus.');
 
@@ -125,9 +126,9 @@ export class AnalysisController {
       this.gameController.startClock();
     }
 
-    UI.updateStatus(this.game);
-    UI.renderBoard(this.game);
-    UI.renderEvalGraph(this.game);
+    updateStatus(this.game);
+    renderBoard(this.game);
+    renderEvalGraph(this.game);
 
     const message = restore
       ? '🔍 Analyse-Modus beendet. Position wiederhergestellt.'
@@ -169,8 +170,8 @@ export class AnalysisController {
     this.game.moveController.reconstructBoardAtMove(moveIndex);
     this.game.replayPosition = moveIndex;
 
-    UI.renderBoard(this.game);
-    UI.updateStatus(this.game);
+    renderBoard(this.game);
+    updateStatus(this.game);
 
     if (this.game.continuousAnalysis) {
       this.requestPositionAnalysis();
@@ -188,7 +189,7 @@ export class AnalysisController {
     this.game.moveController.reconstructBoardAtMove(0);
     this.game.replayPosition = -1;
 
-    UI.renderBoard(this.game);
-    UI.updateStatus(this.game);
+    renderBoard(this.game);
+    updateStatus(this.game);
   }
 }

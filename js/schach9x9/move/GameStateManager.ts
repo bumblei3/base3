@@ -1,7 +1,10 @@
 import { logger } from '../logger.js';
 import { PHASES } from '../gameEngine.js';
 import type { Phase } from '../config.js';
-import * as UI from '../ui.js';
+import { updateCapturedUI, updateStatus, updateMoveHistoryUI, updateStatistics } from '../ui/GameStatusUI.js';
+import { renderBoard } from '../ui/BoardRenderer.js';
+import { showShop } from '../ui/ShopUI.js';
+import { updateShopUI } from '../ui/ShopUI.js';
 import type { Game, PieceWithMoved, MoveHistoryEntry, Piece } from '../gameEngine.js';
 import type { MoveController } from '../moveController.js';
 
@@ -70,11 +73,11 @@ export function undoMove(game: Game, moveController: MoveController): void {
   if (move.captured) {
     const capturerColor = move.piece!.color;
     game.capturedPieces[capturerColor].pop();
-    UI.updateCapturedUI(game);
+    updateCapturedUI(game);
   } else if (move.specialMove && move.specialMove.type === 'enPassant') {
     const capturerColor = move.piece!.color;
     game.capturedPieces[capturerColor].pop();
-    UI.updateCapturedUI(game);
+    updateCapturedUI(game);
   }
 
   game.halfMoveClock = move.halfMoveClock || 0;
@@ -84,9 +87,9 @@ export function undoMove(game: Game, moveController: MoveController): void {
 
   game.turn = game.turn === 'white' ? 'black' : 'white';
   game.stats.totalMoves--;
-  UI.updateStatus(game);
-  UI.updateMoveHistoryUI(game);
-  UI.updateStatistics(game);
+  updateStatus(game);
+  updateMoveHistoryUI(game);
+  updateStatistics(game);
 
   if (game.moveHistory.length > 0) {
     const lastMove = game.moveHistory[game.moveHistory.length - 1];
@@ -98,9 +101,9 @@ export function undoMove(game: Game, moveController: MoveController): void {
   game.selectedSquare = null;
   game.validMoves = null;
 
-  UI.renderBoard(game);
-  UI.updateMoveHistoryUI(game);
-  UI.updateStatus(game);
+  renderBoard(game);
+  updateMoveHistoryUI(game);
+  updateStatus(game);
   game.log(
     `Zug ${move.piece && move.piece?.color === 'white' ? 'Weiß' : 'Schwarz'} zurückgenommen`
   );
@@ -199,7 +202,7 @@ export function exitReplayMode(game: Game): void {
   if (undoBtn)
     undoBtn.disabled = game.moveHistory.length === 0 || game.phase !== (PHASES.PLAY as Phase);
 
-  UI.renderBoard(game);
+  renderBoard(game);
 
   if (game.clockEnabled && game.phase === (PHASES.PLAY as Phase)) {
     // startClock is a dynamic method set by applyDelegates()
@@ -342,11 +345,11 @@ export function loadGame(game: Game): boolean {
       select.value = game.difficulty;
     });
 
-    UI.renderBoard(game);
-    UI.updateStatus(game);
-    UI.updateShopUI(game);
-    UI.updateMoveHistoryUI(game);
-    UI.updateCapturedUI(game);
+    renderBoard(game);
+    updateStatus(game);
+    updateShopUI(game);
+    updateMoveHistoryUI(game);
+    updateCapturedUI(game);
 
     game.drawOffered = state.drawOffered || false;
     game.drawOfferedBy = state.drawOfferedBy || null;
@@ -367,9 +370,9 @@ export function loadGame(game: Game): boolean {
       game.phase === (PHASES.SETUP_WHITE_PIECES as Phase) ||
       game.phase === (PHASES.SETUP_BLACK_PIECES as Phase)
     ) {
-      UI.showShop(game, true);
+      showShop(game, true);
     } else {
-      UI.showShop(game, false);
+      showShop(game, false);
     }
 
     if (game.phase === PHASES.PLAY) {

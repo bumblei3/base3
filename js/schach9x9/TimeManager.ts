@@ -3,7 +3,7 @@
  * Handles game clock, time controls, and time expiration.
  */
 import { PHASES, type Game } from './gameEngine.js';
-import * as UI from './ui.js';
+import { updateClockDisplay, updateClockUI } from './ui/GameStatusUI.js';
 import { soundManager } from './sounds.js';
 
 import type { Player } from './types/game.js';
@@ -122,11 +122,11 @@ export class TimeManager {
   }
 
   updateClockDisplay(): void {
-    UI.updateClockDisplay(this.game);
+    updateClockDisplay(this.game);
   }
 
   updateClockUI(): void {
-    UI.updateClockUI(this.game);
+    updateClockUI(this.game);
   }
 }
 

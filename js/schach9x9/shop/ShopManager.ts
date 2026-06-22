@@ -3,7 +3,9 @@ import { PIECE_SVGS } from '../chess-pieces.js';
 import { PHASES, type Game, type PieceWithMoved } from '../gameEngine.js';
 import { campaignManager } from '../campaign/CampaignManager.js';
 import { logger } from '../logger.js';
-import * as UI from '../ui.js';
+import { updateShopUI } from '../ui/ShopUI.js';
+import { renderBoard } from '../ui/BoardRenderer.js';
+import { showModal, closeModal } from '../ui/OverlayManager.js';
 
 /**
  * Manages the shop logic during the setup phase.
@@ -78,7 +80,7 @@ export class ShopManager {
       this.game.points += cost;
       this.game.board[r][c] = null;
 
-      UI.updateShopUI(this.game);
+      updateShopUI(this.game);
       if (this.game.log) this.game.log('Figur entfernt, Punkte erstattet.');
 
       // Update 3D board if active
@@ -131,7 +133,7 @@ export class ShopManager {
       // Deselect all shop buttons
       document.querySelectorAll('.shop-item').forEach(btn => btn.classList.remove('selected'));
 
-      UI.updateShopUI(this.game);
+      updateShopUI(this.game);
 
       // Update 3D board if active
       if (window.battleChess3D && window.battleChess3D.enabled) {
@@ -165,7 +167,7 @@ export class ShopManager {
       const canAfford = this.game.points >= cost;
 
       content += `
-        <button class="btn upgrade-btn ${canAfford ? 'btn-primary' : 'btn-disabled'}" 
+        <button class="btn upgrade-btn ${canAfford ? 'btn-primary' : 'btn-disabled'}"
                 style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; text-align: left;"
                 ${!canAfford ? 'disabled' : ''}
                 onclick="if(window.app && window.app.gameController) { window.app.gameController.shopManager.performUpgrade(${r}, ${c}, '${up.symbol}'); } else if(window.gameController) { window.gameController.shopManager.performUpgrade(${r}, ${c}, '${up.symbol}'); }">
@@ -182,7 +184,7 @@ export class ShopManager {
     });
     content += '</div>';
 
-    UI.showModal(modalTitle, content, [
+    showModal(modalTitle, content, [
       { text: 'Abbrechen', class: 'btn-secondary', callback: () => {} },
     ]);
   }
@@ -321,9 +323,9 @@ export class ShopManager {
           `${piece.color === 'white' ? 'Weiß' : 'Schwarz'} hat eine Figur zu ${targetType} verbessert.`
         );
 
-      UI.updateShopUI(this.game);
-      UI.renderBoard(this.game);
-      UI.closeModal();
+      updateShopUI(this.game);
+      renderBoard(this.game);
+      closeModal();
 
       // Update 3D board if active
       if (window.battleChess3D && window.battleChess3D.enabled) {

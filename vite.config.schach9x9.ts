@@ -21,6 +21,7 @@ export default defineConfig({
         entryFileNames: 'js/[name].js',
         chunkFileNames: 'js/[name].js',
         assetFileNames: 'assets/[name].[ext]',
+        preserveModules: false,
         manualChunks: (id: string) => {
           if (id.includes('battleChess3D')) {
             return 'battleChess3D';
