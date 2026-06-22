@@ -310,7 +310,7 @@ export class Game {
     const savedMentorLevel =
       typeof localStorage !== 'undefined' ? localStorage.getItem('ki_mentor_level') : null;
     this.mentorLevel = savedMentorLevel || 'STANDARD';
-    this.kiMentorEnabled = this.mentorLevel !== 'OFF';
+    this.kiMentorEnabled = false; // Disabled by default, enable via settings
 
     // AI Personality
     this.aiPersonality = 'balanced';
