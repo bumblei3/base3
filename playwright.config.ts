@@ -4,7 +4,6 @@ import { existsSync } from 'node:fs';
 const hasSystemChromium = existsSync('/usr/bin/chromium-browser');
 
 export default defineConfig({
-  // Separate test directories for each game
   projects: [
     {
       name: 'schach9x9-e2e',
@@ -23,16 +22,12 @@ export default defineConfig({
             : {},
       },
       fullyParallel: true,
-      forbidOnly: !!process.env.CI,
       retries: process.env.CI ? 2 : 0,
       workers: process.env.CI ? 1 : undefined,
-      reporter: process.env.CI
-        ? [['github'], ['html', { outputFolder: 'playwright-report/schach9x9', open: 'never' }]]
-        : 'html',
       webServer: {
-        command: 'cp -f dist/schach9x9/index.schach9x9.html dist/schach9x9/index.html && nohup npx http-server dist/schach9x9 -p 3000 -s -c-1 > /dev/null 2>&1 &',
+        command: 'npx http-server dist/schach9x9 -p 3000 -s -c-1',
         url: 'http://localhost:3000',
-        reuseExistingServer: true,
+        reuseExistingServer: !process.env.CI,
         timeout: 180000,
       },
     },
@@ -41,7 +36,7 @@ export default defineConfig({
       testDir: './tests-e2e',
       use: {
         ...devices['Desktop Chrome'],
-        baseURL: 'http://localhost:4173',
+        baseURL: 'http://localhost:3001',
         trace: 'on-first-retry',
         screenshot: 'only-on-failure',
         navigationTimeout: 30000,
@@ -55,14 +50,12 @@ export default defineConfig({
             : {},
       },
       fullyParallel: true,
-      forbidOnly: !!process.env.CI,
       retries: process.env.CI ? 2 : 0,
       workers: process.env.CI ? 1 : undefined,
-      reporter: [['html', { outputFolder: 'playwright-report/trischach', open: 'never' }], ['json', { outputFile: 'test-results/trischach-results.json' }]],
       webServer: {
-        command: 'cp -f dist/trischach/index.trischach.html dist/trischach/index.html && nohup npx http-server dist/trischach -p 4173 -s -c-1 > /dev/null 2>&1 &',
-        url: 'http://localhost:4173',
-        reuseExistingServer: true,
+        command: 'npx http-server dist/trischach -p 3001 -s -c-1',
+        url: 'http://localhost:3001',
+        reuseExistingServer: !process.env.CI,
         timeout: 180000,
       },
     },
