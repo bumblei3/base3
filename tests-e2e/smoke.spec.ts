@@ -14,7 +14,7 @@ test.describe('TriSchach Smoke Tests', () => {
       if (msg.type() === 'error') errors.push(msg.text());
     });
 
-    await page.goto('/trischach/index.trischach.html', { timeout: 30000 });
+    await page.goto('/index.trischach.html', { timeout: 30000 });
     await page.waitForTimeout(3000);
 
     // Check no critical JS errors (ignore font/asset 404s)
@@ -30,7 +30,7 @@ test.describe('TriSchach Smoke Tests', () => {
   });
 
   test('board SVG is rendered', async ({ page }) => {
-    await page.goto('/trischach/index.trischach.html', { timeout: 30000 });
+    await page.goto('/index.trischach.html', { timeout: 30000 });
     await page.waitForTimeout(3000);
 
     // Check if board-svg exists
@@ -39,7 +39,7 @@ test.describe('TriSchach Smoke Tests', () => {
   });
 
   test('pieces are rendered', async ({ page }) => {
-    await page.goto('/trischach/index.trischach.html', { timeout: 30000 });
+    await page.goto('/index.trischach.html', { timeout: 30000 });
     await page.waitForTimeout(3000);
 
     const pieceCount = await page.evaluate(
