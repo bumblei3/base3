@@ -181,6 +181,10 @@ export class App {
 
     logger.info('App initialization complete');
     document.body.classList.add('game-initialized');
+
+    // Show the game layer (remove hidden class)
+    const gameLayer = document.getElementById('game-layer');
+    if (gameLayer) gameLayer.classList.remove('hidden');
   }
 
   public initDOM(): void {

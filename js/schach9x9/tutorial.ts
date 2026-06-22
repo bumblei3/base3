@@ -399,6 +399,12 @@ export class Tutorial {
     this.currentStepEl = document.getElementById('tutorial-current-step') as HTMLElement;
     this.totalStepsEl = document.getElementById('tutorial-total-steps') as HTMLElement;
 
+    // If tutorial elements don't exist in DOM, skip initialization
+    if (!this.overlay || !this.stepsContainer) {
+      console.warn('[Tutorial] Tutorial elements not found in DOM, skipping init');
+      return;
+    }
+
     // Clear existing steps to prevent duplication
     this.stepsContainer.innerHTML = '';
 
