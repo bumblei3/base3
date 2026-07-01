@@ -2,6 +2,23 @@ import { describe, expect, test, beforeAll, afterAll, beforeEach, vi } from 'vit
 import { getBestMoveDetailed } from '@schach9x9/aiEngine.js';
 import { logger } from '@schach9x9/logger.js';
 
+vi.mock('@schach9x9/aiEngine', () => ({
+  getBestMoveDetailed: vi.fn().mockResolvedValue({ move: { from: { r: 1, c: 1 }, to: { r: 2, c: 2 } }, score: 50 }),
+  getTopMoves: vi.fn().mockResolvedValue([{ move: { from: { r: 0, c: 0 }, to: { r: 1, c: 1 } }, score: 100 }]),
+  analyzePosition: vi.fn().mockReturnValue({ bestMove: null, score: 0, threats: [], opportunities: [] }),
+  evaluatePosition: vi.fn().mockResolvedValue(25),
+  setOpeningBook: vi.fn(),
+  setProgressCallback: vi.fn(),
+}));
+
+vi.mock('@schach9x9/config', () => ({
+  setCurrentBoardShape: vi.fn(),
+}));
+
+vi.mock('@schach9x9/logger', () => ({
+  logger: { info: vi.fn(), debug: vi.fn(), warn: vi.fn(), error: vi.fn() },
+}));
+
 // Mock Worker class
 class MockWorker {
   scriptUrl: string | URL;
@@ -90,36 +107,10 @@ describe('AI Worker Message Handlers', () => {
   let onmessageHandler: (e: MessageEvent) => Promise<void>;
 
   beforeAll(async () => {
-    // Mock all aiEngine functions
-    vi.mock('@schach9x9/aiEngine', () => ({
-      getBestMoveDetailed: vi
-        .fn()
-        .mockResolvedValue({ move: { from: { r: 1, c: 1 }, to: { r: 2, c: 2 } }, score: 50 }),
-      getTopMoves: vi
-        .fn()
-        .mockResolvedValue([{ move: { from: { r: 0, c: 0 }, to: { r: 1, c: 1 } }, score: 100 }]),
-      analyzePosition: vi
-        .fn()
-        .mockReturnValue({ bestMove: null, score: 0, threats: [], opportunities: [] }),
-      evaluatePosition: vi.fn().mockResolvedValue(25),
-      setOpeningBook: vi.fn(),
-      setProgressCallback: vi.fn(),
-    }));
+    // Silence logs
+    vi.spyOn(logger, 'info').mockImplementation(function () {});
+    vi.spyOn(logger, 'debug').mockImplementation(function () {});
 
-    vi.mock('@schach9x9/config', () => ({
-      setCurrentBoardShape: vi.fn(),
-    }));
-
-    vi.mock('@schach9x9/logger', () => ({
-      logger: {
-        info: vi.fn(),
-        debug: vi.fn(),
-        warn: vi.fn(),
-        error: vi.fn(),
-      },
-    }));
-
-    // Setup mock self with postMessage
     mockPostMessage = vi.fn();
     mockSelf = {
       postMessage: mockPostMessage,
