@@ -35,7 +35,10 @@ export function showModal(
   console.log('[OverlayManager] Showing modal:', title);
 
   titleEl.textContent = title;
-  messageEl.innerHTML = message;
+
+  if (messageEl) {
+    messageEl.textContent = message;
+  }
   actionsEl.innerHTML = '';
 
   actions.forEach(action => {
@@ -220,7 +223,12 @@ export function showToast(message: string, type: string = 'neutral'): void {
   const toast = document.createElement('div');
   toast.className = `toast ${type}`;
   const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : '💡';
-  toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+  const iconSpan = document.createElement('span');
+  iconSpan.textContent = icon;
+  const messageSpan = document.createElement('span');
+  messageSpan.textContent = message;
+  toast.appendChild(iconSpan);
+  toast.appendChild(messageSpan);
   container.appendChild(toast);
   setTimeout(() => {
     toast.classList.add('fade-out');
