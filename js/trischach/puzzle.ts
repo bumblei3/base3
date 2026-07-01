@@ -606,7 +606,7 @@ function getNextFaction(game: Game, current: Faction): Faction {
   return 'fire';
 }
 
-function formatSAN(
+export function formatSAN(
   piece: Piece,
   target: Hex,
   isCapture: boolean,
@@ -616,7 +616,8 @@ function formatSAN(
   const pieceLetter = piece.type === 'pawn' ? '' : (piece.type as string)[0].toUpperCase();
   const capture = isCapture ? 'x' : '';
   const check = isMate ? '#' : isCheck ? '+' : '';
-  return `${pieceLetter}${piece.pos.q},${piece.pos.r}${capture}${target.q},${target.r}${check}`;
+  const movement = isCapture ? 'x' : '->';
+  return `${pieceLetter}${piece.pos.q},${piece.pos.r}${movement}${target.q},${target.r}${check}`;
 }
 
 function serializePosition(game: Game): string {
@@ -634,7 +635,7 @@ function deserializePosition(fen: string): Game | null {
   return reconstructGameFromHash(fen);
 }
 
-function shuffleArray<T>(array: T[]): void {
+export function shuffleArray<T>(array: T[]): void {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     const temp = array[i];
