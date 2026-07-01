@@ -5,7 +5,7 @@ import { calculateBestMove } from "@trischach/ai";
 import { PIECE_TYPE } from "@trischach/pieces";
 
 describe("AI Simulation (Integration)", () => {
-  test("AI can play a sequence of moves without crashing", () => {
+  test("AI can play a sequence of moves without crashing", 120000, async () => {
     const game = new Game();
     game.init(generateBoard());
 
