@@ -68,7 +68,7 @@
     "wasm-pack": "^0.15.0"
   },
   "dependencies": {
-    "@sentry/browser": "^10.59.0",
+    "@sentry/browser": "^10.63.0",
     "three": "^0.185.0"
   },
   "engines": {
