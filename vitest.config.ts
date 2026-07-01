@@ -21,7 +21,7 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
       reportsDirectory: './coverage',
-      exclude: ['node_modules/**', 'dist/**', 'tests/**', 'tests-e2e/**', '*.config.*', 'scripts/**', 'public/**', 'js/trischach/ai.ts', 'tests/trischach/integration.test.js'],
+      exclude: ['node_modules/**', 'dist/**', 'tests/**', 'tests-e2e/**', '*.config.*', 'scripts/**', 'public/**', 'js/trischach/ai.ts'],
       thresholds: {
         global: {
           lines: 75,

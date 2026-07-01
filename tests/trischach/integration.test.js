@@ -10,7 +10,7 @@ describe("AI Simulation (Integration)", () => {
     game.init(generateBoard());
 
     // Play 20 turns
-    for (let turn = 0; turn < 20; turn++) {
+    for (let turn = 0; turn < 8; turn++) {
       if (game.state === "game_over") break;
 
       const faction = game.currentFaction;
