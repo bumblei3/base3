@@ -6,6 +6,8 @@ interface Step {
   content: string;
 }
 
+import { escapeHtml } from './utils/escapeHtml.js';
+
 export class Tutorial {
   public currentStep: number;
   public steps: Step[];
@@ -413,8 +415,8 @@ export class Tutorial {
       const stepEl = document.createElement('div');
       stepEl.className = 'tutorial-step';
       stepEl.innerHTML = `
-        <h2>${step.title}</h2>
-        ${step.content}
+        <h2>${escapeHtml(step.title)}</h2>
+        ${escapeHtml(step.content)}
       `;
       this.stepsContainer.appendChild(stepEl);
     });

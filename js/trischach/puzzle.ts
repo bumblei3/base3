@@ -370,6 +370,8 @@ export async function validatePuzzle(puzzle: Puzzle): Promise<boolean> {
       const result = altGame.handleCellClick(altPiece.pos);
       if (!result || result.action === 'invalid') continue;
 
+      altGame.handleCellClick(target);
+
       const moveResult = altGame.handleCellClick(target);
       if (!moveResult) continue;
 
