@@ -31,6 +31,8 @@ export interface PGNImportResult {
 /**
  * PGN Import & Replay Manager
  */
+import { escapeHtml } from '../utils/escapeHtml.js';
+
 export class PGNImportReplay {
   private parser: PGNParser;
   private currentGame: PGNGame | null = null;
@@ -493,9 +495,9 @@ export class PGNImportUI {
 
     this.moveListContainer!.innerHTML = moveList.map((m, index) => `
       <div class="pgn-move-item" data-index="${index}" style="padding: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; gap: 1rem;">
-        <span class="move-number" style="font-weight: bold; min-width: 3rem;">${m.moveNumber}.</span>
-        <span class="white-move" style="flex: 1;">${m.white}</span>
-        <span class="black-move" style="flex: 1;">${m.black}</span>
+        <span class="move-number" style="font-weight: bold; min-width: 3rem;">${escapeHtml(String(m.moveNumber))}.</span>
+        <span class="white-move" style="flex: 1;">${escapeHtml(m.white)}</span>
+        <span class="black-move" style="flex: 1;">${escapeHtml(m.black)}</span>
       </div>
     `).join('');
 
