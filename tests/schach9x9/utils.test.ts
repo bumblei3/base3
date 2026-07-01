@@ -1,5 +1,6 @@
 import { describe, expect, test, beforeEach, afterEach, vi } from 'vitest';
 import { debounce, deepCopy, coordToAlgebraic } from '@schach9x9/utils.js';
+import { escapeHtml } from '@schach9x9/utils/escapeHtml.js';
 
 describe('Utils', () => {
   describe('debounce', () => {
@@ -233,6 +234,22 @@ describe('Utils', () => {
       expect(coordToAlgebraic(6, 7)).toBe('h3');
       expect(coordToAlgebraic(5, 2)).toBe('c4');
       expect(coordToAlgebraic(1, 6)).toBe('g8');
+    });
+  });
+
+  describe('escapeHtml', () => {
+    test('should escape angle brackets and quotes', () => {
+      expect(escapeHtml('<script>')).toBe('&lt;script&gt;');
+      expect(escapeHtml('a & b')).toBe('a &amp; b');
+      expect(escapeHtml('"test"')).toBe('&quot;test&quot;');
+    });
+
+    test('should pass through normal text', () => {
+      expect(escapeHtml('Hello World')).toBe('Hello World');
+    });
+
+    test('should escape apostrophes', () => {
+      expect(escapeHtml("it's")).toBe('it&#39;s');
     });
   });
 });

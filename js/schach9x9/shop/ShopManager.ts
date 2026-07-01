@@ -8,6 +8,8 @@ import * as UI from '../ui.js';
 /**
  * Manages the shop logic during the setup phase.
  */
+import { escapeHtml } from '../utils/escapeHtml.js';
+
 export class ShopManager {
   game: Game;
 
@@ -44,7 +46,9 @@ export class ShopManager {
       // Get SVG for display
       const svg = PIECE_SVGS['white'][pieceType];
 
-      displayEl.innerHTML = `Ausgewählt: <div style="display:inline-block;width:30px;height:30px;vertical-align:middle;">${svg}</div> ${pieceInfo ? pieceInfo.name : pieceType} (${cost})`;
+      const escapedSvg = escapeHtml(svg);
+      const escapedName = pieceInfo ? escapeHtml(pieceInfo.name) : escapeHtml(pieceType);
+      displayEl.innerHTML = `Ausgewählt: <div style="display:inline-block;width:30px;height:30px;vertical-align:middle;">${escapedSvg}</div> ${escapedName} (${cost})`;
     }
   }
 

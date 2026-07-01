@@ -360,7 +360,36 @@ export async function validatePuzzle(puzzle: Puzzle): Promise<boolean> {
   // Check that mate is delivered
   if (testGame.state !== GAME_STATE.GAME_OVER) return false;
 
-  // TODO: Check for alternative solutions (uniqueness)
+  // Verify uniqueness: no other first move also forces mate.
+  const pieces = game.getAlivePieces().filter((p) => p.faction === game.currentFaction);
+  let alternativeMateMove = false;
+  for (const piece of pieces) {
+    const { moves, attacks } = game.getLegalMoves(piece);
+    for (const target of [...moves, ...attacks]) {
+      const altGame = cloneGameForTest(game);
+      const altPiece = altGame.getPieceAt(piece.pos);
+      if (!altPiece) continue;
+
+      const result = altGame.handleCellClick(altPiece.pos);
+      if (!result || result.action === 'invalid') continue;
+
+      const moveResult = altGame.handleCellClick(target);
+      if (!moveResult) continue;
+
+      const nextFaction = getNextFaction(altGame, altGame.currentFaction);
+      if (nextFaction && isCheckmateInternal(altGame, nextFaction)) {
+        const isOriginalSolutionMove =
+          puzzle.solution.length > 0 &&
+          piece.id === puzzle.solution[0].pieceId &&
+          target.q === puzzle.solution[0].to.q &&
+          target.r === puzzle.solution[0].to.r;
+        if (!isOriginalSolutionMove) {
+          alternativeMateMove = true;
+        }
+      }
+    }
+  }
+  if (alternativeMateMove) return false;
 
   return true;
 }
