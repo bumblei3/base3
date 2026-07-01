@@ -101,7 +101,7 @@ describe('AI Engine - Coverage for Untested Paths', () => {
   // ============================================================
 
   describe('Opening Book Integration', () => {
-    test.skip('getBestMoveDetailed should query opening book early in game', async () => {
+    test('getBestMoveDetailed should query opening book early in game', async () => {
       // Verify that getBestMoveDetailed handles the opening book path
       // (The actual book query is tested in OpeningBook.unit.test.ts)
       const testBoard = createMinimalBoard();
@@ -114,7 +114,7 @@ describe('AI Engine - Coverage for Untested Paths', () => {
       expect(result === null || result?.move).toBeDefined();
     });
 
-    test.skip('getBestMoveDetailed should NOT query opening book after move 22', async () => {
+    test('getBestMoveDetailed should NOT query opening book after move 22', async () => {
       const spy = vi.spyOn(AIEngine, 'queryOpeningBook').mockReturnValue(null);
 
       const testBoard = createMinimalBoard();
