@@ -1,14 +1,13 @@
-/* eslint-disable no-unused-vars, @typescript-eslint/no-unused-vars */
 /**
  * TriSchach Puzzle Mode
  * Generates and manages "Mate in N" puzzles from Opening Book positions.
  */
 
-import { Game, GAME_STATE, GameState } from './game.ts';
+import { Game, GAME_STATE } from './game.ts';
 import { Hex } from './hex.ts';
-import type { IGame, Piece, Faction, PieceType, Cell } from './types.ts';
+import type { Piece, Faction, PieceType, Cell } from './types.ts';
 import { calculateBestMove, setAIDepth, setAIPersonality } from './ai.ts';
-import { boardHash, getBookMoves, OPENING_BOOK } from './opening-book.ts';
+import { OPENING_BOOK } from './opening-book.ts';
 import { isCheckmateInternal, isKingdomCheck } from './game-check.ts';
 import { indexedDBInstance } from '@shared/storage';
 
@@ -57,7 +56,7 @@ export interface PuzzleState {
 
 const PUZZLE_STORAGE_KEY = 'trischach-puzzles';
 const PUZZLE_PROGRESS_KEY = 'trischach-puzzle-progress';
-const MAX_PUZZLES_PER_BATCH = 50;
+const _MAX_PUZZLES_PER_BATCH = 50;
 const MATE_SEARCH_DEPTH = 6; // Search depth for mate finding
 
 // ─── Puzzle Generator ────────────────────────────────────────────────────
@@ -79,7 +78,7 @@ export async function generatePuzzlesFromBook(
   // Shuffle positions for variety
   shuffleArray(bookPositions);
 
-  for (const [hash, variations] of bookPositions) {
+  for (const [hash] of bookPositions) {
     if (puzzles.length >= count) break;
 
     // Reconstruct position from hash
@@ -121,7 +120,6 @@ function reconstructGameFromHash(hash: string): Game | null {
       for (const entry of pieceEntries) {
         if (!entry) continue;
         const factionChar = entry[0];
-        const typeChar = entry[1];
         const coords = entry.slice(2).split(',');
         const q = Number(coords[0]);
         const r = Number(coords[1]);
@@ -166,7 +164,6 @@ function generateBoardForPuzzle(): Map<string, Cell> {
  * Search for a forced mate from the given position using the AI engine.
  */
 async function findMatePuzzle(game: Game): Promise<Puzzle | null> {
-  const originalDepth = 4; // We'll use iterative deepening
   const faction = game.currentFaction;
 
   // First, check if there's an immediate mate
@@ -268,7 +265,7 @@ async function searchForcedMate(
       const result = testGame.handleCellClick(piece.pos);
       if (!result) return null;
 
-      const moveResult = testGame.handleCellClick(target);
+      const interaction = testGame.handleCellClick(target);
 
       const checkResult = isKingdomCheck(
         testGame,
