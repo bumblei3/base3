@@ -10,6 +10,12 @@
 import { describe, test, expect, beforeEach, vi, afterEach } from 'vitest';
 import * as TacticsDetector from '@schach9x9/tutor/TacticsDetector';
 import * as aiEngine from '@schach9x9/aiEngine';
+import * as config from '@schach9x9/config';
+
+vi.mock('@schach9x9/config', () => ({
+  getCurrentBoardShape: vi.fn(() => 'standard'),
+  isBlockedCell: vi.fn(() => false),
+}));
 
 describe('TacticsDetector - Additional Coverage', () => {
   let mockGame: any;
@@ -37,6 +43,7 @@ describe('TacticsDetector - Additional Coverage', () => {
       },
     };
 
+    vi.mocked(config.isBlockedCell).mockReturnValue(false);
     vi.clearAllMocks();
   });
 
@@ -119,10 +126,7 @@ describe('TacticsDetector - Additional Coverage', () => {
       mockGame.board[4][6] = { type: 'q', color: 'black' };
       mockGame.board[4][8] = { type: 'k', color: 'black' };
       
-      vi.mock('@schach9x9/config', () => ({
-        isBlockedCell: vi.fn(() => true),
-        getCurrentBoardShape: vi.fn(() => 'standard'),
-      }));
+      vi.mocked(config.isBlockedCell).mockReturnValue(true);
 
       const skewers = TacticsDetector.detectSkewers(mockGame, mockAnalyzer, { r: 4, c: 4 }, 'white');
       expect(skewers).toEqual([]);
@@ -300,10 +304,7 @@ describe('TacticsDetector - Additional Coverage', () => {
       mockGame.board[2][2] = { type: 'n', color: 'black' };
       mockGame.board[4][4] = { type: 'k', color: 'black' };
       
-      vi.mock('@schach9x9/config', () => ({
-        isBlockedCell: vi.fn(() => true),
-        getCurrentBoardShape: vi.fn(() => 'standard'),
-      }));
+      vi.mocked(config.isBlockedCell).mockReturnValue(true);
 
       const pins = TacticsDetector.detectPins(mockGame, mockAnalyzer, { r: 0, c: 0 }, 'white');
       expect(pins).toEqual([]);
@@ -605,10 +606,7 @@ describe('TacticsDetector - Additional Coverage', () => {
       mockGame.board[4][6] = { type: 'p', color: 'white' };
       mockGame.board[4][8] = { type: 'r', color: 'white' };
       
-      vi.mock('@schach9x9/config', () => ({
-        isBlockedCell: vi.fn((r: number, c: number) => r === 4 && c === 6),
-        getCurrentBoardShape: vi.fn(() => 'standard'),
-      }));
+      vi.mocked(config.isBlockedCell).mockImplementation((r: number, c: number) => r === 4 && c === 6);
 
       const batteries = TacticsDetector.detectBattery(mockGame, mockAnalyzer, { r: 4, c: 4 }, 'white');
       
