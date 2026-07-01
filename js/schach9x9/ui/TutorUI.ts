@@ -8,6 +8,8 @@ import type { Game } from '../gameEngine.js';
 import type { MoveExplanation } from '../tutor/MoveAnalyzer.js';
 import type { MoveResult } from '../aiEngine.js';
 
+import { escapeHtml } from '../utils/escapeHtml.js';
+
 export interface TutorHint {
   move: MoveResult | { from: { r: number; c: number }; to: { r: number; c: number } } | null;
   score: number;
@@ -135,8 +137,8 @@ export function updateTutorRecommendations(game: Game): void {
 
       card.innerHTML = `
         ${template.isRecommended ? '<div class="recommended-badge">Empfohlen</div>' : ''}
-        <div class="template-name">${template.name}</div>
-        <div class="template-description">${template.description}</div>
+        <div class="template-name">${escapeHtml(template.name)}</div>
+        <div class="template-description">${escapeHtml(template.description)}</div>
         <div class="template-pieces">
           <span>Enthält:</span>
           ${piecesPreview}
@@ -225,8 +227,8 @@ export async function showTutorSuggestions(
 
           div.innerHTML = `
               ${template.isRecommended ? '<div class="recommended-badge">KI-Tipp</div>' : ''}
-              <div class="template-name">${template.name}</div>
-              <div class="template-description" style="font-size: 0.85rem; color: #cbd5e1;">${template.description}</div>
+              <div class="template-name">${escapeHtml(template.name)}</div>
+              <div class="template-description" style="font-size: 0.85rem; color: #cbd5e1;">${escapeHtml(template.description)}</div>
               <div style="margin-top: 10px; display: flex; gap: 4px;">${piecesPreview}</div>
             `;
           div.addEventListener('click', () => {
@@ -358,12 +360,12 @@ export async function showTutorSuggestions(
           Record<string, string>
         >;
         el.innerHTML = `
-            <div style="font-weight: bold; margin-bottom: 0.5rem; font-size: 1.1rem;">${template.name}</div>
-            <div style="font-size: 0.9rem; color: #cbd5e1; margin-bottom: 0.5rem;">${template.description}</div>
-            <div style="font-size: 0.8rem; color: #94a3b8;">Kosten: ${template.cost} Punkte</div>
+            <div style="font-weight: bold; margin-bottom: 0.5rem; font-size: 1.1rem;">${escapeHtml(template.name)}</div>
+            <div style="font-size: 0.9rem; color: #cbd5e1; margin-bottom: 0.5rem;">${escapeHtml(template.description)}</div>
+            <div style="font-size: 0.8rem; color: #94a4b8;">Kosten: ${template.cost} Punkte</div>
             <div style="font-size: 0.8rem; color: #64748b; margin-top: 0.5rem; display: flex; align-items: center; gap: 0.25rem;">
                 <span>Enthält:</span>
-                ${template.pieces.map((p: string) => `<span style="display: inline-block; width: 28px; height: 28px;">${pieceSvgs ? pieceSvgs[colorPrefix][p] : p}</span>`).join('')}
+                ${template.pieces.map((p: string) => `<span style="display: inline-block; width: 28px; height: 28px;">${pieceSvgs ? pieceSvgs[colorPrefix][p] : escapeHtml(p)}</span>`).join('')}
             </div>
         `;
         el.onclick = () => {
@@ -392,7 +394,7 @@ export async function showTutorSuggestions(
   }
 
   const header = document.createElement('h3');
-  header.innerHTML = `🤖 Tutor Vorschläge <span style="font-size: 0.8rem; font-weight: normal; color: #94a3b8; display: block; margin-top: 0.25rem;">Beste Züge für ${g.turn === 'white' ? 'Weiß' : 'Schwarz'}</span>`;
+  header.innerHTML = `🤖 Tutor Vorschläge <span style="font-size: 0.8rem; font-weight: normal; color: #94a4b8; display: block; margin-top: 0.25rem;">Beste Züge für ${escapeHtml(g.turn === 'white' ? 'Weiß' : 'Schwarz')}</span>`;
   suggestionsEl!.appendChild(header);
 
   (hints as TutorHint[]).forEach((hint: TutorHint, index: number) => {
@@ -412,7 +414,7 @@ export async function showTutorSuggestions(
     const scoreDisplay = scoreDesc
       ? `<span style="color: ${scoreDesc.color};">${scoreDesc.emoji} ${scoreDesc.label}</span>`
       : `<span style="color: ${hint.score > 0 ? '#22c55e' : '#888'};">${(hint.score / 100).toFixed(1)}</span>`;
-    overview.innerHTML = `<span style="font-size: 1.2rem;">${rankBadge}</span><span style="flex: 1;">${hint.notation}</span>${scoreDisplay}`;
+    overview.innerHTML = `<span style="font-size: 1.2rem;">${rankBadge}</span><span style="flex: 1;">${escapeHtml(hint.notation)}</span>${scoreDisplay}`;
     suggEl.appendChild(overview);
 
     if (analysis.qualityLabel) {
@@ -463,7 +465,7 @@ export async function showTutorSuggestions(
         questionEl.innerHTML = `
           <div style="color: #fbbf24; font-weight: 600; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
             <span>🧐</span> 
-            <span>${analysis.questions[0]}</span>
+            <span>${escapeHtml(analysis.questions[0])}</span>
           </div>
           <button class="show-details-btn" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; cursor: pointer;">
             Erklärung anzeigen

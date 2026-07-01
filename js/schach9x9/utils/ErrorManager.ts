@@ -5,7 +5,9 @@
 import { logger } from '../logger.js';
 import { notificationUI } from '../ui/NotificationUI.js';
 
-class ErrorManager {
+import { escapeHtml } from './escapeHtml.js';
+
+export class ErrorManager {
   private initialized: boolean = false;
 
   constructor() {
