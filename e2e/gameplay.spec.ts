@@ -59,9 +59,8 @@ test.describe('Core Gameplay Loop', () => {
   });
 
   test('should start a game and verify board setup', async ({ page }) => {
-    // 1. Select Hiring Mode (25 Points)
-    const hiringCard = page.locator('.gamemode-card', { hasText: 'Truppen anheuern (9x9)' });
-    await hiringCard.click();
+    // 1. Select Setup Mode
+    await page.click('#setup-mode-btn');
 
     // 2. Wait for Board & Setup Mode
     await expect(page.locator('#board')).toBeVisible();
@@ -78,7 +77,12 @@ test.describe('Core Gameplay Loop', () => {
     await expect(statusDisplay).toBeVisible();
     await expect(statusDisplay.textContent()).not.toBe('');
 
-    // 5. Verify finish button is available
+    // 5. Place White King to unlock Shop & Finish button
+    const whiteKingCell = page.locator('.cell[data-r="8"][data-c="4"]');
+    await whiteKingCell.click();
+    await page.waitForTimeout(300);
+
+    // 6. Verify finish button is available (visible after king placement)
     const doneButton = page.locator('#finish-setup-btn');
     await expect(doneButton).toBeVisible();
   });
@@ -162,8 +166,8 @@ test.describe('Core Gameplay Loop', () => {
   });
 
   test('should handle Shop interaction and Piece Placement', async ({ page }) => {
-    // 1. Enter Hire Mode
-    await page.click('.gamemode-card:has-text("Truppen anheuern (9x9)")');
+    // 1. Enter Setup Mode
+    await page.click('#setup-mode-btn');
 
     // Wait for setup mode to be active
     await expect(page.locator('body')).toHaveClass(/setup-mode/);

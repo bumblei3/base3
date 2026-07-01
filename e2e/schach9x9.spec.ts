@@ -67,7 +67,7 @@ test.describe('Schach9x9 - Critical User Flows', () => {
       await undoBtn.click();
 
       // Verify piece is back
-      await expect(page.locator('.cell[data-r="6"][data-c="0"] .piece-svg')).toBeVisible();
+      await expect(page.locator('.cell[data-r="7"][data-c="0"] .piece-svg')).toBeVisible();
     }
   });
 });

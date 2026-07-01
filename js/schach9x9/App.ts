@@ -147,6 +147,13 @@ export class App {
     // Initialize DOM Handler (Menu handlers, etc.)
     this.domHandler.init();
 
+    // UI Adjustments for Game Modes
+    // Hide main menu for modes that start directly from mode selection
+    if (mode === 'setup' || mode === 'upgrade') {
+      const mainMenu = document.getElementById('main-menu');
+      if (mainMenu) mainMenu.classList.remove('active');
+    }
+
     // Apply delegates (monkey-patching Game prototype for legacy support)
     this.applyDelegates();
 

@@ -139,6 +139,27 @@
         </div>
       </div>
 
+      <!-- Game Over Overlay -->
+      <div id="game-over-overlay" class="modal-overlay hidden">
+        <div class="game-over-content">
+          <h2 id="winner-text">Spiel zu Ende</h2>
+          <div id="game-over-stats"></div>
+          <div class="game-over-actions">
+            <button id="game-over-restart-btn" class="btn-primary">Neues Spiel</button>
+            <button id="game-over-menu-btn" class="btn-secondary">Hauptmenü</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Generic Modal -->
+      <div id="generic-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+          <h2 id="modal-title">Titel</h2>
+          <div id="modal-message">Nachricht</div>
+          <div id="modal-actions" class="modal-buttons"></div>
+        </div>
+      </div>
+
       <!-- Skeleton Loading Screen -->
       <div id="skeleton-overlay" class="skeleton-overlay hidden">
         <div class="skeleton-header">
@@ -221,6 +242,16 @@
                 <span class="card-icon">📖</span>
                 <span class="card-title">Tutorial</span>
                 <span class="card-desc">Lerne die Regeln und besonderen Figuren.</span>
+              </button>
+              <button id="setup-mode-btn" class="gamemode-card" data-mode="setup">
+                <span class="card-icon">⚙️</span>
+                <span class="card-title">Setup Phase</span>
+                <span class="card-desc">Stelle deine Armee zusammen und platziere die Figuren.</span>
+              </button>
+              <button id="upgrade-mode-btn" class="gamemode-card" data-mode="upgrade">
+                <span class="card-icon">⬆️</span>
+                <span class="card-title">9x9 + Upgrades</span>
+                <span class="card-desc">Klassisch 9x9 mit Upgrade-Optionen für Figuren.</span>
               </button>
             </div>
           </div>
@@ -369,6 +400,11 @@
 
           <!-- Action Bar -->
           <div class="action-bar">
+            <button id="finish-setup-btn" class="action-icon-btn hidden" title="Setup fertigstellen (F)">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </button>
             <button id="undo-btn" class="action-icon-btn" title="Rückgängig (U)">
               <svg
                 viewBox="0 0 24 24"

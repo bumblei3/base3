@@ -39,11 +39,10 @@ export const BOOK_INFO = {
 // Helper: Generate board hash (matches ai.js exactly)
 // ---------------------------------------------------------------------------
 export function boardHash(game: IGame): string {
-  const pieces = game.getAlivePieces
-    ? game.getAlivePieces()
-    : game.pieces.filter((p) => p.alive);
+  // Use pieces array directly to avoid reliance on getAlivePieces method
+  // which may not be present on plain objects used in AI worker
+  const pieces = game.pieces.filter((p) => p.alive);
   const piecesStr = pieces
-    .filter((p) => p.alive)
     .map((p) => `${p.faction[0]}${p.type[0]}${p.pos.q},${p.pos.r}`)
     .sort()
     .join('|');

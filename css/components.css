@@ -363,6 +363,38 @@ input:checked + .toggle-slider:before {
   text-align: center;
 }
 
+/* --- Game Over Overlay --- */
+.game-over-content {
+  background: var(--color-bg-secondary);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: var(--spacing-xl);
+  border-radius: var(--rounded-xl);
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.game-over-content h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: var(--color-text-primary);
+}
+
+#game-over-stats {
+  margin: 1rem 0;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.game-over-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
 .modal-buttons {
   display: flex;
   gap: var(--spacing-md);

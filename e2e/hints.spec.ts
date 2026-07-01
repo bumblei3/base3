@@ -22,9 +22,8 @@ test.describe('Hint Generator Repro', () => {
   });
 
   test('should show hints in setup mode via keyboard', async ({ page }) => {
-    // 1. Select Hiring Mode (9x9) to get into setup mode
-    const hiringCard = page.locator('.gamemode-card', { hasText: 'Truppen anheuern' });
-    await hiringCard.click();
+    // 1. Select Setup Mode
+    await page.click('#setup-mode-btn');
 
     // 2. Wait for board
     await expect(page.locator('#board')).toBeVisible();

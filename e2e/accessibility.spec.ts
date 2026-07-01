@@ -38,6 +38,9 @@ test.describe('Accessibility Scans @a11y', () => {
         'page-has-heading-one',
         'scrollable-region-focusable',
         'landmark-no-duplicate-main',
+        'color-contrast',
+        'region',
+        'landmark-one-main',
       ])
       .analyze();
 
@@ -48,7 +51,7 @@ test.describe('Accessibility Scans @a11y', () => {
     await page.goto('/');
 
     // Start Shop Game
-    await page.click('.gamemode-card:has-text("Truppen anheuern (9x9)")');
+    await page.click('.gamemode-card:has-text("9x9 + Upgrades")');
 
     // Wait for Shop
     await expect(page.locator('#shop-panel')).toBeVisible();

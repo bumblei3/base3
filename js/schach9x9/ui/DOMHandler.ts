@@ -118,7 +118,7 @@ export class DOMHandler {
       upgrade8x8Btn.addEventListener('click', () => {
         const overlay = document.getElementById('points-selection-overlay');
         if (overlay) overlay.classList.add('hidden');
-        this.app.init(5, 'standard8x8');
+        this.app.init(5, 'upgrade8x8');
       });
     }
 
@@ -168,6 +168,30 @@ export class DOMHandler {
           this.tutorial = new Tutorial();
         }
         this.tutorial.show();
+      });
+    }
+
+    // Setup Mode
+    const setupModeBtn = document.getElementById('setup-mode-btn');
+    if (setupModeBtn) {
+      setupModeBtn.addEventListener('click', () => {
+        const overlay = document.getElementById('points-selection-overlay');
+        if (overlay) overlay.classList.add('hidden');
+        const mainMenu = document.getElementById('main-menu');
+        if (mainMenu) mainMenu.classList.remove('active');
+        this.app.init(25, 'setup');
+      });
+    }
+
+    // Upgrade Mode (9x9)
+    const upgradeModeBtn = document.getElementById('upgrade-mode-btn');
+    if (upgradeModeBtn) {
+      upgradeModeBtn.addEventListener('click', () => {
+        const overlay = document.getElementById('points-selection-overlay');
+        if (overlay) overlay.classList.add('hidden');
+        const mainMenu = document.getElementById('main-menu');
+        if (mainMenu) mainMenu.classList.remove('active');
+        this.app.init(25, 'upgrade');
       });
     }
 
