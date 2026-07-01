@@ -265,7 +265,7 @@ async function searchForcedMate(
       const result = testGame.handleCellClick(piece.pos);
       if (!result) return null;
 
-      const interaction = testGame.handleCellClick(target);
+      testGame.handleCellClick(target);
 
       const checkResult = isKingdomCheck(
         testGame,
