@@ -105,11 +105,6 @@ describe('PuzzleMode', () => {
     expect(puzzleManager.currentPuzzleIndex).toBe(1);
   });
 
-  test.skip('should generate new puzzle when list exhausted (slow - triggers AI generation)', () => {
-    // This test triggers the ProceduralGenerator which uses AI search
-    // and takes ~165s. Skipped for normal CI runs.
-  });
-
   test('should find puzzle by id', () => {
     const p = puzzleManager.getPuzzle('mate-in-1-arch');
     expect(p).toBeDefined();
