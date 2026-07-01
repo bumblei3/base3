@@ -71,14 +71,14 @@ describe('AIEngine Coverage Boost', () => {
     expect(aiEngine.getParamsForElo(2400).maxDepth).toBe(7);
   });
 
-  test.skip('getBestMove - success path', async () => {
+  test('getBestMove - success path', async () => {
     board[0][0] = { type: 'k', color: 'white' };
     board[8][8] = { type: 'k', color: 'black' };
     const result = await aiEngine.getBestMove(board, 'white', 1, 'hard', { elo: 2500 });
     expect(result).toBeDefined();
   }, 30000);
 
-  test.skip('getBestMoveDetailed with Elo config', async () => {
+  test('getBestMoveDetailed with Elo config', async () => {
     board[0][0] = { type: 'k', color: 'white' };
     board[8][8] = { type: 'k', color: 'black' };
     const result = await aiEngine.getBestMoveDetailed(board, 'white', 1, { elo: 2500 });
