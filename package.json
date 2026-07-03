@@ -69,7 +69,7 @@
   },
   "dependencies": {
     "@sentry/browser": "^10.63.0",
-    "three": "^0.185.0"
+    "three": "^0.185.1"
   },
   "engines": {
     "node": ">=22.0.0"
