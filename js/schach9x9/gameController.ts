@@ -42,6 +42,7 @@ import { SetupModeStrategy } from './modes/strategies/SetupMode.js';
 import { ClassicModeStrategy } from './modes/strategies/ClassicMode.js';
 import { StandardModeStrategy } from './modes/strategies/StandardMode.js';
 import { CampaignModeStrategy } from './modes/strategies/CampaignMode.js';
+import { PuzzleModeStrategy } from './modes/strategies/PuzzleMode.js';
 
 export interface ArrowRendererType {
   clearArrows: () => void;
@@ -119,15 +120,8 @@ export class GameController {
     } else if (mode === 'campaign') {
       this.currentModeStrategy = new CampaignModeStrategy();
     } else if (mode === 'puzzle') {
-      // Puzzle mode currently handled slightly differently,
-      // but could be a strategy. For now, let's defer if it's not a Strategy yet
-      // OR add a basic one.
-      // Based on plan, we didn't explicitly make PuzzleStrategy yet but we can stub it or keep legacy logic for puzzle.
-      // Actually, let's handle puzzle legacy logic or simple strategy.
-      // Re-using legacy logic inside here for simplicity until PuzzleStrategy is prioritized?
-      // Wait, the plan said "Missing Coverage: Puzzle Mode", and "New E2E Tests: puzzle.spec.ts".
-      // Plan didn't explicitly say Implement PuzzleStrategy, just Classic, Setup, Standard, Campaign.
-      this.currentModeStrategy = null; // Puzzle handled ad-hoc or we adhere to legacy for now.
+      // Puzzle mode: board clicks solve the puzzle via handlePlayClick.
+      this.currentModeStrategy = new PuzzleModeStrategy();
     } else {
       // Fallback
       this.currentModeStrategy = new SetupModeStrategy();
@@ -149,11 +143,6 @@ export class GameController {
     // Delegate to Strategy
     if (this.currentModeStrategy) {
       this.currentModeStrategy.init(this.game, this, initialPoints);
-    } else if (mode === 'puzzle') {
-      // Legacy Puzzle initialization
-      this.puzzleMenu.show();
-      this.game.mode = 'puzzle';
-      UI.renderBoard(this.game);
     }
 
     // Initialize helpers common to all
