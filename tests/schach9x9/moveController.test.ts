@@ -372,6 +372,32 @@ describe('MoveController', () => {
     expect(game.board[6][4]).toBeNull();
   });
 
+  it('should redo a promotion without re-triggering the promotion UI and restore the exact type', async () => {
+    game.isAI = false;
+    // White pawn one step from promotion row (0), column 4 to avoid the
+    // black king that beforeEach places on 0,0
+    game.board[1][4] = { type: 'p', color: 'white', hasMoved: true } as any;
+    // Keep kings present so end-of-move checks don't throw (avoid 0,4 / 8,4
+    // which would collide with the promotion square and its undo target)
+    game.board[0][8] = { type: 'k', color: 'black', hasMoved: false } as any;
+    game.board[8][0] = { type: 'k', color: 'white', hasMoved: false } as any;
+
+    // First move: promote to queen
+    await moveController.executeMove({ r: 1, c: 4 }, { r: 0, c: 4 }, false, 'q');
+    expect(game.board[0][4]!.type).toBe('q');
+    UI.showPromotionUI.mockClear();
+
+    // Undo
+    moveController.undoMove();
+    expect(game.board[1][4]!.type).toBe('p');
+    expect(game.board[0][4]).toBeNull();
+
+    // Redo — must NOT re-open the promotion picker and must restore 'q'
+    await moveController.redoMove();
+    expect(UI.showPromotionUI).not.toHaveBeenCalled();
+    expect(game.board[0][4]!.type).toBe('q');
+  });
+
   it('should clear redo stack when new move is made', async () => {
     // Setup and execute a move
     game.board[6][4] = { type: 'p', color: 'white' } as any;
@@ -1037,15 +1063,16 @@ describe('MoveController', () => {
       // Mock animateMove
       (moveController as any).animateMove = vi.fn().mockResolvedValue(undefined);
 
-      // Setup en passant situation
-      game.board[3][4] = { type: 'p', color: 'white' } as any;
-      game.board[3][3] = { type: 'p', color: 'black' } as any;
-      game.lastMove = {
-        from: { r: 1, c: 3 },
-        to: { r: 3, c: 3 },
-        piece: { type: 'p', color: 'black' },
-        isDoublePawnPush: true, // Correct property name
-      } as any;
+      // Real prior move so it lands in moveHistory and survives undo/redo.
+      // Black double pawn push from 1,3 to 3,3 (enables en passant).
+      game.board[1][3] = { type: 'p', color: 'black', hasMoved: false } as any;
+      game.board[0][4] = { type: 'k', color: 'black', hasMoved: false } as any;
+      game.board[8][4] = { type: 'k', color: 'white', hasMoved: false } as any;
+      game.turn = 'black';
+      await moveController.executeMove({ r: 1, c: 3 }, { r: 3, c: 3 });
+
+      // White pawn positioned to capture en passant
+      game.board[3][4] = { type: 'p', color: 'white', hasMoved: true } as any;
 
       const from = { r: 3, c: 4 };
       const to = { r: 2, c: 3 }; // En passant capture square

@@ -160,7 +160,9 @@ export class MoveController {
     if (piece) {
       this.game.validMoves = this.game.getValidMoves(move.from.r, move.from.c, piece);
     }
-    await this.executeMove(move.from, move.to, true);
+    // Pass the original promotion type so a redone promotion is restored exactly
+    // instead of re-triggering the promotion UI or defaulting to Angel.
+    await this.executeMove(move.from, move.to, true, move.promotion);
     this.updateUndoRedoButtons();
   }
 

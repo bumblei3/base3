@@ -53,6 +53,7 @@ export async function executeMove(
     piece: { type: piece.type, color: piece.color, hasMoved: piece.hasMoved },
     captured: targetPiece ? { type: targetPiece.type, color: targetPiece.color } : null,
     halfMoveClock: game.halfMoveClock,
+    isDoublePawnPush: piece.type === 'p' && Math.abs(to.r - from.r) === 2,
   };
 
   // Handle Castling

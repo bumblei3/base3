@@ -90,8 +90,10 @@ export function undoMove(game: Game, moveController: MoveController): void {
 
   if (game.moveHistory.length > 0) {
     const lastMove = game.moveHistory[game.moveHistory.length - 1];
+    game.lastMove = lastMove;
     game.lastMoveHighlight = { from: lastMove.from, to: lastMove.to };
   } else {
+    game.lastMove = null as unknown as MoveHistoryEntry;
     game.lastMoveHighlight = null;
   }
 
