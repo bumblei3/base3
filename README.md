@@ -121,7 +121,7 @@ base3/
 
 - **Language**: TypeScript (strict mode, project references)
 - **Build**: Vite 8 + Rolldown, `resolve.tsconfigPaths: true`
-- **Testing**: Vitest 4 (happy-dom) + Playwright
+- **Testing**: Vitest 4 (happy-dom + jsdom) + Playwright
 - **Linting**: ESLint 10 + TypeScript ESLint + Prettier
 - **WASM**: Rust + wasm-pack (Schach9x9 engine, compiled in CI)
 - **3D**: Three.js via jsDelivr CDN (Schach9x9 battle animations)

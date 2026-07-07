@@ -252,7 +252,7 @@ jobs:
 
 | Phase | Aufwand | Risiko | Blocker | Status |
 |-------|---------|--------|---------|--------|
-| 1. Tests grün + Coverage + Lint | 2W | Niedrig | Keine | ✅ 2026-06-20 |
+| 1. Tests grün + Coverage + Lint | 2W | Niedrig | Keine | ✅ 2026-07-07 |
 | 2. E2E | 2W | Mittel | Playwright CI Zeit | 🔄 15/15 Trischach ✅, Schach9x9 8 Tests erstellt (webServer Bug) |
 | 3. Performance | 1W | Mittel | WASM/Worker Stabilität | ⬜ |
 | 4. A11y | 1W | Niedrig | Design Token Audit | ⬜ |
@@ -265,19 +265,20 @@ jobs:
 
 ---
 
-## 🚀 Quick Wins (2026-06-20)
+## 🚀 Quick Wins (2026-07-07)
 
-1. ✅ **Tests grün**: 2239 Unit Tests + 15 E2E Tests (Trischach) ✅
+1. ✅ **Tests grün**: 2253 Unit Tests (Schach9x9 ~1843, Trischach ~347, Shared ~63) + 15 E2E Tests (Trischach) ✅
 2. ✅ **Coverage**: 77.83% Statements (Threshold 75%) ✅
 3. ✅ **Lint**: 0 Errors, 0 Warnings ✅
 4. ✅ **TypeScript strict**: `tsc --noEmit` 0 Errors ✅
-5. ⬜ **Bundle**: `npm run build && npx vite-bundle-visualizer` → 3D Chunk lazy laden
-6. ⬜ **A11y**: `npx playwright test tests-e2e/accessibility.spec.ts --project=trischach-e2e` → 0 critical violations
-7. ⬜ **Security**: `npm audit fix` + CSP Header in `_headers` (GitHub Pages)
+5. ✅ **Security**: `npm audit` → 0 vulnerabilities ✅
+6. ⬜ **Bundle**: `npm run build && npx vite-bundle-visualizer` → 3D Chunk lazy laden
+7. ⬜ **A11y**: `npx playwright test tests-e2e/accessibility.spec.ts --project=trischach-e2e` → 0 critical violations
+8. ⬜ **CSP Header** in `_headers` (GitHub Pages)
 
 ---
 
-## 📝 Nächste Schritte (2026-06-20)
+## 📝 Nächste Schritte (2026-07-07)
 
 ```bash
 # 1. Bundle Analyse
@@ -286,8 +287,8 @@ npm run build && npx vite-bundle-visualizer dist/trischach
 # 2. A11y Audit
 npx playwright test tests-e2e/accessibility.spec.ts --project=trischach-e2e
 
-# 3. Security
-npm audit
+# 3. Security (CSP Header)
+# _headers file für GitHub Pages erstellen
 
 # 4. Coverage Report (Detail)
 npx vitest run --coverage 2>&1 | grep -E "File|All files"
