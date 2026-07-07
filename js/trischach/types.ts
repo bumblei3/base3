@@ -286,6 +286,11 @@ export interface AISnapshot {
   promotion?: PieceType;
   prevFactionIdx: number;
   prevZobristHash?: bigint;
+  /** Full state snapshot taken before the simulation, so undoMove can restore
+   *  the board exactly (including mass eliminations) without relying on
+   *  incremental reversal, which previously left pieces dead after chained
+   *  simulations in isCheckmate/isStalemate. */
+  fullSnapshot?: Snapshot;
 }
 
 export interface IGame {

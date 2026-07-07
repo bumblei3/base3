@@ -81,14 +81,18 @@ describe("simulateMove / undoMove", () => {
     expect(game.eliminatedFactions.has(FACTION.NATURE)).toBe(false);
   });
 
-  test("simulateMove: turn order advances and restores", () => {
+  test("simulateMove: does not change turn (side-effect free) and undoMove restores exact state", () => {
     const p = new Piece(PIECE_TYPE.KNIGHT, FACTION.FIRE, new Hex(0, 0));
     game.pieces = [p];
     game._rebuildOccupiedMap();
     expect(game.currentFaction).toBe(FACTION.FIRE);
 
     const undo = game.simulateMove(p, new Hex(1, 0));
-    expect(game.currentFaction).not.toBe(FACTION.FIRE);
+    // simulateMove must NOT advance the turn — it is a side-effect-free
+    // simulation used for AI lookahead and legality checks, and advancing the
+    // turn here previously corrupted the real game state.
+    expect(game.currentFaction).toBe(FACTION.FIRE);
+    expect(game.currentFactionIdx).toBe(0);
 
     game.undoMove(undo);
     expect(game.currentFaction).toBe(FACTION.FIRE);
