@@ -464,6 +464,13 @@ export class Game {
         // King elimination
         if (defender.type === PIECE_TYPE.KING) {
           undo.eliminatedFaction = defender.faction;
+          // Record which pieces of this faction were already dead so undo
+          // doesn't resurrect them.
+          undo.previouslyDeadFactionPieces = new Set(
+            this.pieces
+              .filter((p) => p.faction === defender.faction && !p.alive)
+              .map((p) => p.id),
+          );
           this.eliminatedFactions.add(defender.faction);
           for (const p of this.pieces) {
             if (p.faction === defender.faction) p.alive = false;
@@ -477,6 +484,11 @@ export class Game {
 
         if (piece.type === PIECE_TYPE.KING) {
           undo.eliminatedFaction = piece.faction;
+          undo.previouslyDeadFactionPieces = new Set(
+            this.pieces
+              .filter((p) => p.faction === piece.faction && !p.alive)
+              .map((p) => p.id),
+          );
           this.eliminatedFactions.add(piece.faction);
           for (const p of this.pieces) {
             if (p.faction === piece.faction) p.alive = false;
@@ -512,7 +524,12 @@ export class Game {
     if (undo.eliminatedFaction) {
       this.eliminatedFactions.delete(undo.eliminatedFaction);
       for (const p of this.pieces) {
-        if (p.faction === undo.eliminatedFaction) p.alive = true;
+        if (p.faction === undo.eliminatedFaction) {
+          // Only resurrect pieces that were alive before this move's
+          // elimination; pieces that were already dead stay dead.
+          const wasAlreadyDead = undo.previouslyDeadFactionPieces?.has(p.id);
+          if (!wasAlreadyDead) p.alive = true;
+        }
       }
     }
 

@@ -280,6 +280,9 @@ export interface AISnapshot {
   defenderWasKilled: boolean;
   attackerDied: boolean;
   eliminatedFaction?: Faction;
+  /** IDs of pieces of the eliminated faction that were already dead BEFORE
+   *  this move's elimination, so undoMove doesn't wrongly resurrect them. */
+  previouslyDeadFactionPieces?: Set<string>;
   promotion?: PieceType;
   prevFactionIdx: number;
   prevZobristHash?: bigint;

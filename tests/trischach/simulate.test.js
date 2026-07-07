@@ -120,4 +120,32 @@ describe("simulateMove / undoMove", () => {
     game.undoMove(undo);
     expect(game.capturedPieces[FACTION.FIRE].length).toBe(0);
   });
+
+  test("simulateMove: king elimination does not resurrect already-dead pieces on undo", () => {
+    const attacker = new Piece(PIECE_TYPE.QUEEN, FACTION.FIRE, new Hex(0, 1));
+    const enemyKing = new Piece(PIECE_TYPE.KING, FACTION.NATURE, new Hex(0, 0));
+    // A Nature pawn that was already captured in a previous move (dead before
+    // the king elimination).
+    const alreadyDeadPawn = new Piece(
+      PIECE_TYPE.PAWN,
+      FACTION.NATURE,
+      new Hex(1, 0),
+    );
+    alreadyDeadPawn.alive = false;
+    game.pieces = [attacker, enemyKing, alreadyDeadPawn];
+    game._rebuildOccupiedMap();
+
+    const undo = game.simulateMove(attacker, new Hex(0, 0));
+    // Both king and the (already dead) pawn are marked dead by elimination.
+    expect(enemyKing.alive).toBe(false);
+    expect(alreadyDeadPawn.alive).toBe(false);
+    expect(game.eliminatedFactions.has(FACTION.NATURE)).toBe(true);
+
+    game.undoMove(undo);
+    // King comes back, but the pawn that was dead BEFORE the elimination must
+    // stay dead (previously it was wrongly resurrected).
+    expect(enemyKing.alive).toBe(true);
+    expect(alreadyDeadPawn.alive).toBe(false);
+    expect(game.eliminatedFactions.has(FACTION.NATURE)).toBe(false);
+  });
 });
