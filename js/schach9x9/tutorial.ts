@@ -18,6 +18,7 @@ export class Tutorial {
   public closeBtn!: HTMLButtonElement;
   public currentStepEl!: HTMLElement;
   public totalStepsEl!: HTMLElement;
+  private boundHandleKeydown: ((_e: KeyboardEvent) => void) | null = null;
 
   constructor() {
     this.currentStep = 0;
@@ -427,7 +428,7 @@ export class Tutorial {
     this.closeBtn.addEventListener('click', () => this.close());
 
     // Keyboard navigation
-    document.addEventListener('keydown', e => {
+    this.boundHandleKeydown = (e: KeyboardEvent) => {
       if (!this.overlay.classList.contains('hidden')) {
         if (e.key === 'ArrowLeft') {
           this.prevStep();
@@ -437,7 +438,8 @@ export class Tutorial {
           this.close();
         }
       }
-    });
+    };
+    document.addEventListener('keydown', this.boundHandleKeydown);
 
     this.totalStepsEl.textContent = this.steps.length.toString();
   }
@@ -450,6 +452,10 @@ export class Tutorial {
 
   public close(): void {
     this.overlay.classList.add('hidden');
+    if (this.boundHandleKeydown) {
+      document.removeEventListener('keydown', this.boundHandleKeydown);
+      this.boundHandleKeydown = null;
+    }
   }
 
   public nextStep(): void {
