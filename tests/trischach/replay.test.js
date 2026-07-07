@@ -5,7 +5,7 @@ import { expect, test, describe, beforeEach, vi } from "vitest";
 import { Hex } from "@trischach/hex";
 import { FACTION, generateBoard } from "@trischach/board";
 import { PIECE_TYPE, Piece } from "@trischach/pieces";
-import { GAME_STATE } from "@trischach/game";
+import { GAME_STATE, Game } from "@trischach/game";
 
 // Import all exported functions from replay.js
 import {
@@ -909,6 +909,42 @@ describe("Replay: replayGame generator", () => {
     expect(first.value.index).toBe(-1);
     expect(first.value.move).toBeNull();
     expect(first.value.game).toBeDefined();
+  });
+
+  test("completes promotion even when move flag is missing", () => {
+    // Real game so we exercise the actual handleCellClick -> promotion flow.
+    // A Fire pawn at (0,1) can advance to r=0 (<=0) which triggers promotion.
+    const realGame = new Game();
+    realGame.init(generateBoard());
+    // Strip to a minimal position: one Fire pawn one step from promotion rank.
+    realGame.pieces = [
+      new Piece(PIECE_TYPE.PAWN, FACTION.FIRE, new Hex(0, 1)),
+      new Piece(PIECE_TYPE.KING, FACTION.FIRE, new Hex(0, 7)),
+      new Piece(PIECE_TYPE.KING, FACTION.WATER, new Hex(1, 0)),
+      new Piece(PIECE_TYPE.KING, FACTION.NATURE, new Hex(-1, 0)),
+    ];
+    realGame._rebuildOccupiedMap();
+    realGame.currentFaction = FACTION.FIRE;
+    realGame.currentFactionIdx = 0;
+    realGame.state = GAME_STATE.SELECT_PIECE;
+    realGame.eliminatedFactions = new Set();
+
+    // Move without promotion flag -> previously the replay stalled in PROMOTION state.
+    const moves = [
+      {
+        piece: { id: realGame.pieces[0].id, pos: new Hex(0, 1) },
+        target: new Hex(0, 0),
+        promotion: false, // flag omitted, as in some external TSPN files
+      },
+    ];
+
+    const generator = replayGame(realGame, moves);
+    generator.next(); // initial
+    const afterMove = generator.next();
+    expect(afterMove.done).toBe(false);
+    expect(afterMove.value.game.state).not.toBe(GAME_STATE.PROMOTION);
+    const done = generator.next();
+    expect(done.done).toBe(true);
   });
 
   test("yields state after each move", () => {

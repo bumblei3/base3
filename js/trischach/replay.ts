@@ -393,7 +393,10 @@ export function* replayGame(initialGame, moveHistory) {
       game.handleCellClick(move.piece.pos);
       const result = game.handleCellClick(move.target);
 
-      if (result.promotion && move.promotion) {
+      // Complete any pending promotion so the replay doesn't stall in
+      // PROMOTION state. Driven by the actual result, not the move flag,
+      // so replays from external TSPN files (which may omit the flag) still work.
+      if (result.promotion) {
         game.completePromotion(move.promotionType || 'queen');
       }
     }
@@ -429,7 +432,7 @@ export class ReplayController {
         game.handleCellClick(move.piece.pos);
         const result = game.handleCellClick(move.target);
 
-        if (result.promotion && move.promotion) {
+        if (result.promotion) {
           game.completePromotion(move.promotionType || 'queen');
         }
       }
