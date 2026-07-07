@@ -4,7 +4,7 @@
 import { expect, test, describe, beforeEach, vi } from "vitest";
 import { FACTION, generateBoard } from "@trischach/board";
 import { PIECE_TYPE, Piece } from "@trischach/pieces";
-import { GAME_STATE } from "@trischach/game";
+import { GAME_STATE, Game } from "@trischach/game";
 
 // Import all exported functions from opening-book.js
 import {
@@ -333,6 +333,16 @@ describe("Opening Book: buildOpeningBook", () => {
     const secondSize = OPENING_BOOK.size;
 
     expect(secondSize).toBe(firstSize);
+  });
+
+  test("builds book using the real Game class (worker-safe, no getAlivePieces crash)", () => {
+    // In the AI worker, `game` arrives as a deserialized plain object whose
+    // constructor is Object, so `new game.constructor()` lacked getAlivePieces/init
+    // and crashed the worker. calculateBestMove now passes the real Game class.
+    // This verifies buildOpeningBook works with the actual Game implementation.
+    OPENING_BOOK.clear();
+    expect(() => buildOpeningBook(Game)).not.toThrow();
+    expect(OPENING_BOOK.size).toBeGreaterThan(0);
   });
 });
 

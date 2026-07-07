@@ -12,6 +12,7 @@ import { getValidMoves, PIECE_STRENGTH } from './pieces.ts';
 import { getRPSResult, FACTION } from './board.ts';
 import { Hex } from './hex.ts';
 import { isKingdomCheck } from './game-check.ts';
+import { Game } from './game.ts';
 import {
   pickBookMove,
   buildOpeningBook,
@@ -2088,7 +2089,11 @@ export function calculateBestMove(
   faction: Faction,
 ): AIAction | null {
   if (!_bookBuilt) {
-    buildOpeningBook(game.constructor as new () => IGame);
+    // Use the real Game class directly instead of `game.constructor`:
+    // in the AI worker `game` arrives as a deserialized plain object whose
+    // constructor is Object, so `new game.constructor()` lacked getAlivePieces/init
+    // and crashed the worker (TypeError: e.getAlivePieces is not a function).
+    buildOpeningBook(Game);
     _bookBuilt = true;
   }
 
