@@ -40,8 +40,7 @@ import {
   PIECE_ANGEL, PIECE_NIGHTRIDER, COLOR_WHITE, COLOR_BLACK, TYPE_MASK, COLOR_MASK,
 } from './ai/BoardDefinitions';
 import { getCurrentBoardShape } from './config';
-// @ts-expect-error - Vite worker import (.ts extension)
-import AIWorkerMod from './ai/aiWorker.ts?worker';
+import { createAIWorker } from './ai/workerFactory.js';
 import type { Player, Square, Piece, PieceType } from './types/game';
 import { computeZobristHash, TranspositionTable } from './ai/transpositionTable';
 
@@ -155,7 +154,7 @@ function ensureTopMovesWorker(): Worker | null {
   if (typeof Worker === 'undefined' || typeof window === 'undefined') return null;
   if (_topMovesWorker) return _topMovesWorker;
 
-  const worker = new AIWorkerMod();
+  const worker = createAIWorker();
 
   worker.onmessage = (e: MessageEvent) => {
     const { id, type, data } = e.data || {};

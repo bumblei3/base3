@@ -253,7 +253,7 @@ jobs:
 | Phase | Aufwand | Risiko | Blocker | Status |
 |-------|---------|--------|---------|--------|
 | 1. Tests grün + Coverage + Lint | 2W | Niedrig | Keine | ✅ 2026-07-07 |
-| 2. E2E | 2W | Mittel | Playwright CI Zeit | ✅ 2026-07-07 (globalSetup/Teardown fix → beide Projekte laufen automatisch, 69 Schach9x9 + 15 Trischach Tests verfügbar) |
+| 2. E2E | 2W | Mittel | Playwright CI Zeit | 🔄 globalSetup/Teardown fix → beide Projekte collecten+laufen; Trischach 15/15 ✅; Schach9x9 ~47/69 grün, 22 known-failing (veraltete Tests, nicht App-Bugs — UI-Text/DOM seit Test-Erstellung geändert, z.B. 36 statt 18 Figuren auf 9x9) |
 | 3. Performance | 1W | Mittel | WASM/Worker Stabilität | ✅ 2026-07-07 |
 | 4. A11y | 1W | Niedrig | Design Token Audit | ✅ 2026-07-07 (Trischach Landing + Schach9x9 Main Menu/Board/Shop/Settings = 0 violations) |
 | 5. Security | 1W | Niedrig | CSP Testing | 🔄 CSP-Header (`_headers`) + CI-Copy-Step hinzugefügt; `npm audit` clean (0 vulns); CSP-Runtime-Test als `playwright.csp.config.mjs` (läuft in CI) |

@@ -10,6 +10,7 @@ export default defineConfig({
     {
       name: 'schach9x9-e2e',
       testDir: './e2e',
+      testMatch: '**/*.spec.ts',
       use: {
         ...devices['Desktop Chrome'],
         baseURL: 'http://localhost:3000',
@@ -30,6 +31,7 @@ export default defineConfig({
     {
       name: 'trischach-e2e',
       testDir: './tests-e2e',
+      testMatch: '**/*.spec.ts',
       use: {
         ...devices['Desktop Chrome'],
         baseURL: 'http://localhost:3001',

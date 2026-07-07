@@ -23,7 +23,7 @@ import { AI_PERSONALITIES } from './ai/personalities.js';
 import { AnalysisUI } from './ui/AnalysisUI.js';
 
 // @ts-expect-error - Vite worker import (.ts extension)
-import AIWorker from './ai/aiWorker.ts?worker';
+import { createAIWorker } from './ai/workerFactory.js';
 
 // Piece values for shop
 const PIECES: Record<string, ShopPieceConfig> = SHOP_PIECES;
@@ -461,7 +461,7 @@ export class AIController {
       });
 
     for (let i = 0; i < numWorkers; i++) {
-      const worker = new AIWorker();
+      const worker = createAIWorker();
       this.aiWorkers.push(worker);
 
       // Dedicated message handler per worker
