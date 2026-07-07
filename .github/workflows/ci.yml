@@ -234,6 +234,10 @@ jobs:
           cp -r _pages/landing/* _pages/
           rm -rf _pages/landing
 
+      - name: Copy security headers
+        run: |
+          cp _headers _pages/_headers
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:

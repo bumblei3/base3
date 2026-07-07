@@ -253,10 +253,10 @@ jobs:
 | Phase | Aufwand | Risiko | Blocker | Status |
 |-------|---------|--------|---------|--------|
 | 1. Tests grün + Coverage + Lint | 2W | Niedrig | Keine | ✅ 2026-07-07 |
-| 2. E2E | 2W | Mittel | Playwright CI Zeit | 🔄 15/15 Trischach ✅, Schach9x9 8 Tests erstellt (webServer Bug) |
+| 2. E2E | 2W | Mittel | Playwright CI Zeit | ✅ 2026-07-07 (globalSetup/Teardown fix → beide Projekte laufen automatisch, 69 Schach9x9 + 15 Trischach Tests verfügbar) |
 | 3. Performance | 1W | Mittel | WASM/Worker Stabilität | ✅ 2026-07-07 |
-| 4. A11y | 1W | Niedrig | Design Token Audit | ⬜ |
-| 5. Security | 1W | Niedrig | CSP Testing | ⬜ |
+| 4. A11y | 1W | Niedrig | Design Token Audit | ✅ 2026-07-07 (Trischach Landing + Schach9x9 Main Menu/Board/Shop/Settings = 0 violations) |
+| 5. Security | 1W | Niedrig | CSP Testing | 🔄 CSP-Header (`_headers`) + CI-Copy-Step hinzugefügt; `npm audit` clean (0 vulns); CSP-Runtime-Test als `playwright.csp.config.mjs` (läuft in CI) |
 | 6. Observability | 1W | Niedrig | Sentry Setup | ⬜ |
 | 7. DX/Docs | 1W | Niedrig | Storybook Config | ⬜ |
 | 8. Polish | Laufend | Niedrig | Zeit | ⬜ |
@@ -273,8 +273,8 @@ jobs:
 4. ✅ **TypeScript strict**: `tsc --noEmit` 0 Errors ✅
 5. ✅ **Security**: `npm audit` → 0 vulnerabilities ✅
 6. ✅ **Bundle**: Initial Bundle < 200KB gzip (Trischach ~90KB, Schach9x9 < 200KB ohne lazy 3D-Chunk). battleChess3D (148KB gzip) bereits lazy via dynamischem Import. `inlineDynamicImports`-Deprecation in vite.config.trischach.ts entfernt. ui.ts-Barrel-Split bewusst NICHT gemacht — ROI zu schlecht (~15KB gzip) bei ~1843 Test-Risiko, da ~70% der ui.ts-Exports startup-kritisch sind.
-7. ⬜ **A11y**: `npx playwright test tests-e2e/accessibility.spec.ts --project=trischach-e2e` → 0 critical violations
-8. ⬜ **CSP Header** in `_headers` (GitHub Pages)
+7. ✅ **A11y**: `npx playwright test tests-e2e/accessibility.spec.ts --project=trischach-e2e` + Schach9x9 `e2e/accessibility.spec.ts` (4 Tests) → 0 critical/serious violations
+8. 🔄 **CSP Header** in `_headers` (GitHub Pages) + CI-Copy-Step; `npm audit` clean (0 vulns); CSP-Runtime-Test `playwright.csp.config.mjs`
 
 ---
 

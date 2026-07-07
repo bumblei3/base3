@@ -1,0 +1,12 @@
+# Security headers for GitHub Pages (served for all routes)
+# Three.js is loaded as an ES module from jsdelivr via an import map,
+# so the CDN host must be allowed in script-src. WASM + Web Workers are
+# used for the AI engine, hence wasm-unsafe-eval + worker-src.
+
+# Apply to everything
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://cdn.jsdelivr.net; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), camera=(), microphone=(), payment=()
