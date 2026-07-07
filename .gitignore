@@ -63,3 +63,11 @@ icon-*.png
 manifest.json
 *storybook.log
 storybook-static
+
+# NOTE: PWA source assets in public/ must be tracked (they are NOT build output).
+# These negations MUST come AFTER the generic ignores above to take effect.
+!public/service-worker.js
+!public/sw.js
+!public/manifest.json
+!public/icon-192.png
+!public/icon-512.png

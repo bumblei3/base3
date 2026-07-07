@@ -43,16 +43,21 @@ if (document.readyState === 'loading') {
   init();
 }
 
-// Register Service Worker for PWA (DISABLED in E2E to avoid interference)
-// if ('serviceWorker' in navigator && !window.location.search.includes('disable-sw')) {
-//   window.addEventListener('load', () => {
-//     navigator.serviceWorker
-//       .register('service-worker.js')
-//       .then(registration => {
-//         console.log('SW registered: ', registration);
-//       })
-//       .catch(err => {
-//         console.log('SW registration failed: ', err);
-//       });
-//   });
-// }
+// Register Service Worker for PWA (skip in E2E via ?disable-sw)
+if ('serviceWorker' in navigator && !window.location.search.includes('disable-sw')) {
+  const registerSW = () => {
+    navigator.serviceWorker
+      .register('./service-worker.js')
+      .then((registration) => {
+        console.log('[PWA] Service Worker registered:', registration.scope);
+      })
+      .catch((err) => {
+        console.warn('[PWA] Service Worker registration failed:', err);
+      });
+  };
+  if (document.readyState === 'complete') {
+    registerSW();
+  } else {
+    window.addEventListener('load', registerSW);
+  }
+}
