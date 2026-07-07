@@ -370,9 +370,13 @@ export class CampaignUI {
 
       const talentsBtn = card.querySelector('.talents-btn');
       talentsBtn?.addEventListener('click', () => {
-        import('./TalentTreeUI.js').then(module => {
-          module.talentTreeUI.show(type);
-        });
+        import('./TalentTreeUI.js')
+          .then(module => {
+            module.talentTreeUI.show(type);
+          })
+          .catch(err => {
+            console.warn('[CampaignUI] Failed to load TalentTreeUI:', err);
+          });
       });
 
       grid.appendChild(card);

@@ -731,6 +731,9 @@ function handleContextMenuAction(
         .writeText(window.replayController?.exportTSPN() || '')
         .then(() => {
           console.log('TSPN copied to clipboard');
+        })
+        .catch(err => {
+          console.warn('[main] Clipboard write failed:', err);
         });
       break;
     }

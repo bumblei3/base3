@@ -11,6 +11,7 @@ import type { PieceWithMoved, MoveHistoryEntry } from '../gameEngine.js';
 import type { MoveController } from '../moveController.js';
 import { notificationUI } from '../ui/NotificationUI.js';
 import { campaignManager } from '../campaign/CampaignManager.js';
+import { logger } from '../logger.js';
 
 /**
  * Executes a move on the board
@@ -443,10 +444,16 @@ export function finishMove(game: Game, lastTo?: Square): void {
       // defenderData may be a partial Piece (e.g. capturedPawn only has color)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const defenderData = (targetPiece || lastMove.specialMove?.capturedPawn || null) as any;
-      window.battleChess3D.playBattleSequence(attackerData, defenderData, from, to).then(() => {
-        window.battleChess3D!.removePiece(to.r, to.c);
-        window.battleChess3D!.animateMove(from.r, from.c, to.r, to.c);
-      });
+      window.battleChess3D.playBattleSequence(attackerData, defenderData, from, to)
+        .then(() => {
+          if (window.battleChess3D && window.battleChess3D.enabled) {
+            window.battleChess3D.removePiece(to.r, to.c);
+            window.battleChess3D.animateMove(from.r, from.c, to.r, to.c);
+          }
+        })
+        .catch((err) => {
+          logger.warn('[MoveExecutor] 3D battle sequence failed:', err);
+        });
     } else {
       window.battleChess3D.animateMove(from.r, from.c, to.r, to.c);
     }

@@ -172,6 +172,10 @@ export class KeyboardManager {
     );
 
     renderBoard(g);
-    import('../ui.js').then(UI => UI.updateStatus(g));
+    import('../ui.js')
+      .then(UI => UI.updateStatus(g))
+      .catch(err => {
+        console.warn('[KeyboardManager] Failed to update status UI:', err);
+      });
   }
 }
