@@ -5,11 +5,13 @@
 
 import { Game, GAME_STATE } from './game.ts';
 import { Hex } from './hex.ts';
-import type { Piece, Faction, PieceType, Cell } from './types.ts';
+import { Piece } from './pieces.ts';
+import type { Faction, PieceType, Cell } from './types.ts';
 import { calculateBestMove, setAIDepth, setAIPersonality } from './ai.ts';
 import { OPENING_BOOK } from './opening-book.ts';
 import { isCheckmateInternal, isKingdomCheck } from './game-check.ts';
 import { indexedDBInstance } from '@shared/storage';
+import { generateBoard } from './board.ts';
 
 // ─── Types ────────────────────────────────────────────────────────────────
 
@@ -155,8 +157,6 @@ function reconstructGameFromHash(hash: string): Game | null {
  * Generate a simple board for puzzle reconstruction (no SVG needed).
  */
 function generateBoardForPuzzle(): Map<string, Cell> {
-  // Import here to avoid circular deps
-  const { generateBoard } = require('./board.ts');
   return generateBoard();
 }
 
@@ -180,7 +180,9 @@ async function findMatePuzzle(game: Game): Promise<Puzzle | null> {
 
     const moves = await searchForcedMate(game, depth, faction);
     if (moves && moves.length > 0) {
-      const mateIn = Math.ceil(moves.length / 3); // 3 factions per full ply
+      // solutionMoves contains only the mating faction's moves, so its
+      // length is the exact number of moves to deliver mate.
+      const mateIn = moves.length;
       return buildPuzzle(game, moves, mateIn, faction);
     }
   }
@@ -191,7 +193,7 @@ async function findMatePuzzle(game: Game): Promise<Puzzle | null> {
 /**
  * Find immediate mate in 1 move.
  */
-function findImmediateMate(game: Game): PuzzleMove | null {
+export function findImmediateMate(game: Game): PuzzleMove | null {
   const pieces = game
     .getAlivePieces()
     .filter((p) => p.faction === game.currentFaction);
@@ -204,27 +206,43 @@ function findImmediateMate(game: Game): PuzzleMove | null {
       if (!testPiece) continue;
 
       const result = testGame.handleCellClick(testPiece.pos);
-      if (result && (result.action === 'move' || result.action === 'combat')) {
-        // Check if opponent is mated
-        const nextFaction = getNextFaction(testGame, testGame.currentFaction);
-        if (nextFaction && isCheckmateInternal(testGame, nextFaction)) {
-          return {
-            pieceId: piece.id,
-            pieceType: piece.type,
-            faction: piece.faction,
-            from: { q: piece.pos.q, r: piece.pos.r },
-            to: { q: target.q, r: target.r },
-            isCapture: !!testGame.getPieceAt(target),
-            isCheck: true,
-            isMate: true,
-            san: formatSAN(
-              piece,
-              target,
-              !!testGame.getPieceAt(target),
-              true,
-              true,
-            ),
-          };
+      if (result && result.action === 'select') {
+        // First click selected the piece; now execute the move/attack by
+        // clicking the target square.
+        const moveResult = testGame.handleCellClick(target);
+        if (moveResult && (moveResult.action === 'move' || moveResult.action === 'combat')) {
+          // Check if any enemy faction is mated. In TriSchach a "mate" is a
+          // captured king (= faction eliminated), but we also keep the classic
+          // checkmate check for safety. The faction that got mated is not
+          // necessarily the next one in turn order (it may have been skipped
+          // because it was just eliminated), so test every enemy faction.
+          const enemyFactions = (['fire', 'water', 'nature'] as Faction[]).filter(
+            (f) => f !== game.currentFaction,
+          );
+          const matedFaction = enemyFactions.find(
+            (f) =>
+              testGame.eliminatedFactions.has(f) ||
+              isCheckmateInternal(testGame, f),
+          );
+          if (matedFaction) {
+            return {
+              pieceId: piece.id,
+              pieceType: piece.type,
+              faction: piece.faction,
+              from: { q: piece.pos.q, r: piece.pos.r },
+              to: { q: target.q, r: target.r },
+              isCapture: !!testGame.getPieceAt(target),
+              isCheck: true,
+              isMate: true,
+              san: formatSAN(
+                piece,
+                target,
+                !!testGame.getPieceAt(target),
+                true,
+                true,
+              ),
+            };
+          }
         }
       }
     }
@@ -571,18 +589,18 @@ function cloneGameForTest(game: Game): Game {
   const cells = generateBoardForPuzzle();
   newGame.init(cells);
 
-  // Copy pieces
-  for (const piece of game.pieces) {
-    const newPiece = newGame.pieces.find((p) => p.id === piece.id);
-    if (newPiece) {
-      newPiece.pos = new Hex(piece.pos.q, piece.pos.r);
-      newPiece.alive = piece.alive;
-      newPiece.hasMoved = piece.hasMoved;
-      newPiece.type = piece.type;
-      newPiece.faction = piece.faction;
-      newPiece.symbol = piece.symbol;
-    }
-  }
+  // Copy pieces. Replace the standard initial pieces entirely with copies of
+  // the source game's pieces, because the source may have a custom piece set
+  // (e.g. reconstructed from an opening-book hash) whose IDs won't match the
+  // standard initial set.
+  newGame.pieces = game.pieces.map((p) => {
+    const np = new Piece(p.type, p.faction, new Hex(p.pos.q, p.pos.r));
+    np.id = p.id;
+    np.alive = p.alive;
+    np.hasMoved = p.hasMoved;
+    np.symbol = p.symbol;
+    return np;
+  });
 
   newGame.currentFactionIdx = game.currentFactionIdx;
   newGame.currentFaction = game.currentFaction;
