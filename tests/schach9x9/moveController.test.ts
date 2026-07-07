@@ -1065,6 +1065,7 @@ describe('MoveController', () => {
 
       // Real prior move so it lands in moveHistory and survives undo/redo.
       // Black double pawn push from 1,3 to 3,3 (enables en passant).
+      game.isAI = false; // deterministic: no async aiMove setTimeout on black's turn
       game.board[1][3] = { type: 'p', color: 'black', hasMoved: false } as any;
       game.board[0][4] = { type: 'k', color: 'black', hasMoved: false } as any;
       game.board[8][4] = { type: 'k', color: 'white', hasMoved: false } as any;
