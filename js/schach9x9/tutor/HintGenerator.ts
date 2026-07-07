@@ -66,14 +66,17 @@ export async function getTutorHints(game: Game, _tutorController: unknown): Prom
     if (game.isAI && game.turn === 'black') {
       return []; // Don't give hints for AI
     }
-    // Calculate dynamic depth: AI depth + 2, but always at least 6 for strong hints
+    // Calculate dynamic depth: AI depth + 3, but always at least 7 for strong hints.
+    // The tutor must play stronger than the opponent AI, which searches at
+    // AI_DEPTH_CONFIG[difficulty] (2-6). Running +3 deeper guarantees the tutor
+    // finds tactics the opponent misses.
     const aiDepth =
       (AI_DEPTH_CONFIG[game.difficulty as keyof typeof AI_DEPTH_CONFIG] as number) || 4;
     // In test environment, use very shallow depth for speed
-    const minTutorDepth = isTestEnv ? 2 : 6;
-    const tutorDepth = Math.max(minTutorDepth, aiDepth + 2);
-    // Short timeout in test env
-    const maxTimeMs = isTestEnv ? 1000 : 5000;
+    const minTutorDepth = isTestEnv ? 2 : 7;
+    const tutorDepth = Math.max(minTutorDepth, aiDepth + 3);
+    // Short timeout in test env; generous in prod so the worker can reach full depth
+    const maxTimeMs = isTestEnv ? 1000 : 8000;
     const moveNumber = Math.floor(game.moveHistory.length / 2);
 
     const topMoves: SearchResult[] = await aiEngine.getTopMoves(

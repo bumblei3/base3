@@ -40,6 +40,8 @@ import {
   PIECE_ANGEL, PIECE_NIGHTRIDER, COLOR_WHITE, COLOR_BLACK, TYPE_MASK, COLOR_MASK,
 } from './ai/BoardDefinitions';
 import { getCurrentBoardShape } from './config';
+// @ts-expect-error - Vite worker import (.ts extension)
+import AIWorkerMod from './ai/aiWorker.ts?worker';
 import type { Player, Square, Piece, PieceType } from './types/game';
 import { computeZobristHash, TranspositionTable } from './ai/transpositionTable';
 
@@ -143,7 +145,37 @@ type PendingResolve = (_data: SearchResult | SearchResult[] | null) => void;
 
 const workerPendingRequests = new Map<string, { resolve: PendingResolve; timer: number }>();
 
-// Worker initialization removed - not currently used
+// Persistent worker for getTopMoves (tutor hints). Created lazily so it is
+// only spun up when actually needed (e.g. the tutor is used), and reuses the
+// same aiWorker module the opponent AI uses — keeping the tutor on a real
+// worker instead of blocking the main thread with the JS fallback.
+let _topMovesWorker: Worker | null = null;
+
+function ensureTopMovesWorker(): Worker | null {
+  if (typeof Worker === 'undefined' || typeof window === 'undefined') return null;
+  if (_topMovesWorker) return _topMovesWorker;
+
+  const worker = new AIWorkerMod();
+
+  worker.onmessage = (e: MessageEvent) => {
+    const { id, type, data } = e.data || {};
+    if (type === 'topMoves' && id && workerPendingRequests.has(id)) {
+      const req = workerPendingRequests.get(id)!;
+      clearTimeout(req.timer);
+      workerPendingRequests.delete(id);
+      req.resolve(data as SearchResult[]);
+    }
+  };
+
+  _topMovesWorker = worker;
+  _topMovesWorkerReady = true;
+
+  // Propagate current board shape if known
+  const shape = getCurrentBoardShape();
+  if (shape) worker.postMessage({ type: 'setBoardShape', data: { shape } });
+
+  return worker;
+}
 
 function runWorkerSearch(
   board: IntBoard, turnColor: Player, maxDepth: number, personality: string, elo: number
@@ -157,13 +189,30 @@ function runWorkerSearch(
 }
 
 function runWorkerTopMoves(
-  board: IntBoard, _turnColor: Player, _count: number, _searchDepth: number, _maxTimeMs: number
+  board: IntBoard, turnColor: Player, count: number, searchDepth: number, maxTimeMs: number
 ): Promise<SearchResult[]> {
-  // Worker not initialized in aiEngine - delegate to JS/WASM fallback
-  // This function is kept for API compatibility but the actual work
-  // is done by the JS fallback in getTopMoves() below
-  void board;
-  return Promise.resolve([]);
+  // Use a real worker (same module as the opponent AI) so the tutor searches
+  // off the main thread at full depth. Falls back to the JS/WASM path in
+  // getTopMoves() if workers are unavailable (e.g. SSR / test env).
+  const worker = ensureTopMovesWorker();
+  if (!worker) return Promise.resolve([]);
+
+  return new Promise<SearchResult[]>(resolve => {
+    const id = Math.random().toString(36).slice(2);
+    const timer = window.setTimeout(() => {
+      workerPendingRequests.delete(id);
+      resolve([]);
+    }, Math.max(maxTimeMs + 2000, 8000));
+
+    workerPendingRequests.set(id, { resolve: resolve as PendingResolve, timer });
+
+    const color = turnColor === 'white' ? COLOR_WHITE : COLOR_BLACK;
+    worker.postMessage({
+      type: 'getTopMoves',
+      id,
+      data: { board, color, count, depth: searchDepth, maxTimeMs, moveNumber: undefined },
+    });
+  });
 }
 
 function convertMoveToResult(move: { from: number; to: number; promotion?: number } | null): MoveResult | null {

@@ -132,6 +132,34 @@ describe('HintGenerator - Unit Tests', () => {
     expect(await getTutorHints(game, mockTutorController)).toEqual([]);
   });
 
+  test('getTutorHints searches deeper than the opponent AI (tutor is smarter)', async () => {
+    game.phase = PHASES.PLAY;
+    game.isAI = false;
+    game.turn = 'white';
+    game.difficulty = 'medium'; // AI depth 4
+    let capturedDepth = -1;
+    let capturedTimeMs = -1;
+    (aiEngine.getTopMoves as any).mockImplementation(
+      (_board: any, _color: string, _count: number, depth: number, maxTimeMs: number) => {
+        capturedDepth = depth;
+        capturedTimeMs = maxTimeMs;
+        return Promise.resolve([{ move: { from: { r: 7, c: 4 }, to: { r: 5, c: 4 } }, score: 50 }]);
+      },
+    );
+    game.board[7][4] = { type: 'p', color: 'white' };
+
+    const hints = await getTutorHints(game, mockTutorController);
+    // medium => aiDepth 4 => tutorDepth must be >= 4 + 3 = 7 (and >= min 7).
+    // This guarantees the tutor searches at least 3 plies deeper than the
+    // opponent AI (which uses AI_DEPTH_CONFIG[difficulty] = 4 here).
+    expect(capturedDepth).toBeGreaterThanOrEqual(7);
+    expect(capturedDepth).toBeGreaterThanOrEqual(4 + 3);
+    // Timeout is set (1000ms in test env, 8000ms in prod) so the worker can
+    // reach the configured depth instead of being cut short.
+    expect(capturedTimeMs).toBeGreaterThan(0);
+    expect(hints.length).toBeGreaterThan(0);
+  });
+
   test('getTutorHints should return empty for AI turn', async () => {
     game.turn = 'black';
     game.isAI = true;
