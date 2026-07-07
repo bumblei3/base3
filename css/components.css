@@ -363,6 +363,46 @@ input:checked + .toggle-slider:before {
   text-align: center;
 }
 
+/* --- Puzzle Overlay (HUD panel; must NOT cover the board so cells stay clickable) --- */
+.puzzle-overlay {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  width: auto;
+  max-width: 320px;
+  z-index: var(--elevation-z-modal);
+  background: var(--color-bg-secondary);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--rounded-xl);
+  padding: var(--spacing-lg);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  pointer-events: auto;
+}
+.puzzle-overlay.hidden {
+  display: none;
+}
+.puzzle-content h2 {
+  margin: 0 0 var(--spacing-sm);
+  font-size: 1.25rem;
+}
+.puzzle-content .puzzle-status {
+  margin: var(--spacing-sm) 0;
+  font-weight: 600;
+}
+.puzzle-content .puzzle-status.success {
+  color: var(--color-success, #31c48d);
+}
+.puzzle-content .puzzle-status.error {
+  color: var(--color-danger, #f87171);
+}
+.puzzle-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+}
+
 /* --- Game Over Overlay --- */
 .game-over-content {
   background: var(--color-bg-secondary);

@@ -210,7 +210,11 @@ export class GameController {
     }
 
     // Fallback or Global Interactions (like Play Phase default if strategy didn't handle it detailedly)
-    if (this.game.phase === PHASES.PLAY || this.game.phase === PHASES.ANALYSIS) {
+    if (
+      this.game.phase === PHASES.PLAY ||
+      this.game.phase === PHASES.ANALYSIS ||
+      this.game.puzzleMode
+    ) {
       if (this.game.handlePlayClick) {
         await this.game.handlePlayClick(r, c);
       }

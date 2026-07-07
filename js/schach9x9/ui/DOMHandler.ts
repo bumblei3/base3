@@ -362,6 +362,24 @@ export class DOMHandler {
       });
     }
 
+    // Undo / Redo Buttons
+    const undoBtn = document.getElementById('undo-btn');
+    if (undoBtn) {
+      undoBtn.addEventListener('click', () => {
+        const gc = this.gameController as any;
+        const mc = gc?.game?.moveController || gc?.moveController || (window as any).game?.moveController;
+        if (mc?.undoMove) mc.undoMove();
+      });
+    }
+    const redoBtn = document.getElementById('redo-btn');
+    if (redoBtn) {
+      redoBtn.addEventListener('click', () => {
+        const gc = this.gameController as any;
+        const mc = gc?.game?.moveController || gc?.moveController || (window as any).game?.moveController;
+        if (mc?.redoMove) mc.redoMove();
+      });
+    }
+
     // Game Over Overlay Buttons
     const restartBtnOverlay = document.getElementById('restart-btn-overlay');
     if (restartBtnOverlay) {

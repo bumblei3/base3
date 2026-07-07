@@ -53,25 +53,33 @@ test.describe('Schach9x9 - Critical User Flows', () => {
 
   test('Undo button works', async ({ page }) => {
     await helper.startGame('classic');
+    // Disable AI so the undo assertion is deterministic (no AI-response race)
+    await page.evaluate(() => { if ((window as any).game) (window as any).game.isAI = false; });
 
     // Wait for game instance to be ready
     await page.waitForFunction(() => !!(window as any).game && typeof (window as any).game.handlePlayClick === 'function', { timeout: 10000 });
 
-    // Make a move synchronously via the game API (avoids AI-response race)
+    // Make a move via the game API (white rook 7,0 -> 5,0)
     await page.evaluate(async () => {
       const g = (window as any).game;
       await g.handlePlayClick(7, 0);
       await g.handlePlayClick(5, 0);
     });
-    await page.waitForFunction(() => !!(window as any).game && (window as any).game.moveHistory && (window as any).game.moveHistory.length > 0, { timeout: 5000 });
+    await page.waitForFunction(
+      () => !!(window as any).game && (window as any).game.moveHistory && (window as any).game.moveHistory.length > 0,
+      { timeout: 5000 }
+    );
 
-    // Undo via game API (the #undo-btn is disabled in headless due to a
-    // re-enable race after the move; undoMove logic itself is correct)
-    await page.evaluate(() => {
-      const g = (window as any).game;
-      if (g.moveController?.undoMove) g.moveController.undoMove();
-    });
-    await page.waitForTimeout(300);
+    // The #undo-btn is now enabled after the move (bug fixed)
+    const undoBtn = page.locator('#undo-btn');
+    await expect(undoBtn).toBeEnabled();
+
+    // Click the real Undo button
+    await undoBtn.click();
+    await page.waitForFunction(
+      () => !!(window as any).game && (window as any).game.moveHistory && (window as any).game.moveHistory.length === 0,
+      { timeout: 5000 }
+    );
 
     // Verify piece is back
     await expect(page.locator('.cell[data-r="7"][data-c="0"] .piece-svg')).toBeVisible();

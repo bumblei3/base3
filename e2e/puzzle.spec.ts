@@ -69,12 +69,9 @@ test.describe('Puzzle Mode @puzzle', () => {
     await expect(fromCell).toHaveAttribute('data-piece', 'r');
     await expect(fromCell).toHaveAttribute('data-color', 'white');
 
-    // NOTE: puzzle-mode UI cell clicks do not trigger handlePlayClick in headless
-    // (app bug tracked separately); drive the move via the game API directly.
-    await page.evaluate(async () => {
-      await (window as any).game.handlePlayClick(1, 7);
-      await (window as any).game.handlePlayClick(0, 7);
-    });
+    // Puzzle-mode UI cell clicks now trigger handlePlayClick (bug fixed)
+    await fromCell.click();
+    await toCell.click();
 
     // Verify Success (German localization)
     const statusEl = page.locator('#puzzle-status');
@@ -96,11 +93,9 @@ test.describe('Puzzle Mode @puzzle', () => {
     const wrongTarget = page.locator('.cell[data-r="1"][data-c="6"]');
 
     await expect(fromCell).toBeVisible();
-    // NOTE: drive via game API (see 'should solve puzzle 1' for rationale)
-    await page.evaluate(async () => {
-      await (window as any).game.handlePlayClick(1, 7);
-      await (window as any).game.handlePlayClick(1, 6);
-    });
+    // Puzzle-mode UI cell clicks now trigger handlePlayClick (bug fixed)
+    await fromCell.click();
+    await wrongTarget.click();
 
     // Verify Failure Feedback
     const statusEl = page.locator('#puzzle-status');
