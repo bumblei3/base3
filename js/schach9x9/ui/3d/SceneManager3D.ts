@@ -18,6 +18,7 @@ export class SceneManager3D {
   public squareSize: number;
   public currentTheme: string;
   public boundAnimate: () => void;
+  public boundOnWindowResize: () => void;
   public enabled: boolean;
 
   constructor(containerElement: HTMLElement) {
@@ -134,7 +135,8 @@ export class SceneManager3D {
        this.createBoard();
 
        // Handle window resize
-       window.addEventListener('resize', this.onWindowResize.bind(this));
+       this.boundOnWindowResize = this.onWindowResize.bind(this);
+       window.addEventListener('resize', this.boundOnWindowResize);
 
        // Start loop
        this.enabled = true;
@@ -333,7 +335,7 @@ export class SceneManager3D {
 
   dispose(): void {
     this.enabled = false;
-    window.removeEventListener('resize', this.onWindowResize.bind(this));
+    window.removeEventListener('resize', this.boundOnWindowResize);
     this.controls?.dispose();
     this.renderer?.dispose();
 
