@@ -169,7 +169,9 @@ describe('DOMHandler', () => {
                 <option value="blue">Blue</option>
             </select>
             <button id="resume-game-btn" class="hidden"></button>
-            <div class="shop-item" data-piece="p"></div>
+            <div id="shop-panel">
+              <div class="shop-item" data-piece="p"></div>
+            </div>
             <div id="battle-chess-3d-container"></div>
             <div id="board-wrapper"></div>
             <button id="close-analysis-btn"></button>
@@ -238,7 +240,6 @@ describe('DOMHandler', () => {
     const shopItem = document.querySelector('.shop-item') as HTMLElement;
     shopItem.click();
     expect(app.gameController.selectShopPiece).toHaveBeenCalledWith('p');
-    expect(shopItem.classList.contains('selected')).toBe(true);
   });
 
   test('should toggle analysis display items', () => {

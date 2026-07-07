@@ -29,13 +29,9 @@ export function renderShopItems(): void {
     container = document.createElement('div');
     container.id = 'shop-buttons';
     container.className = 'shop-buttons';
-    // Insert before the tutor recommendations section if present
-    const tutorSection = document.getElementById('tutor-recommendations-section');
-    if (tutorSection) {
-      panel.insertBefore(container, tutorSection);
-    } else {
-      panel.appendChild(container);
-    }
+    // Append to the panel (the tutor-recommendations section, if any, may
+    // live elsewhere in the DOM, so we avoid insertBefore across subtrees)
+    panel.appendChild(container);
   }
 
   // Ensure the selected-piece status display exists (used by ShopManager.updateShopUI)
