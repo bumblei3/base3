@@ -34,10 +34,10 @@ function freshGame(): any {
   const rows = g.board.length;
   const cols = g.board[0].length;
   g.board = Array.from({ length: rows }, () => Array(cols).fill(null));
-  g.board[1][4] = { type: 'pawn', color: 'white', hasMoved: false };
-  g.board[2][3] = { type: 'pawn', color: 'black', hasMoved: false }; // capturable
-  g.board[0][4] = { type: 'king', color: 'white', hasMoved: true };
-  g.board[rows - 1][4] = { type: 'king', color: 'black', hasMoved: true };
+  g.board[1][4] = { type: 'p', color: 'white', hasMoved: false };
+  g.board[2][3] = { type: 'p', color: 'black', hasMoved: false }; // capturable
+  g.board[0][4] = { type: 'k', color: 'white', hasMoved: true };
+  g.board[rows - 1][4] = { type: 'k', color: 'black', hasMoved: true };
   g.turn = 'white';
   // Prime moveHistory so the 3D-update branch (game.moveHistory.length > 0) is taken,
   // and include a `captured` entry so the battle-sequence branch is exercised.
@@ -103,6 +103,21 @@ describe('MoveExecutor 3D-board error handling', () => {
 
     expect(unhandled).toHaveLength(0);
     expect(removePiece).not.toHaveBeenCalled();
+    expect(animateMove).not.toHaveBeenCalled();
+  });
+
+  it('does not call 3D animateMove when board disabled (non-capture move branch)', async () => {
+    const animateMove = vi.fn();
+    (window as any).battleChess3D = { enabled: false, animateMove };
+
+    const game = freshGame();
+    const mc = new MoveController(game);
+
+    // Non-capturing move (no enemy on target) -> else branch (animateMove)
+    await executeMove(game, mc, { r: 1, c: 4 }, { r: 2, c: 4 });
+    await new Promise((r) => setTimeout(r, 0));
+
+    expect(unhandled).toHaveLength(0);
     expect(animateMove).not.toHaveBeenCalled();
   });
 });

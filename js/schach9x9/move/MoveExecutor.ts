@@ -455,7 +455,9 @@ export function finishMove(game: Game, lastTo?: Square): void {
           logger.warn('[MoveExecutor] 3D battle sequence failed:', err);
         });
     } else {
-      window.battleChess3D.animateMove(from.r, from.c, to.r, to.c);
+      if (window.battleChess3D && window.battleChess3D.enabled) {
+        window.battleChess3D.animateMove(from.r, from.c, to.r, to.c);
+      }
     }
   }
 
