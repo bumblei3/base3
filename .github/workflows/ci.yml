@@ -223,6 +223,8 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - name: Checkout repo (for _headers)
+        uses: actions/checkout@v5
       - name: Download dist artifact
         uses: actions/download-artifact@v4
         with:
