@@ -413,6 +413,9 @@ export function finishMove(game: Game, lastTo?: Square): void {
     } else {
       game.blackTime += game.timeControl.increment;
     }
+    // Reset the clock timestamp so the new player's time starts counting
+    // from the moment the move was made, not from the last timer tick.
+    game.lastMoveTime = Date.now();
     UI.updateClockDisplay(game);
     UI.updateClockUI(game);
   }

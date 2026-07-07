@@ -327,6 +327,28 @@ describe('MoveExecutor Integration Tests', () => {
     vi.useRealTimers();
   });
 
+  test('Clock: resets lastMoveTime after move when clock is enabled', async () => {
+    // Setup clock-enabled game
+    game.clockEnabled = true;
+    game.timeControl = { base: 300, increment: 3 };
+    game.whiteTime = 300;
+    game.blackTime = 300;
+    game.turn = 'white';
+    game.lastMoveTime = Date.now() - 5000; // 5 seconds stale
+
+    game.board[6][4] = { type: 'p', color: 'white', hasMoved: false };
+
+    const before = game.lastMoveTime;
+    await MoveExecutor.executeMove(game, moveController, { r: 6, c: 4 }, { r: 5, c: 4 });
+
+    // After the move, lastMoveTime should be reset to ~now (not the stale value)
+    expect(game.lastMoveTime).toBeGreaterThan(before);
+    // Increment should have been added to the previous player (white)
+    expect(game.whiteTime).toBe(303);
+    // Turn should have switched to black
+    expect(game.turn).toBe('black');
+  });
+
   test('Auto-save: Triggers saveGame after a move', async () => {
     // game.settings might not exist on Game class based on view_file.
     // MoveExecutor checks: if (game.moveHistory.length % 5 === 0)
