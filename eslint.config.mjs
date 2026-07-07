@@ -34,6 +34,8 @@ export default tseslint.config({
     'tests/mocks/**',
     'docs/**',
     'vitest.shims.d.ts',
+    '.storybook/**',
+    'stories/**',
   ],
 }, ...tseslint.configs.recommended, {
   files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
