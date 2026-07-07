@@ -402,8 +402,13 @@ export class Game {
           if (this.onGameOver) this.onGameOver(aliveAfter[0] ?? null);
           return result;
         }
-        // Continue to next faction after elimination
-        this._nextTurn();
+        // Continue to next faction after elimination ONLY if the eliminated
+        // faction was the one whose turn it currently is. Otherwise the faction
+        // that just received the turn (via the _nextTurn call above) keeps it —
+        // the eliminated faction is a *different* one and must not steal the turn.
+        if (checkedFaction === this.currentFaction) {
+          this._nextTurn();
+        }
       }
     }
 
