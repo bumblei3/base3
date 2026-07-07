@@ -4,6 +4,8 @@ import { existsSync } from 'node:fs';
 const hasSystemChromium = existsSync('/usr/bin/chromium-browser');
 
 export default defineConfig({
+  globalSetup: './tests-e2e/globalSetup.ts',
+  globalTeardown: './tests-e2e/globalTeardown.ts',
   projects: [
     {
       name: 'schach9x9-e2e',
@@ -24,12 +26,6 @@ export default defineConfig({
       fullyParallel: true,
       retries: process.env.CI ? 2 : 0,
       workers: process.env.CI ? 1 : undefined,
-      webServer: {
-        command: 'node node_modules/http-server/bin/http-server dist/schach9x9 -p 3000 -s -c-1',
-        url: 'http://localhost:3000',
-        reuseExistingServer: false,
-        timeout: 180000,
-      },
     },
     {
       name: 'trischach-e2e',
@@ -52,12 +48,6 @@ export default defineConfig({
       fullyParallel: true,
       retries: process.env.CI ? 2 : 0,
       workers: process.env.CI ? 1 : undefined,
-      webServer: {
-        command: 'node node_modules/http-server/bin/http-server dist/trischach -p 3001 -s -c-1',
-        url: 'http://localhost:3001',
-        reuseExistingServer: false,
-        timeout: 180000,
-      },
     },
   ],
 });
