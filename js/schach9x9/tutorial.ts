@@ -18,7 +18,10 @@ export class Tutorial {
   public closeBtn!: HTMLButtonElement;
   public currentStepEl!: HTMLElement;
   public totalStepsEl!: HTMLElement;
-  private boundHandleKeydown: ((_e: KeyboardEvent) => void) | null = null;
+  public boundHandleKeydown: ((_e: KeyboardEvent) => void) | null = null;
+  public boundPrevClick: (() => void) | null = null;
+  public boundNextClick: (() => void) | null = null;
+  public boundCloseClick: (() => void) | null = null;
 
   constructor() {
     this.currentStep = 0;
@@ -423,9 +426,12 @@ export class Tutorial {
     });
 
     // Event listeners
-    this.prevBtn.addEventListener('click', () => this.prevStep());
-    this.nextBtn.addEventListener('click', () => this.nextStep());
-    this.closeBtn.addEventListener('click', () => this.close());
+    this.boundPrevClick = () => this.prevStep();
+    this.boundNextClick = () => this.nextStep();
+    this.boundCloseClick = () => this.close();
+    this.prevBtn.addEventListener('click', this.boundPrevClick);
+    this.nextBtn.addEventListener('click', this.boundNextClick);
+    this.closeBtn.addEventListener('click', this.boundCloseClick);
 
     // Keyboard navigation
     this.boundHandleKeydown = (e: KeyboardEvent) => {
@@ -455,6 +461,18 @@ export class Tutorial {
     if (this.boundHandleKeydown) {
       document.removeEventListener('keydown', this.boundHandleKeydown);
       this.boundHandleKeydown = null;
+    }
+    if (this.boundPrevClick) {
+      this.prevBtn.removeEventListener('click', this.boundPrevClick);
+      this.boundPrevClick = null;
+    }
+    if (this.boundNextClick) {
+      this.nextBtn.removeEventListener('click', this.boundNextClick);
+      this.boundNextClick = null;
+    }
+    if (this.boundCloseClick) {
+      this.closeBtn.removeEventListener('click', this.boundCloseClick);
+      this.boundCloseClick = null;
     }
   }
 

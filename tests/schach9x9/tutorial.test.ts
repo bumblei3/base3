@@ -345,4 +345,20 @@ describe('Tutorial keydown listener lifecycle', () => {
       expect(keydownRemovals[i].fn).toBe(a.fn);
     });
   });
+
+  it('removes button click listeners on close', () => {
+    const t = new Tutorial();
+    const prevHandler = t.boundPrevClick;
+    const nextHandler = t.boundNextClick;
+    const closeHandler = t.boundCloseClick;
+    const prevSpy = vi.spyOn(t.prevBtn, 'removeEventListener');
+    const nextSpy = vi.spyOn(t.nextBtn, 'removeEventListener');
+    const closeSpy = vi.spyOn(t.closeBtn, 'removeEventListener');
+
+    t.close();
+
+    expect(prevSpy).toHaveBeenCalledWith('click', prevHandler);
+    expect(nextSpy).toHaveBeenCalledWith('click', nextHandler);
+    expect(closeSpy).toHaveBeenCalledWith('click', closeHandler);
+  });
 });
