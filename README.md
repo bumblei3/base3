@@ -136,8 +136,8 @@ base3/
 # .github/workflows/ci.yml
 1. setup       → cache + deps + WASM build
 2. quality     → lint + typecheck
-3. test-trischach → 342 unit tests
-   test-schach9x9  → ~1700 unit tests (4 shards, parallel)
+3. test-trischach → ~347 unit tests
+   test-schach9x9  → ~1843 unit tests (4 shards, parallel)
 4. build       → WASM + 3 Vite builds (landing, schach9x9, trischach)
 5. deploy      → GitHub Pages (on push to main)
 ```
@@ -165,7 +165,7 @@ Run `npm run typecheck` to verify both projects.
 
 ## Testing
 
-- ~2000 unit tests across both games (Vitest + happy-dom)
+- ~2190 unit tests across both games (Vitest + happy-dom + jsdom)
 - 4-way sharded Schach9x9 tests for CI parallelism
 - E2E tests via Playwright (Schach9x9)
 - WASM mocked in CI test job, real build in setup job
