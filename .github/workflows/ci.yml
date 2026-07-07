@@ -205,6 +205,19 @@ jobs:
       - run: npm run build
       - name: Generate API Docs (TypeDoc)
         run: npm run docs:api
+      - name: Upload Source Maps to Sentry (optional)
+        if: ${{ env.SENTRY_AUTH_TOKEN != '' && env.VITE_SENTRY_DSN != '' }}
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
+        run: |
+          npm install -g @sentry/cli
+          export SENTRY_RELEASE="base3@${GITHUB_SHA::8}"
+          sentry-cli releases new "$SENTRY_RELEASE" || true
+          sentry-cli releases files "$SENTRY_RELEASE" upload-sourcemaps dist --rewrite || true
+          sentry-cli releases finalize "$SENTRY_RELEASE" || true
       - uses: actions/upload-artifact@v4
         with:
           name: dist

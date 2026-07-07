@@ -10,6 +10,7 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
+    sourcemap: true, // Enable for Sentry source-map upload + readable prod traces
     rolldownOptions: {
       output: {
         codeSplitting: true,

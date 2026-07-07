@@ -13,6 +13,7 @@ export default defineConfig({
   build: {
     outDir: 'dist/schach9x9',
     assetsDir: 'assets',
+    sourcemap: true, // Enable for Sentry source-map upload + readable prod traces
     rollupOptions: {
       input: {
         index: resolve(__dirname, 'index.schach9x9.html'),

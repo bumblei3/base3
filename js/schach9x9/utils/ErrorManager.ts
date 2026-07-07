@@ -1,50 +1,97 @@
 /**
  * ErrorManager.ts
  * Centralized error handling and reporting.
+ *
+ * Forwards errors to Sentry when a DSN is configured (VITE_SENTRY_DSN in
+ * production). Without a DSN the manager is a no-op sink so the game never
+ * breaks for lack of an error-tracking account.
  */
 import { logger } from '../logger.js';
 import { notificationUI } from '../ui/NotificationUI.js';
 
+type SentryCapture = (_error: unknown, _context?: Record<string, unknown>) => void;
 
 export class ErrorManager {
   private initialized: boolean = false;
+  /** Sentry capture fn, resolved lazily on init() when a DSN is present. */
+  private sentryCapture: SentryCapture | null = null;
+  /** Release/version tag forwarded to Sentry for grouping. */
+  private release: string | undefined = undefined;
+  /** Bound handlers so removeEventListener (clean teardown) keeps working. */
+  private readonly boundOnError = (event: ErrorEvent) => this.onWindowError(event);
+  private readonly boundOnRejection = (event: PromiseRejectionEvent) =>
+    this.handleError(event.reason, { context: 'Promise', meta: { type: 'unhandledRejection' } });
 
   constructor() {
     this.initialized = false;
   }
 
-  init(): void {
+  async init(dsnOverride?: string): Promise<void> {
     if (this.initialized) return;
 
-    // Global Error Handler
-    window.onerror = (message, source, lineno, colno, error) => {
-      this.handleError(error || new Error(String(message)), {
-        context: 'Global',
-        meta: { source, lineno, colno },
-      });
-      return true; // Prevent default browser console spam if handled
-    };
-
-    // Unhandled Promise Rejections
-    window.onunhandledrejection = (event: PromiseRejectionEvent) => {
-      this.handleError(event.reason, {
-        context: 'Promise',
-        meta: { type: 'unhandledRejection' },
-      });
-    };
-
+    // Attach global listeners synchronously so errors are caught immediately,
+    // even before the (async) Sentry SDK has finished loading.
+    window.addEventListener('error', this.boundOnError as EventListener);
+    window.addEventListener('unhandledrejection', this.boundOnRejection as EventListener);
     this.initialized = true;
+
+    const dsn = dsnOverride ?? import.meta.env.VITE_SENTRY_DSN;
+    this.release = import.meta.env.VITE_APP_VERSION;
+
+    if (dsn) {
+      try {
+        const Sentry = await import('@sentry/browser');
+        Sentry.init({
+          dsn,
+          environment: import.meta.env.MODE,
+          release: this.release,
+          integrations: [
+            Sentry.browserTracingIntegration(),
+            Sentry.replayIntegration({ maskAllText: false, blockAllMedia: false }),
+          ],
+          tracesSampleRate: 0.1,
+          replaysSessionSampleRate: 0.1,
+          replaysOnErrorSampleRate: 1.0,
+        });
+        // Use addEventListener-style capture so we always have a live fn.
+        this.sentryCapture = (error, context) => Sentry.captureException(error, context as never);
+        logger.info('ErrorManager: Sentry forwarding enabled');
+      } catch (e) {
+        // Never let observability setup break the game.
+        logger.warn('ErrorManager: Sentry init failed, continuing without it', e);
+        this.sentryCapture = null;
+      }
+    }
+
     logger.info('ErrorManager initialized');
   }
 
+  private onWindowError(event: ErrorEvent): void {
+    this.handleError(event.error ?? new Error(event.message), {
+      context: 'Global',
+      meta: { source: event.filename, lineno: event.lineno, colno: event.colno },
+    });
+  }
+
   /**
-   * Handle an error
-   * @param error
-   * @param options
+   * Handle an error: log it, optionally show UI, and forward to Sentry when enabled.
    */
-  handleError(error: unknown, options: { context?: string; critical?: boolean; meta?: Record<string, unknown> } = {}): void {
+  handleError(
+    error: unknown,
+    options: { context?: string; critical?: boolean; meta?: Record<string, unknown> } = {},
+  ): void {
     const context = options.context || 'App';
     const isCritical = options.critical || false;
+
+    // Forward to Sentry before any UI side effects.
+    if (this.sentryCapture) {
+      this.sentryCapture(error, {
+        context,
+        critical: isCritical,
+        release: this.release,
+        ...(options.meta ?? {}),
+      });
+    }
 
     // Log to internal logger
     logger.error(`[${context}]`, error);
