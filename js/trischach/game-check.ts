@@ -59,27 +59,17 @@ export function legalMoveCheck(
   target: Hex,
   faction: Faction,
 ): boolean {
-  // Full snapshot/restore: simulateMove + isKingdomCheck can mutate board
-  // state (positions, alive flags, captured pieces, occupied map, faction
-  // index). Wrapping the whole check guarantees no side effects leak into
-  // the real game state between tested targets — previously this left pieces
-  // dead and caused false stalemate/checkmate eliminations.
-  const snap = game.snapshot();
-  try {
-    const savedIdx = game.currentFactionIdx;
-    const undo = game.simulateMove(piece, target);
-    game.currentFactionIdx = undo.prevFactionIdx ?? savedIdx;
-    game._rebuildOccupiedMap();
-    const inCheck = isKingdomCheck(game, faction);
-    game.currentFactionIdx = savedIdx;
-    game._rebuildOccupiedMap();
-    game.undoMove(undo);
-    game.currentFactionIdx = savedIdx;
-    game._rebuildOccupiedMap();
-    return !inCheck;
-  } finally {
-    game.restoreDataOnly(snap);
-  }
+  const savedIdx = game.currentFactionIdx;
+  const undo = game.simulateMove(piece, target);
+  game.currentFactionIdx = undo.prevFactionIdx ?? savedIdx;
+  game._rebuildOccupiedMap();
+  const inCheck = isKingdomCheck(game, faction);
+  game.currentFactionIdx = savedIdx;
+  game._rebuildOccupiedMap();
+  game.undoMove(undo);
+  game.currentFactionIdx = savedIdx;
+  game._rebuildOccupiedMap();
+  return !inCheck;
 }
 
 /**

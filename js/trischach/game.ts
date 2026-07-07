@@ -346,10 +346,6 @@ export class Game {
     const isDraw = this._updateDrawState(wasCapture, wasPawnMove);
     if (isDraw) {
       result.draw = true;
-      // Advance the turn even on a draw so the next player is correctly set
-      // (the game is over, but turn order must stay consistent for callers
-      // like the opening-book builder that keep simulating moves).
-      this._nextTurn();
       return result;
     }
 
@@ -435,10 +431,6 @@ export class Game {
    * Does NOT call callbacks, does NOT push to moveHistory.
    */
   simulateMove(piece: Piece, target: Hex): AISnapshot {
-    // Take a full snapshot BEFORE any mutation so undoMove can restore the
-    // board exactly (including mass eliminations from king captures). This
-    // fixes a bug where chained simulateMove calls (inside isCheckmate /
-    // isStalemate via getLegalMoves -> legalMoveCheck) left pieces dead.
     const undo: AISnapshot = {
       piece,
       from: new Hex(piece.pos.q, piece.pos.r),
@@ -449,7 +441,6 @@ export class Game {
       attackerDied: false,
       eliminatedFaction: undefined,
       prevFactionIdx: this.currentFactionIdx,
-      fullSnapshot: this.snapshot(),
     };
 
     const defender = this.getPieceAt(target);
@@ -517,29 +508,14 @@ export class Game {
     }
 
     this._rebuildOccupiedMap();
-    // NOTE: simulateMove must NOT advance the turn. It is a side-effect-free
-    // simulation used for AI lookahead and legality checks (is a move leaving
-    // the king in check). Advancing currentFactionIdx here corrupts the real
-    // turn order because legalMoveCheck/isCheckmate call simulateMove
-    // repeatedly and only restore currentFactionIdx, not currentFaction.
-    // The real turn switch happens in _selectTarget / completePromotion.
+    this._nextTurn();
     return undo;
   }
 
   /**
-   * Undo a move previously made with simulateMove().
+   * Undo a simulated move using the undo object from simulateMove().
    */
   undoMove(undo: AISnapshot): void {
-    // If a full snapshot was captured, restore it exactly. This is the robust
-    // path: it reverses ALL side effects of simulateMove (including mass
-    // eliminations from king captures) without relying on incremental
-    // reversal, which previously left pieces dead after chained simulations.
-    if (undo.fullSnapshot) {
-      this.restoreDataOnly(undo.fullSnapshot);
-      return;
-    }
-
-    // Fallback (no full snapshot): incremental reversal.
     // Restore turn
     this.currentFactionIdx = undo.prevFactionIdx;
     this.currentFaction = TURN_ORDER[this.currentFactionIdx] as Faction;
@@ -586,41 +562,6 @@ export class Game {
     undo.piece.pos = undo.from;
     undo.piece.hasMoved = undo.pieceHasMoved;
 
-    this._rebuildOccupiedMap();
-  }
-
-  /**
-   * Restore only the board data from a snapshot (pieces, factions, captured),
-   * without touching selection/state/pendingPromotion. Used by undoMove() to
-   * reverse a simulation exactly. Does NOT touch selection/state/
-   * pendingPromotion, so it is safe to call from move legality checks that
-   * run in the middle of a real turn.
-   */
-  restoreDataOnly(snap: Snapshot): void {
-    this.pieces.forEach((p) => {
-      const sp = snap.pieces.find((sp) => sp.id === p.id);
-      if (sp) {
-        p.faction = sp.faction;
-        p.type = sp.type;
-        p.pos = new Hex(sp.pos.q, sp.pos.r);
-        p.alive = sp.alive;
-        p.hasMoved = sp.hasMoved;
-      }
-    });
-    this.currentFactionIdx = snap.currentFactionIdx;
-    this.currentFaction = TURN_ORDER[this.currentFactionIdx] as Faction;
-    this.eliminatedFactions = new Set(snap.eliminatedFactions);
-    for (const fac of [FACTION.FIRE, FACTION.WATER, FACTION.NATURE]) {
-      this.capturedPieces[fac] = [];
-    }
-    for (const fac of [FACTION.FIRE, FACTION.WATER, FACTION.NATURE]) {
-      const ids =
-        snap.capturedPieces[fac.toLowerCase() as 'fire' | 'water' | 'nature'];
-      for (const id of ids) {
-        const piece = this.pieces.find((p) => p.id === id);
-        if (piece) this.capturedPieces[fac].push(piece);
-      }
-    }
     this._rebuildOccupiedMap();
   }
 
