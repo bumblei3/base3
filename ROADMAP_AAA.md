@@ -254,7 +254,7 @@ jobs:
 |-------|---------|--------|---------|--------|
 | 1. Tests grün + Coverage + Lint | 2W | Niedrig | Keine | ✅ 2026-07-07 |
 | 2. E2E | 2W | Mittel | Playwright CI Zeit | 🔄 15/15 Trischach ✅, Schach9x9 8 Tests erstellt (webServer Bug) |
-| 3. Performance | 1W | Mittel | WASM/Worker Stabilität | ⬜ |
+| 3. Performance | 1W | Mittel | WASM/Worker Stabilität | ✅ 2026-07-07 |
 | 4. A11y | 1W | Niedrig | Design Token Audit | ⬜ |
 | 5. Security | 1W | Niedrig | CSP Testing | ⬜ |
 | 6. Observability | 1W | Niedrig | Sentry Setup | ⬜ |
@@ -272,7 +272,7 @@ jobs:
 3. ✅ **Lint**: 0 Errors, 0 Warnings ✅
 4. ✅ **TypeScript strict**: `tsc --noEmit` 0 Errors ✅
 5. ✅ **Security**: `npm audit` → 0 vulnerabilities ✅
-6. ⬜ **Bundle**: `npm run build && npx vite-bundle-visualizer` → 3D Chunk lazy laden
+6. ✅ **Bundle**: Initial Bundle < 200KB gzip (Trischach ~90KB, Schach9x9 < 200KB ohne lazy 3D-Chunk). battleChess3D (148KB gzip) bereits lazy via dynamischem Import. `inlineDynamicImports`-Deprecation in vite.config.trischach.ts entfernt. ui.ts-Barrel-Split bewusst NICHT gemacht — ROI zu schlecht (~15KB gzip) bei ~1843 Test-Risiko, da ~70% der ui.ts-Exports startup-kritisch sind.
 7. ⬜ **A11y**: `npx playwright test tests-e2e/accessibility.spec.ts --project=trischach-e2e` → 0 critical violations
 8. ⬜ **CSP Header** in `_headers` (GitHub Pages)
 
@@ -281,18 +281,17 @@ jobs:
 ## 📝 Nächste Schritte (2026-07-07)
 
 ```bash
-# 1. Bundle Analyse
-npm run build && npx vite-bundle-visualizer dist/trischach
-
-# 2. A11y Audit
+# Phase 4: Accessibility (WCAG 2.1 AA)
+# 1. A11y Audit (Playwright + axe)
 npx playwright test tests-e2e/accessibility.spec.ts --project=trischach-e2e
 
-# 3. Security (CSP Header)
-# _headers file für GitHub Pages erstellen
+# 2. Kontrast / Design Token Audit
+npx @axe-core/playwright tests-e2e/ --project=trischach-e2e
 
-# 4. Coverage Report (Detail)
-npx vitest run --coverage 2>&1 | grep -E "File|All files"
+# 3. Keyboard-Navigation & ARIA (Board als role="grid", aria-live Status)
 ```
+
+> Phase 3 (Performance/Bundle) abgehakt: Initial Bundle < 200KB gzip, 3D-Chunk lazy, Deprecation-Warnung entfernt. ui.ts-Barrel-Split bewusst übersprungen (schlechter ROI).
 
 ---
 
