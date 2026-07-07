@@ -136,6 +136,7 @@ const ttScores = new Int32Array(TT_SIZE);
 const ttFlags = new Uint8Array(TT_SIZE); // 0=empty, 1=exact, 2=lower, 3=upper
 const ttBestFrom = new Uint8Array(TT_SIZE);
 const ttBestTo = new Uint8Array(TT_SIZE);
+const ttBestPromo = new Uint8Array(TT_SIZE); // 0 = no promotion, else piece type
 const ttBestMoveValid = new Uint8Array(TT_SIZE); // 0=no best move, 1=valid
 
 let ttEntryCount = 0;
@@ -154,6 +155,9 @@ export class TranspositionTable {
     ttDepths.fill(0);
     ttScores.fill(0);
     ttFlags.fill(0);
+    ttBestFrom.fill(0);
+    ttBestTo.fill(0);
+    ttBestPromo.fill(0);
     ttBestMoveValid.fill(0);
     ttEntryCount = 0;
   }
@@ -161,12 +165,19 @@ export class TranspositionTable {
   probe(hash: number, depth: number): TTEntry | null {
     const idx = (hash >>> 0) & TT_MASK;
     if (ttFlags[idx] !== 0 && ttHashes[idx] === hash && ttDepths[idx] >= depth) {
+      const promo = ttBestPromo[idx];
       return {
         hash: ttHashes[idx],
         depth: ttDepths[idx],
         score: ttScores[idx],
         flag: uint8ToFlag(ttFlags[idx]),
-        bestMove: ttBestMoveValid[idx] ? { from: ttBestFrom[idx], to: ttBestTo[idx] } : null,
+        bestMove: ttBestMoveValid[idx]
+          ? {
+              from: ttBestFrom[idx],
+              to: ttBestTo[idx],
+              promotion: promo !== 0 ? promo : undefined,
+            }
+          : null,
       };
     }
     return null;
@@ -184,6 +195,8 @@ export class TranspositionTable {
       if (bestMove) {
         ttBestFrom[idx] = bestMove.from;
         ttBestTo[idx] = bestMove.to;
+        // Store promotion piece type (0 = none) so the move survives a TT round-trip
+        ttBestPromo[idx] = bestMove.promotion ?? 0;
         ttBestMoveValid[idx] = 1;
       } else {
         ttBestMoveValid[idx] = 0;

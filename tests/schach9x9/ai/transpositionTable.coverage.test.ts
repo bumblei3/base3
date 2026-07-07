@@ -320,6 +320,27 @@ describe('TranspositionTable - Branch Coverage', () => {
       expect(result!.bestMove).toEqual(bestMove);
     });
 
+    test('should preserve promotion through store/probe round-trip', () => {
+      // A pawn promotion move must survive a TT round-trip (promotion was
+      // previously dropped, producing an illegal/incorrect move on retrieval).
+      const promotingMove = { from: 8, to: 1, promotion: 5 }; // promote to queen
+      tt.store(100, 5, 100, 'exact', promotingMove);
+
+      const result = tt.probe(100, 1);
+      expect(result!.bestMove).not.toBeNull();
+      expect(result!.bestMove!.from).toBe(8);
+      expect(result!.bestMove!.to).toBe(1);
+      expect(result!.bestMove!.promotion).toBe(5);
+    });
+
+    test('should not set promotion when move has none (no false promotion)', () => {
+      const plainMove = { from: 42, to: 52 };
+      tt.store(100, 5, 100, 'exact', plainMove);
+
+      const result = tt.probe(100, 1);
+      expect(result!.bestMove!.promotion).toBeUndefined();
+    });
+
     test('should handle null bestMove', () => {
       tt.store(100, 5, 100, 'exact', null);
       const result = tt.probe(100, 1);
