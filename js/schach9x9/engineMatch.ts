@@ -123,6 +123,8 @@ export interface GameResult {
 
 export interface EngineGameStats {
   avgDepth: number;
+  /** Number of moves counted toward avgDepth, needed for a true running mean */
+  depthCount: number;
   maxDepth: number;
   totalNodes: number;
   totalTimeMs: number;
@@ -348,7 +350,7 @@ export class EngineMatchRunner {
   }
 
   private createEmptyStats(): EngineGameStats {
-    return { avgDepth: 0, maxDepth: 0, totalNodes: 0, totalTimeMs: 0, nps: 0, avgTimePerMoveMs: 0, blunders: 0, mistakes: 0, inaccuracies: 0, bestMoves: 0 };
+    return { avgDepth: 0, depthCount: 0, maxDepth: 0, totalNodes: 0, totalTimeMs: 0, nps: 0, avgTimePerMoveMs: 0, blunders: 0, mistakes: 0, inaccuracies: 0, bestMoves: 0 };
   }
 
   private createInitialGameState(): number[][] {
@@ -400,7 +402,9 @@ export class EngineMatchRunner {
     stats.totalNodes += result.nodes || 0;
     stats.totalTimeMs += moveTimeMs;
     stats.maxDepth = Math.max(stats.maxDepth, result.depth || 0);
-    stats.avgDepth = (stats.avgDepth + (result.depth || 0)) / 2;
+    // True running mean of search depth across all counted moves.
+    stats.depthCount += 1;
+    stats.avgDepth = stats.avgDepth + ((result.depth || 0) - stats.avgDepth) / stats.depthCount;
     stats.nps = stats.totalTimeMs > 0 ? Math.round(stats.totalNodes / (stats.totalTimeMs / 1000)) : 0;
   }
 
@@ -408,13 +412,49 @@ export class EngineMatchRunner {
     gameNumber: number, whiteConfig: EngineConfig, blackConfig: EngineConfig,
     result: string, winner: GameResult['winner'], terminationReason: TerminationReason,
     moves: number, whiteStats: EngineGameStats, blackStats: EngineGameStats,
-    _moveHistory: Array<{ from: { r: number; c: number }; to: { r: number; c: number }; promotion?: string }>, durationMs: number
+    moveHistory: MoveRecord[], durationMs: number
   ): GameResult {
+    const pgn = this.buildMatchPGN(whiteConfig, blackConfig, moveHistory, result);
     return {
       gameNumber, whiteEngine: whiteConfig.name, blackEngine: blackConfig.name,
       result: result as '1-0' | '0-1' | '1/2-1/2' | '*', winner, moves,
-      durationMs, pgn: 'PGN placeholder', whiteStats, blackStats, terminationReason,
+      durationMs, pgn, whiteStats, blackStats, terminationReason,
     };
+  }
+
+  /**
+   * Build a readable PGN-style listing from the engine match's recorded moves.
+   * Uses UCI-style coordinate notation (e.g. "e2e4") plus the engine eval per
+   * move, since the match runs on a lightweight numeric board without full
+   * piece metadata required by moveToNotation.
+   */
+  private buildMatchPGN(
+    whiteConfig: EngineConfig, blackConfig: EngineConfig,
+    moveHistory: MoveRecord[], result: string
+  ): string {
+    const headers = [
+      `[Event "Engine Match ${whiteConfig.name} vs ${blackConfig.name}"]`,
+      `[White "${whiteConfig.name}"]`,
+      `[Black "${blackConfig.name}"]`,
+      `[Result "${result}"]`,
+    ];
+    const moveText: string[] = [];
+    let moveNumber = 1;
+    for (let i = 0; i < moveHistory.length; i++) {
+      const m = moveHistory[i];
+      const coord = (sq: { r: number; c: number }) => `${String.fromCharCode(97 + sq.c)}${9 - sq.r}`;
+      const san = `${coord(m.from)}${coord(m.to)}`;
+      const evalTag = m.evalScore != null ? ` {${m.evalScore >= 0 ? '+' : ''}${(m.evalScore / 100).toFixed(2)}}` : '';
+      const token = `${san}${evalTag}`;
+      if (i % 2 === 0) {
+        moveText.push(`${moveNumber}. ${token}`);
+      } else {
+        moveText[moveText.length - 1] += ` ${token}`;
+        moveNumber++;
+      }
+    }
+    moveText.push(result);
+    return headers.join('\n') + '\n\n' + moveText.join(' ');
   }
 
   private printSummary(): void {
