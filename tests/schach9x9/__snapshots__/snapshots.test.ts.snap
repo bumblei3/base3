@@ -177,7 +177,8 @@ exports[`Visual DOM Snapshot Tests > Initial setup phase snapshot 1`] = `
       </div>
 
       <!-- Puzzle Overlay -->
-      <div id="puzzle-overlay" class="modal-overlay hidden">
+      <!-- Puzzle Overlay (HUD panel, NOT a full-screen modal so the board stays clickable) -->
+      <div id="puzzle-overlay" class="puzzle-overlay hidden">
         <div class="puzzle-content">
           <h2 id="puzzle-title">Puzzle</h2>
           <p id="puzzle-description"></p>
@@ -508,6 +509,10 @@ exports[`Visual DOM Snapshot Tests > Initial setup phase snapshot 1`] = `
               </svg>
             </button>
           </div>
+
+          <!-- Move History (rendered by updateMoveHistoryUI) -->
+          <div id="move-history" class="move-history" role="log" aria-label="Zughistorie" aria-live="polite"></div>
+
         </div>
 
         <!-- PANEL LAYER: Contextual side/top panels -->

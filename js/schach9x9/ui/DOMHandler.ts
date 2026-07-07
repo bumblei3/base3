@@ -366,16 +366,14 @@ export class DOMHandler {
     const undoBtn = document.getElementById('undo-btn');
     if (undoBtn) {
       undoBtn.addEventListener('click', () => {
-        const gc = this.gameController as any;
-        const mc = gc?.game?.moveController || gc?.moveController || (window as any).game?.moveController;
+        const mc = this.gameController?.game?.moveController;
         if (mc?.undoMove) mc.undoMove();
       });
     }
     const redoBtn = document.getElementById('redo-btn');
     if (redoBtn) {
       redoBtn.addEventListener('click', () => {
-        const gc = this.gameController as any;
-        const mc = gc?.game?.moveController || gc?.moveController || (window as any).game?.moveController;
+        const mc = this.gameController?.game?.moveController;
         if (mc?.redoMove) mc.redoMove();
       });
     }

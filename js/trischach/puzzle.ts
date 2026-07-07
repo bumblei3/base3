@@ -634,7 +634,7 @@ export function formatSAN(
   const pieceLetter = piece.type === 'pawn' ? '' : (piece.type as string)[0].toUpperCase();
   const capture = isCapture ? 'x' : '';
   const check = isMate ? '#' : isCheck ? '+' : '';
-  const movement = isCapture ? 'x' : '->';
+  const movement = capture || '->';
   return `${pieceLetter}${piece.pos.q},${piece.pos.r}${movement}${target.q},${target.r}${check}`;
 }
 
