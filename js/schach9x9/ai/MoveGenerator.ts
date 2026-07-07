@@ -183,21 +183,22 @@ function generatePawnMoves(board: BoardStorage, from: number, color: number, mov
 
   // Single Push
   if (board[forward] === PIECE_NONE) {
-    moves.push({ from, to: forward });
+    const forwardRank = indexToRow(forward);
+    if ((color === COLOR_WHITE && forwardRank === 0) || (color === COLOR_BLACK && forwardRank === 8)) {
+      // Promotion on reaching last rank
+      for (const promo of PROMO_TYPES) {
+        moves.push({ from, to: forward, promotion: promo });
+      }
+    } else {
+      moves.push({ from, to: forward });
 
-    // Double Push
-    const isStart = (color === COLOR_WHITE && rank === 6) || (color === COLOR_BLACK && rank === 2); // 0-indexed rows
-    // Actually standard is: Black at 0,1,2. White at 6,7,8.
-    // Pawns at 2 and 6?
-    // Wait, 9x9. 0..8.
-    // Black Pawns at row 2?
-    // Let's stick to logic: if (rank === startRank) check double.
-
-    // For now, assuming standard double push allowed.
-    if (isStart) {
-      const doubleForward = forward + direction;
-      if (board[doubleForward] === PIECE_NONE) {
-        moves.push({ from, to: doubleForward, flags: 'double' });
+      // Double Push
+      const isStart = (color === COLOR_WHITE && rank === 6) || (color === COLOR_BLACK && rank === 2); // 0-indexed rows
+      if (isStart) {
+        const doubleForward = forward + direction;
+        if (board[doubleForward] === PIECE_NONE) {
+          moves.push({ from, to: doubleForward, flags: 'double' });
+        }
       }
     }
   }
@@ -210,7 +211,15 @@ function generatePawnMoves(board: BoardStorage, from: number, color: number, mov
     if (isValidSquare(captureLeft)) {
       const target = board[captureLeft];
       if (target !== PIECE_NONE && (target & COLOR_MASK) !== color) {
-        moves.push({ from, to: captureLeft });
+        // Capture with promotion on last rank
+        const leftRank = indexToRow(captureLeft);
+        if ((color === COLOR_WHITE && leftRank === 0) || (color === COLOR_BLACK && leftRank === 8)) {
+          for (const promo of PROMO_TYPES) {
+            moves.push({ from, to: captureLeft, promotion: promo });
+          }
+        } else {
+          moves.push({ from, to: captureLeft });
+        }
       }
     }
   }
@@ -221,11 +230,26 @@ function generatePawnMoves(board: BoardStorage, from: number, color: number, mov
     if (isValidSquare(captureRight)) {
       const target = board[captureRight];
       if (target !== PIECE_NONE && (target & COLOR_MASK) !== color) {
-        moves.push({ from, to: captureRight });
+        const rightRank = indexToRow(captureRight);
+        if ((color === COLOR_WHITE && rightRank === 0) || (color === COLOR_BLACK && rightRank === 8)) {
+          for (const promo of PROMO_TYPES) {
+            moves.push({ from, to: captureRight, promotion: promo });
+          }
+        } else {
+          moves.push({ from, to: captureRight });
+        }
       }
     }
   }
 }
+
+// Promotion piece types for pawn promotion (Capablanca standard set).
+const PROMO_TYPES = [
+  PIECE_QUEEN,
+  PIECE_ROOK,
+  PIECE_BISHOP,
+  PIECE_KNIGHT,
+];
 
 function generatePieceMoves(
   board: BoardStorage,
@@ -389,7 +413,13 @@ export function makeMove(board: BoardStorage, move: Move): UndoInfo {
   // For a real engine, we use a separate state stack.
   // For now, we just swap.
 
-  board[move.to] = piece;
+  if (move.promotion !== undefined) {
+    // Pawn promotion: place the promoted piece (keeping color) at destination.
+    const color = piece & COLOR_MASK;
+    board[move.to] = move.promotion | color;
+  } else {
+    board[move.to] = piece;
+  }
   board[move.from] = PIECE_NONE;
 
   return { move, captured, piece };
