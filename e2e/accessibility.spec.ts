@@ -26,7 +26,7 @@ test.describe('Accessibility Scans @a11y', () => {
     await page.goto('/');
 
     // Start Game (Standard)
-    await page.click('.gamemode-card:has-text("Standard 8x8")');
+    await page.click('.gamemode-card[data-mode="standard8x8"]');
 
     // Wait for board
     await expect(page.locator('#board-container')).toBeVisible();
@@ -51,7 +51,7 @@ test.describe('Accessibility Scans @a11y', () => {
     await page.goto('/');
 
     // Start Shop Game
-    await page.click('.gamemode-card:has-text("9x9 + Upgrades")');
+    await page.click('.gamemode-card[data-mode="upgrade"]');
 
     // Wait for Shop
     await expect(page.locator('#shop-panel')).toBeVisible();

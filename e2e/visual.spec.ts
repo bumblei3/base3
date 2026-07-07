@@ -8,8 +8,8 @@ test.describe('Visual Regression Tests @visual', () => {
 
     await page.goto('/?disable-sw');
 
-    // Wait for initialize
-    await page.waitForSelector('#board');
+    // Wait for initialize (board element exists even when hidden behind main menu)
+    await page.waitForSelector('#board', { state: 'attached' });
 
     // Wait for DOMHandler to attach listeners to avoid race condition
     await page.waitForFunction(() => document.body.classList.contains('app-ready'));

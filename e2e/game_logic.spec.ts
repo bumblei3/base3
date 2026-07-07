@@ -15,7 +15,7 @@ test.describe('Deep Game Logic @logic', () => {
 
   async function setupPieceAndRender(page: any, r: number, c: number, pieceType: string) {
     // Initialize 9x9 Classic
-    await page.click('.gamemode-card:has-text("Klassisch 9x9")');
+    await page.click('.gamemode-card[data-mode="classic"]');
     await expect(page.locator('#board')).toBeVisible();
 
     // Wait for game instance
@@ -99,7 +99,7 @@ test.describe('Deep Game Logic @logic', () => {
 
   test('Castling 9x9: King should reach correct square', async ({ page }) => {
     // Initialize 9x9 Classic
-    await page.click('.gamemode-card:has-text("Klassisch 9x9")');
+    await page.click('.gamemode-card[data-mode="classic"]');
     await expect(page.locator('#board')).toBeVisible();
     await page.waitForFunction(() => (window as any).game !== undefined);
 
@@ -132,7 +132,7 @@ test.describe('Deep Game Logic @logic', () => {
   test('En Passant 9x9', async ({ page }) => {
     test.slow(); // Firefox needs more time
 
-    await page.click('.gamemode-card:has-text("Klassisch 9x9")');
+    await page.click('.gamemode-card[data-mode="classic"]');
     await expect(page.locator('#board')).toBeVisible();
     await page.waitForFunction(() => (window as any).game !== undefined);
     await page.waitForFunction(() => (window as any).game?.phase === 'PLAY', { timeout: 10000 });
@@ -224,7 +224,7 @@ test.describe('Deep Game Logic @logic', () => {
 
   test('Pawn Promotion 8x8', async ({ page }) => {
     // Start 8x8 game
-    await page.click('.gamemode-card:has-text("Standard 8x8")');
+    await page.click('.gamemode-card[data-mode="standard8x8"]');
     await expect(page.locator('#board')).toBeVisible();
 
     // Wait for game to be initialized
@@ -256,7 +256,7 @@ test.describe('Deep Game Logic @logic', () => {
 
   test('Pawn Promotion 9x9 to Angel (e)', async ({ page }) => {
     // Start 9x9 game
-    await page.click('.gamemode-card:has-text("Klassisch 9x9")');
+    await page.click('.gamemode-card[data-mode="classic"]');
     await expect(page.locator('#board')).toBeVisible();
 
     // Wait for game to be initialized
@@ -289,7 +289,7 @@ test.describe('Deep Game Logic @logic', () => {
   });
 
   test('Game Over: Checkmate', async ({ page }) => {
-    await page.click('.gamemode-card:has-text("Standard 8x8")');
+    await page.click('.gamemode-card[data-mode="standard8x8"]');
     await expect(page.locator('#board')).toBeVisible();
     await page.waitForFunction(() => (window as any).game !== undefined);
 
@@ -322,7 +322,7 @@ test.describe('Deep Game Logic @logic', () => {
   });
 
   test('Game Over: Stalemate', async ({ page }) => {
-    await page.click('.gamemode-card:has-text("Standard 8x8")');
+    await page.click('.gamemode-card[data-mode="standard8x8"]');
     await expect(page.locator('#board')).toBeVisible();
     await page.waitForFunction(() => (window as any).game !== undefined);
 

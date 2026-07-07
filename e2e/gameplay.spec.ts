@@ -89,7 +89,7 @@ test.describe('Core Gameplay Loop', () => {
 
   test('should verify Game Over (Checkmate) flow', async ({ page }) => {
     // 1. Start Standard Game to skip setup phase
-    await page.click('.gamemode-card:has-text("Standard 8x8")');
+    await page.click('.gamemode-card[data-mode="standard8x8"]');
     await expect(page.locator('#board')).toBeVisible();
 
     // Wait for Game to be fully initialized
@@ -274,7 +274,7 @@ test.describe('Core Gameplay Loop', () => {
     test.slow();
 
     // 1. Start Classic 9x9 (directly in PLAY phase, no setup)
-    await page.click('.gamemode-card:has-text("Klassisch 9x9")');
+    await page.click('.gamemode-card[data-mode="classic"]');
     await expect(page.locator('#board')).toBeVisible();
 
     // Wait for game to be fully ready
@@ -338,7 +338,7 @@ test.describe('Core Gameplay Loop', () => {
     test.slow();
 
     // 1. Start Classic 9x9 Game (has better persistence support than 8x8)
-    await page.click('.gamemode-card:has-text("Klassisch 9x9")');
+    await page.click('.gamemode-card[data-mode="classic"]');
     await expect(page.locator('#board')).toBeVisible();
 
     // Wait for game to be ready

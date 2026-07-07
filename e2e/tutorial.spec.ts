@@ -21,17 +21,12 @@ test.describe('Tutorial @tutorial', () => {
   });
 
   test('should complete the interactive tutorial', async ({ page }) => {
-    // 1. Switch to "Lernen" tab
-    const learnTab = page.locator('.menu-tab-btn[data-tab="learn"]');
-    await expect(learnTab).toBeVisible();
-    await learnTab.click();
-
-    // 2. Click "Interaktives Tutorial" using ID
+    // 1. The Tutorial button is on the (default-active) Play view
     const tutorialBtn = page.locator('#start-tutorial-btn');
     await expect(tutorialBtn).toBeVisible();
     await tutorialBtn.click();
 
-    // 3. Verify Overlay
+    // 2. Verify Overlay
     const overlay = page.locator('#tutorial-overlay');
     await expect(overlay).toBeVisible();
 

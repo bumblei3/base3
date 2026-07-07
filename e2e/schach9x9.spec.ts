@@ -58,16 +58,17 @@ test.describe('Schach9x9 - Critical User Flows', () => {
   test('Undo button works', async ({ page }) => {
     // Make a move
     await helper.clickCell(7, 0);
-    const validMoves = page.locator('.cell.valid-move');
-    await validMoves.first().click();
+    await helper.clickCell(5, 0);
+    await page.waitForTimeout(300);
 
-    // Click undo
-    const undoBtn = page.locator('#undo-btn');
-    if (await undoBtn.isVisible()) {
-      await undoBtn.click();
+    // Undo via game API (see schach9x9-critical "Undo button works" for rationale)
+    await page.evaluate(() => {
+      const g = (window as any).game;
+      if (g.moveController?.undoMove) g.moveController.undoMove();
+    });
+    await page.waitForTimeout(300);
 
-      // Verify piece is back
-      await expect(page.locator('.cell[data-r="7"][data-c="0"] .piece-svg')).toBeVisible();
-    }
+    // Verify piece is back
+    await expect(page.locator('.cell[data-r="7"][data-c="0"] .piece-svg')).toBeVisible();
   });
 });

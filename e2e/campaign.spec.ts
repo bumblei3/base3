@@ -11,7 +11,7 @@ test.describe('Campaign Mode', () => {
 
   test('should open campaign menu and display levels', async ({ page }) => {
     // Click campaign card
-    const card = page.locator('.gamemode-card').filter({ hasText: 'Kampagne' });
+    const card = page.locator('.gamemode-card[data-mode="campaign"]');
     await expect(card).toBeVisible();
     await card.click();
 
@@ -26,7 +26,7 @@ test.describe('Campaign Mode', () => {
 
   test('should start the first campaign level "Der Aufstand"', async ({ page }) => {
     // 1. Open Campaign Menu
-    await page.click('.gamemode-card:has-text("Kampagne")');
+    await page.click('.gamemode-card[data-mode="campaign"]');
 
     // 2. Select first level
     const firstLevelBtn = page.locator('.campaign-level-card').first();
@@ -45,7 +45,7 @@ test.describe('Campaign Mode', () => {
     // 1. Go through UI
 
     // Go through UI
-    await page.click('.gamemode-card:has-text("Kampagne")');
+    await page.click('.gamemode-card[data-mode="campaign"]');
     await page.locator('.campaign-level-card').first().click();
     await expect(page.locator('#board')).toBeVisible();
 
