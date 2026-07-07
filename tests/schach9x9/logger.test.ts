@@ -229,5 +229,23 @@ describe('Logger', () => {
         expect((logger as any).enabled).toBe(false);
       }
     });
+
+    test('should not throw when localStorage.setItem fails (private mode/quota)', () => {
+      const setItemSpy = vi
+        .spyOn(Storage.prototype, 'setItem')
+        .mockImplementation(() => {
+          throw new DOMException('QuotaExceededError', 'QuotaExceededError');
+        });
+
+      // Must NOT throw
+      expect(() => logger.setLevel(LOG_LEVELS.WARN)).not.toThrow();
+      expect(() => logger.setEnabled(false)).not.toThrow();
+
+      // State still updates in-memory
+      expect((logger as any).level).toBe(LOG_LEVELS.WARN);
+      expect((logger as any).enabled).toBe(false);
+
+      setItemSpy.mockRestore();
+    });
   });
 });

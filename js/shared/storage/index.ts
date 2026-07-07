@@ -22,7 +22,11 @@ class LocalStorageAdapter implements StorageAdapter {
   }
 
   async set<T>(key: string, value: T): Promise<void> {
-    localStorage.setItem(key, JSON.stringify(value));
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch {
+      // localStorage may be unavailable (private mode) or full (quota) — ignore
+    }
   }
 
   async remove(key: string): Promise<void> {

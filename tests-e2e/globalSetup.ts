@@ -12,7 +12,7 @@ export default async function globalSetup() {
   execSync('cp dist/trischach/index.trischach.html dist/trischach/index.html', { cwd: '/home/tobber/base3' });
 
   // Start http-server
-  serverProcess = spawn('npx', ['http-server', 'dist/trischach', '-p', '4173', '-s', '-c-1'], {
+  serverProcess = spawn('node_modules/.bin/http-server', ['dist/trischach', '-p', '4173', '-s', '-c-1'], {
     cwd: '/home/tobber/base3',
     stdio: 'pipe',
     detached: true,

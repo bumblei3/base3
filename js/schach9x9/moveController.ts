@@ -345,7 +345,11 @@ export class MoveController {
   public setTheme(themeName: string): void {
     this.game.currentTheme = themeName;
     this.applyTheme(themeName);
-    localStorage.setItem('chess_theme', themeName);
+    try {
+      localStorage.setItem('chess_theme', themeName);
+    } catch {
+      // localStorage may be unavailable (private mode, quota) — ignore
+    }
   }
 
   public applyTheme(themeName: string): void {

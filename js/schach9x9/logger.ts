@@ -54,7 +54,11 @@ class Logger {
   setLevel(level: LogLevel): void {
     this.level = level;
     if (this.hasLocalStorage) {
-      localStorage.setItem('logLevel', level.toString());
+      try {
+        localStorage.setItem('logLevel', level.toString());
+      } catch {
+        // localStorage may be unavailable (private mode, quota) — ignore
+      }
     }
   }
 
@@ -64,7 +68,11 @@ class Logger {
   setEnabled(enabled: boolean): void {
     this.enabled = enabled;
     if (this.hasLocalStorage) {
-      localStorage.setItem('loggingEnabled', enabled.toString());
+      try {
+        localStorage.setItem('loggingEnabled', enabled.toString());
+      } catch {
+        // localStorage may be unavailable (private mode, quota) — ignore
+      }
     }
   }
 

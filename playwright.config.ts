@@ -25,9 +25,9 @@ export default defineConfig({
       retries: process.env.CI ? 2 : 0,
       workers: process.env.CI ? 1 : undefined,
       webServer: {
-        command: 'npx http-server dist/schach9x9 -p 3000 -s -c-1',
+        command: 'node node_modules/http-server/bin/http-server dist/schach9x9 -p 3000 -s -c-1',
         url: 'http://localhost:3000',
-        reuseExistingServer: !process.env.CI,
+        reuseExistingServer: false,
         timeout: 180000,
       },
     },
@@ -53,9 +53,9 @@ export default defineConfig({
       retries: process.env.CI ? 2 : 0,
       workers: process.env.CI ? 1 : undefined,
       webServer: {
-        command: 'npx http-server dist/trischach -p 3001 -s -c-1',
+        command: 'node node_modules/http-server/bin/http-server dist/trischach -p 3001 -s -c-1',
         url: 'http://localhost:3001',
-        reuseExistingServer: !process.env.CI,
+        reuseExistingServer: false,
         timeout: 180000,
       },
     },
