@@ -17,7 +17,6 @@ export default defineConfig({
         entryFileNames: 'js/[name].js',
         chunkFileNames: 'js/[name].js',
         assetFileNames: 'assets/[name].[ext]',
-        inlineDynamicImports: false,
         format: 'es',
         manualChunks: (id: string) => {
           if (id.includes('opening-book.ts') || id.includes('opening-book.compiled')) {
