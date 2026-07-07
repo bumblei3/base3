@@ -183,7 +183,7 @@ Die vollständige Roadmap mit 8 Phasen liegt in [`ROADMAP_AAA.md`](ROADMAP_AAA.m
 
 | Phase | Status | Hinweis |
 |-------|--------|---------|
-| 1. Fundament | 🟡 In Progress | Tests grün, Lint 0 errors, Typecheck ✅ |
+| 1. Fundament | 🟢 Done | Tests grün, Lint 0 errors, Typecheck ✅ |
 | 2. E2E | 🔲 Geplant | Playwright CI, visuelle Regression |
 | 3. Performance | 🔲 Geplant | Bundle < 200KB, 3D lazy-load |
 | 4. Accessibility | 🔲 Geplant | WCAG 2.1 AA Audit |
@@ -192,12 +192,13 @@ Die vollständige Roadmap mit 8 Phasen liegt in [`ROADMAP_AAA.md`](ROADMAP_AAA.m
 | 7. DX/Docs | 🔲 Geplant | Storybook, API Docs, Contributing Guide |
 | 8. Polish | 🔲 Geplant | PWA, i18n, 500+ Puzzles |
 
-**Quick Wins:**
-1. Restliche fehlerhafte Tests fixen
-2. Coverage Report prüfen, Lücken schließen
-3. Bundle Analyse → 3D Chunk lazy laden
-4. A11y Audit (`@axe-core/playwright`)
-5. `npm audit fix` + CSP Header
+**Quick Wins (erledigt):**
+1. ✅ Restliche fehlerhafte Tests fixen (~2190 Unit-Tests grün)
+2. ✅ `npm audit fix` → 0 vulnerabilities
+3. ⬜ Coverage Report prüfen, Lücken schließen
+4. ⬜ Bundle Analyse → 3D Chunk lazy laden
+5. ⬜ A11y Audit (`@axe-core/playwright`)
+6. ⬜ CSP Header (`_headers` für GitHub Pages)
 
 ---
 
