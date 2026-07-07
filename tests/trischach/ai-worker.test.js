@@ -221,6 +221,26 @@ describe("AI Worker: Exported Core Functions (Unit Tests)", () => {
   });
 
   describe("Move Generation (getAllActions, getLegalMoves)", () => {
+    test("getAllActions excludes suicidal RPS-disadvantage attacks", () => {
+      // Fire is at a disadvantage vs Water in RPS (fire < water).
+      // Place a Fire pawn that can attack a Water piece -> disadvantage, must be excluded.
+      const gameState = createGameState({
+        pieces: [
+          createPiece("pawn", FACTION.FIRE, 0, 3),
+          createPiece("pawn", FACTION.WATER, 1, 2), // diagonal attack target for fire pawn
+        ],
+        currentFaction: FACTION.FIRE,
+        currentFactionIdx: 0,
+        rpsEnabled: true,
+      });
+
+      const actions = getAllActions(gameState, FACTION.FIRE);
+      const disadvantageAttacks = actions.filter(
+        (a) => a.type === "attack" && a.rps === "disadvantage",
+      );
+      expect(disadvantageAttacks.length).toBe(0);
+    });
+
     test("getAllActions returns moves and attacks for a piece", () => {
       const gameState = createGameState({
         pieces: [

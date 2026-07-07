@@ -1323,6 +1323,9 @@ export function getAllActions(game: IGame, faction: Faction): AIAction[] {
       const rps = game.rpsEnabled
         ? getRPSResult(faction, defender.faction)
         : 'advantage';
+      // Never voluntarily make a suicidal capture (RPS disadvantage).
+      // The attacker would die immediately and lose the piece for nothing.
+      if (rps === 'disadvantage') continue;
       actions.push({ piece, target, type: 'attack', rps });
     }
     for (const target of moves) {
