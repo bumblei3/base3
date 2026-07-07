@@ -1,8 +1,14 @@
 import { spawn } from 'node:child_process';
 import { mkdirSync, writeFileSync, readFileSync, existsSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const ROOT = '/home/tobber/base3';
-const HS = 'node_modules/http-server/bin/http-server';
+// Derive repo root from this file's location (works in CI and locally),
+// instead of hardcoding /home/tobber/base3 which only exists on one machine.
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const ROOT = resolve(__dirname, '..');
+const HS = resolve(ROOT, 'node_modules/http-server/bin/http-server');
 
 interface ServerSpec {
   name: string;
