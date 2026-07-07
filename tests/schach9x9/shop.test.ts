@@ -160,7 +160,6 @@ describe('Shop System', () => {
   });
 
   describe('Piece Removal and Refund', () => {
-    // Note: Refund test skipped due to complex PIECES symbol lookup in gameController
     test('should refund points when removing own piece', () => {
       game.phase = PHASES.SETUP_WHITE_PIECES;
       game.points = 10;

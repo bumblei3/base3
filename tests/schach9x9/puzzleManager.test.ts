@@ -128,6 +128,24 @@ describe('PuzzleManager', () => {
       expect(manager.currentPuzzleIndex).toBe(1);
     });
 
+    test('checkMove must not crash on out-of-bounds currentPuzzleIndex', () => {
+      // Simulate a stale/negative index or an index beyond the puzzles array
+      (manager as any).currentPuzzleIndex = 9999;
+      game.puzzleState = { active: true, currentMoveIndex: 0 } as any;
+
+      // Should return false gracefully instead of throwing on undefined puzzle
+      expect(() => manager.checkMove(game, { from: { r: 0, c: 0 }, to: { r: 1, c: 1 } })).not.toThrow();
+      expect(manager.checkMove(game, { from: { r: 0, c: 0 }, to: { r: 1, c: 1 } })).toBe(false);
+    });
+
+    test('checkMove must handle missing expected move at index', () => {
+      manager.loadPuzzle(game, 0);
+      // Force an out-of-range move index
+      game.puzzleState.currentMoveIndex = 9999;
+      const result = manager.checkMove(game, { from: { r: 0, c: 0 }, to: { r: 1, c: 1 } });
+      expect(result).toBe(false);
+    });
+
     test('should generate new puzzle when no more static puzzles', () => {
       // Mock the heavy generator to avoid 4s wait
       const mockPuzzle = {

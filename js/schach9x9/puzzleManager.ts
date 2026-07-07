@@ -121,7 +121,8 @@ export class PuzzleManager {
           ...genPuzzle,
           title: `Infinite Puzzle #${index + 1}`,
         };
-        this.puzzles[index] = newPuzzle;
+        this.puzzles.push(newPuzzle);
+        this.currentPuzzleIndex = this.puzzles.length - 1;
         puzzle = newPuzzle;
       } else {
         return false;
@@ -170,7 +171,11 @@ export class PuzzleManager {
     if (!game.puzzleState || !game.puzzleState.active) return false;
 
     const puzzle = this.puzzles[this.currentPuzzleIndex];
-    const expectedMove = puzzle.solution[game.puzzleState.currentMoveIndex];
+    if (!puzzle || !puzzle.solution) return false;
+    const solution = puzzle.solution;
+
+    const expectedMove = solution[game.puzzleState.currentMoveIndex];
+    if (!expectedMove) return false;
 
     // Simple coordinate check
     const isCorrectParams =
@@ -181,7 +186,7 @@ export class PuzzleManager {
 
     if (isCorrectParams) {
       game.puzzleState.currentMoveIndex++;
-      if (game.puzzleState.currentMoveIndex >= puzzle.solution.length) {
+      if (game.puzzleState.currentMoveIndex >= solution.length) {
         game.puzzleState.solved = true;
         game.puzzleState.active = false;
         this.markSolved(puzzle.id);
