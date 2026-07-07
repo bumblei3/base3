@@ -157,8 +157,8 @@ export function buildOpeningBook(GameClass: new () => IGame): void {
         'fire_pawn_10 -> -4,4',
         'water_knight_16 -> 0,0',
         'nature_knight_31 -> 0,0',
-        'fire_bishop_2 -> -4,5',
-        'water_bishop_17 -> 0,1',
+        'fire_bishop_2 -> -3,3',
+        'water_bishop_17 -> -1,0',
       ],
       weight: 85,
     },
@@ -171,8 +171,8 @@ export function buildOpeningBook(GameClass: new () => IGame): void {
         'fire_knight_6 -> 0,5',
         'water_knight_21 -> 0,5',
         'nature_knight_36 -> -5,5',
-        'fire_bishop_2 -> -4,5',
-        'water_bishop_17 -> 0,1',
+        'fire_bishop_2 -> -3,3',
+        'water_bishop_17 -> -1,0',
       ],
       weight: 90,
     },
@@ -184,9 +184,9 @@ export function buildOpeningBook(GameClass: new () => IGame): void {
         'nature_pawn_44 -> -5,5',
         'fire_pawn_13 -> -1,5',
         'water_pawn_28 -> 0,4',
-        'nature_pawn_43 -> -4,5',
+        'nature_pawn_43 -> -4,4',
         'fire_rook_7 -> 0,6',
-        'water_rook_22 -> 0,5',
+        'water_rook_22 -> 1,5',
       ],
       weight: 75,
     },
@@ -212,10 +212,10 @@ export function buildOpeningBook(GameClass: new () => IGame): void {
         'water_pawn_25 -> 0,2',
         'nature_pawn_40 -> -1,1',
         'fire_pawn_10 -> -4,4',
-        'water_pawn_25 -> 0,1',
+        'water_pawn_25 -> -1,3',
         'nature_knight_31 -> 0,0',
-        'fire_bishop_2 -> -4,5',
-        'water_queen_18 -> 0,2',
+        'fire_bishop_2 -> -3,3',
+        'water_queen_18 -> 0,1',
       ],
       weight: 85,
     },
@@ -228,8 +228,8 @@ export function buildOpeningBook(GameClass: new () => IGame): void {
         'fire_knight_6 -> 0,5',
         'water_knight_21 -> 0,5',
         'nature_knight_36 -> -5,5',
-        'fire_bishop_2 -> -4,5',
-        'water_bishop_17 -> 0,1',
+        'fire_bishop_2 -> -3,3',
+        'water_bishop_17 -> -1,0',
       ],
       weight: 90,
     },
@@ -241,9 +241,9 @@ export function buildOpeningBook(GameClass: new () => IGame): void {
         'nature_pawn_44 -> -5,5',
         'fire_pawn_13 -> -1,5',
         'water_pawn_28 -> 0,4',
-        'nature_pawn_43 -> -4,5',
+        'nature_pawn_43 -> -4,4',
         'fire_rook_7 -> 0,6',
-        'water_rook_22 -> 0,5',
+        'water_rook_22 -> 1,5',
       ],
       weight: 75,
     },
@@ -271,9 +271,9 @@ export function buildOpeningBook(GameClass: new () => IGame): void {
         'nature_pawn_40 -> -1,1',
         'fire_pawn_10 -> -4,4',
         'water_knight_16 -> 0,0',
-        'nature_pawn_40 -> -2,2',
-        'fire_bishop_2 -> -4,5',
-        'water_queen_18 -> 0,2',
+        'nature_pawn_40 -> 0,1',
+        'fire_bishop_2 -> -3,3',
+        'water_queen_18 -> 0,1',
         'nature_queen_33 -> -1,3',
       ],
       weight: 85,
@@ -287,8 +287,8 @@ export function buildOpeningBook(GameClass: new () => IGame): void {
         'fire_knight_6 -> 0,5',
         'water_knight_21 -> 0,5',
         'nature_knight_36 -> -5,5',
-        'fire_bishop_2 -> -4,5',
-        'water_bishop_17 -> 0,1',
+        'fire_bishop_2 -> -3,3',
+        'water_bishop_17 -> -1,0',
         'nature_bishop_32 -> -1,1',
       ],
       weight: 90,
@@ -303,7 +303,7 @@ export function buildOpeningBook(GameClass: new () => IGame): void {
         'water_pawn_28 -> 0,4',
         'nature_pawn_39 -> -1,1',
         'fire_rook_7 -> 0,6',
-        'water_rook_22 -> 0,5',
+        'water_rook_22 -> 1,5',
         'nature_rook_30 -> 0,-1',
       ],
       weight: 75,
@@ -361,12 +361,12 @@ export function buildOpeningBook(GameClass: new () => IGame): void {
         break;
       }
       const result = game.handleCellClick(parsed.target);
-      if (result && (result.action === 'move' || result.action === 'combat')) {
-        // Move was made, game state advanced
-      } else if (result && result.promotion) {
+      if (result && result.promotion) {
+        // Promotion: complete it (this advances the turn) before recording
         game.completePromotion('queen');
+      } else if (result && (result.action === 'move' || result.action === 'combat')) {
+        // Move was made, game state advanced
       } else {
-        // Move failed (illegal) - stop this line
         console.warn(
           `Opening book (${line.name}): Move ${moveStr} failed at ply ${i}`,
         );
