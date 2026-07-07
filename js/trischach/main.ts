@@ -780,6 +780,10 @@ function triggerAutoMove(): void {
       action = await calculateBestMoveWorker(game, game.currentFaction);
     }
 
+    // The user may have stopped auto-battle while the move was being computed.
+    // Abort before executing if so, otherwise a move plays after stopping.
+    if (!autoBattleActive || (game.state as string) === 'game_over') return;
+
     if (action) {
       const piece = game.pieces.find((p) => p.id === action.pieceId);
       if (!piece) {
@@ -862,6 +866,14 @@ function triggerAutoMove(): void {
       ].filter((f) => !game.eliminatedFactions.has(f));
       if (aliveFactions.length <= 1) {
         (game.state as string) = 'game_over';
+        autoBattleActive = false;
+        const autoBattleBtn = document.getElementById(
+          'auto-battle-btn',
+        ) as HTMLButtonElement | null;
+        if (autoBattleBtn) {
+          autoBattleBtn.textContent = '🤖 Auto Battle';
+          autoBattleBtn.classList.remove('active');
+        }
         updateUI();
       } else {
         game._nextTurn();
