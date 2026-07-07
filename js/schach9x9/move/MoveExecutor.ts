@@ -81,7 +81,12 @@ export async function executeMove(
   }
 
   // Handle En Passant
-  if (piece.type === 'p' && to.c !== from.c && !targetPiece) {
+  if (
+    piece.type === 'p' &&
+    to.c !== from.c &&
+    !targetPiece &&
+    game.lastMove?.isDoublePawnPush
+  ) {
     const capturedPawnRow = from.r;
     const capturedPawn = game.board[capturedPawnRow][to.c] as PieceWithMoved;
 
