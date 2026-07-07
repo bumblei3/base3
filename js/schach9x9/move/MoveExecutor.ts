@@ -60,24 +60,30 @@ export async function executeMove(
     const isKingside = to.c > from.c;
     const rookCol = isKingside ? game.boardSize - 1 : 0;
     const rookTargetCol = isKingside ? to.c - 1 : to.c + 1;
-    const rook = game.board[from.r][rookCol] as PieceWithMoved;
+    const rook = game.board[from.r][rookCol] as PieceWithMoved | null;
 
-    moveRecord.specialMove = {
-      type: 'castling',
-      isKingside,
-      rookFrom: { r: from.r, c: rookCol },
-      rookTo: { r: from.r, c: rookTargetCol },
-      rookHadMoved: rook.hasMoved,
-      rookType: rook.type,
-    };
+    // Only castle if the rook is present, is actually a rook, and neither the
+    // king nor the rook has already moved. Without this guard, executeMove
+    // assumes any 2-square king move is castling and crashes (null deref) or
+    // performs an illegal rook relocation when the rook is missing/moved.
+    if (rook && rook.type === 'r' && !piece.hasMoved && !rook.hasMoved) {
+      moveRecord.specialMove = {
+        type: 'castling',
+        isKingside,
+        rookFrom: { r: from.r, c: rookCol },
+        rookTo: { r: from.r, c: rookTargetCol },
+        rookHadMoved: rook.hasMoved,
+        rookType: rook.type,
+      };
 
-    moveRecord.isCastling = true;
+      moveRecord.isCastling = true;
 
-    // Move Rook
-    game.board[from.r][rookTargetCol] = rook;
-    game.board[from.r][rookCol] = null;
-    rook.hasMoved = true;
-    game.log(`${piece.color === 'white' ? 'Weiß' : 'Schwarz'} rochiert!`);
+      // Move Rook
+      game.board[from.r][rookTargetCol] = rook;
+      game.board[from.r][rookCol] = null;
+      rook.hasMoved = true;
+      game.log(`${piece.color === 'white' ? 'Weiß' : 'Schwarz'} rochiert!`);
+    }
   }
 
   // Handle En Passant
