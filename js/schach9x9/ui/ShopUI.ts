@@ -2,7 +2,8 @@
  * Modul für das Shop-System UI.
  * @module ShopUI
  */
-import { PIECE_VALUES } from '../config.js';
+import { SHOP_PIECES, PIECE_VALUES } from '../config.js';
+import { PIECE_SVGS } from '../chess-pieces.js';
 import { getPieceText } from './BoardRenderer.js';
 import type { GameLike } from '../types/game.js';
 
@@ -10,6 +11,56 @@ import type { GameLike } from '../types/game.js';
 // const { updateTutorRecommendations } = (await import('./TutorUI.js')) as any;
 
 type GameWithSelectedPiece = GameLike & { selectedShopPiece?: string | null };
+
+let shopItemsRendered = false;
+
+/**
+ * Builds the shop item buttons (one per SHOP_PIECES entry) inside the
+ * #shop-buttons container. Called once; the container may be missing from the
+ * static HTML, so we create it lazily if needed.
+ */
+export function renderShopItems(): void {
+  if (shopItemsRendered) return;
+  const panel = document.getElementById('shop-panel');
+  if (!panel) return;
+
+  let container = document.getElementById('shop-buttons');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'shop-buttons';
+    container.className = 'shop-buttons';
+    // Insert before the tutor recommendations section if present
+    const tutorSection = document.getElementById('tutor-recommendations-section');
+    if (tutorSection) {
+      panel.insertBefore(container, tutorSection);
+    } else {
+      panel.appendChild(container);
+    }
+  }
+
+  // Ensure the selected-piece status display exists (used by ShopManager.updateShopUI)
+  if (!document.getElementById('selected-piece-display')) {
+    const statusEl = document.createElement('div');
+    statusEl.id = 'selected-piece-display';
+    statusEl.className = 'selected-piece-display';
+    container.parentNode?.insertBefore(statusEl, container.nextSibling);
+  }
+
+  container.innerHTML = Object.values(SHOP_PIECES)
+    .map(p => {
+      const symbol = p.symbol as keyof typeof PIECE_SVGS['white'];
+      const svg = PIECE_SVGS['white'][symbol] ?? '';
+      const cost = PIECE_VALUES[p.symbol as keyof typeof PIECE_VALUES] ?? p.points;
+      return `<button class="shop-item" data-piece="${p.symbol}" data-cost="${cost}" title="${p.name} (${cost} Pkt)">
+        <span class="shop-item-svg">${svg}</span>
+        <span class="shop-item-name">${p.name}</span>
+        <span class="shop-item-cost">${cost}</span>
+      </button>`;
+    })
+    .join('');
+
+  shopItemsRendered = true;
+}
 
 /**
  * Zeigt oder verbirgt das Shop-Panel.
@@ -21,6 +72,7 @@ export function showShop(game: GameLike, show: boolean): void {
   if (!panel) return;
 
   if (show) {
+    renderShopItems();
     panel.classList.remove('hidden');
     document.body.classList.add('setup-mode');
   } else {

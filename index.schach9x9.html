@@ -151,6 +151,42 @@
         </div>
       </div>
 
+      <!-- Puzzle Menu Overlay -->
+      <div id="puzzle-menu-overlay" class="modal-overlay hidden">
+        <div class="puzzle-menu-content">
+          <h2>Puzzles</h2>
+          <div id="puzzle-menu-list" class="puzzle-menu-list"></div>
+          <button id="puzzle-menu-close-btn" class="btn-secondary">Schließen</button>
+        </div>
+      </div>
+
+      <!-- Puzzle Overlay -->
+      <div id="puzzle-overlay" class="modal-overlay hidden">
+        <div class="puzzle-content">
+          <h2 id="puzzle-title">Puzzle</h2>
+          <p id="puzzle-description"></p>
+          <div id="puzzle-status" class="puzzle-status"></div>
+          <div class="puzzle-actions">
+            <button id="puzzle-next-btn" class="btn-primary hidden">Weiter</button>
+            <button id="puzzle-exit-btn" class="btn-secondary">Beenden</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tutorial Overlay -->
+      <div id="tutorial-overlay" class="modal-overlay hidden">
+        <div class="tutorial-content">
+          <h2>Interaktives Tutorial</h2>
+          <div id="tutorial-steps" class="tutorial-steps"></div>
+          <div class="tutorial-nav">
+            <button id="tutorial-prev" class="btn-secondary">Zurück</button>
+            <span id="tutorial-current-step">1</span> / <span id="tutorial-total-steps">1</span>
+            <button id="tutorial-next" class="btn-primary">Weiter</button>
+            <button id="tutorial-close" class="btn-secondary">Schließen</button>
+          </div>
+        </div>
+      </div>
+
       <!-- Generic Modal -->
       <div id="generic-modal" class="modal-overlay hidden">
         <div class="modal-content">

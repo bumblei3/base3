@@ -195,18 +195,19 @@ export class DOMHandler {
       });
     }
 
-    // Shop Item Selection
-    document.querySelectorAll<HTMLElement>('.shop-item').forEach(btn => {
-      btn.addEventListener('click', () => {
+    // Shop Item Selection (event delegation on the always-present
+    // #shop-panel so dynamically rendered shop-items also receive clicks)
+    const shopPanel = document.getElementById('shop-panel');
+    if (shopPanel) {
+      shopPanel.addEventListener('click', (e) => {
+        const btn = (e.target as HTMLElement).closest('.shop-item') as HTMLElement | null;
+        if (!btn) return;
         const pieceType = btn.dataset.piece;
         if (pieceType && this.gameController) {
           this.gameController.selectShopPiece(pieceType);
-          // Highlight selected button
-          document.querySelectorAll('.shop-item').forEach(b => b.classList.remove('selected'));
-          btn.classList.add('selected');
         }
       });
-    });
+    }
 
     // Analysis Toggle Buttons
     const bestMoveBtn = document.getElementById('best-move-btn');
