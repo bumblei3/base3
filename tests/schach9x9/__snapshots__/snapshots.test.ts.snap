@@ -682,30 +682,16 @@ exports[`Visual DOM Snapshot Tests > Initial setup phase snapshot 1`] = `
 
     <!-- Service Worker Registration -->
     
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker
-            .register('/service-worker.ts')
-            .then((registration) => {
-              console.log('[PWA] Service Worker registered:', registration.scope);
-            })
-            .catch((error) => {
-              console.warn('[PWA] Service Worker registration failed:', error);
-            });
-        });
-      }
 
-      // Mobile menu toggle
       const toggle = document.querySelector('.nav-toggle');
       const navLinks = document.querySelector('.nav-links');
-      if (toggle && navLinks) {
-        toggle.addEventListener('click', () => {
+      if (toggle &amp;&amp; navLinks) {
+        toggle.addEventListener('click', () =&gt; {
           const isOpen = navLinks.classList.toggle('open');
           toggle.setAttribute('aria-expanded', isOpen);
         });
-        navLinks.querySelectorAll('a').forEach(link => {
-          link.addEventListener('click', () => {
+        navLinks.querySelectorAll('a').forEach(link =&gt; {
+          link.addEventListener('click', () =&gt; {
             navLinks.classList.remove('open');
             toggle.setAttribute('aria-expanded', 'false');
           });
@@ -715,20 +701,20 @@ exports[`Visual DOM Snapshot Tests > Initial setup phase snapshot 1`] = `
       // Touch feedback for board cells
       const board = document.getElementById('board');
       if (board) {
-        board.addEventListener('touchstart', (e) => {
+        board.addEventListener('touchstart', (e) =&gt; {
           const cell = e.target.closest('.cell');
           if (cell) cell.classList.add('touch-active');
         }, { passive: true });
 
-        board.addEventListener('touchend', (e) => {
+        board.addEventListener('touchend', (e) =&gt; {
           const cell = e.target.closest('.cell');
           if (cell) cell.classList.remove('touch-active');
         }, { passive: true });
 
         // Prevent double-tap zoom on board
-        board.addEventListener('dblclick', (e) => e.preventDefault());
+        board.addEventListener('dblclick', (e) =&gt; e.preventDefault());
       }
-    </script>
+    
   
 "
 `;
