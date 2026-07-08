@@ -5,34 +5,21 @@
     "moduleResolution": "bundler",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "noImplicitOverride": true,
-    "forceConsistentCasingInFileNames": true,
-    "esModuleInterop": true,
+    "noEmit": true,
     "skipLibCheck": true,
-    "resolveJsonModule": true,
+    "esModuleInterop": true,
     "isolatedModules": true,
-    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@trischach/*": ["js/trischach/*"],
-      "@shared/*": ["js/shared/*"]
-    },
-    "types": ["vitest/globals", "@types/node", "happy-dom"],
-    "composite": true,
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "outDir": "./dist/trischach",
-    "rootDir": "./"
+      "@trischach/*": ["js/trischach/*"]
+    }
   },
   "include": [
-    "js/trischach/**/*",
-    "js/shared/**/*",
-    "tests/trischach/**/*",
-    "tests-e2e/**/*",
-    "playwright.config.ts",
-    "vitest.config.ts"
+    "js/trischach/**/*.ts",
+    "tests/trischach/**/*.ts",
+    "tests/trischach/**/*.js",
+    "tests-e2e/**/*.ts"
   ],
-  "exclude": ["node_modules", "dist", "js/**/*.js"]
+  "exclude": ["node_modules", "dist"]
 }

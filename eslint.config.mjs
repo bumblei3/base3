@@ -20,7 +20,9 @@ export default tseslint.config({
     'public/sw.js',
     'storybook-static/**',
     'schach9x9/**/*.js',
+    'js/trischach/**',
     'trischach/**/*.js',
+    'trischach/js/**',
     'trischach/sw.js',
     'trischach/generate-*.js',
     'trischach/tournament.js',
@@ -57,14 +59,14 @@ export default tseslint.config({
       afterAll: 'readonly',
     },
     parserOptions: {
-      project: ['./tsconfig.json', './tsconfig.schach9x9.json', './tsconfig.trischach.json'],
+      project: ['./tsconfig.json', './tsconfig.schach9x9.json'],
       tsconfigRootDir: import.meta.dirname,
     },
   },
   settings: {
     'import/resolver': {
       typescript: {
-        project: ['./tsconfig.schach9x9.json', './tsconfig.trischach.json'],
+        project: ['./tsconfig.schach9x9.json'],
       },
     },
   },
@@ -114,17 +116,22 @@ export default tseslint.config({
     '@typescript-eslint/no-require-imports': 'off',
   },
 }, {
-  files: ['tests/**/*.ts', 'tests/**/*.js', 'tests/**/*.tsx', 'tests/**/*.jsx', 'tests-e2e/**/*.ts', 'tests-e2e/**/*.js'],
+  files: ['tests/**/*.ts', 'tests/**/*.js', 'tests/**/*.tsx', 'tests/**/*.jsx', 'tests-e2e/**/*.ts', 'tests-e2e/**/*.js', 'trischach/js/**/*.ts', 'trischach/js/**/*.js', 'js/trischach/**/*.ts', 'js/trischach/**/*.js'],
+  languageOptions: {
+    parserOptions: {
+      project: null,
+    },
+  },
   rules: {
     'no-unused-vars': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
   },
 }, {
-  files: ['vite.config.ts', 'vite.config.*.ts', 'vitest.config.ts', 'playwright.config.ts', 'service-worker.ts', 'vite.landing.config.ts'],
-  languageOptions: {
-    parserOptions: {
-      project: null,
-    },
+files: ['vite.config.ts', 'vite.config.*.ts', 'vitest.config.ts', 'playwright.config.ts', 'service-worker.ts', 'vite.landing.config.ts'],
+languageOptions: {
+  parserOptions: {
+    project: null,
   },
+},
 }, storybook.configs["flat/recommended"]);
