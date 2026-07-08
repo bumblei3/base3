@@ -370,6 +370,10 @@ exports[`Visual DOM Snapshot Tests > Initial setup phase snapshot 1`] = `
                   <option value="en">English</option>
                 </select>
               </div>
+              <div class="setting-group">
+                <h3 data-i18n="settings.install">App installieren</h3>
+                <button id="install-app-btn" class="btn-secondary hidden">Als App installieren</button>
+              </div>
             </div>
           </div>
         </div>

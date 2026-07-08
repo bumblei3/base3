@@ -61,3 +61,36 @@ if ('serviceWorker' in navigator && !window.location.search.includes('disable-sw
     window.addEventListener('load', registerSW);
   }
 }
+
+// Capture the install prompt so we can trigger it from a UI button
+// (browsers only fire this once and don't show a persistent install button).
+interface InstallPromptEvent extends Event {
+  prompt(): Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+}
+let deferredInstallPrompt: InstallPromptEvent | null = null;
+
+window.addEventListener('beforeinstallprompt', (e: Event) => {
+  // Prevent the default mini-infobar from appearing on its own.
+  e.preventDefault();
+  deferredInstallPrompt = e as InstallPromptEvent;
+  // Reveal the install button (hidden by default until the prompt is available).
+  const btn = document.getElementById('install-app-btn');
+  if (btn) btn.classList.remove('hidden');
+});
+
+window.addEventListener('appinstalled', () => {
+  deferredInstallPrompt = null;
+  const btn = document.getElementById('install-app-btn');
+  if (btn) btn.classList.add('hidden');
+});
+
+// Expose for DOMHandler (kept minimal — only the prompt trigger is needed).
+(window as unknown as { __promptInstall?: () => Promise<void> }).__promptInstall = async () => {
+  if (!deferredInstallPrompt) return;
+  deferredInstallPrompt.prompt();
+  await deferredInstallPrompt.userChoice;
+  deferredInstallPrompt = null;
+  const btn = document.getElementById('install-app-btn');
+  if (btn) btn.classList.add('hidden');
+};

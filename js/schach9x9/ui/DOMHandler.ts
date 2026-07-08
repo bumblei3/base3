@@ -819,7 +819,17 @@ export class DOMHandler {
       });
     }
 
-    // --- Language selector ---
+    // --- Install app button (PWA) ---
+    const installBtn = document.getElementById('install-app-btn');
+    if (installBtn) {
+      installBtn.addEventListener('click', async () => {
+        const promptInstall = (window as unknown as { __promptInstall?: () => Promise<void> }).__promptInstall;
+        if (promptInstall) {
+          await promptInstall();
+        }
+      });
+    }
+
     const languageSelect = document.getElementById('language-select') as HTMLSelectElement | null;
     if (languageSelect) {
       languageSelect.value = getLocale();
