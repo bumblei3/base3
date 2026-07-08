@@ -68,7 +68,7 @@
     "vitest": "^4.0.17"
   },
   "dependencies": {
-    "@sentry/browser": "^10.63.0",
+    "@sentry/browser": "^10.64.0",
     "three": "^0.185.1"
   },
   "engines": {
