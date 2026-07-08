@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parsePGN } from '../../../js/schach9x9/utils/PGNParser.js';
+import { parsePGN } from '../../../js/schach9x9/utils/PGNImportParser.js';
 
 describe('parsePGN', () => {
   it('parses headers and SAN moves with alternating colors', () => {

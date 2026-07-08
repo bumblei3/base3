@@ -17,7 +17,11 @@ import type { TutorController } from './tutorController.js';
 import type { AnalysisManager } from './AnalysisManager.js';
 import type { UIEffects } from './ui/ui_effects.js';
 import type { KeyboardManager } from './input/KeyboardManager.js';
-import { setLocale, getLocale } from './i18n/index.js';
+import { setLocale, getLocale, t } from './i18n/index.js';
+import { showToast } from './ui/OverlayManager.js';
+import { generatePGN, downloadPGN } from './utils/PGNGenerator.js';
+import { parsePGN } from './utils/PGNImportParser.js';
+import { loadFENIntoGame } from './utils/persistence.js';
 // BattleChess3D is lazy-loaded at runtime (dynamic import) - only the type is imported here
 
 type BattleChess3DConstructor = new (_container: HTMLElement) => BattleChess3D;
@@ -513,5 +517,71 @@ export class App {
     } else {
       document.exitFullscreen().catch(() => {});
     }
+  }
+
+  /**
+   * Apply a pasted FEN to the live game (replaces board + side to move).
+   */
+  importFEN(fen: string): boolean {
+    if (!this.game) return false;
+    const ok = loadFENIntoGame(this.game as Game, fen.trim());
+    if (ok) {
+      this.render();
+      showToast(t('file.loaded'), 'success');
+    } else {
+      showToast(t('file.invalidFen'), 'error');
+    }
+    return ok;
+  }
+
+  /**
+   * Export the current game as a downloadable PGN file.
+   */
+  exportPGN(): void {
+    if (!this.game) return;
+    const pgn = generatePGN(this.game as Game);
+    downloadPGN(pgn, `game-${Date.now()}.pgn`);
+  }
+
+  /**
+   * Import a PGN string. If it carries a SetUp FEN, load it; otherwise
+   * replay the SAN move list onto the current board.
+   * @returns true when at least the header/FEN was applied
+   */
+  importPGN(pgn: string): boolean {
+    if (!this.game) return false;
+    const { headers, moves } = parsePGN(pgn);
+    const setupFen = headers.FEN;
+    if (setupFen) {
+      const ok = this.importFEN(setupFen);
+      if (!ok) return false;
+    }
+    if (moves.length === 0) {
+      if (!setupFen) {
+        showToast(t('file.invalidPgn'), 'error');
+        return false;
+      }
+      return true;
+    }
+    // Minimal MVP: replay SAN moves via the move executor if available.
+    // Full SAN→move validation is out of scope for P1.3; we surface a toast
+    // when no executable path exists (e.g. no moveController bound).
+    const gc = this.gameController;
+    if (gc && (gc as unknown as { replayMovesFromPGN?: (_m: string[]) => boolean }).replayMovesFromPGN) {
+      const sans = moves.map((m) => m.san);
+      const replayed = (gc as unknown as { replayMovesFromPGN: (_m: string[]) => boolean }).replayMovesFromPGN(sans);
+      if (replayed) {
+        this.render();
+        showToast(t('file.loaded'), 'success');
+        return true;
+      }
+    }
+    showToast(t('file.invalidPgn'), 'error');
+    return false;
+  }
+
+  private render(): void {
+    const game = this.game as (Game & { renderBoard?: () => void }) | null;
+    if (game?.renderBoard) game.renderBoard();
   }
 }

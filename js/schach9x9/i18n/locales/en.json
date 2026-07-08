@@ -64,6 +64,15 @@
     "mentorLevel": "AI Mentor",
     "mentorStrict": "Strict (errors & blunders)"
   },
+  "file": {
+    "title": "Game import/export",
+    "importFen": "Load FEN",
+    "exportPgn": "Export PGN",
+    "importPgn": "Import PGN",
+    "invalidFen": "Invalid FEN",
+    "invalidPgn": "Invalid PGN",
+    "loaded": "Position loaded"
+  },
   "setup": {
     "whiteKing": "White: Choose a corridor for the king",
     "blackKing": "Black: Choose a corridor for the king",

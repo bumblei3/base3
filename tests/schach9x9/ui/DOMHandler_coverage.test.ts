@@ -69,6 +69,9 @@ describe('DOMHandler Comprehensive Coverage', () => {
         offerDraw: vi.fn(),
       },
       battleChess3D: { enabled: false },
+      exportPGN: vi.fn(),
+      importFEN: vi.fn(),
+      importPGN: vi.fn(),
     };
 
     document.body.innerHTML = `

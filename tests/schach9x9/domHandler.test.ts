@@ -115,6 +115,9 @@ describe('DOMHandler', () => {
         requestHint: vi.fn(),
         setTimeControl: vi.fn(),
       },
+      exportPGN: vi.fn(),
+      importFEN: vi.fn(),
+      importPGN: vi.fn(),
     };
 
     // Create full required DOM elements

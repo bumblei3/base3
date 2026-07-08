@@ -64,6 +64,15 @@
     "mentorLevel": "KI-Mentor",
     "mentorStrict": "Streng (Fehler & Patzer)"
   },
+  "file": {
+    "title": "Spiel import/export",
+    "importFen": "FEN laden",
+    "exportPgn": "PGN exportieren",
+    "importPgn": "PGN importieren",
+    "invalidFen": "Ungültiges FEN",
+    "invalidPgn": "Ungültiges PGN",
+    "loaded": "Position geladen"
+  },
   "setup": {
     "whiteKing": "Weiß: Wähle einen Korridor für den König",
     "blackKing": "Schwarz: Wähle einen Korridor für den König",

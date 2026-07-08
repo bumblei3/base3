@@ -7,7 +7,7 @@
 
 import { debounce } from '@shared/utils';
 import * as UI from '../ui.js';
-import { getLocale, setLocale, ensureLocale } from '../i18n/index.js';
+import { getLocale, setLocale, ensureLocale, t } from '../i18n/index.js';
 import { clearPieceCache } from '../ui/BoardRenderer.js';
 import { showToast } from '../ui/OverlayManager.js';
 import { generatePGN, copyPGNToClipboard, downloadPGN } from '../utils/PGNGenerator.js';
@@ -310,6 +310,30 @@ export class DOMHandler {
         } else {
           showToast('Kopieren nicht möglich', 'error');
         }
+      });
+    }
+
+    // File I/O: FEN load / PGN export / PGN import
+    const importFenBtn = document.getElementById('import-fen-btn');
+    if (importFenBtn) {
+      importFenBtn.addEventListener('click', () => {
+        const fen = window.prompt(t('file.importFen') + ' (FEN):');
+        if (fen && this.app) this.app.importFEN(fen);
+      });
+    }
+
+    const exportPgnBtn = document.getElementById('export-pgn-btn');
+    if (exportPgnBtn) {
+      exportPgnBtn.addEventListener('click', () => {
+        if (this.app) this.app.exportPGN();
+      });
+    }
+
+    const importPgnBtn = document.getElementById('import-pgn-btn');
+    if (importPgnBtn) {
+      importPgnBtn.addEventListener('click', () => {
+        const pgn = window.prompt(t('file.importPgn') + ' (PGN):');
+        if (pgn && this.app) this.app.importPGN(pgn);
       });
     }
 
