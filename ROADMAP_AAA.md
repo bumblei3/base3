@@ -253,12 +253,12 @@ jobs:
 | Phase | Aufwand | Risiko | Blocker | Status |
 |-------|---------|--------|---------|--------|
 | 1. Tests grün + Coverage + Lint | 2W | Niedrig | Keine | ✅ 2026-07-07 |
-| 2. E2E | 2W | Mittel | Playwright CI Zeit | 🔄 globalSetup/Teardown fix → beide Projekte collecten+laufen; Trischach 15/15 ✅; Schach9x9 ~47/69 grün, 22 known-failing (veraltete Tests, nicht App-Bugs — UI-Text/DOM seit Test-Erstellung geändert, z.B. 36 statt 18 Figuren auf 9x9) |
+| 2. E2E | 2W | Mittel | Playwright CI Zeit | ✅ 2026-07-08 — Trischach 15/15 ✅; Schach9x9 70 passed / 1 skipped / 0 failed (Flakes via global storage isolation + Angel/Promotion-Test-Reparatur behoben, f12022b). Der alte "22 known-failing" Vermerk war falsch — echte App-Regressions wurden als App-Bugs gefixt (b109022), keine dauerhaften Test-Skips. |
 | 3. Performance | 1W | Mittel | WASM/Worker Stabilität | ✅ 2026-07-07 |
 | 4. A11y | 1W | Niedrig | Design Token Audit | ✅ 2026-07-07 (Trischach Landing + Schach9x9 Main Menu/Board/Shop/Settings = 0 violations) |
-| 5. Security | 1W | Niedrig | CSP Testing | 🔄 CSP-Header (`_headers`) + CI-Copy-Step hinzugefügt; `npm audit` clean (0 vulns); CSP-Runtime-Test als `playwright.csp.config.mjs` (läuft in CI) |
+| 5. Security | 1W | Niedrig | CSP Testing | ✅ 2026-07-08 — CSP-Header (`_headers`) + CI-Copy-Step; `npm audit` clean (0 vulns); CSP-Runtime-Test als `playwright.csp.config.mjs` läuft in CI grün |
 | 6. Observability | 1W | Niedrig | Sentry Setup | ⬜ |
-| 7. DX/Docs | 1W | Niedrig | Storybook Config | ⬜ |
+| 7. DX/Docs | 1W | Niedrig | Storybook Config | 🔄 2026-07-08 — Storybook fertig (69d50f0, vanilla TS via html-vite); TypeDoc API-Docs + Contributing Guide + ADRs offen |
 | 8. Polish | Laufend | Niedrig | Zeit | ⬜ |
 
 **Gesamt: ~10-12 Wochen für "AAA Launch"**
@@ -274,24 +274,32 @@ jobs:
 5. ✅ **Security**: `npm audit` → 0 vulnerabilities ✅
 6. ✅ **Bundle**: Initial Bundle < 200KB gzip (Trischach ~90KB, Schach9x9 < 200KB ohne lazy 3D-Chunk). battleChess3D (148KB gzip) bereits lazy via dynamischem Import. `inlineDynamicImports`-Deprecation in vite.config.trischach.ts entfernt. ui.ts-Barrel-Split bewusst NICHT gemacht — ROI zu schlecht (~15KB gzip) bei ~1843 Test-Risiko, da ~70% der ui.ts-Exports startup-kritisch sind.
 7. ✅ **A11y**: `npx playwright test tests-e2e/accessibility.spec.ts --project=trischach-e2e` + Schach9x9 `e2e/accessibility.spec.ts` (4 Tests) → 0 critical/serious violations
-8. 🔄 **CSP Header** in `_headers` (GitHub Pages) + CI-Copy-Step; `npm audit` clean (0 vulns); CSP-Runtime-Test `playwright.csp.config.mjs`
+8. ✅ **CSP Header** in `_headers` (GitHub Pages) + CI-Copy-Step; `npm audit` clean (0 vulns); CSP-Runtime-Test `playwright.csp.config.mjs` grün
+9. ✅ **E2E vollständig grün**: Schach9x9 70 passed / 1 skipped / 0 failed (f12022b)
+10. ✅ **Storybook** für Schach9x9 UI (69d50f0, vanilla TS via html-vite)
 
 ---
 
-## 📝 Nächste Schritte (2026-07-07)
+## 📝 Nächste Schritte (2026-07-08)
 
+Offen (alle "nice to have", kein harter Blocker):
 ```bash
-# Phase 4: Accessibility (WCAG 2.1 AA)
-# 1. A11y Audit (Playwright + axe)
-npx playwright test tests-e2e/accessibility.spec.ts --project=trischach-e2e
+# Phase 6: Observability
+# Sentry Setup (Self-hosted/Cloud) + Source Maps Upload + Web Vitals Endpoint
 
-# 2. Kontrast / Design Token Audit
-npx @axe-core/playwright tests-e2e/ --project=trischach-e2e
+# Phase 7: Docs vervollständigen
+# - TypeDoc → /docs/ (GitHub Pages)
+# - CONTRIBUTING.md + CODE_OF_CONDUCT.md
+# - ADRs (Architecture Decision Records) im Repo
 
-# 3. Keyboard-Navigation & ARIA (Board als role="grid", aria-live Status)
+# Phase 8.2: Plattform-Features (empfohlen, klein + testbar)
+# - Global Keyboard Shortcuts (? Help, u Undo, h Hint, p Pause)
+# - Share API / Clipboard API (FEN, PGN, Replay-Link)
+# - Custom Install Prompt (PWA)
 ```
 
 > Phase 3 (Performance/Bundle) abgehakt: Initial Bundle < 200KB gzip, 3D-Chunk lazy, Deprecation-Warnung entfernt. ui.ts-Barrel-Split bewusst übersprungen (schlechter ROI).
+> "AAA Launch" ist faktisch erreicht (Tests, Coverage, Lint, Type Safety, Perf, A11y, Security, E2E alle grün). Verbleibend: Observability, Docs-Vervollständigung, Platform-Polish.
 
 ---
 
