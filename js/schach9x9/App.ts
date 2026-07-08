@@ -526,7 +526,7 @@ export class App {
     if (!this.game) return false;
     const ok = loadFENIntoGame(this.game as Game, fen.trim());
     if (ok) {
-      this.render();
+      UI_MODULE?.renderBoard(this.game as Game);
       showToast(t('file.loaded'), 'success');
     } else {
       showToast(t('file.invalidFen'), 'error');
@@ -571,17 +571,12 @@ export class App {
       const sans = moves.map((m) => m.san);
       const replayed = (gc as unknown as { replayMovesFromPGN: (_m: string[]) => boolean }).replayMovesFromPGN(sans);
       if (replayed) {
-        this.render();
+        UI_MODULE?.renderBoard(this.game as Game);
         showToast(t('file.loaded'), 'success');
         return true;
       }
     }
     showToast(t('file.invalidPgn'), 'error');
     return false;
-  }
-
-  private render(): void {
-    const game = this.game as (Game & { renderBoard?: () => void }) | null;
-    if (game?.renderBoard) game.renderBoard();
   }
 }
