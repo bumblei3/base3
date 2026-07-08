@@ -10,11 +10,9 @@ export default defineConfig({
     exclude: ["node_modules", "tests-e2e"],
     testTimeout: 60000,
     // Run tests sequentially in CI to avoid memory issues
-    pool: isCI ? "forks" : "threads",
-    poolOptions: {
-      forks: { singleFork: true },
-      threads: { singleThread: true },
-    },
+    pool: isCI
+      ? { forks: { singleFork: true } }
+      : { threads: { singleThread: true } },
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],
