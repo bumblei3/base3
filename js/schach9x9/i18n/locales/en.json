@@ -1,0 +1,75 @@
+{
+  "menu": {
+    "newGame": "New Game",
+    "loadGame": "Load Game",
+    "saveGame": "Save Game",
+    "settings": "Settings",
+    "help": "Help",
+    "achievements": "Achievements",
+    "pause": "Pause"
+  },
+  "pause": {
+    "title": "Paused",
+    "resume": "Resume",
+    "hint": "Press P or ESC to resume"
+  },
+  "game": {
+    "white": "White",
+    "black": "Black",
+    "toMove": "to move",
+    "whiteToMove": "White to move",
+    "blackToMove": "Black to move",
+    "analysisMode": "Analysis Mode",
+    "running": "Game in progress",
+    "moveCount": "{n} moves",
+    "win": "Victory",
+    "loss": "Defeat",
+    "draw": "Draw",
+    "over": "Game over!",
+    "won": "has won!",
+    "begin": "Game starts! White to move."
+  },
+  "toast": {
+    "bestMoveOn": "Best Move ON",
+    "bestMoveOff": "Best Move OFF",
+    "success": "Success",
+    "error": "Error",
+    "achievementUnlocked": "Achievement unlocked: {name}",
+    "saveError": "Error saving game.",
+    "loadError": "Error loading: {message}",
+    "tipsOnlyOnYourTurn": "Tips are only available on your turn."
+  },
+  "analysis": {
+    "modeEnabled": "Analysis mode enabled. Moves do not trigger AI responses.",
+    "modeDisabled": "Analysis mode ended.",
+    "positionRestored": "Position restored.",
+    "positionKept": "Current position kept.",
+    "continuousEnabled": "Continuous analysis enabled.",
+    "continuousDisabled": "Continuous analysis disabled."
+  },
+  "import": {
+    "error": "Import error: {error}",
+    "loadError": "Error loading PGN file"
+  },
+  "tutor": {
+    "best": "Best Move",
+    "mistake": "Mistake",
+    "good": "Good Move",
+    "excellent": "Excellent Move",
+    "blunder": "Blunder",
+    "lost": "Lost"
+  },
+  "settings": {
+    "language": "Language",
+    "mentorLevel": "AI Mentor",
+    "mentorStrict": "Strict (errors & blunders)"
+  },
+  "setup": {
+    "whiteKing": "White: Choose a corridor for the king",
+    "blackKing": "Black: Choose a corridor for the king",
+    "whitePieces": "White: Buy troops",
+    "blackPieces": "Black: Buy troops",
+    "whiteUpgrades": "White: Click a piece for upgrades",
+    "blackUpgrades": "Black: Click a piece for upgrades"
+  }
+}

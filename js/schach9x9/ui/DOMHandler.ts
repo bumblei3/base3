@@ -7,6 +7,7 @@
 
 import { debounce } from '@shared/utils';
 import * as UI from '../ui.js';
+import { getLocale, setLocale, ensureLocale } from '../i18n/index.js';
 import { clearPieceCache } from '../ui/BoardRenderer.js';
 import { showToast } from '../ui/OverlayManager.js';
 import { generatePGN, copyPGNToClipboard, downloadPGN } from '../utils/PGNGenerator.js';
@@ -815,6 +816,20 @@ export class DOMHandler {
       volumeSlider.addEventListener('input', debounce(handleVolumeInput, 50));
       volumeSlider.addEventListener('input', () => {
         volumeValue.textContent = volumeSlider.value + '%';
+      });
+    }
+
+    // --- Language selector ---
+    const languageSelect = document.getElementById('language-select') as HTMLSelectElement | null;
+    if (languageSelect) {
+      languageSelect.value = getLocale();
+      languageSelect.addEventListener('change', async () => {
+        const next = languageSelect.value as 'de' | 'en';
+        await ensureLocale(next);
+        setLocale(next);
+        document.documentElement.lang = next;
+        // Re-render locale-dependent UI without restarting the game.
+        UI.updateStatus(this.game);
       });
     }
 

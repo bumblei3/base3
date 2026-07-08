@@ -1,6 +1,7 @@
 import { PHASES, type Player, type Square, type PieceWithMoved, type MoveHistoryEntry, type LastMoveInfo } from './gameEngine.js';
 import type { GameController, GameExtended } from './gameController.js';
 import * as UI from './ui.js';
+import { t } from './i18n/index.js';
 
 interface AnalysisBasePosition {
   board: (PieceWithMoved | null)[][];
@@ -71,7 +72,7 @@ export class AnalysisController {
     UI.renderBoard(this.game);
     UI.renderEvalGraph(this.game);
 
-    this.game.log('🔍 Analyse-Modus aktiviert. Züge lösen keine KI-Reaktion aus.');
+    this.game.log(t('analysis.modeEnabled'));
 
     // Start continuous analysis if enabled
     if (this.game.continuousAnalysis && this.game.aiController) {
@@ -130,8 +131,8 @@ export class AnalysisController {
     UI.renderEvalGraph(this.game);
 
     const message = restore
-      ? '🔍 Analyse-Modus beendet. Position wiederhergestellt.'
-      : '🔍 Analyse-Modus beendet. Aktuelle Position behalten.';
+      ? t('analysis.modeDisabled') + ' ' + t('analysis.positionRestored')
+      : t('analysis.modeDisabled') + ' ' + t('analysis.positionKept');
     this.game.log(message);
 
     return true;
@@ -151,9 +152,9 @@ export class AnalysisController {
 
     if (this.game.continuousAnalysis && this.game.analysisMode) {
       this.requestPositionAnalysis();
-      this.game.log('🔄 Kontinuierliche Analyse aktiviert.');
+      this.game.log(t('analysis.continuousEnabled'));
     } else {
-      this.game.log('⏸️ Kontinuierliche Analyse deaktiviert.');
+      this.game.log(t('analysis.continuousDisabled'));
     }
   }
 

@@ -363,6 +363,13 @@ exports[`Visual DOM Snapshot Tests > Initial setup phase snapshot 1`] = `
                 <h3>Animationen</h3>
                 <button id="animations-toggle-btn" class="btn-secondary">Animationen an/aus</button>
               </div>
+              <div class="setting-group">
+                <h3 data-i18n="settings.language">Sprache</h3>
+                <select id="language-select" class="btn-secondary" aria-label="Sprache">
+                  <option value="de">Deutsch</option>
+                  <option value="en">English</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>

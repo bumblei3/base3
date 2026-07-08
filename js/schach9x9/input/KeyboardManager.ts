@@ -4,6 +4,7 @@
  * @module KeyboardManager
  */
 import { showToast, closeModal, renderBoard } from '../ui.js';
+import { t } from '../i18n/index.js';
 import type { App } from '../App.js';
 import type { Game } from '../gameEngine.js';
 
@@ -101,7 +102,7 @@ export class KeyboardManager {
       event.preventDefault();
       if (g.analysisManager) {
         const active = g.analysisManager.toggleBestMove();
-        showToast(active ? 'Bester Zug AN' : 'Bester Zug AUS', 'info');
+        showToast(active ? t('toast.bestMoveOn') : t('toast.bestMoveOff'), 'info');
         const btn = document.getElementById('best-move-btn');
         if (btn) btn.classList.toggle('active', active);
       }

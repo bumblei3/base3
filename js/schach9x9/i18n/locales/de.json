@@ -1,0 +1,75 @@
+{
+  "menu": {
+    "newGame": "Neues Spiel",
+    "loadGame": "Spiel laden",
+    "saveGame": "Spiel speichern",
+    "settings": "Einstellungen",
+    "help": "Hilfe",
+    "achievements": "Erfolge",
+    "pause": "Pause"
+  },
+  "pause": {
+    "title": "Pausiert",
+    "resume": "Fortsetzen",
+    "hint": "Drücke P oder ESC zum Fortsetzen"
+  },
+  "game": {
+    "white": "Weiß",
+    "black": "Schwarz",
+    "toMove": "am Zug",
+    "whiteToMove": "Weiß am Zug",
+    "blackToMove": "Schwarz am Zug",
+    "analysisMode": "Analyse-Modus",
+    "running": "Spiel läuft",
+    "moveCount": "{n} Züge",
+    "win": "Gewonnen",
+    "loss": "Verloren",
+    "draw": "Unentschieden",
+    "over": "Spiel vorbei!",
+    "won": "hat gewonnen!",
+    "begin": "Spiel beginnt! Weiß ist am Zug."
+  },
+  "toast": {
+    "bestMoveOn": "Bester Zug AN",
+    "bestMoveOff": "Bester Zug AUS",
+    "success": "Erfolg",
+    "error": "Fehler",
+    "achievementUnlocked": "Erfolg freigeschaltet: {name}",
+    "saveError": "Fehler beim Speichern.",
+    "loadError": "Fehler beim Laden: {message}",
+    "tipsOnlyOnYourTurn": "Tipps sind nur verfügbar, wenn du am Zug bist."
+  },
+  "analysis": {
+    "modeEnabled": "Analyse-Modus aktiviert. Züge lösen keine KI-Reaktion aus.",
+    "modeDisabled": "Analyse-Modus beendet.",
+    "positionRestored": "Position wiederhergestellt.",
+    "positionKept": "Aktuelle Position behalten.",
+    "continuousEnabled": "Kontinuierliche Analyse aktiviert.",
+    "continuousDisabled": "Kontinuierliche Analyse deaktiviert."
+  },
+  "import": {
+    "error": "Fehler beim Import: {error}",
+    "loadError": "Fehler beim Laden der PGN Datei"
+  },
+  "tutor": {
+    "best": "Bester Zug",
+    "mistake": "Fehler",
+    "good": "Guter Zug",
+    "excellent": "Exzellenter Zug",
+    "blunder": "Grober Fehler",
+    "lost": "Verloren"
+  },
+  "settings": {
+    "language": "Sprache",
+    "mentorLevel": "KI-Mentor",
+    "mentorStrict": "Streng (Fehler & Patzer)"
+  },
+  "setup": {
+    "whiteKing": "Weiß: Wähle einen Korridor für den König",
+    "blackKing": "Schwarz: Wähle einen Korridor für den König",
+    "whitePieces": "Weiß: Kaufe Truppen",
+    "blackPieces": "Schwarz: Kaufe Truppen",
+    "whiteUpgrades": "Weiß: Klicke eine Figur für Upgrades",
+    "blackUpgrades": "Schwarz: Klicke eine Figur für Upgrades"
+  }
+}

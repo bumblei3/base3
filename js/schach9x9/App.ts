@@ -16,6 +16,7 @@ import type { TutorController } from './tutorController.js';
 import type { AnalysisManager } from './AnalysisManager.js';
 import type { UIEffects } from './ui/ui_effects.js';
 import type { KeyboardManager } from './input/KeyboardManager.js';
+import { setLocale, getLocale } from './i18n/index.js';
 // BattleChess3D is lazy-loaded - no static import to enable code-splitting
 // Minimal interface for type checking without importing the heavy Three.js module
 interface BattleChess3D {
@@ -197,7 +198,12 @@ export class App {
   }
 
   public initDOM(): void {
-    // Global shortcuts available even on the main menu before a game (and thus
+    // Restore the saved UI language before rendering anything (defaults to de).
+    const savedLocale = (typeof localStorage !== 'undefined' && localStorage.getItem('schach9x9.locale')) as 'de' | 'en' | null;
+    if (savedLocale === 'de' || savedLocale === 'en') {
+      setLocale(savedLocale);
+    }
+    document.documentElement.lang = getLocale();
     // the KeyboardManager) is initialized. Escape closes any open overlay.
     window.addEventListener('keydown', (e: KeyboardEvent) => {
       const t = e.target as HTMLElement | null;

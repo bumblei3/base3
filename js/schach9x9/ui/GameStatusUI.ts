@@ -7,6 +7,7 @@ import { renderBoard } from './BoardRenderer.js';
 import { getOpeningName } from '../ai/OpeningDatabase.js';
 import { openingBookUI } from './OpeningBookUI.js';
 import type { Game, PieceWithMoved } from '../gameEngine.js';
+import { t } from '../i18n/index.js';
 import type { Square } from '../types/game.js';
 
 interface SavedGameState {
@@ -150,33 +151,34 @@ export function updateStatus(game: Game): void {
   const statusEl = document.getElementById('status-display');
   if (!statusEl) return;
   let text = '';
+  const side = game.turn === 'white' ? t('game.white') : t('game.black');
   switch (game.phase) {
     case PHASES.SETUP_WHITE_KING:
-      text = 'Weiß: Wähle einen Korridor für den König';
+      text = t('setup.whiteKing');
       break;
     case PHASES.SETUP_BLACK_KING:
-      text = 'Schwarz: Wähle einen Korridor für den König';
+      text = t('setup.blackKing');
       break;
     case PHASES.SETUP_WHITE_PIECES:
-      text = 'Weiß: Kaufe Truppen';
+      text = t('setup.whitePieces');
       break;
     case PHASES.SETUP_BLACK_PIECES:
-      text = 'Schwarz: Kaufe Truppen';
+      text = t('setup.blackPieces');
       break;
     case PHASES.SETUP_WHITE_UPGRADES:
-      text = 'Weiß: Klicke eine Figur für Upgrades';
+      text = t('setup.whiteUpgrades');
       break;
     case PHASES.SETUP_BLACK_UPGRADES:
-      text = 'Schwarz: Klicke eine Figur für Upgrades';
+      text = t('setup.blackUpgrades');
       break;
     case PHASES.PLAY:
-      text = `Spiel läuft - ${game.turn === 'white' ? 'Weiß' : 'Schwarz'} am Zug`;
+      text = `${t('game.running')} - ${side} ${t('game.toMove')}`;
       break;
     case PHASES.ANALYSIS:
-      text = `🔍 Analyse-Modus - ${game.turn === 'white' ? 'Weiß' : 'Schwarz'} am Zug`;
+      text = `${t('game.analysisMode')} - ${side} ${t('game.toMove')}`;
       break;
     case PHASES.GAME_OVER:
-      text = `Spiel vorbei! ${game.turn === 'white' ? 'Weiß' : 'Schwarz'} hat gewonnen!`;
+      text = `${t('game.over')} ${side} ${t('game.won')}`;
       break;
   }
   statusEl.textContent = text;
