@@ -58,7 +58,6 @@ base3/
 │   │   ├── main.ts       # Entry point
 │   │   └── *.ts          # Game logic, board, pieces, puzzles
 │   └── shared/           # Shared utilities
-├── engine-wasm/          # Rust WASM engine for Schach9x9
 ├── dist/
 │   ├── landing/          # Landing page build
 │   ├── schach9x9/        # Production build
@@ -126,7 +125,7 @@ base3/
 - **Build**: Vite 8 + Rolldown, `resolve.tsconfigPaths: true`
 - **Testing**: Vitest 4 (happy-dom + jsdom) + Playwright
 - **Linting**: ESLint 10 + TypeScript ESLint + Prettier
-- **WASM**: Rust + wasm-pack (Schach9x9 engine, compiled in CI)
+- **AI Engine**: TypeScript search + evaluation (JS fallback, no WASM dependency)
 - **3D**: Three.js via jsDelivr CDN (Schach9x9 battle animations)
 - **PWA**: Service worker + manifest (offline-capable)
 - **API Docs**: TypeDoc → [`docs/api/`](docs/api/index.html)

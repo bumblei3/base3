@@ -1,7 +1,11 @@
 /**
  * AI Bridge Layer for Schach 9x9.
  * Thin wrapper that delegates to search.ts and evaluate.ts.
- * Handles WASM worker communication, board conversion, and public API.
+ * Handles board conversion and the public API.
+ *
+ * Note: the optional WASM search engine was removed (it crashed with a
+ * browser-specific "memory access out of bounds" RuntimeError that was not
+ * reproducible in Node). The JS fallback search is now the sole engine.
  */
 
 import { logger } from './logger';
@@ -11,11 +15,6 @@ import {
   detectTacticalComplexity,
   type TimeAllocationParams,
 } from './ai/timeManagement';
-import {
-  getBestMoveWasm,
-  getWasmNodesEvaluated,
-  resetWasmNodesEvaluated,
-} from './ai/wasmBridge';
 import { setOpeningBook, queryOpeningBook } from './ai/OpeningBook';
 import type { Move } from './ai/MoveGenerator';
 import {
@@ -343,15 +342,6 @@ export async function getBestMoveDetailed(
     }
   }
 
-  if (boardShape === 'standard') {
-    try {
-      const wasmResult = await getBestMoveWasm(board, turnColor, maxDepth, personalityId, elo);
-      if (wasmResult) return { ...wasmResult, depth: wasmResult.depth ?? 0, nodes: wasmResult.nodes ?? 0 };
-    } catch {
-      logger.debug('[AiEngine] WASM fallback failed, using JS');
-    }
-  }
-
   logger.debug('[AiEngine] Using JS Fallback Search');
   const jsResult = await runJsSearch(board, turnColor, maxDepth, elo, personalityId);
   if (jsResult) {
@@ -431,10 +421,9 @@ export async function getTopMoves(
   const loopDepth = Math.max(2, searchDepth - 3);
   for (const candidate of topCandidates) {
     if (performance.now() - startTime > maxTimeMs) break;
-    try {
-      const wasmResult = await getBestMoveWasm(board, turnColor, loopDepth, 'NORMAL', 2500);
-      if (wasmResult) moveScores.push({ move: candidate.move, score: wasmResult.score });
-    } catch { moveScores.push({ move: candidate.move, score: candidate.score }); }
+    // JS evaluation of the candidate (WASM engine removed — JS search is the
+    // sole engine). Use the quick-eval score already computed for this move.
+    moveScores.push({ move: candidate.move, score: candidate.score });
   }
   moveScores.sort((a, b) => b.score - a.score);
 
@@ -525,8 +514,8 @@ export function isInCheck(uiBoard: UiBoard, color: Player): boolean {
   return checkInt(board, c);
 }
 
-export function getNodesEvaluated(): number { return getWasmNodesEvaluated(); }
-export function resetNodesEvaluated(): void { resetWasmNodesEvaluated(); }
+export function getNodesEvaluated(): number { return 0; }
+export function resetNodesEvaluated(): void {}
 
 // --- Legacy stubs ---
 

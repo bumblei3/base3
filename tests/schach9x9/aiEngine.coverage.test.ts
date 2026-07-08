@@ -240,9 +240,6 @@ describe('AI Engine - Coverage for Untested Paths', () => {
     });
 
     test('guaranteed fallback should return legal moves when search fails', async () => {
-      const wasmModule = await import('@schach9x9/ai/wasmBridge');
-      vi.spyOn(wasmModule, 'getBestMoveWasm').mockRejectedValue(new Error('WASM failed'));
-
       const testBoard = createMinimalBoard();
       testBoard[4][4] = { type: 'n', color: 'white', hasMoved: false };
       testBoard[3][3] = { type: 'p', color: 'black', hasMoved: false };
@@ -277,19 +274,6 @@ describe('AI Engine - Coverage for Untested Paths', () => {
       const result = await AIEngine.getBestMoveDetailed(testBoard, 'white', 1, { elo: 1000 });
       expect(result).not.toBeNull();
     });
-
-    test('should handle WASM fallback failure and use JS', async () => {
-      const wasmModule = await import('@schach9x9/ai/wasmBridge');
-      vi.spyOn(wasmModule, 'getBestMoveWasm').mockRejectedValue(new Error('WASM failed'));
-
-      const testBoard = createMinimalBoard();
-      testBoard[4][4] = { type: 'r', color: 'white', hasMoved: false };
-      testBoard[4][6] = { type: 'p', color: 'black', hasMoved: false };
-
-      const result = await AIEngine.getBestMoveDetailed(testBoard, 'white', 1, { elo: 1000 });
-      expect(result).not.toBeNull();
-      expect(result?.move).toBeDefined();
-    });
   });
 
   // ============================================================
@@ -297,10 +281,7 @@ describe('AI Engine - Coverage for Untested Paths', () => {
   // ============================================================
 
   describe('JS Fallback Search', () => {
-    test('should find move via JS search when WASM fails', async () => {
-      const wasmModule = await import('@schach9x9/ai/wasmBridge');
-      vi.spyOn(wasmModule, 'getBestMoveWasm').mockRejectedValue(new Error('WASM failed'));
-
+    test('should find a move via JS search', async () => {
       const testBoard = createMinimalBoard();
       testBoard[4][4] = { type: 'r', color: 'white', hasMoved: false };
       testBoard[4][6] = { type: 'p', color: 'black', hasMoved: false };

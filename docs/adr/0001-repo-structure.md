@@ -25,3 +25,10 @@ Tooling (Vitest, Playwright, ESLint, Vite).
 - Nachteil: ein Build-Schritt zieht beide Spiele; WASM-Build nur für Schach9x9.
 - Dependabot-Bundles betreffen oft beide Spiele → Bundle-PRs werden geschlossen,
   Einzel-Bumps direkt auf main angewendet (siehe CONTRIBUTING.md).
+
+## Update (2026-07, v1.1.0)
+
+- `engine-wasm/` (Rust) wurde entfernt: die WASM-Suche crashte im Browser mit
+  einem nicht-reproduzierbaren `memory access out of bounds`-RuntimeError.
+  Die JS-Suche ist nun die alleinige Engine (kein WASM mehr im Build/CI).
+- Der ursprüngliche `engine-wasm/`-Teil der Entscheidung ist damit gegenstandslos.

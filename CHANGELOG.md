@@ -4,6 +4,28 @@ Alle nennenswerten Änderungen an diesem Projekt werden in dieser Datei dokument
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/),
 und das Projekt folgt [Semantic Versioning](https://semver.org/).
 
+## [1.1.1] - 2026-07-08
+
+### Entfernt
+- **WASM-Engine komplett entfernt (radikal-clean)**: `engine-wasm/`-Verzeichnis
+  (Rust, 21 Dateien) und `js/schach9x9/ai/wasmBridge.ts` gelöscht. Die WASM-Suche
+  crashte im Browser mit `RuntimeError: memory access out of bounds` (nicht in Node
+  reproduzierbar, browser-spezifisches UB). Die JS-Suche ist nun die **alleinige**
+  Engine.
+- `wasm:build`-Script + `wasm-pack`-DevDependency aus `package.json` (root + schach9x9).
+- Alle WASM-Build/Cache-Schritte aus `ci.yml` (rust-toolchain, cargo caches,
+  Build-WASM-Step) — CI baut kein WASM mehr.
+- `@engine-wasm`-Aliase aus `vite.config.ts` + `vitest.ci.config.ts`.
+- `engine-wasm`-Excludes aus allen tsconfigs.
+- Obsolete WASM-Mock-Tests (`aiEngine_fallback.test.ts`, `ai/slow/wasmBridge*.test.ts`)
+  und WASM-spezifische Test-Cases in `aiEngine.coverage.test.ts`.
+
+### Behoben
+- `aiEngine.ts`: toter WASM-Pfad (`getBestMoveWasm`-Aufrufe in `getBestMove` +
+  `getTopMoves`) entfernt; JS-Suche läuft direkt ohne Try/Catch-Detour.
+- `getNodesEvaluated()` / `resetNodesEvaluated()` wrappen nun keine WASM-Zähler
+  mehr (returns 0 / no-op).
+
 ## [1.1.0] - 2026-07-08
 
 ### Hinzugefügt

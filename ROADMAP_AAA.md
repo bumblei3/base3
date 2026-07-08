@@ -113,7 +113,7 @@ npm run build && npx vite-bundle-analyzer dist/
 | AI Move | < 500ms | Time Management Logs |
 
 - [ ] **Web Worker** für AI (bereits vorbereitet, aber Bugs in `aiWorker.coverage.test.ts`)
-- [ ] **WASM Engine** für Trischach/Schach9x9 (bereits `engine-wasm`, aber CI Build fragil)
+- [x] **WASM Engine** entfernt (crashte mit browser-spezifischem `memory access out of bounds` RuntimeError; JS-Fallback ist nun die alleinige Engine — siehe v1.1.0)
 - [ ] **Service Worker** Caching Strategy (Stale-While-Revalidate für Assets)
 - [ ] **Preload Critical CSS/Fonts** (Outfit Font → `font-display: swap` + Preload)
 
