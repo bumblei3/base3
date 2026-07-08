@@ -5,8 +5,10 @@ test.describe('Deep Game Logic @logic', () => {
     // Listen to browser console logs
     page.on('console', msg => console.log(`[Browser] ${msg.text()}`));
 
-    // Disable AI Mentor
+    // Clear persisted state so each test starts from a clean app (otherwise an
+    // autosave from a previous test in this file is loaded on navigation).
     await page.addInitScript(() => {
+      localStorage.clear();
       localStorage.setItem('ki_mentor_level', 'OFF');
     });
     await page.goto('/?disable-sw');
@@ -89,8 +91,9 @@ test.describe('Deep Game Logic @logic', () => {
     await setupPieceAndRender(page, 4, 4, 'e');
     await page.click('.cell[data-r="4"][data-c="4"]');
 
-    // Queen moves
-    await expect(page.locator('.cell[data-r="0"][data-c="0"].valid-move')).toBeVisible();
+    // Queen moves (free squares on the diagonals; (0,0) is occupied by the
+    // injected black king and is therefore not a legal target)
+    await expect(page.locator('.cell[data-r="8"][data-c="8"].valid-move')).toBeVisible();
     await expect(page.locator('.cell[data-r="4"][data-c="8"].valid-move')).toBeVisible();
 
     // Knight moves

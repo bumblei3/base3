@@ -11,9 +11,14 @@ export default defineConfig({
       name: 'schach9x9-e2e',
       testDir: './e2e',
       testMatch: '**/*.spec.ts',
+      // Start every test context with a clean storage so no spec inherits an
+      // autosave / leftover localStorage from a previous one (root cause of the
+      // cross-file flaky screenshot failures). Each spec still sets its own
+      // needed keys via addInitScript on top of this empty baseline.
       use: {
         ...devices['Desktop Chrome'],
         baseURL: 'http://localhost:3000',
+        storageState: { cookies: [], origins: [] },
         trace: 'on-first-retry',
         launchOptions: process.env.CI
           ? {}
