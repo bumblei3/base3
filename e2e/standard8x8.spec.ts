@@ -2,21 +2,18 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Standard 8x8 Mode', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
-    await page.waitForFunction(() => (window as any).app !== undefined);
+    await page.addInitScript(() => {
+      localStorage.clear();
+      localStorage.setItem('ki_mentor_level', 'OFF');
+    });
+    await page.goto('/?disable-sw');
+    await page.waitForFunction(() => document.body.classList.contains('app-ready'));
     await expect(page.locator('#main-menu')).toBeVisible();
   });
 
   test('should start standard 8x8 chess', async ({ page }) => {
     // Click "Standard (8x8)" card
-    const standardCard = page.locator('.gamemode-card').filter({ hasText: 'Standard 8x8' });
-
-    // Note: If the UI card doesn't exist, we might fail here.
-    // Assuming standard 8x8 is available in the menu based on the codebase supporting it.
-    if ((await standardCard.count()) === 0) {
-      test.skip(true, 'Standard 8x8 card not found in main menu - feature might be hidden');
-      return;
-    }
+    const standardCard = page.locator('.gamemode-card[data-mode="standard8x8"]');
 
     await standardCard.click();
 
