@@ -149,6 +149,7 @@ const workerPendingRequests = new Map<string, { resolve: PendingResolve; timer: 
 // same aiWorker module the opponent AI uses — keeping the tutor on a real
 // worker instead of blocking the main thread with the JS fallback.
 let _topMovesWorker: Worker | null = null;
+let _topMovesWorkerReady = false;
 
 function ensureTopMovesWorker(): Worker | null {
   if (typeof Worker === 'undefined' || typeof window === 'undefined') return null;

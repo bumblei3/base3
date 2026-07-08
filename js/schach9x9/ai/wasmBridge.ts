@@ -20,8 +20,12 @@ export async function ensureWasmInitialized(): Promise<boolean> {
   initPromise = (async () => {
     try {
       // Truly dynamic import - construct path at runtime so Vite can't analyze it
-      // This prevents "Failed to resolve import" errors during test transforms
-      const modulePath = '../../../engine-wasm/pkg/schach9x9.js';
+      // This prevents "Failed to resolve import" errors during test transforms.
+      // Relative to the built JS bundle (dist/schach9x9/js/...), one level up keeps
+      // the WASM inside the app directory so it resolves both for the local E2E
+      // server (root = dist/schach9x9) and the production deploy (root = dist/,
+      // app under /schach9x9): /js/ + ../engine-wasm/pkg/ = /engine-wasm/pkg/.
+      const modulePath = '../engine-wasm/pkg/schach9x9.js';
       const module = await import(/* @vite-ignore */ modulePath);
 
       // Check if we're in Node.js

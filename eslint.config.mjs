@@ -18,6 +18,7 @@ export default tseslint.config({
     'public/service-worker.js',
     'public/icons/generate-icons.js',
     'public/sw.js',
+    'storybook-static/**',
     'schach9x9/**/*.js',
     'trischach/**/*.js',
     'trischach/sw.js',

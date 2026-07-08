@@ -37,6 +37,10 @@ export default defineConfig({
       name: 'trischach-e2e',
       testDir: './tests-e2e',
       testMatch: '**/*.spec.ts',
+      // csp.spec.ts runs only in the dedicated `csp` project (playwright.csp.config.mjs),
+      // which serves dist/schach9x9 on port 3005. Running it here would hit the
+      // trischach server and assert a schach9x9 board, which fails.
+      testIgnore: '**/csp.spec.ts',
       use: {
         ...devices['Desktop Chrome'],
         baseURL: 'http://localhost:3001',
