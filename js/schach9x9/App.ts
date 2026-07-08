@@ -197,9 +197,8 @@ export class App {
   }
 
   public initDOM(): void {
-    // Global "?" shortcut to open the help overlay, available even on the
-    // main menu before a game (and thus the KeyboardManager) is initialized.
-    // Escape also closes it from anywhere.
+    // Global shortcuts available even on the main menu before a game (and thus
+    // the KeyboardManager) is initialized. Escape closes any open overlay.
     window.addEventListener('keydown', (e: KeyboardEvent) => {
       const t = e.target as HTMLElement | null;
       if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) {
@@ -211,10 +210,20 @@ export class App {
         if (overlay) overlay.classList.remove('hidden');
         const menu = document.getElementById('main-menu');
         if (menu) menu.classList.remove('active');
+      } else if (e.key === 'p' || e.key === 'P') {
+        // Pause overlay (toggle) — works from the menu too, but only meaningful
+        // once a game is active.
+        const pauseOverlay = document.getElementById('pause-overlay');
+        const helpOverlay = document.getElementById('help-overlay');
+        if (pauseOverlay && helpOverlay && helpOverlay.classList.contains('hidden')) {
+          pauseOverlay.classList.toggle('hidden');
+        }
       } else if (e.key === 'Escape') {
-        const overlay = document.getElementById('help-overlay');
-        if (overlay && !overlay.classList.contains('hidden')) {
-          overlay.classList.add('hidden');
+        for (const id of ['help-overlay', 'pause-overlay']) {
+          const overlay = document.getElementById(id);
+          if (overlay && !overlay.classList.contains('hidden')) {
+            overlay.classList.add('hidden');
+          }
         }
       }
     });

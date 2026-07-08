@@ -719,6 +719,16 @@ export class DOMHandler {
       }
     }
 
+    // Pause overlay resume button (closes the overlay; game state is unaffected
+    // by the pause — it only blocks input while open).
+    const pauseOverlay = document.getElementById('pause-overlay');
+    const resumePauseBtn = document.getElementById('resume-game-btn-pause');
+    if (pauseOverlay && resumePauseBtn) {
+      resumePauseBtn.addEventListener('click', () => {
+        pauseOverlay.classList.add('hidden');
+      });
+    }
+
     const themeSelect = document.getElementById('theme-select') as HTMLSelectElement | null;
     if (themeSelect) {
       themeSelect.addEventListener('change', e => {

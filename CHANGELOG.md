@@ -4,6 +4,20 @@ Alle nennenswerten Änderungen an diesem Projekt werden in dieser Datei dokument
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/),
 und das Projekt folgt [Semantic Versioning](https://semver.org/).
 
+## [1.1.2] - 2026-07-08
+
+### Hinzugefügt
+- **Pause-Feature** (`P`-Taste): öffnet/schließt ein Pause-Overlay (wie das
+  Help-Overlay). `Esc` oder "Fortsetzen"-Button schließen es. Ergänzt die
+  Keyboard-Shortcuts aus v1.1.0 (Phase 8.2 vollständig).
+- `P`-Eintrag in der Help-Overlay-Shortcut-Liste.
+- E2E-Test `e2e/pause.spec.ts` (4 Tests: öffnen, togglen, Escape, Resume-Button).
+
+### Hinweis
+- Pause blockt nur die Eingabe, während das Overlay offen ist; der Spielzustand
+  (inkl. AI-Timer) ist davon unberührt. Ein echtes "Einfrieren" der AI ist ein
+  separater, größerer Eingriff (siehe FUTURE_PLAN P1.1).
+
 ## [1.1.1] - 2026-07-08
 
 ### Entfernt

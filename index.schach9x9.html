@@ -195,6 +195,7 @@
           <ul class="shortcut-list">
             <li><kbd>U</kbd> / <kbd>Ctrl+Z</kbd> Rückgängig</li>
             <li><kbd>R</kbd> / <kbd>Ctrl+Y</kbd> Wiederholen</li>
+            <li><kbd>P</kbd> Spiel pausieren / fortsetzen</li>
             <li><kbd>H</kbd> Tipp anzeigen</li>
             <li><kbd>T</kbd> Drohungen ein/aus</li>
             <li><kbd>O</kbd> Chancen ein/aus</li>
@@ -207,6 +208,17 @@
           </ul>
           <div class="tutorial-nav">
             <button id="close-help-btn" class="btn-primary">Schließen</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pause Overlay -->
+      <div id="pause-overlay" class="modal-overlay hidden">
+        <div class="tutorial-content">
+          <h2>⏸️ Spiel pausiert</h2>
+          <p class="pause-hint">Drücke <kbd>P</kbd> oder <kbd>Esc</kbd> zum Fortsetzen.</p>
+          <div class="tutorial-nav">
+            <button id="resume-game-btn-pause" class="btn-primary">Fortsetzen</button>
           </div>
         </div>
       </div>
