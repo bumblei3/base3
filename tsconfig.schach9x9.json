@@ -36,8 +36,7 @@
     "js/schach9x9/**/*",
     "js/shared/**/*",
     "tests/schach9x9/**/*",
-    "tests/shared/**/*",
-    "service-worker.ts"
+    "tests/shared/**/*"
   ],
   "exclude": ["node_modules", "dist"]
 }
