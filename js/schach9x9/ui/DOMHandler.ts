@@ -10,6 +10,7 @@ import * as UI from '../ui.js';
 import { clearPieceCache } from '../ui/BoardRenderer.js';
 import { showToast } from '../ui/OverlayManager.js';
 import { generatePGN, copyPGNToClipboard, downloadPGN } from '../utils/PGNGenerator.js';
+import { shareCurrentGame } from '../utils/share.js';
 import { soundManager } from '../sounds.js';
 import { setPieceSkin } from '../chess-pieces.js';
 import { CampaignUI } from './CampaignUI.js';
@@ -293,6 +294,20 @@ export class DOMHandler {
       closeOpeningBookBtn.addEventListener('click', () => {
         this.openingBookUI.hide();
         if (openingBookBtn) openingBookBtn.classList.remove('active');
+      });
+    }
+
+    // Share / Copy current position (FEN + PGN) to clipboard or native share sheet
+    const shareBtn = document.getElementById('share-btn');
+    if (shareBtn) {
+      shareBtn.addEventListener('click', async () => {
+        if (!this.game) return;
+        const ok = await shareCurrentGame(this.game as unknown as Game);
+        if (ok) {
+          showToast('Stellung kopiert (FEN + PGN)', 'success');
+        } else {
+          showToast('Kopieren nicht möglich', 'error');
+        }
       });
     }
 
@@ -689,11 +704,14 @@ export class DOMHandler {
     const helpBtn = document.getElementById('help-btn');
     const helpOverlay = document.getElementById('help-overlay');
     const closeHelpBtn = document.getElementById('close-help-btn');
-    if (helpBtn && helpOverlay) {
-      helpBtn.addEventListener('click', () => {
-        helpOverlay.classList.remove('hidden');
-        if (mainMenu) mainMenu.classList.remove('active');
-      });
+    if (helpOverlay) {
+      if (helpBtn) {
+        helpBtn.addEventListener('click', () => {
+          helpOverlay.classList.remove('hidden');
+          if (mainMenu) mainMenu.classList.remove('active');
+        });
+      }
+      // Close button works regardless of whether a help button exists
       if (closeHelpBtn) {
         closeHelpBtn.addEventListener('click', () => {
           helpOverlay.classList.add('hidden');

@@ -26,10 +26,7 @@ export class KeyboardManager {
   }
 
   async handleKeyDown(event: KeyboardEvent): Promise<void> {
-    const g: Game = this.app.game as unknown as Game;
-    if (!this.app.gameController || !g) return;
-
-    // Ignore input fields
+    // Ignore input fields (so typing "?" in a text box works normally)
     const target = event.target as HTMLElement;
     if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
       return;
@@ -39,7 +36,18 @@ export class KeyboardManager {
     const ctrl = event.ctrlKey || event.metaKey;
     const shift = event.shiftKey;
 
-    // Undo: Ctrl+Z or 'u'
+    // Help: '?' (Shift+/) — works anywhere, even on the main menu
+    if (key === '?') {
+      event.preventDefault();
+      const helpOverlay = document.getElementById('help-overlay');
+      if (helpOverlay) helpOverlay.classList.remove('hidden');
+      const mainMenu = document.getElementById('main-menu');
+      if (mainMenu) mainMenu.classList.remove('active');
+      return;
+    }
+
+    const g: Game = this.app.game as unknown as Game;
+    if (!this.app.gameController || !g) return;
     if ((ctrl && key === 'z' && !shift) || key === 'u') {
       event.preventDefault();
       this.app.gameController.undoMove();

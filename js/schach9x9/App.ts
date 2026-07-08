@@ -128,8 +128,10 @@ export class App {
     }
     this.uiEffects.startFloatingPieces();
 
-    // Input handlers
-    this.keyboardManager = new KeyboardManager(this);
+    // Input handlers (created once; may already exist from initDOM)
+    if (!this.keyboardManager) {
+      this.keyboardManager = new KeyboardManager(this);
+    }
 
     // Expose global recovery function for console access
     window.recoverGame = () => {
@@ -195,6 +197,27 @@ export class App {
   }
 
   public initDOM(): void {
+    // Global "?" shortcut to open the help overlay, available even on the
+    // main menu before a game (and thus the KeyboardManager) is initialized.
+    // Escape also closes it from anywhere.
+    window.addEventListener('keydown', (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement | null;
+      if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) {
+        return;
+      }
+      if (e.key === '?') {
+        e.preventDefault();
+        const overlay = document.getElementById('help-overlay');
+        if (overlay) overlay.classList.remove('hidden');
+        const menu = document.getElementById('main-menu');
+        if (menu) menu.classList.remove('active');
+      } else if (e.key === 'Escape') {
+        const overlay = document.getElementById('help-overlay');
+        if (overlay && !overlay.classList.contains('hidden')) {
+          overlay.classList.add('hidden');
+        }
+      }
+    });
     this.domHandler.initDOM();
   }
 
