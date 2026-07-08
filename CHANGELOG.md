@@ -4,6 +4,31 @@ Alle nennenswerten Änderungen an diesem Projekt werden in dieser Datei dokument
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/),
 und das Projekt folgt [Semantic Versioning](https://semver.org/).
 
+## [1.1.3] - 2026-07-08
+
+### Hinzugefügt
+- **P1.3 File Handling / Game Persistence** (Schach9x9):
+  - **PGN-Import-Parser** (`parsePGN` in `utils/PGNImportParser.ts`): parst PGN-Header +
+    SAN-Zugliste (tolerant gegenüber Kommentaren/Variationen/NAG). Wird für
+    Round-Trip + FEN-Setup genutzt.
+  - **Game-State-Serialization** (`utils/persistence.ts`): `gameToSaveData` /
+    `saveDataToGame` (FEN-Round-Trip über `BoardFactory.fromFEN`) — ergänzt das
+    bestehende Save/Load-System (`storage.ts` / `#save-btn` / `#load-btn`).
+  - **FEN-Load** (`loadFENIntoGame` + `App.importFEN`): Stellung aus FEN im
+    Settings-Panel laden (`#import-fen-btn`).
+  - **PGN-Export** (`App.exportPGN`): aktuelles Spiel als `.pgn`-Datei herunterladen
+    (`#export-pgn-btn`).
+  - **PGN-Import** (`App.importPGN`): PGN mit `[FEN "..."]`-Header lädt die Stellung;
+    reiner SAN-Replay (ohne FEN) ist Folge-Feature (kein SAN→Move-Validator in P1.3).
+  - i18n-Keys `file.*` (de/en) für Settings-Panel-Labels + Toasts.
+  - E2E-Spec `e2e/file-io.spec.ts` (FEN-Load + PGN-Export Smoke).
+
+### Hinweis
+- Save/Load (localStorage) war bereits vor P1.3 implementiert (`storage.ts`);
+  P1.3 ergänzt FEN/PGN-Import/Export.
+- `PGNParser.ts` (original `class PGNParser`) wurde wiederhergestellt; der neue
+  `parsePGN`-Helper liegt in `PGNImportParser.ts` (Vermeidung von Barrel-Namensclash).
+
 ## [1.1.2] - 2026-07-08
 
 ### Hinzugefügt
