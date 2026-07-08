@@ -15,8 +15,8 @@ export interface TimeControlMode {
 
 export interface GameControllerInterface {
   saveGameToStatistics?: (_result: string, _color: Player) => void;
-  loadPuzzle?: (index: number) => void;
-  startPuzzleMode?: (index?: number) => void;
+  loadPuzzle?: (_index: number) => void;
+  startPuzzleMode?: (_index?: number) => void;
 }
 
 const TIME_CONTROLS: Record<string, TimeControlMode> = {

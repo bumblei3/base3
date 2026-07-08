@@ -1,8 +1,8 @@
-/* eslint-disable no-unused-vars */
 /**
  * App.ts
  * Main application class handling lifecycle and initialization.
  */
+
 import { logger } from './logger.js';
 import { DOMHandler } from './ui/DOMHandler.js';
 import { errorManager } from './utils/ErrorManager.js';
@@ -10,6 +10,7 @@ import type { EvaluationBar } from './ui/EvaluationBar.js';
 import type { Player, Square, Piece, GameMode } from './types/game.js';
 import type { Game, MoveHistoryEntry, PieceWithMoved } from './gameEngine.js';
 import type { GameController, GameExtended } from './gameController.js';
+import type { BattleChess3D } from './battleChess3D.js';
 import type { MoveController } from './moveController.js';
 import type { AIController } from './aiController.js';
 import type { TutorController } from './tutorController.js';
@@ -17,25 +18,10 @@ import type { AnalysisManager } from './AnalysisManager.js';
 import type { UIEffects } from './ui/ui_effects.js';
 import type { KeyboardManager } from './input/KeyboardManager.js';
 import { setLocale, getLocale } from './i18n/index.js';
-// BattleChess3D is lazy-loaded - no static import to enable code-splitting
-// Minimal interface for type checking without importing the heavy Three.js module
-interface BattleChess3D {
-  init(): Promise<void>;
-  updateFromGameState(game: Game): void;
-  enabled: boolean;
-  onWindowResize(): void;
-  scene?: unknown;
-  pieceManager?: {
-    setSkin: (skin: string) => void;
-    updateFromGameState: (game: Game | null) => void;
-  };
-  playBattleSequence?: (attacker: Piece, defender: Piece, from: Square, to: Square) => Promise<void>;
-  removePiece?: (r: number, c: number) => void;
-  animateMove?: (fromR: number, fromC: number, toR: number, toC: number) => Promise<void>;
-}
+// BattleChess3D is lazy-loaded at runtime (dynamic import) - only the type is imported here
 
-type BattleChess3DConstructor = new (container: HTMLElement) => BattleChess3D;
-type GameConstructor = new (initialPoints?: number, mode?: GameMode) => Game;
+type BattleChess3DConstructor = new (_container: HTMLElement) => BattleChess3D;
+type GameConstructor = new (_initialPoints?: number, _mode?: GameMode) => Game;
 
 import type * as UIImport from './ui.js';
 
@@ -251,7 +237,7 @@ export class App {
         this.battleChess3D = new this.battleChess3D_Class(container3D);
       }
       if (this.battleChess3D) {
-        window.battleChess3D = this.battleChess3D as any;
+        window.battleChess3D = this.battleChess3D ?? undefined;
         // Initialize the 3D scene (creates canvas, renderer, etc.)
         await this.battleChess3D.init();
       }

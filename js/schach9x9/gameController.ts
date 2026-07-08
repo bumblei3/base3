@@ -50,6 +50,7 @@ export interface ArrowRendererType {
   highlightMoves?: (_arrows: { fromR: number; fromC: number; toR: number; toC: number; colorKey: string }[]) => void;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface GameExtended extends Game, Record<string, any> {
   campaignMode?: boolean;
   currentLevelId?: string;

@@ -2,7 +2,7 @@
  * Core game type definitions for Schach 9x9
  */
 import type { MoveResult } from '../aiEngine.js';
-import type { PieceWithMoved, MoveHistoryEntry } from '../gameEngine.js';
+import type { MoveHistoryEntry } from '../gameEngine.js';
 export type { MoveResult } from '../aiEngine.js';
 
 export type PieceType = 'k' | 'q' | 'r' | 'b' | 'n' | 'p' | 'e' | 'a' | 'c' | 'j' | null;
@@ -111,30 +111,30 @@ export interface Statistics {
    getValidMoves?: (_r: number, _c: number, _piece: unknown) => Square[];
    calculateMaterialAdvantage?: (_color?: Player) => number;
    // --- GameController delegations ---
-   placeKing?: (r: number, c: number, color: Player) => unknown;
-   selectShopPiece?: (type: string) => unknown;
-   placeShopPiece?: (r: number, c: number) => unknown;
+   placeKing?: (_r: number, _c: number, _color: Player) => unknown;
+   selectShopPiece?: (_type: string) => unknown;
+   placeShopPiece?: (_r: number, _c: number) => unknown;
    finishSetupPhase?: () => unknown;
-   setTimeControl?: (mode: string) => unknown;
+   setTimeControl?: (_mode: string) => unknown;
    updateClockVisibility?: () => unknown;
    startClock?: () => unknown;
    stopClock?: () => unknown;
    tickClock?: () => unknown;
    updateClockDisplay?: () => unknown;
    updateClockUI?: () => unknown;
-   showShop?: (show: boolean) => unknown;
+   showShop?: (_show: boolean) => unknown;
    updateShopUI?: () => unknown;
-   handleCellClick?: (r: number, c: number) => unknown;
-   resign?: (color: Player) => unknown;
-   offerDraw?: (color: Player) => unknown;
+   handleCellClick?: (_r: number, _c: number) => unknown;
+   resign?: (_color: Player) => unknown;
+   offerDraw?: (_color: Player) => unknown;
    acceptDraw?: () => unknown;
    declineDraw?: () => unknown;
    showDrawOfferDialog?: () => unknown;
    // --- MoveController delegations ---
-   handlePlayClick?: (r: number, c: number) => unknown;
-   executeMove?: (from: Square, to: Square) => unknown;
-   showPromotionUI?: (r: number, c: number, color: Player, record: MoveHistoryEntry) => unknown;
-   animateMove?: (from: Square, to: Square, piece: Piece) => unknown;
+   handlePlayClick?: (_r: number, _c: number) => unknown;
+   executeMove?: (_from: Square, _to: Square) => unknown;
+   showPromotionUI?: (_r: number, _c: number, _color: Player, _record: MoveHistoryEntry) => unknown;
+   animateMove?: (_from: Square, _to: Square, _piece: Piece) => unknown;
    finishMove?: () => unknown;
    undoMove?: () => unknown;
    redoMove?: () => unknown;
@@ -143,12 +143,12 @@ export interface Statistics {
    getBoardHash?: () => unknown;
    saveGame?: () => unknown;
    loadGame?: () => unknown;
-   autoSave?: (show: boolean) => unknown;
+   autoSave?: (_show: boolean) => unknown;
    updateMoveHistoryUI?: () => unknown;
    updateUndoRedoButtons?: () => unknown;
    updateCapturedUI?: () => unknown;
-   animateCheck?: (color: Player) => unknown;
-   animateCheckmate?: (color: Player) => unknown;
+   animateCheck?: (_color: Player) => unknown;
+   animateCheckmate?: (_color: Player) => unknown;
    updateStatistics?: () => unknown;
    enterReplayMode?: () => unknown;
    exitReplayMode?: () => unknown;
@@ -157,17 +157,17 @@ export interface Statistics {
    replayNext?: () => unknown;
    replayLast?: () => unknown;
    updateReplayUI?: () => unknown;
-   reconstructBoardAtMove?: (idx: number) => unknown;
-   undoMoveForReplay?: (move: MoveHistoryEntry) => unknown;
-   setTheme?: (theme: string) => unknown;
-   applyTheme?: (theme: string) => unknown;
+   reconstructBoardAtMove?: (_idx: number) => unknown;
+   undoMoveForReplay?: (_move: MoveHistoryEntry) => unknown;
+   setTheme?: (_theme: string) => unknown;
+   applyTheme?: (_theme: string) => unknown;
    // --- AIController delegations ---
    aiSetupKing?: () => unknown;
    aiSetupPieces?: () => unknown;
    aiSetupUpgrades?: () => unknown;
    aiMove?: () => unknown;
-   evaluatePosition?: (color: Player) => unknown;
-   updateAIProgress?: (data: {
+   evaluatePosition?: (_color: Player) => unknown;
+   updateAIProgress?: (_data: {
      depth?: number;
      maxDepth?: number;
      nodes?: number;
@@ -179,15 +179,15 @@ export interface Statistics {
    // --- TutorController delegations ---
    updateBestMoves?: () => unknown;
    getTutorHints?: () => unknown;
-   getMoveNotation?: (move: { from: Square; to: Square }) => unknown;
+   getMoveNotation?: (_move: { _from: Square; _to: Square }) => unknown;
    showTutorSuggestions?: () => unknown;
-   getPieceName?: (type: string) => unknown;
-   getThreatenedPieces?: (pos: Square, color: Player) => unknown;
-   detectTacticalPatterns?: (move: { from: Square; to: Square }) => unknown;
-   getDefendedPieces?: (pos: Square, color: Player) => unknown;
-   analyzeStrategicValue?: (move: { from: Square; to: Square }) => unknown;
-   getScoreDescription?: (score: number) => unknown;
-   analyzeMoveWithExplanation?: (move: { from: Square; to: Square }, score: number, best: number) => unknown;
+   getPieceName?: (_type: string) => unknown;
+   getThreatenedPieces?: (_pos: Square, _color: Player) => unknown;
+   detectTacticalPatterns?: (_move: { _from: Square; _to: Square }) => unknown;
+   getDefendedPieces?: (_pos: Square, _color: Player) => unknown;
+   analyzeStrategicValue?: (_move: { _from: Square; _to: Square }) => unknown;
+   getScoreDescription?: (_score: number) => unknown;
+   analyzeMoveWithExplanation?: (_move: { _from: Square; _to: Square }, _score: number, _best: number) => unknown;
    // --- AnalysisManager delegations ---
    toggleThreats?: () => unknown;
    toggleOpportunities?: () => unknown;
@@ -269,6 +269,6 @@ export interface GameLike {
   _previousBoardState?: (Piece | null)[][];
   _forceFullRender?: boolean;
   // App-level methods used by UI components
-  startCampaignLevel?: (levelId: string) => void;
+  startCampaignLevel?: (_levelId: string) => void;
   // Allow additional properties for dynamic extensions
 }

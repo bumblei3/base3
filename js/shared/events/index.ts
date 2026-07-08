@@ -1,24 +1,23 @@
-/* eslint-disable no-unused-vars, @typescript-eslint/no-unused-vars */
 /**
  * Shared Event Emitter - Typed event system
  */
 
-type EventCallback<T = any> = (data: T) => void;
-type EventMap = Record<string, any>;
+type EventCallback<T = unknown> = (_data: T) => void;
+type EventMap = Record<string, unknown>;
 
 export class EventEmitter<E extends EventMap = EventMap> {
-  private listeners: Map<keyof E, Set<EventCallback>> = new Map();
+  private listeners: Map<keyof E, Set<(_data: unknown) => void>> = new Map();
 
   on<K extends keyof E>(event: K, callback: EventCallback<E[K]>): () => void {
     if (!this.listeners.has(event)) {
       this.listeners.set(event, new Set());
     }
-    this.listeners.get(event)!.add(callback);
+    this.listeners.get(event)!.add(callback as unknown as (_data: unknown) => void);
     return () => this.off(event, callback);
   }
 
   off<K extends keyof E>(event: K, callback: EventCallback<E[K]>): void {
-    this.listeners.get(event)?.delete(callback);
+    this.listeners.get(event)?.delete(callback as unknown as (_data: unknown) => void);
   }
 
   emit<K extends keyof E>(event: K, data: E[K]): void {
@@ -54,7 +53,7 @@ export class EventEmitter<E extends EventMap = EventMap> {
 
 // Pre-defined game events
 export interface GameEvents {
-  [key: string]: any;
+  [key: string]: unknown;
   'game:start': { variant: 'schach9x9' | 'trischach'; timeControl: { initial: number; increment: number } };
   'game:end': { result: 'white' | 'black' | 'fire' | 'water' | 'nature' | 'draw'; reason: string };
   'move:made': { move: { from: { row: number; col: number }; to: { row: number; col: number }; piece: string; san: string } };
@@ -85,7 +84,7 @@ export const gameEvents = new EventEmitter<GameEvents>();
 export function useEvent<K extends keyof GameEvents>(
   emitter: EventEmitter<GameEvents>,
   event: K,
-  callback: (data: GameEvents[K]) => void,
+  callback: (_data: GameEvents[K]) => void,
   _deps: unknown[] = []
 ): () => void {
   // This would be used in a React-like hook system
