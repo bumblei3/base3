@@ -1,5 +1,24 @@
 import { test, expect } from '@playwright/test';
 
+// Start a 9x9 Classic game, retrying the menu click until the board is visible.
+// The main menu cards have an entry animation that makes Playwright's default
+// "stable" check race; clicking with force + waiting for #board avoids the flake.
+async function startClassicGame(page: any): Promise<void> {
+  for (let attempt = 0; attempt < 3; attempt++) {
+    await page.locator('.gamemode-card[data-mode="classic"]').first().click({ force: true });
+    try {
+      await page.waitForSelector('#board', { state: 'visible', timeout: 5000 });
+      await page.waitForFunction(() => (window as any).game !== undefined, { timeout: 5000 });
+      return;
+    } catch {
+      // board didn't appear — retry the click
+    }
+  }
+  // final attempt without force so Playwright reports a clear error
+  await page.locator('.gamemode-card[data-mode="classic"]').first().click();
+  await expect(page.locator('#board')).toBeVisible();
+}
+
 test.describe('Deep Game Logic @logic', () => {
   test.beforeEach(async ({ page }) => {
     // Listen to browser console logs
@@ -17,8 +36,7 @@ test.describe('Deep Game Logic @logic', () => {
 
   async function setupPieceAndRender(page: any, r: number, c: number, pieceType: string) {
     // Initialize 9x9 Classic
-    await page.click('.gamemode-card[data-mode="classic"]');
-    await expect(page.locator('#board')).toBeVisible();
+    await startClassicGame(page);
 
     // Wait for game instance
     await page.waitForFunction(() => (window as any).game !== undefined);
@@ -102,8 +120,7 @@ test.describe('Deep Game Logic @logic', () => {
 
   test('Castling 9x9: King should reach correct square', async ({ page }) => {
     // Initialize 9x9 Classic
-    await page.click('.gamemode-card[data-mode="classic"]');
-    await expect(page.locator('#board')).toBeVisible();
+    await startClassicGame(page);
     await page.waitForFunction(() => (window as any).game !== undefined);
 
     await page.evaluate(() => {
@@ -135,8 +152,7 @@ test.describe('Deep Game Logic @logic', () => {
   test('En Passant 9x9', async ({ page }) => {
     test.slow(); // Firefox needs more time
 
-    await page.click('.gamemode-card[data-mode="classic"]');
-    await expect(page.locator('#board')).toBeVisible();
+    await startClassicGame(page);
     await page.waitForFunction(() => (window as any).game !== undefined);
     await page.waitForFunction(() => (window as any).game?.phase === 'PLAY', { timeout: 10000 });
 
@@ -259,8 +275,7 @@ test.describe('Deep Game Logic @logic', () => {
 
   test('Pawn Promotion 9x9 to Angel (e)', async ({ page }) => {
     // Start 9x9 game
-    await page.click('.gamemode-card[data-mode="classic"]');
-    await expect(page.locator('#board')).toBeVisible();
+    await startClassicGame(page);
 
     // Wait for game to be initialized
     await page.waitForFunction(() => (window as any).game !== undefined, { timeout: 5000 });

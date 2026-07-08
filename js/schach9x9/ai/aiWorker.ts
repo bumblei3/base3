@@ -73,8 +73,12 @@ self.onmessage = async function (e: MessageEvent) {
 
       case 'getTopMoves': {
         const { board, color, count, depth, maxTimeMs, moveNumber } = data;
+        // `color` arrives as a numeric constant (COLOR_WHITE=16 / COLOR_BLACK=32),
+        // but getTopMoves expects the string form ('white' | 'black'). Convert it
+        // here, otherwise getTopMoves defaults to black and the tutor shows no hints.
+        const turnColorStr = color === 16 ? 'white' : 'black';
         try {
-          const topMoves = await getTopMoves(board, color, count, depth, maxTimeMs, moveNumber);
+          const topMoves = await getTopMoves(board, turnColorStr, count, depth, maxTimeMs, moveNumber);
           workerSelf.postMessage({ type: 'topMoves', id, data: topMoves });
         } catch (error) {
           logger.error('[AI Worker] getTopMoves failed:', error);
