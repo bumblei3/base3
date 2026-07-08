@@ -68,8 +68,8 @@ export async function shareCurrentGame(game: Game): Promise<boolean> {
 
   // Prefer native share sheet on mobile / installable PWA
   const nav = navigator as Navigator & {
-    share?: (data: { title?: string; text?: string }) => Promise<void>;
-    canShare?: (data: { title?: string; text?: string }) => boolean;
+    share?: (_data: { title?: string; text?: string }) => Promise<void>;
+    canShare?: (_data: { title?: string; text?: string }) => boolean;
   };
   if (nav.share && nav.canShare?.({ text })) {
     try {
