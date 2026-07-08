@@ -210,13 +210,9 @@ export class App {
         const menu = document.getElementById('main-menu');
         if (menu) menu.classList.remove('active');
       } else if (e.key === 'p' || e.key === 'P') {
-        // Pause overlay (toggle) — works from the menu too, but only meaningful
-        // once a game is active.
-        const pauseOverlay = document.getElementById('pause-overlay');
-        const helpOverlay = document.getElementById('help-overlay');
-        if (pauseOverlay && helpOverlay && helpOverlay.classList.contains('hidden')) {
-          pauseOverlay.classList.toggle('hidden');
-        }
+        // Pause overlay (toggle) — delegated to togglePause() so the
+        // KeyboardManager and this listener share a single source of truth.
+        this.togglePause();
       } else if (e.key === 'Escape') {
         for (const id of ['help-overlay', 'pause-overlay']) {
           const overlay = document.getElementById(id);
@@ -516,6 +512,18 @@ export class App {
       document.documentElement.requestFullscreen().catch(() => {});
     } else {
       document.exitFullscreen().catch(() => {});
+    }
+  }
+
+  /**
+   * Toggle the pause overlay. Only meaningful once a game is active,
+   * but safe to call from the menu (no-op if overlay is missing).
+   */
+  togglePause(): void {
+    const pauseOverlay = document.getElementById('pause-overlay');
+    const helpOverlay = document.getElementById('help-overlay');
+    if (pauseOverlay && helpOverlay && helpOverlay.classList.contains('hidden')) {
+      pauseOverlay.classList.toggle('hidden');
     }
   }
 

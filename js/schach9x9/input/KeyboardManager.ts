@@ -127,6 +127,15 @@ export class KeyboardManager {
       return;
     }
 
+    // Pause: 'p' — toggle pause overlay (works once a game is active)
+    if (key === 'p') {
+      event.preventDefault();
+      if (this.app.togglePause) {
+        this.app.togglePause();
+      }
+      return;
+    }
+
     // Emergency Recovery: Ctrl+Shift+F12
     if (ctrl && shift && key === 'f12') {
       event.preventDefault();

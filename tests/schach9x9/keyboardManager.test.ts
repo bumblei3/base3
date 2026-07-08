@@ -35,6 +35,7 @@ describe('KeyboardManager', () => {
       tutorController: mockTutorController,
       game: { selectedSquare: { r: 0, c: 0 }, validMoves: [] },
       toggleFullscreen: vi.fn(),
+      togglePause: vi.fn(),
     };
 
     keyboardManager = new KeyboardManager(app as any);
@@ -116,6 +117,15 @@ describe('KeyboardManager', () => {
     Object.defineProperty(event, 'target', { value: document.body });
     await keyboardManager.handleKeyDown(event);
     expect(mockGameController.resetSelection).toHaveBeenCalled();
+  });
+
+  it('should call togglePause on "p" key', async () => {
+    const event = new KeyboardEvent('keydown', { key: 'p' });
+    Object.defineProperty(event, 'target', { value: document.body });
+    vi.spyOn(event, 'preventDefault');
+    await keyboardManager.handleKeyDown(event);
+    expect(app.togglePause).toHaveBeenCalled();
+    expect(event.preventDefault).toHaveBeenCalled();
   });
 
   it('should handle Escape key with fallback if resetSelection is missing', async () => {
