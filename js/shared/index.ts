@@ -4,7 +4,7 @@ export * from './storage';
 export * from './events';
 export * from './utils';
 export * from './board';
-export {
+export type {
   IAIEngine,
   IAIFactory,
   AIConfig,
@@ -17,11 +17,6 @@ export {
   IMoveOrdering,
   EvaluationComponents,
   IEvaluator,
-  IAIWorker,
   AIWorkerMessage,
   AIWorkerResponse,
-  IUCIEngine,
-  BookFormat,
-  PGNGame,
-  IPGNParser,
-} from './ai';
+} from './ai/index';

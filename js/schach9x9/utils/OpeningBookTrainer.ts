@@ -59,7 +59,7 @@ interface BookData {
     generatedAt: string;
     totalPositions: number;
     totalMoves: number;
-    config: TrainerConfig;
+    config: Partial<TrainerConfig>;
   };
 }
 

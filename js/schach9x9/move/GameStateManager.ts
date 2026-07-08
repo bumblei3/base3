@@ -2,7 +2,7 @@ import { logger } from '../logger.js';
 import { PHASES } from '../gameEngine.js';
 import type { Phase } from '../config.js';
 import * as UI from '../ui.js';
-import type { Game, PieceWithMoved, MoveHistoryEntry, Piece } from '../gameEngine.js';
+import type { Game, PieceWithMoved, MoveHistoryEntry, LastMoveInfo, Piece } from '../gameEngine.js';
 import type { MoveController } from '../moveController.js';
 
 /**
@@ -90,10 +90,10 @@ export function undoMove(game: Game, moveController: MoveController): void {
 
   if (game.moveHistory.length > 0) {
     const lastMove = game.moveHistory[game.moveHistory.length - 1];
-    game.lastMove = lastMove;
+    game.lastMove = lastMove as unknown as LastMoveInfo;
     game.lastMoveHighlight = { from: lastMove.from, to: lastMove.to };
   } else {
-    game.lastMove = null as unknown as MoveHistoryEntry;
+    game.lastMove = null;
     game.lastMoveHighlight = null;
   }
 

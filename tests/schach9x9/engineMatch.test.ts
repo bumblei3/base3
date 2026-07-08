@@ -38,9 +38,9 @@ describe('EngineMatchRunner.updateStats', () => {
     };
     const stats = emptyStats();
     // Depths: 5, 10, 15 -> mean should be 10, NOT the gliding (5+10)/2 style
-    runner.updateStats(stats, { score: 0, depth: 5, nodes: 100, pv: [], mate: false, bestMove: null } as SearchResult, 10);
-    runner.updateStats(stats, { score: 0, depth: 10, nodes: 100, pv: [], mate: false, bestMove: null } as SearchResult, 10);
-    runner.updateStats(stats, { score: 0, depth: 15, nodes: 100, pv: [], mate: false, bestMove: null } as SearchResult, 10);
+    runner.updateStats(stats, { score: 0, depth: 5, nodes: 100, pv: [], mate: false, bestMove: null } as unknown as SearchResult, 10);
+    runner.updateStats(stats, { score: 0, depth: 10, nodes: 100, pv: [], mate: false, bestMove: null } as unknown as SearchResult, 10);
+    runner.updateStats(stats, { score: 0, depth: 15, nodes: 100, pv: [], mate: false, bestMove: null } as unknown as SearchResult, 10);
     expect(stats.depthCount).toBe(3);
     expect(stats.maxDepth).toBe(15);
     expect(stats.avgDepth).toBeCloseTo(10, 5);

@@ -12,6 +12,8 @@
  *   Special: =Q (promotion), x (capture), # (checkmate), + (check), !? (annotations)
  */
 
+import type { Game, IGame, Faction } from './types.js';
+
 export const REPLAY_VERSION = '1.0';
 
 // ─── Serialization ────────────────────────────────────────────────────────
@@ -19,17 +21,26 @@ export const REPLAY_VERSION = '1.0';
 /**
  * Serialize a game to TSPN format string.
  */
-export function serializeGame(game, options = {}) {
+export interface ReplayOptions {
+  event?: string;
+  site?: string;
+  round?: string;
+  result?: string;
+  rpsEnabled?: boolean;
+  includeComments?: boolean;
+}
+
+export function serializeGame(game: any, options: ReplayOptions = {}) {
   const {
     event = 'Casual Game',
     site = 'TriSchach',
     round = '1',
     result = getResultString(game),
-    rpsEnabled = game.rpsEnabled,
+    rpsEnabled = game.rpsEnabled ?? false,
     includeComments = true,
   } = options;
 
-  const lines = [];
+  const lines: string[] = [];
   const date = new Date().toISOString().split('T')[0];
 
   // Headers
@@ -47,12 +58,13 @@ export function serializeGame(game, options = {}) {
   lines.push('');
 
   // Move list
-  const moveLines = [];
+  const moveLines: string[] = [];
   let moveNumber = 1;
-  let moveBuffer = [];
+  let moveBuffer: string[] = [];
 
-  for (let i = 0; i < game.moveHistory.length; i++) {
-    const move = game.moveHistory[i];
+  const moveHistory = game.moveHistory ?? [];
+  for (let i = 0; i < moveHistory.length; i++) {
+    const move = moveHistory[i];
     const notation = formatMove(move, game, i);
 
     if (moveBuffer.length === 0) {
@@ -173,7 +185,7 @@ export function wrapLine(line, maxLength) {
   if (line.length <= maxLength) return [line];
 
   const words = line.split(' ');
-  const lines = [];
+  const lines: string[] = [];
   let current = '';
 
   for (const word of words) {
@@ -207,8 +219,8 @@ export function wrapLine(line, maxLength) {
  */
 export function parseTSPN(tspnString) {
   const lines = tspnString.trim().split('\n');
-  const headers = {};
-  const moves = [];
+  const headers: Record<string, string> = {};
+  const moves: any[] = [];
   let inMoves = false;
   let moveText = '';
 
@@ -246,7 +258,7 @@ export function parseMoveText(text) {
   const cleaned = text.replace(/\d+\.\s*/g, '');
   const tokens = cleaned.split(/\s+/).filter((t) => t);
 
-  const moves = [];
+  const moves: any[] = [];
   let i = 0;
 
   while (i < tokens.length) {
@@ -415,7 +427,12 @@ export function* replayGame(initialGame, moveHistory) {
  * Provides step-by-step control over replay.
  */
 export class ReplayController {
-  constructor(initialGame, moveHistory) {
+  initialGame: Game;
+  moveHistory: any[];
+  currentIndex: number;
+  states: Game[];
+
+  constructor(initialGame: Game, moveHistory: any[]) {
     this.initialGame = cloneGameForReplay(initialGame);
     this.moveHistory = moveHistory;
     this.currentIndex = -1;
@@ -526,7 +543,7 @@ export class ReplayController {
     };
 
     const allHeaders = { ...defaultHeaders, ...headers };
-    return serializeGame(tempGame, { ...headers, ...allHeaders });
+    return serializeGame(tempGame);
   }
 
   /** Export the complete game as TSPN string (all moves from start to finish) */
@@ -556,7 +573,7 @@ export class ReplayController {
     };
 
     const allHeaders = { ...defaultHeaders, ...headers };
-    return serializeGame(tempGame, { ...headers, ...allHeaders });
+    return serializeGame(tempGame);
   }
 }
 
@@ -572,7 +589,7 @@ export function cloneGameForReplay(game) {
 /**
  * Clone game state for yield.
  */
-export function cloneGameState(game) {
+export function cloneGameState(game: any): Game {
   return {
     pieces: game.pieces.map((p) => ({
       id: p.id,
@@ -586,14 +603,14 @@ export function cloneGameState(game) {
     currentFaction: game.currentFaction,
     currentFactionIdx: game.currentFactionIdx,
     state: game.state,
-    eliminatedFactions: Array.from(game.eliminatedFactions),
+    eliminatedFactions: new Set(game.eliminatedFactions) as Set<Faction>,
     capturedPieces: {
       fire: game.capturedPieces.fire.map((p) => p.id),
       water: game.capturedPieces.water.map((p) => p.id),
       nature: game.capturedPieces.nature.map((p) => p.id),
     },
     moveHistory: game.moveHistory,
-  };
+  } as Game;
 }
 
 /**
@@ -618,7 +635,7 @@ export function reconstructGameFromTSPN(parsedTSPN, GameClass, boardCells) {
 /**
  * Download game as .tspn file.
  */
-export function downloadGame(game, filename = null) {
+export function downloadGame(game: IGame, filename: string | null = null) {
   const tspn = serializeGame(game);
   const blob = new Blob([tspn], { type: 'text/plain' });
   const url = URL.createObjectURL(blob);
@@ -643,12 +660,12 @@ export async function copyGameToClipboard(game) {
 /**
  * Load game from file.
  */
-export function loadGameFromFile(file) {
+export function loadGameFromFile(file: File): Promise<any> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       try {
-        const parsed = parseTSPN(e.target.result);
+        const parsed = parseTSPN(e.target!.result);
         resolve(parsed);
       } catch (err) {
         reject(err);

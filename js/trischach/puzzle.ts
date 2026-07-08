@@ -10,7 +10,7 @@ import type { Faction, PieceType, Cell } from './types.ts';
 import { calculateBestMove, setAIDepth, setAIPersonality } from './ai.ts';
 import { OPENING_BOOK } from './opening-book.ts';
 import { isCheckmateInternal, isKingdomCheck } from './game-check.ts';
-import { indexedDBInstance } from '@shared/storage';
+import { indexedDBInstance } from '../shared/storage/index.js';
 import { generateBoard } from './board.ts';
 
 // ─── Types ────────────────────────────────────────────────────────────────
@@ -143,7 +143,6 @@ function reconstructGameFromHash(hash: string): Game | null {
 
     game.currentFactionIdx = factionIdx % 3;
     const factions = ['fire', 'water', 'nature'] as const;
-    // @ts-expect-error - index is always valid (0, 1, 2)
     game.currentFaction = factions[game.currentFactionIdx];
     game._rebuildOccupiedMap();
 
@@ -386,7 +385,7 @@ export async function validatePuzzle(puzzle: Puzzle): Promise<boolean> {
       if (!altPiece) continue;
 
       const result = altGame.handleCellClick(altPiece.pos);
-      if (!result || result.action === 'invalid') continue;
+      if (!result) continue;
 
       altGame.handleCellClick(target);
 
@@ -469,14 +468,14 @@ export function makePuzzleMove(
       puzzleState.currentMoveIndex >= puzzleState.currentPuzzle.solution.length
     ) {
       puzzleState.isComplete = true;
-      updatePuzzleStats(true);
+      void updatePuzzleStats(true);
       return { correct: true, gameOver: true };
     }
 
     return { correct: true, gameOver: false };
   } else {
     puzzleState.isFailed = true;
-    updatePuzzleStats(false);
+    void updatePuzzleStats(false);
     return { correct: false, expectedMove, gameOver: false };
   }
 }
@@ -559,10 +558,10 @@ export async function loadProgress(): Promise<PuzzleState | null> {
   }
 }
 
-function updatePuzzleStats(solved: boolean): void {
+async function updatePuzzleStats(solved: boolean): Promise<void> {
   if (!puzzleState.currentPuzzle) return;
 
-  const puzzles = loadPuzzles();
+  const puzzles = await loadPuzzles();
   const idx = puzzles.findIndex((p) => p.id === puzzleState.currentPuzzle!.id);
   if (idx >= 0) {
     const puzzle = puzzles[idx]!;
@@ -595,10 +594,10 @@ function cloneGameForTest(game: Game): Game {
   // standard initial set.
   newGame.pieces = game.pieces.map((p) => {
     const np = new Piece(p.type, p.faction, new Hex(p.pos.q, p.pos.r));
-    np.id = p.id;
+    (np as { id: string }).id = p.id;
     np.alive = p.alive;
     np.hasMoved = p.hasMoved;
-    np.symbol = p.symbol;
+    (np as { symbol: string }).symbol = p.symbol;
     return np;
   });
 

@@ -2,6 +2,9 @@
  * SoundManager - Synthesizes game sounds using the Web Audio API.
  */
 class SoundManager {
+  ctx: AudioContext | null;
+  enabled: boolean;
+
   constructor() {
     this.ctx = null;
     this.enabled = true;
@@ -9,40 +12,41 @@ class SoundManager {
 
   _init() {
     if (!this.ctx) {
-      this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+      this.ctx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
     }
     if (this.ctx.state === 'suspended') {
       this.ctx.resume();
     }
   }
 
-  _playTone(freq, type, duration, volume, slide = 0) {
+  _playTone(freq: number, type: OscillatorType, duration: number, volume: number, slide = 0) {
     if (!this.enabled) return;
     this._init();
+    const ctx = this.ctx!;
 
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
 
     osc.type = type;
-    osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+    osc.frequency.setValueAtTime(freq, ctx.currentTime);
     if (slide !== 0) {
       osc.frequency.exponentialRampToValueAtTime(
         freq + slide,
-        this.ctx.currentTime + duration,
+        ctx.currentTime + duration,
       );
     }
 
-    gain.gain.setValueAtTime(volume, this.ctx.currentTime);
+    gain.gain.setValueAtTime(volume, ctx.currentTime);
     gain.gain.exponentialRampToValueAtTime(
       0.01,
-      this.ctx.currentTime + duration,
+      ctx.currentTime + duration,
     );
 
     osc.connect(gain);
-    gain.connect(this.ctx.destination);
+    gain.connect(ctx.destination);
 
     osc.start();
-    osc.stop(this.ctx.currentTime + duration);
+    osc.stop(ctx.currentTime + duration);
   }
 
   playSelect() {
@@ -99,7 +103,11 @@ class SoundManager {
     });
   }
 
-  toggle(val) {
+  playError() {
+    this._playTone(220, 'sawtooth', 0.25, 0.12, -80);
+  }
+
+  toggle(val: boolean) {
     this.enabled = val;
   }
 }

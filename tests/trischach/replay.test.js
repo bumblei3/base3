@@ -860,12 +860,12 @@ describe("Replay: cloneGameState", () => {
     }
   });
 
-  test("clones eliminatedFactions as array", () => {
+  test("clones eliminatedFactions as Set", () => {
     const game = createMockGame({
       eliminatedFactions: new Set([FACTION.NATURE]),
     });
     const cloned = cloneGameState(game);
-    expect(cloned.eliminatedFactions).toEqual([FACTION.NATURE]);
+    expect(cloned.eliminatedFactions).toEqual(new Set([FACTION.NATURE]));
   });
 
   test("clones capturedPieces as ids", () => {

@@ -191,7 +191,7 @@ describe('GameStatusUI Component', () => {
     // SVG-innerHTML approach. Verified manually in browser context.
     game.moveHistory = [{ evalScore: 100 }, { evalScore: 200 }, { evalScore: -50 }];
 
-    const svgEl = document.getElementById('eval-graph') as SVGSVGElement & { dataset: Record<string, string> };
+    const svgEl = document.getElementById('eval-graph') as unknown as SVGSVGElement & { dataset: Record<string, string> };
     if (svgEl) {
       delete svgEl.dataset.hasListener;
     }

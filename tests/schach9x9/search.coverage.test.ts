@@ -44,7 +44,7 @@ describe('search.ts coverage', () => {
     // Create a minimal IntBoard (9x9 = 81 squares)
     // Board layout: [piece_int, ...] 81 entries
     // We need a valid position with kings
-    const board = new Int32Array(81).fill(0);
+    const board = new Int8Array(81).fill(0);
     // Place white king at 40, black king at 0
     // PIECE_KING=6, COLOR_WHITE=0, COLOR_BLACK=8
     // piece = type | color
@@ -70,7 +70,7 @@ describe('search.ts coverage', () => {
     const { setProgressCallback } = await import('@schach9x9/aiEngine');
     setProgressCallback(progressCallback);
 
-    const board = new Int32Array(81).fill(0);
+    const board = new Int8Array(81).fill(0);
     board[40] = 6;
     board[0] = 6 | 8;
 
@@ -85,7 +85,7 @@ describe('search.ts coverage', () => {
     const search = createJsSearch();
 
     // Board with only kings — no legal moves for either side
-    const board = new Int32Array(81).fill(0);
+    const board = new Int8Array(81).fill(0);
     board[40] = 6; // white king
     board[0] = 6 | 8; // black king
 
@@ -100,7 +100,7 @@ describe('search.ts coverage', () => {
     const { createJsSearch } = await import('@schach9x9/search');
     const search = createJsSearch();
 
-    const board = new Int32Array(81).fill(0);
+    const board = new Int8Array(81).fill(0);
     board[40] = 6;
     board[0] = 6 | 8;
 
@@ -114,7 +114,7 @@ describe('search.ts coverage', () => {
     const { createJsSearch } = await import('@schach9x9/search');
     const search = createJsSearch();
 
-    const board = new Int32Array(81).fill(0);
+    const board = new Int8Array(81).fill(0);
     board[40] = 6;
     board[0] = 6 | 8;
 

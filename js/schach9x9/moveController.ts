@@ -73,7 +73,7 @@ export class MoveController {
           const isHumanMove = this.game.isAI ? this.game.turn === 'white' : true;
           if (isHumanMove) {
             this.game.stats.playerMoves++;
-            if (this.game.isTutorMove && this.game.isTutorMove(move)) {
+            if (this.game.isTutorMove && this.game.isTutorMove(from, move)) {
               this.game.stats.playerBestMoves++;
             }
             if (this.game.tutorController?.handlePlayerMove) {

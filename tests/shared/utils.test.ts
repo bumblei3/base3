@@ -177,7 +177,7 @@ describe('merge', () => {
 
   it('should not mutate original', () => {
     const target = { a: { b: 1 } };
-    merge(target, { a: { c: 2 } });
+    merge(target, { a: { c: 2 } } as any);
     expect(target).toEqual({ a: { b: 1 } });
   });
 });

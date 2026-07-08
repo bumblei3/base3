@@ -2,7 +2,7 @@
  * Modul für das Rendern des Schachbretts.
  * @module BoardRenderer
  */
-import { BOARD_SIZE, PHASES, isBlockedCell } from '../config.js';
+import { BOARD_SIZE, PHASES, isBlockedCell, type BoardShape } from '../config.js';
 import { debounce } from '@shared/utils';
 import { particleSystem, floatingTextManager, shakeScreen } from '../effects.js';
 import { updateLastMoveArrow, clearArrows } from './ArrowRenderer.js';
@@ -117,15 +117,15 @@ export function initBoardUI(game: GameLike): void {
       cell.dataset.c = c.toString();
 
       // Mark blocked squares for cross-shaped board
-      if (game.boardShape && isBlockedCell(r, c, game.boardShape)) {
+      if (game.boardShape && isBlockedCell(r, c, game.boardShape as BoardShape)) {
         cell.classList.add('blocked-square');
         cell.style.pointerEvents = 'none';
       }
 
       cell.addEventListener('click', () => {
-        if (game.boardShape && isBlockedCell(r, c, game.boardShape)) return;
+        if (game.boardShape && isBlockedCell(r, c, game.boardShape as BoardShape)) return;
         console.log('[BoardRenderer] Cell click: row=%d, col=%d, phase=%s', r, c, game.phase);
-        game.handleCellClick(r, c);
+        game.handleCellClick?.(r, c);
       });
 
       // Drag & Drop
@@ -207,7 +207,7 @@ export function initBoardUI(game: GameLike): void {
           if (validMoves.some((move: Square) => move.r === r && move.c === c)) {
             game.selectedSquare = { r: fromR, c: fromC };
             game.validMoves = validMoves;
-            game.handleCellClick(r, c);
+            game.handleCellClick?.(r, c);
           }
         }
       });
@@ -321,7 +321,7 @@ export function initBoardUI(game: GameLike): void {
           if (touchDragValidMoves.some((m: Square) => m.r === targetR && m.c === targetC)) {
             game.selectedSquare = { r: fromR, c: fromC };
             game.validMoves = touchDragValidMoves;
-            game.handleCellClick(targetR, targetC);
+            game.handleCellClick?.(targetR, targetC);
           }
         }
         touchDragValidMoves = [];
@@ -537,7 +537,7 @@ export function renderBoard(game: GameLike): void {
         const move = game.validMoves.find((m: Square) => m.r === r && m.c === c);
         if (move) {
           cell.classList.add('valid-move');
-          if (game.isTutorMove && game.isTutorMove(game.selectedSquare, { r, c }))
+          if (game.isTutorMove && game.isTutorMove(game.selectedSquare as Square, { r, c }))
             cell.classList.add('tutor-move');
         }
       }

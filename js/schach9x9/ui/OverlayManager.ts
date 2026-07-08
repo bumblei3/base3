@@ -4,8 +4,8 @@
  */
 import { renderBoard } from './BoardRenderer.js';
 import { soundManager } from '../sounds.js';
-import type { Player, GameLike } from '../gameEngine.js';
-import type { MoveRecord, Puzzle, ModalAction } from '../types/game.js';
+import type { Player } from '../gameEngine.js';
+import type { GameLike, MoveRecord, Puzzle, ModalAction, Piece } from '../types/game.js';
 
 /**
  * Zeigt ein modales Dialogfenster an.

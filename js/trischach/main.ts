@@ -40,6 +40,7 @@ import {
   GameResult,
   Piece,
 } from './game.ts';
+import type { IGame, Faction } from './types.ts';
 import {
   calculateBestMove,
   evaluateBoard,
@@ -267,14 +268,14 @@ function calculateBestMoveWorker(
 ): Promise<WorkerMove | null> {
   return new Promise((resolve) => {
     if (!aiWorker || !workerReady) {
-      const move = calculateBestMove(game, faction);
+      const move = calculateBestMove(game, faction as Faction);
       if (move) {
         resolve({
           pieceId: move.piece.id,
           targetQ: move.target.q,
           targetR: move.target.r,
-          moveType: move.type,
-          rps: move.rps,
+          moveType: move.type ?? '',
+          rps: move.rps ?? '',
         });
       } else {
         resolve(null);
@@ -832,7 +833,6 @@ function triggerAutoMove(): void {
           updateUI();
 
           // Start pondering for next AI move
-          // @ts-expect-error - GameState union comparison with string literal
           if ((game.state as string) !== 'game_over') {
             startPondering(game, game.currentFaction);
           }
@@ -841,7 +841,6 @@ function triggerAutoMove(): void {
           updateUI();
 
           // Start pondering for next AI move
-          // @ts-expect-error - GameState union comparison with string literal
           if ((game.state as string) !== 'game_over') {
             startPondering(game, game.currentFaction);
           }
@@ -1174,7 +1173,6 @@ function initEventListeners(): void {
       autoBattleBtn.textContent = '⏹ Auto Battle Stoppen';
       autoBattleBtn.classList.add('active');
       // Start pondering for first auto-move
-      // @ts-expect-error - GameState union comparison with string literal
       if ((game.state as string) !== 'game_over') {
         startPondering(game, game.currentFaction);
       }
@@ -1494,7 +1492,7 @@ function initEventListeners(): void {
     if (replayPause) replayPause.style.display = 'none';
   }
 
-  function applyGameState(state: Game): void {
+  function applyGameState(state: IGame): void {
     const boardGroup = document.getElementById('board-group');
     if (boardGroup) {
       boardGroup.querySelectorAll('.piece').forEach((el) => el.remove());
@@ -1516,20 +1514,20 @@ function initEventListeners(): void {
     (game.state as string) = state.state;
     game.eliminatedFactions = new Set(state.eliminatedFactions);
     game.capturedPieces = {
-      fire: (state.capturedPieces.fire || [])
-        .map((id: string) => game.pieces.find((p: Piece) => p.id === id))
-        .filter(Boolean),
-      water: (state.capturedPieces.water || [])
-        .map((id: string) => game.pieces.find((p: Piece) => p.id === id))
-        .filter(Boolean),
-      nature: (state.capturedPieces.nature || [])
-        .map((id: string) => game.pieces.find((p: Piece) => p.id === id))
-        .filter(Boolean),
+      fire: ((state.capturedPieces.fire || [])
+        .map((p: Piece) => game.pieces.find((x: Piece) => x.id === p.id))
+        .filter((p): p is Piece => p != null)),
+      water: ((state.capturedPieces.water || [])
+        .map((p: Piece) => game.pieces.find((x: Piece) => x.id === p.id))
+        .filter((p): p is Piece => p != null)),
+      nature: ((state.capturedPieces.nature || [])
+        .map((p: Piece) => game.pieces.find((x: Piece) => x.id === p.id))
+        .filter((p): p is Piece => p != null)),
     };
 
     for (const fac of [FACTION.FIRE, FACTION.WATER, FACTION.NATURE]) {
       const el = document.getElementById(`panel-${fac}`);
-      if (el && state.eliminatedFactions?.includes(fac)) {
+      if (el && state.eliminatedFactions?.has(fac as Faction)) {
         el.classList.add('eliminated');
       } else if (el) {
         el.classList.remove('eliminated');

@@ -60,7 +60,7 @@ export class PuzzleMenu {
         if (this.gameController.loadPuzzle) {
           this.gameController.loadPuzzle(index);
         } else {
-          this.gameController.startPuzzleMode(index);
+          this.gameController.startPuzzleMode?.(index);
         }
       };
 

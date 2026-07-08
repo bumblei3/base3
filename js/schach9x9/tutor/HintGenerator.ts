@@ -9,7 +9,7 @@ import {
   renderBoard,
   updateShopUI,
 } from '../ui.js';
-import type { TutorHint } from '../ui.js';
+import type { TutorHint } from '../ui/TutorUI.js';
 import { analyzeMoveWithExplanation, getMoveNotation } from './MoveAnalyzer.js';
 import type { Piece } from '../types/game.js';
 import * as aiEngine from '../aiEngine.js';

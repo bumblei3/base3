@@ -19,7 +19,7 @@ import {
 import { AI_PERSONALITIES } from './ai/personalities.js';
 import type { Piece } from './types/game.js';
 
-interface MoveRecord {
+export interface MoveRecord {
   moveNumber: number;
   color: string;
   from: { r: number; c: number };
@@ -216,7 +216,7 @@ export class EngineMatchRunner {
     
     const whiteStats = this.createEmptyStats();
     const blackStats = this.createEmptyStats();
-    const moveHistory: Array<{ from: { r: number; c: number }; to: { r: number; c: number }; promotion?: string }> = [];
+    const moveHistory: MoveRecord[] = [];
     let moveNumber = 1;
     let currentTurn: 'white' | 'black' = 'white';
 

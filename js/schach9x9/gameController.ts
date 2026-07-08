@@ -50,20 +50,13 @@ export interface ArrowRendererType {
   highlightMoves?: (_arrows: { fromR: number; fromC: number; toR: number; toC: number; colorKey: string }[]) => void;
 }
 
-export interface GameExtended extends Game {
+export interface GameExtended extends Game, Record<string, any> {
   campaignMode?: boolean;
   currentLevelId?: string;
-  handlePlayClick?: (_r: number, _c: number) => Promise<void>;
-  aiSetupKing?: () => void;
-  aiSetupPieces?: () => void;
-  aiSetupUpgrades?: () => void;
-  aiEvaluateDrawOffer?: () => void;
-  updateBestMoves?: () => void;
   gameStartTime?: number;
   arrowRenderer?: ArrowRendererType;
   puzzleMode?: boolean;
   currentPuzzle?: PuzzleState | null;
-  calculateMaterialAdvantage?: (_color?: Player) => number;
   gameController?: GameController;
   aiController?: AIController;
   moveController?: {
@@ -71,8 +64,6 @@ export interface GameExtended extends Game {
     redoMove: () => void;
     reconstructBoardAtMove?: (_moveIndex: number) => void;
   };
-  startClock?: () => void;
-  stopClock?: () => void;
 }
 
 export class GameController {

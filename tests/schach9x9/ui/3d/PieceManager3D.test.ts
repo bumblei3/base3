@@ -39,6 +39,7 @@ vi.mock('../../../../js/schach9x9/logger.ts', () => ({
 }));
 
 import { PieceManager3D } from '../../../../js/schach9x9/ui/3d/PieceManager3D.ts';
+import type { Game } from '../../../../js/schach9x9/gameEngine.js';
 
 describe('PieceManager3D', () => {
   let pieceManager: PieceManager3D;
@@ -104,7 +105,7 @@ describe('PieceManager3D', () => {
     board[6][4] = { type: 'p', color: 'white', pos: { q: 6, r: 4 }, symbol: '♙', alive: true, id: 1 };
     const mockGame = { board };
 
-    pieceManager.updateFromGameState(mockGame);
+    pieceManager.updateFromGameState(mockGame as unknown as Game);
 
     expect(pieceManager.pieces['6,4']).toBeDefined();
   });

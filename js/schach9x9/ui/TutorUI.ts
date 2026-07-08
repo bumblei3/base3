@@ -34,14 +34,14 @@ interface ScoreDescription {
   emoji: string;
 }
 
-interface GameExtensions {
+interface TutorGameExtensions {
   executeMove: (_from: { r: number; c: number }, _to: { r: number; c: number }) => void;
   getTutorHints: () => Promise<TutorHint[]>;
   analyzeMoveWithExplanation: (_move: unknown, _score: number) => MoveExplanation;
   getScoreDescription: (_score: number) => ScoreDescription | null;
 }
 
-type GameWithExtensions = Game & Partial<GameExtensions> & Record<string, unknown>;
+type GameWithExtensions = Game & Partial<TutorGameExtensions> & Record<string, unknown>;
 
 /**
  * Zeigt oder verbirgt einen Lade-Status für den Tutor.

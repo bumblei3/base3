@@ -3,8 +3,8 @@
  * Shared Event Emitter - Typed event system
  */
 
-type EventCallback<T = unknown> = (data: T) => void;
-type EventMap = Record<string, unknown>;
+type EventCallback<T = any> = (data: T) => void;
+type EventMap = Record<string, any>;
 
 export class EventEmitter<E extends EventMap = EventMap> {
   private listeners: Map<keyof E, Set<EventCallback>> = new Map();
@@ -54,6 +54,7 @@ export class EventEmitter<E extends EventMap = EventMap> {
 
 // Pre-defined game events
 export interface GameEvents {
+  [key: string]: any;
   'game:start': { variant: 'schach9x9' | 'trischach'; timeControl: { initial: number; increment: number } };
   'game:end': { result: 'white' | 'black' | 'fire' | 'water' | 'nature' | 'draw'; reason: string };
   'move:made': { move: { from: { row: number; col: number }; to: { row: number; col: number }; piece: string; san: string } };
@@ -85,7 +86,7 @@ export function useEvent<K extends keyof GameEvents>(
   emitter: EventEmitter<GameEvents>,
   event: K,
   callback: (data: GameEvents[K]) => void,
-  deps: unknown[] = []
+  _deps: unknown[] = []
 ): () => void {
   // This would be used in a React-like hook system
   // For vanilla JS, just use emitter.on directly

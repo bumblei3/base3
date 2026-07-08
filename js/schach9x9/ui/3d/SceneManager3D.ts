@@ -18,7 +18,7 @@ export class SceneManager3D {
   public squareSize: number;
   public currentTheme: string;
   public boundAnimate: () => void;
-  public boundOnWindowResize: () => void;
+  public boundOnWindowResize!: () => void;
   public enabled: boolean;
 
   constructor(containerElement: HTMLElement) {

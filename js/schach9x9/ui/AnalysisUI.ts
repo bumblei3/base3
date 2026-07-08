@@ -310,7 +310,7 @@ export class AnalysisUI {
 
     for (let i = this.game.moveHistory.length - 1; i >= 0; i--) {
       const move = this.game.moveHistory[i];
-      this.undoMoveOnBoard(tempBoard, move);
+      this.undoMoveOnBoard(tempBoard, move as never);
       states.unshift(JSON.parse(JSON.stringify(tempBoard)));
     }
     return states;
@@ -339,12 +339,12 @@ export class AnalysisUI {
     if (specialMove) {
       if (specialMove.type === 'castling') {
         const { rookFrom, rookTo } = specialMove;
-        const rook = board[rookTo?.r]?.[rookTo?.c] as { type: string; color: string; hasMoved?: boolean } | null;
+        const rook = board[rookTo!.r]?.[rookTo!.c] as Piece | null;
         if (rook) {
           rook.hasMoved = specialMove.rookHadMoved || false;
         }
         if (rookFrom && rookTo) {
-          board[rookFrom.r][rookFrom.c] = rook;
+          board[rookFrom.r][rookFrom.c] = rook as Piece;
           board[rookTo.r][rookTo.c] = null;
         }
         if (to.r !== rookTo?.r || to.c !== rookTo?.c) {
@@ -358,10 +358,10 @@ export class AnalysisUI {
         const { capturedPawnPos, capturedPawn } = specialMove;
         if (capturedPawnPos) {
           board[capturedPawnPos.r][capturedPawnPos.c] = {
-            type: 'p',
+            type: 'p' as const,
             hasMoved: true,
             ...capturedPawn,
-          };
+          } as Piece;
         }
         board[to.r][to.c] = null;
         // Also restore the moved piece (pawn) to its original position

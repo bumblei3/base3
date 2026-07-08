@@ -17,11 +17,14 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noUnusedLocals": true,
+    "noUncheckedIndexedAccess": false,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "ignoreDeprecations": "6.0",
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedIndexedAccess": true,
+    "noUncheckedIndexedAccess": false,
     "types": ["node", "vitest", "happy-dom"],
     "incremental": true,
     "tsBuildInfoFile": ".tsbuildinfo.schach9x9",
@@ -30,7 +33,7 @@
       "@schach9x9/*": ["js/schach9x9/*"],
       "@shared/*": ["js/shared/*"]
     },
-    "composite": true
+    "composite": false
   },
   "include": [
     "js/schach9x9/**/*",

@@ -13,6 +13,7 @@ import { showToast } from '../ui/OverlayManager.js';
 import { generatePGN, copyPGNToClipboard, downloadPGN } from '../utils/PGNGenerator.js';
 import { shareCurrentGame } from '../utils/share.js';
 import { soundManager } from '../sounds.js';
+import type { GameLike } from '../types/game.js';
 import { setPieceSkin } from '../chess-pieces.js';
 import { CampaignUI } from './CampaignUI.js';
 import { AnalysisUI } from './AnalysisUI.js';
@@ -147,7 +148,7 @@ export class DOMHandler {
     // Campaign Mode
     const campaignStartBtn = document.getElementById('campaign-start-btn');
     if (campaignStartBtn) {
-      this.campaignUI = new CampaignUI(this.app);
+      this.campaignUI = new CampaignUI(this.app as unknown as GameLike);
       campaignStartBtn.addEventListener('click', () => {
         const overlay = document.getElementById('points-selection-overlay');
         if (overlay) overlay.classList.add('hidden');

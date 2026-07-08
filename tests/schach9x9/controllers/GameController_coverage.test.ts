@@ -19,8 +19,6 @@ vi.mock('@schach9x9/ui', () => ({
   hidePuzzleOverlay: vi.fn(),
   updatePuzzleStatus: vi.fn(),
   showCampaignVictoryModal: vi.fn(),
-  updateCapturedUI: vi.fn(),
-  updatePuzzleStatus: vi.fn(),
 }));
 
 vi.mock('@schach9x9/sounds', () => ({

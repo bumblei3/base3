@@ -84,7 +84,7 @@ const { BattleAnimator } = await import('@schach9x9/battleAnimations.js');
 describe('BattleAnimator Class', () => {
   let scene: InstanceType<typeof mockThree.Scene>;
   let camera: InstanceType<typeof mockThree.PerspectiveCamera>;
-  let animator: BattleAnimator;
+  let animator: InstanceType<typeof BattleAnimator>;
 
   beforeEach(() => {
     scene = new mockThree.Scene();
@@ -146,8 +146,8 @@ describe('BattleAnimator Class', () => {
   });
 
   test('should execute all battle animation types', async () => {
-    const attacker = { type: 'q' };
-    const defender = { type: 'p' };
+    const attacker = { type: 'q', color: 'white' };
+    const defender = { type: 'p', color: 'black' };
     const pos = { x: 0, y: 0, z: 0 };
 
     animator.animateCharge = vi.fn(() => Promise.resolve());

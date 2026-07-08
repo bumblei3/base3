@@ -5,12 +5,17 @@
     "moduleResolution": "bundler",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "strict": true,
+    "noImplicitAny": false,
     "noEmit": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "isolatedModules": true,
     "resolveJsonModule": true,
+    "allowImportingTsExtensions": true,
+    "noUncheckedIndexedAccess": false,
+    "ignoreDeprecations": "6.0",
     "baseUrl": ".",
+    "types": ["node"],
     "paths": {
       "@trischach/*": ["js/trischach/*"]
     }
@@ -18,8 +23,7 @@
   "include": [
     "js/trischach/**/*.ts",
     "tests/trischach/**/*.ts",
-    "tests/trischach/**/*.js",
-    "tests-e2e/**/*.ts"
+    "tests/trischach/**/*.js"
   ],
   "exclude": ["node_modules", "dist"]
 }

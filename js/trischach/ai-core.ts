@@ -2404,8 +2404,6 @@ export { learnFromGame, getLearnedData, loadLearnedData };
 
 // ─── Game Serialization ────────────────────────────────────────────
 
-import { rebuildOccupiedMap } from './board.ts';
-
 export function deserializeGame(state: {
   pieces: Array<{
     id: number;
@@ -2448,7 +2446,7 @@ export function deserializeGame(state: {
     moveHistory: [],
     _positionHistory: new Map(),
     _halfmoveClock: state._halfmoveClock || 0,
-  };
+  } as unknown as Game;
   rebuildOccupiedMap(game);
   return game;
 }

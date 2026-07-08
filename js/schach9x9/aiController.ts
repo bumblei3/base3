@@ -22,7 +22,6 @@ import type { MoveResult, SearchResult } from './aiEngine.js';
 import { AI_PERSONALITIES } from './ai/personalities.js';
 import { AnalysisUI } from './ui/AnalysisUI.js';
 
-// @ts-expect-error - Vite worker import (.ts extension)
 import { createAIWorker } from './ai/workerFactory.js';
 
 // Piece values for shop

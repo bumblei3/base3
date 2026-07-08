@@ -31,7 +31,7 @@ export interface PGNImportResult {
 /**
  * PGN Import & Replay Manager
  */
-import { escapeHtml } from '../utils/escapeHtml.js';
+import { escapeHtml } from './utils/escapeHtml.js';
 
 export class PGNImportReplay {
   private parser: PGNParser;

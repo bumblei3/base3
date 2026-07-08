@@ -2,6 +2,7 @@
  * Core game type definitions for Schach 9x9
  */
 import type { MoveResult } from '../aiEngine.js';
+import type { PieceWithMoved, MoveHistoryEntry } from '../gameEngine.js';
 export type { MoveResult } from '../aiEngine.js';
 
 export type PieceType = 'k' | 'q' | 'r' | 'b' | 'n' | 'p' | 'e' | 'a' | 'c' | 'j' | null;
@@ -96,21 +97,102 @@ export interface Statistics {
 }
 
 /**
- * Dynamically added properties on Game instance
- * These are set at runtime by various controllers
- */
-export interface GameExtensions {
-  tutorController?: {
-    handlePlayerMove?: (_from: Square, _to: Square) => void;
-    analyzePlayerMovePreExecution?: (_move: { from: Square; to: Square }) => Promise<unknown>;
-    showBlunderWarning?: (_analysis: unknown, _callback: () => void) => void;
-  };
-  isTutorMove?: (_move: Square) => boolean;
-  currentTheme?: string;
-  log?: (_message: string) => void;
-  getValidMoves?: (_r: number, _c: number, _piece: unknown) => Square[];
-  calculateMaterialAdvantage?: (_color: Player) => number;
-}
+ /**
+  * Runtime-added methods on the Game instance/prototype.
+  * These are patched in App.applyDelegates() (duck-typing / prototype delegation
+  * to GameController / MoveController / AIController / TutorController / AnalysisManager).
+  * Declared here so the type system can see them.
+  */
+  export interface GameExtensions {
+    // tutorController is declared on Game itself; not duplicated here
+    isTutorMove?: (_from: Square, _to: Square) => boolean;
+   currentTheme?: string;
+   log?: (_message: string) => void;
+   getValidMoves?: (_r: number, _c: number, _piece: unknown) => Square[];
+   calculateMaterialAdvantage?: (_color?: Player) => number;
+   // --- GameController delegations ---
+   placeKing?: (r: number, c: number, color: Player) => unknown;
+   selectShopPiece?: (type: string) => unknown;
+   placeShopPiece?: (r: number, c: number) => unknown;
+   finishSetupPhase?: () => unknown;
+   setTimeControl?: (mode: string) => unknown;
+   updateClockVisibility?: () => unknown;
+   startClock?: () => unknown;
+   stopClock?: () => unknown;
+   tickClock?: () => unknown;
+   updateClockDisplay?: () => unknown;
+   updateClockUI?: () => unknown;
+   showShop?: (show: boolean) => unknown;
+   updateShopUI?: () => unknown;
+   handleCellClick?: (r: number, c: number) => unknown;
+   resign?: (color: Player) => unknown;
+   offerDraw?: (color: Player) => unknown;
+   acceptDraw?: () => unknown;
+   declineDraw?: () => unknown;
+   showDrawOfferDialog?: () => unknown;
+   // --- MoveController delegations ---
+   handlePlayClick?: (r: number, c: number) => unknown;
+   executeMove?: (from: Square, to: Square) => unknown;
+   showPromotionUI?: (r: number, c: number, color: Player, record: MoveHistoryEntry) => unknown;
+   animateMove?: (from: Square, to: Square, piece: Piece) => unknown;
+   finishMove?: () => unknown;
+   undoMove?: () => unknown;
+   redoMove?: () => unknown;
+   checkDraw?: () => unknown;
+   isInsufficientMaterial?: () => unknown;
+   getBoardHash?: () => unknown;
+   saveGame?: () => unknown;
+   loadGame?: () => unknown;
+   autoSave?: (show: boolean) => unknown;
+   updateMoveHistoryUI?: () => unknown;
+   updateUndoRedoButtons?: () => unknown;
+   updateCapturedUI?: () => unknown;
+   animateCheck?: (color: Player) => unknown;
+   animateCheckmate?: (color: Player) => unknown;
+   updateStatistics?: () => unknown;
+   enterReplayMode?: () => unknown;
+   exitReplayMode?: () => unknown;
+   replayFirst?: () => unknown;
+   replayPrevious?: () => unknown;
+   replayNext?: () => unknown;
+   replayLast?: () => unknown;
+   updateReplayUI?: () => unknown;
+   reconstructBoardAtMove?: (idx: number) => unknown;
+   undoMoveForReplay?: (move: MoveHistoryEntry) => unknown;
+   setTheme?: (theme: string) => unknown;
+   applyTheme?: (theme: string) => unknown;
+   // --- AIController delegations ---
+   aiSetupKing?: () => unknown;
+   aiSetupPieces?: () => unknown;
+   aiSetupUpgrades?: () => unknown;
+   aiMove?: () => unknown;
+   evaluatePosition?: (color: Player) => unknown;
+   updateAIProgress?: (data: {
+     depth?: number;
+     maxDepth?: number;
+     nodes?: number;
+     bestMove?: { from: { r: number; c: number }; to: { r: number; c: number } };
+   } | null) => unknown;
+   aiEvaluateDrawOffer?: () => unknown;
+   aiShouldOfferDraw?: () => unknown;
+   aiShouldResign?: () => unknown;
+   // --- TutorController delegations ---
+   updateBestMoves?: () => unknown;
+   getTutorHints?: () => unknown;
+   getMoveNotation?: (move: { from: Square; to: Square }) => unknown;
+   showTutorSuggestions?: () => unknown;
+   getPieceName?: (type: string) => unknown;
+   getThreatenedPieces?: (pos: Square, color: Player) => unknown;
+   detectTacticalPatterns?: (move: { from: Square; to: Square }) => unknown;
+   getDefendedPieces?: (pos: Square, color: Player) => unknown;
+   analyzeStrategicValue?: (move: { from: Square; to: Square }) => unknown;
+   getScoreDescription?: (score: number) => unknown;
+   analyzeMoveWithExplanation?: (move: { from: Square; to: Square }, score: number, best: number) => unknown;
+   // --- AnalysisManager delegations ---
+   toggleThreats?: () => unknown;
+   toggleOpportunities?: () => unknown;
+   toggleBestMove?: () => unknown;
+ }
 
 /**
  * Subset of Game properties consumed by UI/rendering/tutor modules.
@@ -126,6 +208,7 @@ export interface MoveRecord {
   promotion?: PieceType | string;
   evalScore?: number;
   score?: number;
+  specialMove?: { type: string; promotedTo?: string };
 }
 
 /** Puzzle interface */
@@ -161,7 +244,7 @@ export interface GameLike {
   lastMoveHighlight: { from: Square; to: Square; piece?: Piece } | null;
   isInCheck?(_color: Player): boolean;
   isSquareUnderAttack?: (_r: number, _c: number, _color: Player) => boolean;
-  isTutorMove?: (_move: Square) => boolean;
+  isTutorMove?: (_from: Square, _to: Square) => boolean;
   playerColor?: Player;
   whiteCorridor?: number | null;
   blackCorridor?: number | null;
@@ -185,5 +268,7 @@ export interface GameLike {
   // Internal rendering state (added by renderBoard)
   _previousBoardState?: (Piece | null)[][];
   _forceFullRender?: boolean;
+  // App-level methods used by UI components
+  startCampaignLevel?: (levelId: string) => void;
   // Allow additional properties for dynamic extensions
 }

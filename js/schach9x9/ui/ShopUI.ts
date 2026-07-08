@@ -5,7 +5,7 @@
 import { SHOP_PIECES, PIECE_VALUES } from '../config.js';
 import { PIECE_SVGS } from '../chess-pieces.js';
 import { getPieceText } from './BoardRenderer.js';
-import type { GameLike } from '../types/game.js';
+import type { GameLike, PieceType } from '../types/game.js';
 
 // Removed top-level await preventing circular dependency
 // const { updateTutorRecommendations } = (await import('./TutorUI.js')) as any;
@@ -137,7 +137,7 @@ export function updateShopUI(game: GameLike): void {
     if (statusDisplay) {
       const selected = (game as GameWithSelectedPiece).selectedShopPiece;
       if (selected) {
-        statusDisplay.textContent = `Platziere: ${getPieceText({ type: selected, color: game.turn })} (${PIECE_VALUES[selected as keyof typeof PIECE_VALUES]} Pkt)`;
+        statusDisplay.textContent = `Platziere: ${getPieceText({ type: selected as Exclude<PieceType, null>, color: game.turn })} (${PIECE_VALUES[selected as keyof typeof PIECE_VALUES]} Pkt)`;
       } else {
         statusDisplay.textContent = 'Wähle eine Figur zum Kaufen';
       }
@@ -145,11 +145,11 @@ export function updateShopUI(game: GameLike): void {
   }
 
   // Check if UI module is available globally (from App.ts)
-  const globalUI = window.UI as { updateTutorRecommendations?: (_game: GameLike) => void } | undefined;
+  const globalUI = window.UI as unknown as { updateTutorRecommendations?: (_game: GameLike) => void } | undefined;
   if (globalUI?.updateTutorRecommendations) {
     globalUI.updateTutorRecommendations(game);
   } else {
-    const legacyUpdate = window.updateTutorRecommendations as ((_game: GameLike) => void) | undefined;
+    const legacyUpdate = (window as unknown as { updateTutorRecommendations?: (_game: GameLike) => void }).updateTutorRecommendations;
     if (legacyUpdate) {
       legacyUpdate(game);
     }

@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { gameToFEN, buildShareText, shareCurrentGame } from '../../js/schach9x9/utils/share.js';
 import { parseFEN } from '../../js/schach9x9/utils.js';
 import { BoardFactory } from '../../js/schach9x9/campaign/BoardFactory.js';
-import type { Game } from '../../js/schach9x9/gameEngine.js';
+import type { Game, Piece } from '../../js/schach9x9/gameEngine.js';
 
 function makeGame(fen: string, moveCount = 0): Game {
   const parsed = parseFEN(fen);

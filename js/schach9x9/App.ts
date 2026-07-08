@@ -9,7 +9,7 @@ import { errorManager } from './utils/ErrorManager.js';
 import type { EvaluationBar } from './ui/EvaluationBar.js';
 import type { Player, Square, Piece, GameMode } from './types/game.js';
 import type { Game, MoveHistoryEntry, PieceWithMoved } from './gameEngine.js';
-import type { GameController } from './gameController.js';
+import type { GameController, GameExtended } from './gameController.js';
 import type { MoveController } from './moveController.js';
 import type { AIController } from './aiController.js';
 import type { TutorController } from './tutorController.js';
@@ -25,7 +25,10 @@ interface BattleChess3D {
   enabled: boolean;
   onWindowResize(): void;
   scene?: unknown;
-  pieceManager?: unknown;
+  pieceManager?: {
+    setSkin: (skin: string) => void;
+    updateFromGameState: (game: Game | null) => void;
+  };
   playBattleSequence?: (attacker: Piece, defender: Piece, from: Square, to: Square) => Promise<void>;
   removePiece?: (r: number, c: number) => void;
   animateMove?: (fromR: number, fromC: number, toR: number, toC: number) => Promise<void>;
@@ -40,7 +43,7 @@ import type * as UIImport from './ui.js';
 let UI_MODULE: typeof UIImport | null = null;
 
 export class App {
-  public game: Game | null = null;
+  public game: Game | GameExtended | null = null;
   public gameController: GameController | null = null;
   public moveController: MoveController | null = null;
   public aiController: AIController | null = null;
@@ -242,13 +245,13 @@ export class App {
       // Lazy-load battleChess3D only when 3D mode is first enabled
       if (!this.battleChess3D_Class) {
         const BC3D_MODULE = await import('./battleChess3D.js');
-        this.battleChess3D_Class = BC3D_MODULE.BattleChess3D;
+        this.battleChess3D_Class = BC3D_MODULE.BattleChess3D as unknown as BattleChess3DConstructor;
       }
       if (this.battleChess3D_Class) {
         this.battleChess3D = new this.battleChess3D_Class(container3D);
       }
       if (this.battleChess3D) {
-        window.battleChess3D = this.battleChess3D;
+        window.battleChess3D = this.battleChess3D as any;
         // Initialize the 3D scene (creates canvas, renderer, etc.)
         await this.battleChess3D.init();
       }
@@ -275,7 +278,7 @@ export class App {
     const app = this;
     // Game prototype for delegate methods (dynamically patched)
      
-    const GP = (this.Game_Class as typeof Game).prototype as Game;
+    const GP = (this.Game_Class as typeof Game).prototype as GameExtended;
 
     // GameController delegations
     GP.placeKing = function (r: number, c: number, color: Player) {
@@ -322,10 +325,10 @@ export class App {
     };
     GP.resign = function (color: Player) {
       return app.gameController!.resign(color);
-    };
+    } as typeof GP.resign;
     GP.offerDraw = function (color: Player) {
       return app.gameController!.offerDraw(color);
-    };
+    } as typeof GP.offerDraw;
     GP.acceptDraw = function () {
       return app.gameController!.acceptDraw();
     };
@@ -454,7 +457,7 @@ export class App {
     // evaluatePosition is a dynamic method on AIController
     GP.evaluatePosition = function (color: Player) {
       return app.aiController!.evaluatePosition?.(color);
-    };
+    } as typeof GP.evaluatePosition;
     GP.updateAIProgress = function (data: { depth?: number; maxDepth?: number; nodes?: number; bestMove?: { from: { r: number; c: number }; to: { r: number; c: number } } } | null) {
       return app.aiController!.updateAIProgress(data);
     };
@@ -474,7 +477,7 @@ export class App {
     };
     GP.isTutorMove = function (from: Square, to: Square) {
       return app.tutorController!.isTutorMove(from, to);
-    };
+    } as typeof GP.isTutorMove;
     GP.getTutorHints = function () {
       return app.tutorController!.getTutorHints();
     };

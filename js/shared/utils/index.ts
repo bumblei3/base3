@@ -3,6 +3,10 @@
  */
 
 // Generate unique ID
+export type DeepPartial<T> = T extends object
+  ? { [P in keyof T]?: DeepPartial<T[P]> }
+  : T;
+
 export function uid(prefix = ''): string {
   return `${prefix}${Date.now().toString(36)}${Math.random().toString(36).slice(2, 9)}`;
 }
@@ -97,7 +101,7 @@ export function clone<T>(obj: T): T {
 }
 
 // Deep merge
-export function merge<T extends Record<string, unknown>>(target: T, source: Partial<T>): T {
+export function merge<T extends Record<string, unknown>>(target: T, source: DeepPartial<T>): T {
   const result = { ...target };
   for (const key of Object.keys(source)) {
     const sourceValue = source[key];

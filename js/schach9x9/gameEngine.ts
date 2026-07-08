@@ -72,6 +72,7 @@ export interface MoveHistoryEntry {
   isCheckmate?: boolean;
   isCastling?: boolean;
   isEnPassant?: boolean;
+  isDoublePawnPush?: boolean;
   halfMoveClock?: number;
   positionHistoryLength?: number;
   evalScore?: number;
@@ -155,7 +156,7 @@ export class Game {
   aiPersonality: string;
   playerColor: Player;
   tutorController?: TutorController;
-  isTutorMove?: (_move: Square) => boolean;
+  isTutorMove?: (_from: Square, _to: Square) => boolean;
   undoMove?: () => void;
   redoMove?: () => void;
   // Dynamic properties set at runtime by controllers
