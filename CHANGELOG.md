@@ -4,6 +4,24 @@ Alle nennenswerten Änderungen an diesem Projekt werden in dieser Datei dokument
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/),
 und das Projekt folgt [Semantic Versioning](https://semver.org/).
 
+## [1.1.4] - 2026-07-08
+
+### Hinzugefügt
+- **PGN SAN-Replay** (Schach9x9, `PGNImportReplay.ts`): reines SAN-Replay eines
+  importierten PGNs über einen echten `RulesEngine`-Adapter (kein Mock mehr).
+  `App.importPGN` spielt eine PGN-Zugliste vollständig auf dem Schachbrett nach,
+  inkl. Bauern-Promotion und langen Partien. Vervollständigt das P1.3-PGN-Import-
+  Feature (zuvor nur FEN-Header-Setup).
+
+### Behoben
+- **MoveGenerator Doppelschritt** (Schach9x9, `ai/MoveGenerator.ts`): `isStart`-
+  Prüfung nutzte hardcoded Rows 6/2 (8x8-Layout), aber 9x9-classic platziert weiße
+  Bauern auf Row 7, schwarze auf Row 1. Betraf KI-Zuggenerierung, Puzzle-Generator,
+  Analyse und Taktik — diese pflegten vorher für **keine** Farbe Bauern-Doppelschritte
+  zu erzeugen. Jetzt board-größenabhängig (`white = size-2`, `black = 1`).
+- **Pause-Routing** (Schach9x9): `p`-Taste läuft jetzt über `KeyboardManager`
+  (Single Source of Truth) statt über einen separaten Listener.
+
 ## [1.1.3] - 2026-07-08
 
 ### Hinzugefügt
