@@ -168,16 +168,11 @@ export function getAllCaptureMoves(board: BoardStorage, turnColor: string): Move
 
 function generatePawnMoves(board: BoardStorage, from: number, color: number, moves: Move[]): void {
   const direction = color === COLOR_WHITE ? UP : DOWN;
-  // const startRow = color === COLOR_WHITE ? 6 : 2; // Rank 6 (index 6) for White? No, standard chess rank 2.
-  // 9x9 Board:
-  // White Pawns start at Row 6, 7? No, Row 8 is King. Row 7 Pawns?
-  // Let's assume standard layout: White at bottom (Row 8), Black at top (Row 0).
-  // White Pawns at Row 7. Move Up (-9).
-  // Black Pawns at Row 1. Move Down (+9).
-  // Wait, existing config says: White moves UP (decreasing index).
-  // Initial setup: White Rooks at Row 8. Pawns at Row 7?
-  // Let's assume Row 7 is start for White. Row 1 for Black.
-
+  // Board size derived from the flat array length (supports 8x8 and 9x9).
+  const size = Math.round(Math.sqrt(board.length));
+  // White pawns start on the second-to-last rank (row size-2); black pawns on row 1.
+  const startWhiteRank = size - 2;
+  const startBlackRank = 1;
   const forward = from + direction;
   const rank = indexToRow(from);
 
@@ -193,7 +188,8 @@ function generatePawnMoves(board: BoardStorage, from: number, color: number, mov
       moves.push({ from, to: forward });
 
       // Double Push
-      const isStart = (color === COLOR_WHITE && rank === 6) || (color === COLOR_BLACK && rank === 2); // 0-indexed rows
+      // White pawns start on row size-2, black pawns on row 1 (board-size aware).
+      const isStart = (color === COLOR_WHITE && rank === startWhiteRank) || (color === COLOR_BLACK && rank === startBlackRank);
       if (isStart) {
         const doubleForward = forward + direction;
         if (board[doubleForward] === PIECE_NONE) {

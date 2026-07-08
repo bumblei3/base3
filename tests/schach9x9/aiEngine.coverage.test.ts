@@ -124,11 +124,11 @@ describe('AI Engine - Coverage for Untested Paths', () => {
     });
 
     test('getTopMoves should include book move as first result', async () => {
-      const mockBookMove = { from: { r: 6, c: 4 }, to: { r: 4, c: 4 } };
+      const mockBookMove = { from: { r: 7, c: 4 }, to: { r: 5, c: 4 } };
       vi.spyOn(AIEngine, 'queryOpeningBook').mockImplementation(() => mockBookMove);
 
       const testBoard = createMinimalBoard();
-      testBoard[6][4] = { type: 'p', color: 'white', hasMoved: false };
+      testBoard[7][4] = { type: 'p', color: 'white', hasMoved: false };
 
       const results = await AIEngine.getTopMoves(testBoard, 'white', 3, 2, 5000, 5);
       expect(results.length).toBeGreaterThan(0);

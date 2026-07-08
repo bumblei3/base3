@@ -27,11 +27,11 @@ describe('AIEngine Extra Coverage', () => {
     const board = Array(9)
       .fill(null)
       .map(() => Array(9).fill(null));
-    board[6][0] = { type: 'p', color: 'white', hasMoved: false } as any;
+    board[7][0] = { type: 'p', color: 'white', hasMoved: false } as any;
     board[8][4] = { type: 'k', color: 'white' } as any;
     const moves = AIEngine.getAllLegalMoves(board as any, 'white');
     const toPositions = moves.map(m => `${m.to.r},${m.to.c}`);
-    expect(toPositions).toContain('4,0'); // Double jump
+    expect(toPositions).toContain('5,0'); // Double jump
   });
 
   test('Angel (E) moves (Queen + Knight)', () => {
