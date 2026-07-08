@@ -204,6 +204,29 @@ exports[`Visual DOM Snapshot Tests > Initial setup phase snapshot 1`] = `
         </div>
       </div>
 
+      <!-- Help / Keyboard Shortcuts Overlay -->
+      <div id="help-overlay" class="modal-overlay hidden">
+        <div class="tutorial-content">
+          <h2>Tastenkürzel &amp; Hilfe</h2>
+          <ul class="shortcut-list">
+            <li><kbd>U</kbd> / <kbd>Ctrl+Z</kbd> Rückgängig</li>
+            <li><kbd>R</kbd> / <kbd>Ctrl+Y</kbd> Wiederholen</li>
+            <li><kbd>H</kbd> Tipp anzeigen</li>
+            <li><kbd>T</kbd> Drohungen ein/aus</li>
+            <li><kbd>O</kbd> Chancen ein/aus</li>
+            <li><kbd>B</kbd> Besten Zug ein/aus</li>
+            <li><kbd>S</kbd> Spiel speichern / Stellung teilen</li>
+            <li><kbd>F</kbd> Vollbild umschalten</li>
+            <li><kbd>Esc</kbd> Auswahl aufheben / Overlay schließen</li>
+            <li><kbd>?</kbd> Diese Hilfe öffnen</li>
+            <li><kbd>Ctrl+Shift+F12</kbd> Notfall-Recovery (Spiel entsticken)</li>
+          </ul>
+          <div class="tutorial-nav">
+            <button id="close-help-btn" class="btn-primary">Schließen</button>
+          </div>
+        </div>
+      </div>
+
       <!-- Generic Modal -->
       <div id="generic-modal" class="modal-overlay hidden">
         <div class="modal-content">
@@ -474,6 +497,15 @@ exports[`Visual DOM Snapshot Tests > Initial setup phase snapshot 1`] = `
                 <path d="M12.5 17V10.5"></path>
                 <path d="M9 13h7"></path>
                 <path d="M9 17h7"></path>
+              </svg>
+            </button>
+            <button id="share-btn" class="action-icon-btn" title="Stellung teilen / kopieren (S)">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none">
+                <circle cx="18" cy="5" r="3"></circle>
+                <circle cx="6" cy="12" r="3"></circle>
+                <circle cx="18" cy="19" r="3"></circle>
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
               </svg>
             </button>
             <button id="toggle-3d-btn" class="action-icon-btn" title="3D Battle Modus (3)">

@@ -12,31 +12,16 @@ env:
 jobs:
   # ─── Phase 1: Setup & Fast checks ─────────────────────────────
   setup:
-    name: Setup (cache, deps, WASM)
+    name: Setup (cache, deps)
     runs-on: ubuntu-latest
     outputs:
       node-modules-cache: ${{ steps.cache-node-modules.outputs.cache-hit }}
-      cargo-cache: ${{ steps.cache-cargo.outputs.cache-hit }}
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: wasm32-unknown-unknown
-      - uses: actions/cache@v5
-        id: cache-cargo
-        name: Cache Cargo
-        with:
-          path: |
-            engine-wasm/target
-            ~/.cargo/bin
-            ~/.cargo/registry/index
-            ~/.cargo/registry/cache
-            ~/.cargo/git/db
-          key: ${{ runner.os }}-cargo-${{ hashFiles('engine-wasm/Cargo.lock') }}
       - name: Cache npm
         id: cache-node-modules
         uses: actions/cache@v5
@@ -46,8 +31,6 @@ jobs:
       - name: Install deps
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm ci --legacy-peer-deps
-      - name: Build WASM
-        run: npm run wasm:build
 
   # ─── Phase 2: Fast checks (use setup caches) ──────────────────
   quality:
@@ -86,11 +69,6 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}-${{ hashFiles('pnpm-lock.yaml') }}
-      - name: Restore WASM
-        uses: actions/cache@v5
-        with:
-          path: engine-wasm/target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('engine-wasm/Cargo.lock') }}
       - run: npx vitest run --config vitest.ci.config.ts tests/trischach
 
   test-schach9x9-shard1:
@@ -108,11 +86,6 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}-${{ hashFiles('pnpm-lock.yaml') }}
-      - name: Restore WASM
-        uses: actions/cache@v5
-        with:
-          path: engine-wasm/target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('engine-wasm/Cargo.lock') }}
       - run: npx vitest run --config vitest.ci.config.ts --reporter=verbose --shard=1/4 tests/schach9x9
 
   test-schach9x9-shard2:
@@ -130,11 +103,6 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}-${{ hashFiles('pnpm-lock.yaml') }}
-      - name: Restore WASM
-        uses: actions/cache@v5
-        with:
-          path: engine-wasm/target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('engine-wasm/Cargo.lock') }}
       - run: npx vitest run --config vitest.ci.config.ts --reporter=verbose --shard=2/4 tests/schach9x9
 
   test-schach9x9-shard3:
@@ -152,11 +120,6 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}-${{ hashFiles('pnpm-lock.yaml') }}
-      - name: Restore WASM
-        uses: actions/cache@v5
-        with:
-          path: engine-wasm/target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('engine-wasm/Cargo.lock') }}
       - run: npx vitest run --config vitest.ci.config.ts --reporter=verbose --shard=3/4 tests/schach9x9
 
   test-schach9x9-shard4:
@@ -174,11 +137,6 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}-${{ hashFiles('pnpm-lock.yaml') }}
-      - name: Restore WASM
-        uses: actions/cache@v5
-        with:
-          path: engine-wasm/target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('engine-wasm/Cargo.lock') }}
       - run: npx vitest run --config vitest.ci.config.ts --reporter=verbose --shard=4/4 tests/schach9x9
 
   # ─── Phase 4: Build & Deploy ─────────────────────────────────
@@ -197,11 +155,6 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}-${{ hashFiles('pnpm-lock.yaml') }}
-      - name: Restore WASM
-        uses: actions/cache@v5
-        with:
-          path: engine-wasm/target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('engine-wasm/Cargo.lock') }}
       - run: npm run build
       - name: Generate API Docs (TypeDoc)
         run: npm run docs:api
@@ -243,11 +196,6 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}-${{ hashFiles('pnpm-lock.yaml') }}
-      - name: Restore WASM
-        uses: actions/cache@v5
-        with:
-          path: engine-wasm/target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('engine-wasm/Cargo.lock') }}
       - name: Download dist artifact
         uses: actions/download-artifact@v4
         with:

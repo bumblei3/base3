@@ -29,9 +29,12 @@ export default defineConfig({
               }
             : {},
       },
-      fullyParallel: true,
+      fullyParallel: false,
       retries: process.env.CI ? 2 : 0,
-      workers: process.env.CI ? 1 : undefined,
+      // Always single-worker: the app's AI/worker module state is not safe to
+      // share across parallel contexts, and parallel runs caused flaky
+      // menu-click/tutor races locally. CI and local now run identically.
+      workers: 1,
     },
     {
       name: 'trischach-e2e',
@@ -56,9 +59,12 @@ export default defineConfig({
               }
             : {},
       },
-      fullyParallel: true,
+      fullyParallel: false,
       retries: process.env.CI ? 2 : 0,
-      workers: process.env.CI ? 1 : undefined,
+      // Always single-worker: the app's AI/worker module state is not safe to
+      // share across parallel contexts, and parallel runs caused flaky
+      // menu-click/tutor races locally. CI and local now run identically.
+      workers: 1,
     },
   ],
 });

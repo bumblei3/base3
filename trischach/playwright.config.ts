@@ -7,10 +7,12 @@ const hasSystemChromium = existsSync("/usr/bin/chromium-browser");
 
 export default defineConfig({
   testDir: "./tests-e2e",
-  fullyParallel: true,
+  fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  // Always single-worker: parallel runs caused flaky races locally.
+  // CI and local now run identically.
+  workers: 1,
   reporter: [["html"], ["json", { outputFile: "test-results/results.json" }]],
   use: {
     baseURL: "http://localhost:4173",
