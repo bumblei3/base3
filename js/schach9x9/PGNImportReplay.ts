@@ -5,9 +5,20 @@
 
 import { logger } from './logger.js';
 import { PGNParser, PGNGame, PGNHistoryEntry } from './utils/PGNParser.js';
+import { RulesEngine } from './RulesEngine.js';
+import { BOARD_SIZE, Piece } from './gameEngine.js';
 
 /**
- * Minimal engine interface for PGN replay
+ * Minimal view the RulesEngine needs from a game (board + turn + lastMove).
+ */
+interface ReplayGameView {
+  board: Array<Array<{ type: string; color: string; hasMoved: boolean } | null>>;
+  turn: 'white' | 'black';
+  lastMove: { from: { r: number; c: number }; to: { r: number; c: number } } | null;
+}
+
+/**
+ * Engine interface consumed by PGNParser.replayGame
  */
 interface PgnEngine {
   turn: string;
@@ -58,8 +69,8 @@ export class PGNImportReplay {
 
       this.currentGame = games[0]; // Use first game for now
 
-      // Create a minimal engine for replay
-      const mockEngine = this.createMockEngine();
+      // Create a real engine for replay (backed by MoveGenerator)
+      const mockEngine = this.createRealEngine();
 
       // Generate replay history
       this.history = this.parser.replayGame(this.currentGame.moves, mockEngine);
@@ -104,38 +115,65 @@ export class PGNImportReplay {
   }
 
   /**
-   * Creates a mock engine for PGN replay
+   * Creates a real replay engine backed by the Schach9x9 RulesEngine.
+   * The adapter owns its board; the RulesEngine reads it via a thin view,
+   * so move generation stays identical to the live game (single source of truth).
    */
-  private createMockEngine(): PgnEngine {
-    // Minimal engine that can replay moves
+  private createRealEngine(): PgnEngine {
     type PieceWithHasMoved = { type: string; color: string; hasMoved: boolean } | null;
+    const size = BOARD_SIZE;
 
-    const board: PieceWithHasMoved[][] = Array(9).fill(null).map(() => Array(9).fill(null));
-
-    // Setup initial position
+    // Build the standard 9x9 classic starting position.
+    const board: PieceWithHasMoved[][] = Array(size).fill(null).map(() => Array(size).fill(null));
     const whiteBack = ['r', 'n', 'b', 'a', 'k', 'c', 'b', 'n', 'r'];
-    const whitePawns = Array(9).fill('p');
     const blackBack = ['R', 'N', 'B', 'A', 'K', 'C', 'B', 'N', 'R'];
-    const blackPawns = Array(9).fill('P');
+    blackBack.forEach((p, c) => { board[0][c] = { type: p.toLowerCase(), color: 'black', hasMoved: false }; });
+    for (let c = 0; c < size; c++) board[1][c] = { type: 'p', color: 'black', hasMoved: false };
+    for (let c = 0; c < size; c++) board[size - 2][c] = { type: 'p', color: 'white', hasMoved: false };
+    whiteBack.forEach((p, c) => { board[size - 1][c] = { type: p, color: 'white', hasMoved: false }; });
 
-    blackBack.forEach((piece: string, c: number) => { board[0][c] = { type: piece.toLowerCase(), color: 'black', hasMoved: false }; });
-    blackPawns.forEach((_piece: string, c: number) => { board[1][c] = { type: 'p', color: 'black', hasMoved: false }; });
-    whitePawns.forEach((piece: string, c: number) => { board[7][c] = { type: piece, color: 'white', hasMoved: false }; });
-    whiteBack.forEach((piece: string, c: number) => { board[8][c] = { type: piece, color: 'white', hasMoved: false }; });
+    const view: ReplayGameView = { board, turn: 'white', lastMove: null };
+    const rulesEngine = new RulesEngine(view as never);
 
-    return {
-      turn: 'white',
-      boardSize: 9,
+    const engine: PgnEngine = {
+      get turn() { return view.turn; },
+      boardSize: size,
       board,
-      getAllLegalMoves: (): { from: { r: number; c: number }; to: { r: number; c: number }; promotion?: string }[] => {
-        // Simplified - just return all possible moves for basic replay
-        return [];
+      getAllLegalMoves: () => {
+        const moves: { from: { r: number; c: number }; to: { r: number; c: number } }[] = [];
+        for (let r = 0; r < size; r++) {
+          for (let c = 0; c < size; c++) {
+            const piece = board[r][c];
+            if (!piece || piece.color !== view.turn) continue;
+            const targets = rulesEngine.getValidMoves(r, c, piece as Piece);
+            for (const t of targets) {
+              moves.push({ from: { r, c }, to: { r: t.r, c: t.c } });
+            }
+          }
+        }
+        return moves;
       },
-      getBoardHash: (): string => '',
-      executeMove: (_from: { r: number; c: number }, _to: { r: number; c: number }): void => {
-        // Simplified move execution
-      }
+      getBoardHash: () => {
+        let hash = '';
+        for (let r = 0; r < size; r++) {
+          for (let c = 0; c < size; c++) {
+            const p = board[r][c];
+            hash += p ? (p.color === 'white' ? p.type.toUpperCase() : p.type.toLowerCase()) : '.';
+          }
+        }
+        return hash + `|${view.turn}`;
+      },
+      executeMove: (from, to) => {
+        const piece = board[from.r][from.c];
+        if (!piece) return;
+        board[to.r][to.c] = { ...piece, hasMoved: true };
+        board[from.r][from.c] = null;
+        view.lastMove = { from, to };
+        view.turn = view.turn === 'white' ? 'black' : 'white';
+      },
     };
+
+    return engine;
   }
 
   /**
