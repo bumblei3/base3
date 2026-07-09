@@ -106,6 +106,9 @@ Ranking nach: Impact × Testbarkeit ÷ Risiko.
 - Tests: `tests/schach9x9/i18n.test.ts` erweitert (localechange-Event-Test);
   betroffene Unit-Tests (move/ui/TimeManager/aiController/gameController) grün.
 - `en.json` vollständig vervollständigt (alle Keys parallel zu de.json).
+- v1.1.9: ESLint-Warnungen (tote `secs`/`maxDepth`/`GameWithSelectedPiece`) bereinigt
+  + ShopUI-Laufzeit-Bug (verlorene `selected`-Deklaration) gefixt, der durch
+  den i18n-Refactor in v1.1.8 entstanden war.
 
 **P2.2 Mutation Testing (Phase 2.3)**
 - Stryker.js für JS-Suche/Eval (Ziel: 70%+ Mutation Score).

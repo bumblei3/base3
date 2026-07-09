@@ -849,7 +849,6 @@ export class AIController {
     const engineInfo = document.getElementById('analysis-engine-info');
     if (engineInfo) {
       const depth = data.depth || 0;
-      const maxDepth = data.maxDepth || 0;
       const nodes = data.nodes ? data.nodes.toLocaleString('de-DE') : 0;
       engineInfo.textContent = t('analysis.depthNodes', { depth, nodes });
     }

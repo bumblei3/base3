@@ -11,8 +11,6 @@ import { t } from '../i18n/index.js';
 // Removed top-level await preventing circular dependency
 // const { updateTutorRecommendations } = (await import('./TutorUI.js')) as any;
 
-type GameWithSelectedPiece = GameLike & { selectedShopPiece?: string | null };
-
 let shopItemsRendered = false;
 
 /**
@@ -136,7 +134,7 @@ export function updateShopUI(game: GameLike): void {
     if (tutorSection) tutorSection.classList.remove('hidden');
 
     if (statusDisplay) {
-      statusDisplay.textContent = t('shop.selectToBuy');
+      const selected = (game as GameLike & { selectedShopPiece?: string | null }).selectedShopPiece;
       if (selected) {
         statusDisplay.textContent = `Platziere: ${getPieceText({ type: selected as Exclude<PieceType, null>, color: game.turn })} (${PIECE_VALUES[selected as keyof typeof PIECE_VALUES]} Pkt)`;
       } else {

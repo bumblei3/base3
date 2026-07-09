@@ -4,6 +4,14 @@ Alle nennenswerten Änderungen an diesem Projekt werden in dieser Datei dokument
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/),
 und das Projekt folgt [Semantic Versioning](https://semver.org/).
 
+## [1.1.9] - 2026-07-09
+
+### Bugfix
+- **ShopUI Laufzeit-Bug behoben**: durch den i18n-Refactor (v1.1.8) war die `selected`-Variable-Deklaration im "Truppen anheuern"-Zweig verloren gegangen (`if (selected)` zeigte auf eine nicht deklarierte Variable → ReferenceError, wenn der Shop in diesem Modus offen war). Wiederhergestellt mit korrektem Inline-Type-Cast.
+
+### Geändert
+- ESLint-Warnungen aus v1.1.8 bereinigt (radikale Löschung toten Codes): tote `maxDepth`-Variable in `aiController.ts`, tote `secs`-Variablen (2×) in `AnalysisUI.ts`, ungenutzter `GameWithSelectedPiece`-Type in `ShopUI.ts` entfernt.
+
 ## [1.1.8] - 2026-07-09
 
 ### Hinzugefügt

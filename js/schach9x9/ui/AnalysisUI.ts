@@ -178,7 +178,6 @@ export class AnalysisUI {
   
     // Also update the engine info with live data
     if (this.engineInfo && progress.depth !== undefined) {
-      const secs = progress.time ? (progress.time / 1000).toFixed(1) : '-';
       const nodesStr = progress.nodes?.toLocaleString() || '-';
       this.engineInfo.textContent = t('analysis.depthNodes', { depth: progress.depth ?? '-', nodes: nodesStr ?? '-' });
     }
@@ -194,7 +193,6 @@ export class AnalysisUI {
       this.liveScore.textContent = `${prefix}${(data.score / 100).toFixed(2)}`;
     }
     if (this.engineInfo) {
-      const secs = (data.time ?? 0) / 1000;
       this.engineInfo.textContent = t('analysis.depthNodes', { depth: data.depth ?? '-', nodes: data.nodes?.toLocaleString() ?? '-' });
     }
     }
