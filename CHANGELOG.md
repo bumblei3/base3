@@ -4,6 +4,11 @@ Alle nennenswerten Änderungen an diesem Projekt werden in dieser Datei dokument
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/),
 und das Projekt folgt [Semantic Versioning](https://semver.org/).
 
+## [1.1.11] - 2026-07-09
+
+### Changed
+- Removed unused `SQUARE_COUNT` import from `aiEngine.ts` (dead import; the symbol is used in other engine files but not here). ESLint now clean on all changed files.
+
 ## [1.1.10] - 2026-07-09
 
 ### Fixed
