@@ -100,12 +100,27 @@ Ranking nach: Impact × Testbarkeit ÷ Risiko.
 - Impact: Test-Qualität validieren. Risiko: Setup-Zeit, langsame Runs.
 - Nur sinnvoll, wenn P2.1/große Refactors anstehen (sonst kaum Mehrwert).
 
-**P2.3 Opening Book Expansion (Phase 8.3) — QUELLE FEHLT**
-- Aktuell: `opening-book.json` hat nur 71 Positionen; `data/openings.pgn` fehlt.
-- `BookGenerator.ts` trainiert aus einer PGN, aber keine Datenquelle im Repo.
-- Maßnahme: externe Quelle (Lichess Elite-DB) beschaffen + trainieren.
-- Impact: stärkere AI-Eröffnungen. ABER: extern-abhängig, und bei Solo-Spiel
-  gegen die eigene JS-KI ist Buch-Tiefe zweitrangig. Zurückgestellt.
+**P2.3 Opening Book Expansion (Phase 8.3) — ERLEDIGT (v1.1.7)**
+- Vorher: `opening-book.json` hatte nur 2 Positionen (aus 6 Self-Play-Spielen).
+  Das Buch wuchs nicht, weil die Engine bei gleicher Startstellung +
+  Parametern **voll deterministisch identische Züge** spielt → reines
+  Self-Play reproduziert immer dasselbe Spiel.
+- Fix: `OpeningBookTrainer.ts` erweitert um `--openings` (Seed-Vielfalt): pro
+  Spiel wird zufällig ein legaler weißer Eröffnungszug gewählt, danach übernimmt
+  die Engine → Self-Play divergiert, das Buch wächst mit echten Eröffnungen.
+  Zusätzlich cappt `recordGameResult` die History auf `openingMovesTracked`,
+  sodass nur Eröffnungspositionen (nicht Mittel-/Endspiel) im Buch landen.
+- Schrott-Trainer `schach9x9/opening-book-trainer-real.cjs` (Random-Startpositionen,
+  keine echte Engine) gelöscht; npm-scripts `train:schach9x9` / `:fast` zeigen
+  jetzt auf `OpeningBookTrainer.ts` via `tsx`. `tsx` als DevDep nachgerüstet.
+- Ergebnis: `opening-book.json` hat jetzt **101 Positionen / 187 Moves** (aus
+  40 Self-Play-Spielen, seeded), 93 davon frühe Eröffnungspositionen.
+- Keine externe Datenquelle nötig (Self-Play mit echter Engine). Lichess-DB
+  bewusst NICHT genutzt (self-contained, kein Account).
+- Tests: `tests/schach9x9/utils/OpeningBookTrainer.test.ts` (Seed-Vielfalt +
+  gewichtete Moves); `openingBook.test.ts` (Query/Format) weiterhin grün.
+- Externe 8x8-DB (Lichess) bleibt optional; `aiController` lädt `opening-book-8x8.json`
+  falls vorhanden (derzeit nicht generiert — eigener 8x8-Seed-Lauf nötig).
 
 ### P3 — Optional / Nice-to-have
 

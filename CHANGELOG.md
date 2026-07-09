@@ -4,6 +4,23 @@ Alle nennenswerten Änderungen an diesem Projekt werden in dieser Datei dokument
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/),
 und das Projekt folgt [Semantic Versioning](https://semver.org/).
 
+## [1.1.7] - 2026-07-09
+
+### Hinzugefügt
+- **Opening Book Expansion (P2.3)**: `opening-book.json` von 2 auf **101 Positionen / 187 Moves** gewachsen (aus 40 Engine-Self-Play-Spielen).
+- **`OpeningBookTrainer.ts` `--openings` (Seed-Vielfalt)**: pro Spiel wird zufällig ein legaler weißer Eröffnungszug gewählt, danach übernimmt die Engine. Nötig, weil die Engine bei gleicher Startstellung deterministisch identische Züge spielt → reines Self-Play wuchs nie.
+- **Eröffnungs-Fokus**: `recordGameResult` cappt die History auf `openingMovesTracked`, sodass nur Eröffnungspositionen (nicht Mittel-/Endspiel) im Buch landen.
+- **`tsx` als DevDep** nachgerüstet (Trainer ist TypeScript).
+
+### Entfernt
+- **Schrott-Trainer `schach9x9/opening-book-trainer-real.cjs`** gelöscht: nutzte Random-Startpositionen statt der echten Engine — kein valides Schach.
+
+### Geändert
+- npm-scripts `train:schach9x9` / `train:schach9x9:fast` zeigen jetzt auf `OpeningBookTrainer.ts` (via `tsx`) statt des gelöschten CJS-Trainers.
+
+### Tests
+- **`tests/schach9x9/utils/OpeningBookTrainer.test.ts`** (neu): verifiziert Seed-Vielfalt + gewichtete Moves im Buch. `openingBook.test.ts` (Query/Format) weiterhin grün.
+
 ## [1.1.6] - 2026-07-09
 
 ### Hinzugefügt

@@ -442,8 +442,11 @@ export class AIController {
         ? 'opening-book-8x8.json'
         : 'opening-book.json';
 
-    // Load opening book once
-    fetch(bookFile)
+    // Opening book is served from the site root (copied from public/ by Vite),
+    // so use an absolute path from baseURL to be robust in both dev and prod
+    // (the app page lives under a subpath like dist/schach9x9/).
+    const bookUrl = `${import.meta.env.BASE_URL}${bookFile}`;
+    fetch(bookUrl)
       .then(r => {
         if (!r.ok) throw new Error(`HTTP error! status: ${r.status}`);
         return r.json();
