@@ -21,6 +21,7 @@ import type { IGame, Faction } from './types.ts';
 import {
   calculateBestMove,
   evaluateBoard,
+  getAllActions,
   setAIDepth,
   setAIPersonality,
   // Pondering
@@ -790,7 +791,22 @@ function triggerAutoMove(): void {
       game.handleCellClick(piece.pos);
       const { Hex } = await import('./hex.ts');
       const target = new Hex(action.targetQ, action.targetR);
-      const result = game.handleCellClick(target);
+      let result = game.handleCellClick(target);
+
+      // Defensive: the move chosen by the worker/book may be illegal in the
+      // current game state (e.g. a compiled-book move whose piece has shifted
+      // or is no longer at the expected square). If handleCellClick returns
+      // nothing, fall back to a guaranteed-legal action instead of silently
+      // stopping auto-battle (which previously left the game stuck in
+      // select_piece with all factions still alive).
+      if (!result) {
+        const legalActions = getAllActions(game, game.currentFaction);
+        if (legalActions.length > 0) {
+          const fb = legalActions[0];
+          game.handleCellClick(fb.piece.pos);
+          result = game.handleCellClick(fb.target);
+        }
+      }
 
       renderer.clearHighlights();
       renderer.clearSelection();
