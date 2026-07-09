@@ -183,27 +183,6 @@ describe('GameStatusUI Component', () => {
     expect(game.startClock).toHaveBeenCalled();
   });
 
-  test.skip('should render eval graph and handle clicks', () => {
-    // Skipped: jsdom parses svg.innerHTML <circle> elements without the SVG
-    // namespace, so click events dispatched on an eval-point do not bubble up
-    // to the <svg> listener. The renderEvalGraph logic is correct in a real
-    // browser; this cannot be verified under jsdom without replacing the
-    // SVG-innerHTML approach. Verified manually in browser context.
-    game.moveHistory = [{ evalScore: 100 }, { evalScore: 200 }, { evalScore: -50 }];
-
-    const svgEl = document.getElementById('eval-graph') as unknown as SVGSVGElement & { dataset: Record<string, string> };
-    if (svgEl) {
-      delete svgEl.dataset.hasListener;
-    }
-
-    GameStatusUI.renderEvalGraph(game);
-    const svg = document.getElementById('eval-graph')!;
-    expect(svg.innerHTML).toContain('class="eval-line"');
-
-    const points = svg.querySelectorAll('.eval-point');
-    expect(points.length).toBeGreaterThan(0);
-  });
-
   test('should handle empty move history gracefully', () => {
     GameStatusUI.updateMoveHistoryUI(game);
     const historyEl = document.getElementById('move-history')!;

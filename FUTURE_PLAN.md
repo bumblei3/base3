@@ -1,10 +1,14 @@
 # Future Improvement Plan — base3 (Schach9x9 + Trischach)
 
-> Stand: 2026-07-08 (nach Release v1.1.1)
-> Kontext: v1.1.1 ist released. WASM-Engine komplett entfernt (radikal-clean),
+> Stand: 2026-07-09 (nach Release v1.1.4 + gepushtem 8x8-AI-Fix)
+> Kontext: v1.1.4 ist released. WASM-Engine komplett entfernt (radikal-clean),
 > JS-Suche ist die alleinige Engine. ROADMAP_AAA.md (Phasen 1–5, 7) ist grün.
-> Offen: Phase 6 (Observability), Phase 8 (Polish/Platform), AI-Performance
-> (post-WASM), Dependabot-Cleanup.
+> Offen: Phase 6 (Observability — Sentry gestrichen, siehe unten), Phase 8
+> Rest (PWA Excellence), AI-Performance (post-WASM), Dependabot-Cleanup.
+>
+> WICHTIG: Sentry (P0.1 alt) ist GESTRICHEN. User will keinen sentry.io-Account
+> (self-contained bevorzugt). Production-Error-Visibility via leichtgewichtigen
+> Eigenbau (ErrorManager + lokales Log-Export) statt DSN/Source-Maps.
 
 ---
 
@@ -12,15 +16,15 @@
 
 | Dimension | Status | Bemerkung |
 |-----------|--------|-----------|
-| Tests | ✅ | Unit 2246 passed / 17 skipped; E2E 74/1 |
+| Tests | ✅ | Unit 2246 passed / 16 skipped (1 jsdom-skip entfernt → Eval-Graph jetzt als Playwright-E2E grün); E2E 75/1 |
 | Type Safety | ✅ | strict, 0 errors |
 | Lint | ✅ | 0 errors |
 | Performance | ✅ (Initial) | Bundle < 200KB gzip, 3D lazy |
 | Accessibility | ✅ | WCAG 2.1 AA (0 violations) |
 | Security | ✅ | CSP + `npm audit` clean |
-| Observability | ⚠️ | ErrorManager+Sentry-Wrapper da, aber kein DSN/Source-Maps |
-| AI Engine | ⚠️ | JS-only (WASM weg) → Performance-Pfad wichtiger |
-| Platform Polish | ⬜ | Pause-Feature, File Handling, Push, i18n offen |
+| Observability | ⚠️ | ErrorManager da; Sentry GESTRICHEN (kein sentry.io-Account) — Eigenbau-Log statt DSN |
+| AI Engine | ⚠️ | JS-only (WASM weg) → Performance-Pfad wichtiger (Main-Thread-Suche) |
+| Platform Polish | ⬜ | PWA Excellence (installierbar/offline) offen |
 
 ---
 
@@ -30,19 +34,15 @@ Ranking nach: Impact × Testbarkeit ÷ Risiko.
 
 ### P0 — Schnelle Wins (je 0.5–1 Tag, Risiko niedrig)
 
-**P0.1 Sentry Production-Activation (Phase 6)**
-- `@sentry/browser` ist bereits Dep (v10.63.0) + `ErrorManager` integriert.
-- Fehlt: `VITE_SENTRY_DSN` setzen (GitHub Pages Env / Secret), Source-Maps-Upload
-  im `vite build`, Web-Vitals-Endpoint (`Sentry.init` mit `browserTracingIntegration`).
-- Test: `errorManager.observability.test.ts` erweitern (DSN-Pfad mocken);
-  Playwright-Smoke, der einen gesammelten Error im Test-Mode prüft.
-- Impact: Production-Error-Visibility (der einzige fehlende "AAA"-Block).
+**P0.1 Observability — Sentry GESTRICHEN, Eigenbau-Log statt DSN**
+- Status: Sentry-Activation (alter P0.1) gestrichen — User will keinen sentry.io-Account (AGENTS/Präferenz: self-contained).
+- `@sentry/browser` ist noch Dep, wird aber nicht als Production-Sink genutzt. Entweder Dep entfernen oder als reiner ErrorManager-Wrapper belassen (kein DSN).
+- Eigenbau-Alternative: `ErrorManager` sammelt Errors; Log-Export (Copy/Download) im Settings/Debug-Panel. Kein externer Signup.
+- Impact: Production-Error-Visibility ohne Third-Party-Account.
 
-**P0.2 Pause-Feature (`p`-Taste) (Phase 8.2 Rest)**
-- `gameController.togglePause()` existiert? Prüfen. Wenn nicht: `p` triggert
-  Pause-Overlay (ähnlich Help-Overlay) + stoppt AI-Timer.
-- Test: `e2e/help.spec.ts` Pattern wiederverwenden (Taste öffnet Overlay).
-- Impact: Vollständigkeit der Keyboard-Shortcuts (war in 8.2 geplant, weggelassen).
+**P0.2 Pause-Feature (`p`-Taste) — ERLEDIGT (v1.1.2)**
+- `p` triggert Pause-Overlay über `KeyboardManager` (Single Source of Truth).
+- `e2e/pause.spec.ts` (4 Tests) deckt es ab.
 
 **P0.3 Dependabot-Remote-Branches aufräumen**
 - 12 `dependabot/*`-Branches liegen im Remote, keine offenen PRs.
@@ -61,6 +61,7 @@ Ranking nach: Impact × Testbarkeit ÷ Risiko.
     `aiWorker.coverage.test.ts` hatte Bugs — diese fixen).
 - Test: `search.coverage.test.ts` + neuer `aiWorker.test.ts` (Worker-Path grün).
 - Impact: Kein UI-Freeze bei tiefen Suchen (bisher durch WASM kaschiert).
+- Vorab: Benchmarks ent-skippt (`aiBenchmarks.test.ts`) messen, OB ein Freeze real auftritt, bevor refactored wird.
 
 **P1.2 PWA Excellence (Phase 8.1)**
 - Custom Install Prompt (`beforeinstallprompt` capture + Button, nicht Browser-Default).
@@ -70,11 +71,10 @@ Ranking nach: Impact × Testbarkeit ÷ Risiko.
 - Test: `playwright.csp.config.mjs` erweitern (Offline-Modus simulieren).
 - Impact: "Installierbar" + Offline-Spielbar (AAA-PWA-Kriterium).
 
-**P1.3 File Handling API (.pgn OS-Level) (Phase 8.2)**
-- `launchQueue` + `FileSystemHandle` für `.pgn` öffnen/speichern via OS.
-- PGN Import existiert bereits (`PGNImportReplay.ts`), nur OS-Integration fehlt.
-- Test: E2E mit `.pgn`-File-Upload (Playwright `setInputFiles`).
-- Impact: Native UX (Doppelklick auf .pgn öffnet Spiel).
+**P1.3 File Handling API (.pgn OS-Level) — ERLEDIGT (v1.1.3 + v1.1.4)**
+- PGN-Import/Export, FEN-Load, SAN-Replay über echten `RulesEngine`-Adapter.
+- `e2e/file-io.spec.ts` + `schach9x9-critical.spec.ts` decken Round-Trip ab.
+- Offen nur noch: OS-Level `launchQueue`/`FileSystemHandle` (Doppelklick auf .pgn).
 
 ### P2 — Größere Vorhaben (1 Woche+, Risiko mittel–hoch)
 
@@ -105,11 +105,12 @@ Ranking nach: Impact × Testbarkeit ÷ Risiko.
 
 ## 🗺️ Empfohlene Reihenfolge
 
-1. **P0.1** (Sentry) → sofort, da einziger fehlender AAA-Block + fast fertig.
-2. **P0.2** (Pause) → klein, macht 8.2 komplett.
-3. **P1.1** (AI-Perf) → wichtig, seit WASM weg ist JS die alleinige Engine.
+1. **P0.3** (Dependabot-Cleanup) → schnell, Repo-Hygiene, kein Risiko.
+2. **Eval-Graph-Test-Korrektur** (erledigt 2026-07-09) → jsdom-skip entfernt,
+   echter Playwright-E2E (`e2e/eval-graph.spec.ts`) grün. Kein offener Test-Gap mehr.
+3. **P1.1** (AI-Perf) → erst messen (Benchmarks ent-skippt), dann refactoren.
 4. **P1.2** (PWA) → "Installierbar" ist sichtbarer User-Wert.
-5. **P1.3** (File Handling) → native UX.
+5. P0.1 Observability-Eigenbau (Sentry gestrichen) bei Bedarf.
 6. P2+ bei Bedarf.
 
 ---
