@@ -14,7 +14,7 @@ import { getValidMoves, PIECE_STRENGTH, PIECE_TYPE } from "./pieces.js";
 import { getRPSResult, FACTION } from "./board.js";
 import { Hex } from "./hex.js";
 import { isKingdomCheck } from "./game-check.js";
-import { pickBookMove, buildOpeningBook, inBook } from "./opening-book.js";
+import { pickBookMove, buildOpeningBook, inBook, loadOpeningBook } from "./opening-book.js";
 
 // Import all core AI logic from shared module
 import {
@@ -203,8 +203,19 @@ self.onmessage = function (e) {
   } else if (type === "setPersonality") {
     _workerPersonality = depth; // Note: bug in original - should be faction/personality param
   } else if (type === "initBook") {
-    _bookBuilt = true;
-    self.postMessage({ type: "bookReady" });
+    // Load the compiled opening book (good, curated data) into the worker's
+    // OPENING_BOOK map. Previously this only set a flag and calculateBestMove
+    // fell back to buildOpeningBook() which used the hardcoded dev lines
+    // (several of which have invalid coordinates / piece ids).
+    loadOpeningBook()
+      .then((ok) => {
+        _bookBuilt = ok;
+        self.postMessage({ type: "bookReady" });
+      })
+      .catch(() => {
+        _bookBuilt = false;
+        self.postMessage({ type: "bookReady" });
+      });
   }
 };
 

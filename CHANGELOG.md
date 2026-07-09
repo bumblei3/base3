@@ -4,6 +4,46 @@ Alle nennenswerten Änderungen an diesem Projekt werden in dieser Datei dokument
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/),
 und das Projekt folgt [Semantic Versioning](https://semver.org/).
 
+## [1.1.15] - 2026-07-09
+
+### Fixed
+- **Trischach Opening-Book im AI-Worker korrigiert**: der Worker lud nie die
+  kuratierte `opening-book.compiled.json` (72+ Positionen), sondern baute bei
+  jedem `calculateBestMove` das Buch neu aus den hardcoded Dev-Lines
+  (`buildOpeningBook`). Davon waren 5 Linien fehlerhaft (ungültige Zielkoordinaten
+  wie `water_bishop_17 -> -1,0` außerhalb des Brettes, nicht existierende
+  `nature_queen_33` bei ply 8) → im Browser loggten sie
+  `Move X failed at ply N` / `Failed to select piece …` Warnungen und das
+  Worker-Buch hatte Lücken.
+  - `trischach/js/ai-worker.js` (`initBook`): lädt jetzt async via
+    `loadOpeningBook()` die compiled JSON in die Worker-`OPENING_BOOK`-Map
+    (zuvor nur `_bookBuilt = true` ohne Laden).
+  - `js/trischach/ai-core.ts` (`calculateBestMove`): entfernt den
+    `buildOpeningBook(Game)`-Aufruf; der Worker nutzt seither die geladene
+    compiled JSON. Ungenutzter `buildOpeningBook`-Import entfernt.
+  - Repro: `buildOpeningBook` → 39 Positionen + 5 Warnungen; `loadOpeningBook`
+    → 88 Positionen, 0 Warnungen.
+- **Regression-Test** `tests/trischach/opening-book-integration.test.ts` (3 Tests):
+  verifiziert, dass `calculateBestMove` mit einem deserialisierten Plain-Object
+  (Worker-Pfad, kein `getAlivePieces`) nicht crasht und die compiled JSON nutzt.
+
+## [1.1.14] - 2026-07-09
+
+### Changed
+- Updated DOM snapshot for the alpha badge added in v1.1.12 (snapshot test
+  `Initial setup phase snapshot` now includes the `.alpha-badge` CSS + element).
+
+## [1.1.13] - 2026-07-09
+
+### Changed
+- Removed stale WASM references from README (Quick-Start, Scripts, AI Features,
+  Tech Stack, CI/CD section) — WASM was removed in v1.1.1; JS is the sole engine.
+
+### Fixed
+- `tests/schach9x9/evaluate.8x8.test.ts`: real TypeScript bug fixed — `afterAll`
+  was not imported (relied on global) and `evaluate(...)` was called with
+  `'white'` (string) instead of `COLOR_WHITE` (number). Test stays green.
+
 ## [1.1.12] - 2026-07-09
 
 ### Changed

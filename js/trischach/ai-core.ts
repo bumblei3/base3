@@ -15,7 +15,6 @@ import { isKingdomCheck } from './game-check.ts';
 import { Game } from './game.ts';
 import {
   pickBookMove,
-  buildOpeningBook,
   inBook as _inBook,
   learnFromGame,
   getLearnedData,
@@ -2089,11 +2088,11 @@ export function calculateBestMove(
   faction: Faction,
 ): AIAction | null {
   if (!_bookBuilt) {
-    // Use the real Game class directly instead of `game.constructor`:
-    // in the AI worker `game` arrives as a deserialized plain object whose
-    // constructor is Object, so `new game.constructor()` lacked getAlivePieces/init
-    // and crashed the worker (TypeError: e.getAlivePieces is not a function).
-    buildOpeningBook(Game);
+    // The opening book is loaded by the worker's `initBook` handler
+    // (loadOpeningBook → compiled JSON) or by the main thread (main.ts:363).
+    // We no longer call buildOpeningBook() here: it rebuilds the book from the
+    // hardcoded dev lines, which has invalid coordinates/piece ids in several
+    // lines and would shadow the curated compiled book in the worker.
     _bookBuilt = true;
   }
 
