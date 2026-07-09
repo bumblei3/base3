@@ -81,21 +81,29 @@ Ranking nach: Impact × Testbarkeit ÷ Risiko.
 
 ### P2 — Größere Vorhaben (1 Woche+, Risiko mittel–hoch)
 
-**P2.1 i18n / Lokalisierung (Phase 8.3)**
-- Aktuell: UI-Strings hardcoded (DE). Kein `i18n`-Framework im Repo.
-- Ansatz: `i18next` (lightweight) + `Intl` für Zahlen/Datum.
-- Scope: DE (default) + EN als Proof-of-Concept.
-- Test: Unit-Tests für Translation-Keys (kein Missing-Key), E2E-Smoke in EN.
-- Impact: Internationalisierung (AAA-User-Base), aber großer Refactor.
+> Stand 2026-07-09: Alle P2-Punkte sind entweder extern-abhängig (Datenquelle)
+> oder ein großer, risikoreicher Refactor OHNE unmittelbaren Solo-User-Value.
+> Empfehlung: hier sauber stoppen, v1.1.5 taggen, P2 bewusst zurückstellen.
+
+**P2.1 i18n / Lokalisierung (Phase 8.3) — INFRA DA, REFACTOR OFFEN**
+- Status: `js/schach9x9/i18n/` bereits vollständig (sauberes `t()`/`setLocale()`/
+  `ensureLocale()`-System, de.json 62 Keys + en.json). Aber: nur 1 Datei importiert
+  es bisher — die UI nutzt weitgehend hardcoded DE-Strings.
+- Verbleibend: hunderte UI-Strings durch `t()` ersetzen (großer Refactor, schwer
+  testbar, kein unmittelbarer Solo-User-Value). Nicht blind angehen.
+- Wenn doch: schrittweise pro Modul, mit Missing-Key-Unit-Test.
 
 **P2.2 Mutation Testing (Phase 2.3)**
 - Stryker.js für JS-Suche/Eval (Ziel: 70%+ Mutation Score).
-- Impact: Test-Qualität (nicht Test-Menge) validieren. Risiko: Setup-Zeit.
+- Impact: Test-Qualität validieren. Risiko: Setup-Zeit, langsame Runs.
+- Nur sinnvoll, wenn P2.1/große Refactors anstehen (sonst kaum Mehrwert).
 
-**P2.3 Opening Book Expansion (Phase 8.3)**
-- Aktuell: `BookGenerator.ts` trainiert aus `data/openings.pgn`.
-- Maßnahme: Lichess Elite-DB integrieren (größeres Buch).
-- Impact: Stärkere AI-Eröffnungen (spürbar für Spieler).
+**P2.3 Opening Book Expansion (Phase 8.3) — QUELLE FEHLT**
+- Aktuell: `opening-book.json` hat nur 71 Positionen; `data/openings.pgn` fehlt.
+- `BookGenerator.ts` trainiert aus einer PGN, aber keine Datenquelle im Repo.
+- Maßnahme: externe Quelle (Lichess Elite-DB) beschaffen + trainieren.
+- Impact: stärkere AI-Eröffnungen. ABER: extern-abhängig, und bei Solo-Spiel
+  gegen die eigene JS-KI ist Buch-Tiefe zweitrangig. Zurückgestellt.
 
 ### P3 — Optional / Nice-to-have
 
@@ -103,18 +111,19 @@ Ranking nach: Impact × Testbarkeit ÷ Risiko.
 - **Storybook erweitern** (mehr Components) — Phase 7.
 - **ADRs** für AI-Architekturentscheidungen (post-WASM).
 - **Replay/Share-Link** via URL-Parameter (statt nur Clipboard) — Phase 8.2.
+- **OS-Level .pgn** (`launchQueue`/`FileSystemHandle`, Doppelklick auf .pgn) —
+  einziger noch offener P1.3-Rest, klein, aber OS-API (Chromium-only).
 
 ---
 
-## 🗺️ Empfohlene Reihenfolge
+## 🗺️ Empfohlene Reihenfolge (Stand 2026-07-09 — ABSCHLUSS)
 
-1. **P0.3** (Dependabot-Cleanup) → schnell, Repo-Hygiene, kein Risiko.
-2. **Eval-Graph-Test-Korrektur** (erledigt 2026-07-09) → jsdom-skip entfernt,
-   echter Playwright-E2E (`e2e/eval-graph.spec.ts`) grün. Kein offener Test-Gap mehr.
-3. **P1.1** (AI-Perf) → erst messen (Benchmarks ent-skippt), dann refactoren.
-4. **P1.2** (PWA) → "Installierbar" ist sichtbarer User-Wert.
-5. P0.1 Observability-Eigenbau (Sentry gestrichen) bei Bedarf.
-6. P2+ bei Bedarf.
+1. ✅ P0.3 Dependabot-Cleanup (erledigt)
+2. ✅ Eval-Graph-Test (jsdom-skip → Playwright-E2E, erledigt)
+3. ✅ P1.1 AI-Perf (gemessen: nicht nötig, erledigt)
+4. ✅ P1.2 PWA (SW-Bug + Offline-Test, erledigt)
+5. 🔸 v1.1.5 Release-Tag (fasst AI-Fixes + E2E-Abdeckung + PWA-Cleanup zusammen)
+6. P2+ bewusst zurückgestellt (siehe Begründung oben)
 
 ---
 
