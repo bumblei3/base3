@@ -13,6 +13,8 @@ export const BOARD_VARIANTS = {
 
 export type BoardVariant = (typeof BOARD_VARIANTS)[keyof typeof BOARD_VARIANTS];
 
+import { setBoardSize } from './ai/BoardDefinitions.js';
+
 /**
  * Board size for each variant
  */
@@ -116,6 +118,12 @@ export function getCurrentBoardShape(): BoardShape {
 
 export function setCurrentBoardShape(shape: BoardShape): void {
   currentBoardShape = shape;
+  // Keep the integer-board engine geometry (SQUARE_COUNT / BOARD_SIZE in
+  // BoardDefinitions) in sync with the active variant so 8x8 and 9x9 both work.
+  const size = BOARD_SIZES[shape as BoardVariant];
+  if (size) {
+    setBoardSize(size);
+  }
 }
 
 /**

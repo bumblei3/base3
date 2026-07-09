@@ -1,5 +1,14 @@
-export const BOARD_SIZE = 9;
-export const SQUARE_COUNT = 81;
+// Board geometry is runtime-configurable so the same engine code serves both
+// 8x8 and 9x9 variants. setBoardSize() updates these from the active board shape
+// (see config.ts setCurrentBoardShape). ES-module live bindings propagate the
+// change to every consumer that imports SQUARE_COUNT / BOARD_SIZE.
+export let BOARD_SIZE = 9;
+export let SQUARE_COUNT = 81;
+
+export function setBoardSize(size: number): void {
+  BOARD_SIZE = size;
+  SQUARE_COUNT = size * size;
+}
 
 // Piece Types (0-15 bit mask)
 export const PIECE_NONE = 0;
