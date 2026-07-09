@@ -8,6 +8,7 @@ import {
   type Square,
   type PieceWithMoved,
 } from './gameEngine.js';
+import { t } from './i18n/index.js';
 import { campaignManager } from './campaign/CampaignManager.js';
 import {
   checkDraw,
@@ -194,7 +195,7 @@ export class MoveController {
         this.game.moveHistory.length > 0 &&
         (this.game.phase === PHASES.PLAY || this.game.phase === PHASES.ANALYSIS);
       undoBtn.disabled = !canUndo;
-      undoBtn.textContent = `⏮ Rückgängig${this.game.moveHistory.length > 0 ? ` (${this.game.moveHistory.length})` : ''}`;
+      undoBtn.textContent = t('move.undo') + (this.game.moveHistory.length > 0 ? ` (${this.game.moveHistory.length})` : '');
     }
 
     if (redoBtn) {
@@ -202,7 +203,7 @@ export class MoveController {
         this.redoStack.length > 0 &&
         (this.game.phase === PHASES.PLAY || this.game.phase === PHASES.ANALYSIS);
       redoBtn.disabled = !canRedo;
-      redoBtn.textContent = `⏭ Wiederholen${this.redoStack.length > 0 ? ` (${this.redoStack.length})` : ''}`;
+      redoBtn.textContent = t('move.redo') + (this.redoStack.length > 0 ? ` (${this.redoStack.length})` : '');
     }
   }
 

@@ -21,6 +21,7 @@ import * as aiEngine from './aiEngine.js';
 import type { MoveResult, SearchResult } from './aiEngine.js';
 import { AI_PERSONALITIES } from './ai/personalities.js';
 import { AnalysisUI } from './ui/AnalysisUI.js';
+import { t } from './i18n/index.js';
 
 import { createAIWorker } from './ai/workerFactory.js';
 
@@ -325,7 +326,7 @@ export class AIController {
                   return uci;
                 })
                 .join(' ');
-              bestMoveEl.textContent = `KI Plan: ${pvText}`;
+              bestMoveEl.textContent = t('ai.plan', { pv: pvText });
             }
           }
         } else {
@@ -653,19 +654,19 @@ export class AIController {
     if (!data) return; // Guard against null data
 
     if (data && depthEl) {
-      depthEl.textContent = `Tiefe ${data.depth ?? 0}/${data.maxDepth ?? 0}`;
+      depthEl.textContent = t('ai.depth', { depth: data.depth ?? 0, maxDepth: data.maxDepth ?? 0 });
     }
 
     if (nodesEl && data.nodes !== undefined) {
       const nodesFormatted = data.nodes.toLocaleString('de-DE');
-      nodesEl.textContent = `${nodesFormatted} Positionen`;
+      nodesEl.textContent = t('ai.positions', { nodes: nodesFormatted });
     }
 
     if (bestMoveEl && data.bestMove) {
       const size = this.game.boardSize;
       const from = String.fromCharCode(97 + data.bestMove.from.c) + (size - data.bestMove.from.r);
       const to = String.fromCharCode(97 + data.bestMove.to.c) + (size - data.bestMove.to.r);
-      bestMoveEl.textContent = `Bester Zug: ${from}-${to}`;
+      bestMoveEl.textContent = t('ai.bestMove', { from, to });
 
       // Show engine arrow
       if (UI.drawEngineArrow) {
@@ -850,7 +851,7 @@ export class AIController {
       const depth = data.depth || 0;
       const maxDepth = data.maxDepth || 0;
       const nodes = data.nodes ? data.nodes.toLocaleString('de-DE') : 0;
-      engineInfo.textContent = `Tiefe: ${depth}/${maxDepth} | Knoten: ${nodes}`;
+      engineInfo.textContent = t('analysis.depthNodes', { depth, nodes });
     }
   }
 

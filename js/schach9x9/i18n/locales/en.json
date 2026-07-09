@@ -19,24 +19,34 @@
     "toMove": "to move",
     "whiteToMove": "White to move",
     "blackToMove": "Black to move",
-    "analysisMode": "Analysis Mode",
-    "running": "Game in progress",
+    "analysisMode": "Analysis mode",
+    "running": "Game running",
     "moveCount": "{n} moves",
-    "win": "Victory",
-    "loss": "Defeat",
+    "win": "Won",
+    "loss": "Lost",
     "draw": "Draw",
     "over": "Game over!",
     "won": "has won!",
-    "begin": "Game starts! White to move."
+    "begin": "Game starts! White to move.",
+    "drawFiftyMove": "Draw (50-move rule)",
+    "drawRepetition": "Draw (threefold repetition)",
+    "drawInsufficientMaterial": "Draw (insufficient material)",
+    "drawMaterial": "Draw (material)",
+    "drawStalemate": "Draw (stalemate)",
+    "remisAgreed": "Draw agreed",
+    "drawOffered": "{offeringColor} offers a draw. Do you accept?",
+    "winner": "{winner} wins!",
+    "winnerKing": "{winner} wins!\n(King captured)",
+    "winByTimeout": "{winnerColor} wins on time!"
   },
   "toast": {
-    "bestMoveOn": "Best Move ON",
-    "bestMoveOff": "Best Move OFF",
+    "bestMoveOn": "Best move ON",
+    "bestMoveOff": "Best move OFF",
     "success": "Success",
     "error": "Error",
     "achievementUnlocked": "Achievement unlocked: {name}",
-    "saveError": "Error saving game.",
-    "loadError": "Error loading: {message}",
+    "saveError": "Save error.",
+    "loadError": "Load error: {message}",
     "tipsOnlyOnYourTurn": "Tips are only available on your turn."
   },
   "analysis": {
@@ -45,24 +55,29 @@
     "positionRestored": "Position restored.",
     "positionKept": "Current position kept.",
     "continuousEnabled": "Continuous analysis enabled.",
-    "continuousDisabled": "Continuous analysis disabled."
+    "continuousDisabled": "Continuous analysis disabled.",
+    "depthNodes": "Depth: {depth} | Nodes: {nodes}"
   },
   "import": {
     "error": "Import error: {error}",
     "loadError": "Error loading PGN file"
   },
   "tutor": {
-    "best": "Best Move",
+    "best": "Best move",
     "mistake": "Mistake",
-    "good": "Good Move",
-    "excellent": "Excellent Move",
+    "good": "Good move",
+    "excellent": "Excellent move",
     "blunder": "Blunder",
-    "lost": "Lost"
+    "lost": "Lost",
+    "recommendedSetups": "🏗️ Recommended setups",
+    "tryThisMove": "▶️ Try this move",
+    "suggestionsTitle": "🤖 Tutor suggestions",
+    "bestMovesFor": "Best moves for {color}"
   },
   "settings": {
     "language": "Language",
     "mentorLevel": "AI Mentor",
-    "mentorStrict": "Strict (errors & blunders)"
+    "mentorStrict": "Strict (mistakes & blunders)"
   },
   "file": {
     "title": "Game import/export",
@@ -74,11 +89,40 @@
     "loaded": "Position loaded"
   },
   "setup": {
-    "whiteKing": "White: Choose a corridor for the king",
-    "blackKing": "Black: Choose a corridor for the king",
-    "whitePieces": "White: Buy troops",
-    "blackPieces": "Black: Buy troops",
-    "whiteUpgrades": "White: Click a piece for upgrades",
-    "blackUpgrades": "Black: Click a piece for upgrades"
+    "whiteKing": "White: choose a corridor for the king",
+    "blackKing": "Black: choose a corridor for the king",
+    "whitePieces": "White: buy troops",
+    "blackPieces": "Black: buy troops",
+    "whiteUpgrades": "White: click a piece for upgrades",
+    "blackUpgrades": "Black: click a piece for upgrades"
+  },
+  "shop": {
+    "finish": "Done",
+    "upgradeTroops": "Upgrade troops",
+    "clickToUpgrade": "Click pieces on the board to upgrade",
+    "hireTroops": "Hire troops",
+    "selectToBuy": "Select a piece to buy",
+    "selected": "Selected:"
+  },
+  "achievements": {
+    "title": "🏆 Achievements",
+    "unlockedCount": "{unlocked} / {total} unlocked"
+  },
+  "openingBook": {
+    "noBookMove": "No book move for this position",
+    "noResults": "No openings found"
+  },
+  "ai": {
+    "plan": "AI plan: {pv}",
+    "bestMove": "Best move: {from}-{to}",
+    "depth": "Depth {depth}/{maxDepth}",
+    "positions": "{nodes} positions"
+  },
+  "move": {
+    "undo": "⏮ Undo",
+    "redo": "⏭ Redo"
+  },
+  "talent": {
+    "treeTitle": "Talents: Level {level}"
   }
 }

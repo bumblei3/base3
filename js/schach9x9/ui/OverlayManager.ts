@@ -6,6 +6,7 @@ import { renderBoard } from './BoardRenderer.js';
 import { soundManager } from '../sounds.js';
 import type { Player } from '../gameEngine.js';
 import type { GameLike, MoveRecord, Puzzle, ModalAction, Piece } from '../types/game.js';
+import { t } from '../i18n/index.js';
 
 /**
  * Zeigt ein modales Dialogfenster an.
@@ -176,7 +177,7 @@ export function showPuzzleOverlay(puzzle: Puzzle): void {
 
   const statusEl = document.getElementById('puzzle-status');
   if (statusEl) {
-    statusEl.textContent = 'Weiß am Zug';
+    statusEl.textContent = t('game.whiteToMove');
     statusEl.className = 'puzzle-status';
   }
 

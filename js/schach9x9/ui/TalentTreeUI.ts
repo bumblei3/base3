@@ -1,6 +1,7 @@
 import { UNIT_TALENT_TREES } from '../campaign/talents.js';
 import { campaignManager } from '../campaign/CampaignManager.js';
 import { showModal, showToast } from './OverlayManager.js';
+import { t } from '../i18n/index.js';
 
 export class TalentTreeUI {
   private currentUnitType: string = 'p';
@@ -114,7 +115,7 @@ export class TalentTreeUI {
     const tree = UNIT_TALENT_TREES[this.currentUnitType];
     const unitXp = campaignManager.getUnitXp(this.currentUnitType);
 
-    if (unitTitle) unitTitle.textContent = `Talente: Level ${unitXp.level}`;
+    if (unitTitle) unitTitle.textContent = t('talent.treeTitle', { level: unitXp.level });
 
     if (!tree || tree.talents.length === 0) {
       container.innerHTML =

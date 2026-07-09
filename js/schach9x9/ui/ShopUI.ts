@@ -6,6 +6,7 @@ import { SHOP_PIECES, PIECE_VALUES } from '../config.js';
 import { PIECE_SVGS } from '../chess-pieces.js';
 import { getPieceText } from './BoardRenderer.js';
 import type { GameLike, PieceType } from '../types/game.js';
+import { t } from '../i18n/index.js';
 
 // Removed top-level await preventing circular dependency
 // const { updateTutorRecommendations } = (await import('./TutorUI.js')) as any;
@@ -108,10 +109,10 @@ export function updateShopUI(game: GameLike): void {
     // Show button during upgrade phases or piece placement
     const phase = String(game.phase);
     if (phase === 'SETUP_WHITE_UPGRADES' || phase === 'SETUP_BLACK_UPGRADES') {
-      finishBtn.textContent = 'Fertig';
+      finishBtn.textContent = t('shop.finish');
       finishBtn.classList.remove('hidden');
     } else if (phase === 'SETUP_WHITE_PIECES' || phase === 'SETUP_BLACK_PIECES') {
-      finishBtn.textContent = 'Fertig'; // Or 'Start Game'
+      finishBtn.textContent = t('shop.finish'); // Or 'Start Game'
       finishBtn.classList.remove('hidden');
     }
   }
@@ -124,22 +125,22 @@ export function updateShopUI(game: GameLike): void {
   const isUpgradePhase = phase === 'SETUP_WHITE_UPGRADES' || phase === 'SETUP_BLACK_UPGRADES';
 
   if (isUpgradePhase) {
-    if (shopHeader) shopHeader.textContent = 'Truppen verbessern';
+    if (shopHeader) shopHeader.textContent = t('shop.upgradeTroops');
     if (shopGrid) shopGrid.classList.add('hidden');
     if (tutorSection) tutorSection.classList.add('hidden');
     if (statusDisplay)
-      statusDisplay.textContent = 'Klicke auf Figuren auf dem Brett zum Verbessern';
+      statusDisplay.textContent = t('shop.clickToUpgrade');
   } else {
-    if (shopHeader) shopHeader.textContent = 'Truppen anheuern';
+    if (shopHeader) shopHeader.textContent = t('shop.hireTroops');
     if (shopGrid) shopGrid.classList.remove('hidden');
     if (tutorSection) tutorSection.classList.remove('hidden');
 
     if (statusDisplay) {
-      const selected = (game as GameWithSelectedPiece).selectedShopPiece;
+      statusDisplay.textContent = t('shop.selectToBuy');
       if (selected) {
         statusDisplay.textContent = `Platziere: ${getPieceText({ type: selected as Exclude<PieceType, null>, color: game.turn })} (${PIECE_VALUES[selected as keyof typeof PIECE_VALUES]} Pkt)`;
       } else {
-        statusDisplay.textContent = 'Wähle eine Figur zum Kaufen';
+        statusDisplay.textContent = t('shop.selectToBuy');
       }
     }
   }

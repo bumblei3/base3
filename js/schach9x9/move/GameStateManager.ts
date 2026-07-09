@@ -4,6 +4,7 @@ import type { Phase } from '../config.js';
 import * as UI from '../ui.js';
 import type { Game, PieceWithMoved, MoveHistoryEntry, LastMoveInfo, Piece } from '../gameEngine.js';
 import type { MoveController } from '../moveController.js';
+import { t } from '../i18n/index.js';
 
 /**
  * Undoes the last move
@@ -358,7 +359,7 @@ export function loadGame(game: Game): boolean {
         const message = document.getElementById('draw-offer-message');
         const offeringColor = game.drawOfferedBy === 'white' ? 'Wei\u00DF' : 'Schwarz';
         if (message)
-          message.textContent = `${offeringColor} bietet Remis an. M\u00F6chtest du annehmen?`;
+          message.textContent = t('game.drawOffered', { offeringColor });
         drawOverlay.classList.remove('hidden');
       } else {
         drawOverlay.classList.add('hidden');

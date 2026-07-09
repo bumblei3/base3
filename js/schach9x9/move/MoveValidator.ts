@@ -2,6 +2,7 @@ import { PHASES, PIECE_VALUES } from '../gameEngine.js';
 import * as UI from '../ui.js';
 import type { Game } from '../gameEngine.js';
 import { campaignManager } from '../campaign/CampaignManager.js';
+import { t } from '../i18n/index.js';
 
 /**
  * Checks if the game is a draw based on various rules
@@ -17,7 +18,7 @@ export function checkDraw(game: Game): boolean {
     game.log('Unentschieden (50-Züge-Regel)');
     const overlay = document.getElementById('game-over-overlay');
     const winnerText = document.getElementById('winner-text');
-    if (winnerText) winnerText.textContent = 'Unentschieden (50-Züge-Regel)';
+    if (winnerText) winnerText.textContent = t('game.drawFiftyMove');
     if (overlay) overlay.classList.remove('hidden');
 
     // Save to statistics
@@ -40,7 +41,7 @@ export function checkDraw(game: Game): boolean {
     game.log('Unentschieden (Stellungswiederholung)');
     const overlay = document.getElementById('game-over-overlay');
     const winnerText = document.getElementById('winner-text');
-    if (winnerText) winnerText.textContent = 'Unentschieden (Stellungswiederholung)';
+    if (winnerText) winnerText.textContent = t('game.drawRepetition');
     if (overlay) overlay.classList.remove('hidden');
 
     // Save to statistics
@@ -61,7 +62,7 @@ export function checkDraw(game: Game): boolean {
     game.log('Unentschieden (Ungenügendes Material)');
     const overlay = document.getElementById('game-over-overlay');
     const winnerText = document.getElementById('winner-text');
-    if (winnerText) winnerText.textContent = 'Unentschieden (Ungenügendes Material)';
+    if (winnerText) winnerText.textContent = t('game.drawInsufficientMaterial');
     if (overlay) overlay.classList.remove('hidden');
 
     // Save to statistics

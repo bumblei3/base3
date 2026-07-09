@@ -40,4 +40,18 @@ describe('i18n', () => {
     setLocale('en');
     expect(t('menu.help')).toBe('Help');
   });
+
+  test('setLocale dispatches a localechange event on window', async () => {
+    await import('../../js/schach9x9/i18n/index.js').then(m => m.ensureLocale('en' as LocaleCode));
+    let received: string | null = null;
+    const handler = (e: Event) => {
+      received = (e as CustomEvent).detail?.locale;
+    };
+    window.addEventListener('localechange', handler);
+    setLocale('en');
+    expect(received).toBe('en');
+    setLocale('de');
+    expect(received).toBe('de');
+    window.removeEventListener('localechange', handler);
+  });
 });

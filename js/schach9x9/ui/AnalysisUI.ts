@@ -6,6 +6,7 @@ import * as PostGameAnalyzer from '../tutor/PostGameAnalyzer.js';
 import type { Game } from '../gameEngine.js';
 import type { AIProgressData } from '../aiEngine';
 import type { MoveHistoryEntry } from '../gameEngine.js';
+import { t } from '../i18n/index.js';
 import type { Piece, Square } from '../types/game.js';
 
 interface AnalysisResult {
@@ -148,7 +149,7 @@ export class AnalysisUI {
 
     // Update engine info
     if (this.engineInfo) {
-      this.engineInfo.textContent = `Tiefe: ${depth || '-'} | Knoten: ${nodes || '-'}`;
+      this.engineInfo.textContent = t('analysis.depthNodes', { depth: depth || '-', nodes: nodes || '-' });
     }
     }
 
@@ -179,7 +180,7 @@ export class AnalysisUI {
     if (this.engineInfo && progress.depth !== undefined) {
       const secs = progress.time ? (progress.time / 1000).toFixed(1) : '-';
       const nodesStr = progress.nodes?.toLocaleString() || '-';
-      this.engineInfo.textContent = 'Tiefe: ' + progress.depth + ' | Knoten: ' + nodesStr + ' | ' + secs + 's';
+      this.engineInfo.textContent = t('analysis.depthNodes', { depth: progress.depth ?? '-', nodes: nodesStr ?? '-' });
     }
     }
 
@@ -194,7 +195,7 @@ export class AnalysisUI {
     }
     if (this.engineInfo) {
       const secs = (data.time ?? 0) / 1000;
-      this.engineInfo.textContent = 'Tiefe: ' + (data.depth ?? '-') + ' | Knoten: ' + (data.nodes?.toLocaleString() ?? '-') + ' | ' + secs.toFixed(1) + 's';
+      this.engineInfo.textContent = t('analysis.depthNodes', { depth: data.depth ?? '-', nodes: data.nodes?.toLocaleString() ?? '-' });
     }
     }
 

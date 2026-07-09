@@ -6,6 +6,7 @@ import { PHASES } from '../config.js';
 import { updateShopUI } from './ShopUI.js';
 import type { Game } from '../gameEngine.js';
 import type { MoveExplanation } from '../tutor/MoveAnalyzer.js';
+import { t } from '../i18n/index.js';
 import type { MoveResult } from '../aiEngine.js';
 
 import { escapeHtml } from '../utils/escapeHtml.js';
@@ -340,7 +341,7 @@ export async function showTutorSuggestions(
     if (g.tutorController && g.tutorController.getSetupTemplates) {
       const templates = g.tutorController.getSetupTemplates();
       const header = document.createElement('h3');
-      header.textContent = '🏗️ Empfohlene Aufstellungen';
+      header.textContent = t('tutor.recommendedSetups');
       header.style.marginBottom = '1rem';
       suggestionsEl!.appendChild(header);
       (templates as SetupTemplate[]).forEach((template: SetupTemplate) => {
@@ -394,7 +395,7 @@ export async function showTutorSuggestions(
   }
 
   const header = document.createElement('h3');
-  header.innerHTML = `🤖 Tutor Vorschläge <span style="font-size: 0.8rem; font-weight: normal; color: #94a4b8; display: block; margin-top: 0.25rem;">Beste Züge für ${escapeHtml(g.turn === 'white' ? 'Weiß' : 'Schwarz')}</span>`;
+  header.innerHTML = `${t('tutor.suggestionsTitle')} <span style="font-size: 0.8rem; font-weight: normal; color: #94a4b8; display: block; margin-top: 0.25rem;">${t('tutor.bestMovesFor', { color: escapeHtml(g.turn === 'white' ? 'Weiß' : 'Schwarz') })}</span>`;
   suggestionsEl!.appendChild(header);
 
   (hints as TutorHint[]).forEach((hint: TutorHint, index: number) => {
@@ -432,7 +433,7 @@ export async function showTutorSuggestions(
     tryBtn.className = 'try-move-btn';
     tryBtn.style.cssText =
       'flex: 1; padding: 0.5rem 1rem; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; font-size: 0.85rem;';
-    tryBtn.innerHTML = '▶️ Diesen Zug probieren';
+    tryBtn.innerHTML = t('tutor.tryThisMove');
     tryBtn.onmouseover = () => {
       tryBtn.style.transform = 'translateY(-2px)';
     };

@@ -4,6 +4,7 @@ import { PHASES, type Game, type PieceWithMoved } from '../gameEngine.js';
 import { campaignManager } from '../campaign/CampaignManager.js';
 import { logger } from '../logger.js';
 import * as UI from '../ui.js';
+import { t } from '../i18n/index.js';
 
 /**
  * Manages the shop logic during the setup phase.
@@ -48,7 +49,7 @@ export class ShopManager {
 
       const escapedSvg = escapeHtml(svg);
       const escapedName = pieceInfo ? escapeHtml(pieceInfo.name) : escapeHtml(pieceType);
-      displayEl.innerHTML = `Ausgewählt: <div style="display:inline-block;width:30px;height:30px;vertical-align:middle;">${escapedSvg}</div> ${escapedName} (${cost})`;
+      displayEl.innerHTML = `${t('shop.selected')} <div style="display:inline-block;width:30px;height:30px;vertical-align:middle;">${escapedSvg}</div> ${escapedName} (${cost})`;
     }
   }
 

@@ -5,6 +5,7 @@
 
 import { achievementsManager, type Achievement } from '../achievements.js';
 import { logger } from '../logger.js';
+import { t } from '../i18n/index.js';
 
 let isInitialized = false;
 let achievementsContainer: HTMLElement | null = null;
@@ -84,7 +85,7 @@ function renderAchievements(): void {
   const totalCount = achievements.length;
   const statsEl = document.getElementById('achievements-stats');
   if (statsEl) {
-    statsEl.textContent = `${unlockedCount} / ${totalCount} freigeschaltet`;
+    statsEl.textContent = t('achievements.unlockedCount', { unlocked: unlockedCount, total: totalCount });
   }
 }
 
@@ -179,7 +180,7 @@ export function addAchievementsButton(): void {
   const btn = document.createElement('button');
   btn.id = 'achievements-menu-btn';
   btn.className = 'menu-btn';
-  btn.textContent = '🏆 Erfolge';
+  btn.textContent = t('achievements.title');
   btn.addEventListener('click', showAchievementsPanel);
 
   // Insert before the last button (usually Settings/Info)

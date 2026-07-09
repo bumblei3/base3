@@ -47,6 +47,11 @@ export function setLocale(locale: LocaleCode): void {
   } catch {
     /* ignore persistence failures */
   }
+  // Notify the UI so panels can re-render their locale-dependent text live
+  // (the app does not restart on language change).
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('localechange', { detail: { locale } }));
+  }
 }
 
 /** Get the active locale. */

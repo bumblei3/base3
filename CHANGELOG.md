@@ -4,6 +4,19 @@ Alle nennenswerten Änderungen an diesem Projekt werden in dieser Datei dokument
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/),
 und das Projekt folgt [Semantic Versioning](https://semver.org/).
 
+## [1.1.8] - 2026-07-09
+
+### Hinzugefügt
+- **i18n vollständig (P2.1)**: die verbliebenen ~40 hardcoded UI-Strings durch `t()` ersetzt (MoveValidator/MoveExecutor/GameStateManager/TimeManager/gameController, ShopUI, TutorUI, OverlayManager, AchievementUI, TalentTreeUI, OpeningBookUI, AnalysisUI, aiController, moveController).
+- Neue Locale-Keys in `de.json` + `en.json`: `game.drawFiftyMove/Repetition/InsufficientMaterial/Material/Stalemate`, `game.remisAgreed/drawOffered/winner/winnerKing/winByTimeout`, `shop.*`, `tutor.recommendedSetups/tryThisMove/suggestionsTitle/bestMovesFor`, `ai.plan/bestMove/depth/positions`, `move.undo/redo`, `talent.treeTitle`, `achievements.*`, `openingBook.*`. `en.json` vollständig vervollständigt.
+- **Live-Update**: `setLocale()` feuert ein `localechange`-Event; der Sprachumschalter re-rendert nach dem Wechsel `updateStatus` + `updateMoveHistoryUI` + `updateShopUI`, sodass die Sprache sofort sichtbar wechselt.
+
+### Tests
+- `tests/schach9x9/i18n.test.ts` um einen `localechange`-Event-Test erweitert.
+
+### Korrektur
+- FUTURE_PLAN P2.1 war falsch (behauptete "hunderte hardcoded") — i18n war zu ~80% fertig, es fehlten nur ~40 Strings.
+
 ## [1.1.7] - 2026-07-09
 
 ### Hinzugefügt

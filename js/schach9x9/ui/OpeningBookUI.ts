@@ -6,6 +6,7 @@ import { getOpeningEntry, getOpeningsByCategory, getTopOpenings, searchOpenings,
 import { getBoardHash } from '../move/MoveValidator.js';
 import type { Game } from '../gameEngine.js';
 import { PHASES } from '../config.js';
+import { t } from '../i18n/index.js';
 import { openingBook } from '../ai/OpeningBook.js';
 
 interface OpeningBookUIElements {
@@ -167,7 +168,7 @@ export class OpeningBookUI {
         </div>
       `;
     } else {
-      this.elements.bookMovesList.innerHTML = '<div class="no-book-moves">Kein Buchzug für diese Stellung</div>';
+      this.elements.bookMovesList.innerHTML = `<div class="no-book-moves">${t('openingBook.noBookMove')}</div>`;
     }
   }
 
@@ -200,7 +201,7 @@ export class OpeningBookUI {
     if (!this.elements.searchResults) return;
 
     if (entries.length === 0) {
-      this.elements.searchResults.innerHTML = '<div class="no-results">Keine Eröffnungen gefunden</div>';
+      this.elements.searchResults.innerHTML = `<div class="no-results">${t('openingBook.noResults')}</div>`;
       return;
     }
 

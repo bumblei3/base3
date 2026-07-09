@@ -87,13 +87,25 @@ Ranking nach: Impact × Testbarkeit ÷ Risiko.
 > oder ein großer, risikoreicher Refactor OHNE unmittelbaren Solo-User-Value.
 > Empfehlung: hier sauber stoppen, v1.1.5 taggen, P2 bewusst zurückstellen.
 
-**P2.1 i18n / Lokalisierung (Phase 8.3) — INFRA DA, REFACTOR OFFEN**
-- Status: `js/schach9x9/i18n/` bereits vollständig (sauberes `t()`/`setLocale()`/
-  `ensureLocale()`-System, de.json 62 Keys + en.json). Aber: nur 1 Datei importiert
-  es bisher — die UI nutzt weitgehend hardcoded DE-Strings.
-- Verbleibend: hunderte UI-Strings durch `t()` ersetzen (großer Refactor, schwer
-  testbar, kein unmittelbarer Solo-User-Value). Nicht blind angehen.
-- Wenn doch: schrittweise pro Modul, mit Missing-Key-Unit-Test.
+**P2.1 i18n / Lokalisierung (Phase 8.3) — ERLEDIGT (v1.1.8)**
+- Korrektur zum alten Plan: i18n war zu ~80% fertig (187 `t()`-Nutzungen,
+  funktionierender Sprachumschalter), NICHT "hunderte hardcoded". Es fehlten
+  nur ~40 verstreute hardcoded Strings.
+- Erledigt: alle ~40 verbliebenen UI-Strings (Remis/Sieg-Overlays in
+  MoveValidator/MoveExecutor/GameStateManager/TimeManager/gameController,
+  ShopUI, TutorUI, OverlayManager, AchievementUI, TalentTreeUI, OpeningBookUI,
+  AnalysisUI, aiController, moveController) durch `t()` ersetzt; neue Keys in
+  de.json + en.json ergänzt (game.draw*, game.winner*, game.remisAgreed,
+  game.drawOffered, shop.*, tutor.*, ai.*, move.*, talent.*, achievements.*,
+  openingBook.*).
+- Live-Update: `setLocale()` feuert jetzt ein `localechange`-Event (window);
+  der Sprachumschalter in `DOMHandler` re-rendert nach dem Wechsel
+  `updateStatus` + `updateMoveHistoryUI` + `updateShopUI`, sodass die Sprache
+  sofort sichtbar wechselt (ohne Spiel-Neustart). Offene Panels (Overlay/Tutor)
+  aktualisieren sich beim nächsten Render mit übersetzten Texten.
+- Tests: `tests/schach9x9/i18n.test.ts` erweitert (localechange-Event-Test);
+  betroffene Unit-Tests (move/ui/TimeManager/aiController/gameController) grün.
+- `en.json` vollständig vervollständigt (alle Keys parallel zu de.json).
 
 **P2.2 Mutation Testing (Phase 2.3)**
 - Stryker.js für JS-Suche/Eval (Ziel: 70%+ Mutation Score).

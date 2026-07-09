@@ -853,8 +853,12 @@ export class DOMHandler {
         await ensureLocale(next);
         setLocale(next);
         document.documentElement.lang = next;
-        // Re-render locale-dependent UI without restarting the game.
+        // Re-render locale-dependent UI without restarting the game so the
+        // language switch is visible immediately (setLocale also dispatches a
+        // 'localechange' event for panels that listen themselves).
         UI.updateStatus(this.game);
+        UI.updateMoveHistoryUI(this.game);
+        UI.updateShopUI(this.game);
       });
     }
 

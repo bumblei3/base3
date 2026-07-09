@@ -10,6 +10,7 @@ import type { Square, Player, Piece, MoveRecord, MoveResult, PieceType } from '.
 import type { PieceWithMoved, MoveHistoryEntry } from '../gameEngine.js';
 import type { MoveController } from '../moveController.js';
 import { notificationUI } from '../ui/NotificationUI.js';
+import { t } from '../i18n/index.js';
 import { campaignManager } from '../campaign/CampaignManager.js';
 import { logger } from '../logger.js';
 
@@ -346,7 +347,7 @@ export async function completeMoveExecution(
     game.log('Unentschieden durch unzureichendes Material.');
     const overlay = document.getElementById('game-over-overlay');
     const winnerText = document.getElementById('winner-text');
-    if (winnerText) winnerText.textContent = 'Unentschieden (Material)';
+    if (winnerText) winnerText.textContent = t('game.drawMaterial');
     if (overlay) overlay.classList.remove('hidden');
 
     if (game.gameController) {
@@ -397,7 +398,7 @@ export function finishMove(game: Game, lastTo?: Square): void {
 
     const overlay = document.getElementById('game-over-overlay');
     const winnerText = document.getElementById('winner-text');
-    if (winnerText) winnerText.textContent = `${winner} gewinnt!\n(König geschlagen)`;
+    if (winnerText) winnerText.textContent = `${t('game.winnerKing', { winner })}\n`;
     if (overlay) overlay.classList.remove('hidden');
 
     const isPlayerWin = (game.isAI && game.turn === 'black') || !game.isAI;
@@ -485,7 +486,7 @@ export function finishMove(game: Game, lastTo?: Square): void {
 
     const overlay = document.getElementById('game-over-overlay');
     const winnerText = document.getElementById('winner-text');
-    if (winnerText) winnerText.textContent = `${winner} gewinnt!`;
+    if (winnerText) winnerText.textContent = t('game.winner', { winner });
     if (overlay) overlay.classList.remove('hidden');
 
     const isPlayerWin = (game.isAI && opponentColor === 'black') || !game.isAI;
@@ -510,7 +511,7 @@ export function finishMove(game: Game, lastTo?: Square): void {
     game.log('PATT! Unentschieden.');
     const overlay = document.getElementById('game-over-overlay');
     const winnerText = document.getElementById('winner-text');
-    if (winnerText) winnerText.textContent = 'Unentschieden (Patt)';
+    if (winnerText) winnerText.textContent = t('game.drawStalemate');
     if (overlay) overlay.classList.remove('hidden');
 
     if (game.gameController) {

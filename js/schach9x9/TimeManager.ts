@@ -5,6 +5,7 @@
 import { PHASES, type Game } from './gameEngine.js';
 import * as UI from './ui.js';
 import { soundManager } from './sounds.js';
+import { t } from './i18n/index.js';
 
 import type { Player } from './types/game.js';
 
@@ -111,7 +112,7 @@ export class TimeManager {
       const overlay = document.getElementById('game-over-overlay');
       const winnerText = document.getElementById('winner-text');
       if (overlay && winnerText) {
-        winnerText.textContent = `${winnerColor} gewinnt durch Zeitüberschreitung!`;
+        winnerText.textContent = t('game.winByTimeout', { winnerColor });
         overlay.classList.remove('hidden');
       }
     }

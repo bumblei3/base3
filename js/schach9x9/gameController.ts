@@ -25,6 +25,7 @@ import { ShopManager } from './shop/ShopManager.js';
 import { AnalysisController } from './AnalysisController.js';
 import type { AIController } from './aiController.js';
 import { campaignManager } from './campaign/CampaignManager.js';
+import { t } from './i18n/index.js';
 import { AnalysisManager } from './ai/AnalysisManager.js';
 import { AnalysisUI } from './ui/AnalysisUI.js';
 import { showPostGameStats } from './ui/PostGameAnalysisUI.js';
@@ -418,7 +419,7 @@ export class GameController {
     const message = document.getElementById('draw-offer-message');
 
     const offeringColor = this.game.drawOfferedBy === 'white' ? 'Weiß' : 'Schwarz';
-    if (message) message.textContent = `${offeringColor} bietet Remis an. Möchtest du annehmen?`;
+    if (message) message.textContent = t('game.drawOffered', { offeringColor });
 
     if (overlay) overlay.classList.remove('hidden');
   }
@@ -444,7 +445,7 @@ export class GameController {
 
     const gameOverOverlay = document.getElementById('game-over-overlay');
     const winnerText = document.getElementById('winner-text');
-    if (winnerText) winnerText.textContent = 'Remis vereinbart';
+    if (winnerText) winnerText.textContent = t('game.remisAgreed');
     if (gameOverOverlay) gameOverOverlay.classList.remove('hidden');
 
     // Save game to statistics
