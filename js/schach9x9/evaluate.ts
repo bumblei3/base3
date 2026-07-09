@@ -24,6 +24,7 @@ import {
   COLOR_BLACK,
   indexToRow,
   indexToCol,
+  BOARD_SIZE,
 } from './ai/BoardDefinitions';
 
 export type IntBoard = Int8Array;
@@ -258,8 +259,8 @@ export function evaluate(b: IntBoard, c: number, evalConfig: EvalConfig = { pers
 
   const whitePawnFiles = new Set<number>();
   const blackPawnFiles = new Set<number>();
-  const whitePawnsPerFile: number[] = new Array(9).fill(0);
-  const blackPawnsPerFile: number[] = new Array(9).fill(0);
+  const whitePawnsPerFile: number[] = new Array(BOARD_SIZE).fill(0);
+  const blackPawnsPerFile: number[] = new Array(BOARD_SIZE).fill(0);
 
   // Personality weights
   const weights = getPersonalityWeights(evalConfig.personality);
@@ -276,8 +277,8 @@ export function evaluate(b: IntBoard, c: number, evalConfig: EvalConfig = { pers
     const col = indexToCol(i);
     const isUs = pColor === c;
     const isWhitePiece = pColor === COLOR_WHITE;
-    const pstRow = isWhitePiece ? row : 8 - row;
-    const sqIdx = pstRow * 9 + col;
+    const pstRow = isWhitePiece ? row : BOARD_SIZE - 1 - row;
+    const sqIdx = pstRow * BOARD_SIZE + col;
 
     const phaseValue: Record<number, number> = {
       [PIECE_PAWN]: 0, [PIECE_KNIGHT]: 1, [PIECE_BISHOP]: 1,
@@ -554,16 +555,19 @@ function countMobility(board: IntBoard, square: number, offsets: number[], color
 
 function countKnightMobility(board: IntBoard, square: number, color: number): number {
   let count = 0;
-  const KNIGHT_OFFSETS = [-19, -17, -11, -7, 7, 11, 17, 19];
+  const size = Math.round(Math.sqrt(board.length));
+  // Knight offsets derived from board size (matches MoveGenerator.geomFor).
+  const KNIGHT_OFFSETS = [-2 * size - 1, -2 * size + 1, -size - 2, -size + 2, size - 2, size + 2, 2 * size - 1, 2 * size + 1];
   const r = indexToRow(square);
   const c = indexToCol(square);
 
   for (const offset of KNIGHT_OFFSETS) {
     const target = square + offset;
     if (!isValidSquare(target, board)) continue;
-
+    // Reject wrap-around moves that cross a board edge (column overflow).
     const tr = indexToRow(target);
     const tc = indexToCol(target);
+    if (Math.abs(tr - r) > 2 || Math.abs(tc - c) > 2) continue;
 
     // Verify knight move is L-shaped
     const dr = Math.abs(tr - r);
