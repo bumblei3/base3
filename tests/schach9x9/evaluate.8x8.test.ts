@@ -1,7 +1,8 @@
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { setCurrentBoardShape } from '@schach9x9/config';
 import { evaluate } from '@schach9x9/evaluate';
 import { convertBoardToInt } from '@schach9x9/aiEngine';
+import { COLOR_WHITE } from '@schach9x9/ai/BoardDefinitions';
 import type { Piece } from '@schach9x9/types/game';
 
 // Build a standard 8x8 starting position as a UiBoard (8x8 array of Piece|null).
@@ -32,7 +33,7 @@ describe('evaluate 8x8', () => {
     const intBoard = convertBoardToInt(board as any);
     expect(intBoard.length).toBe(64);
     // must not throw / read undefined
-    const score = evaluate(intBoard as any, 'white');
+    const score = evaluate(intBoard as any, COLOR_WHITE);
     expect(typeof score).toBe('number');
   });
 });

@@ -30,7 +30,7 @@ Two chess variants in one repository:
 # Install dependencies
 npm install
 
-# Build both games (includes WASM compilation for Schach9x9)
+# Build both games (JS engine, no WASM)
 npm run build
 
 # Or build individually
@@ -50,7 +50,7 @@ npm run dev:trischach   # http://localhost:5173
 base3/
 ├── js/
 │   ├── schach9x9/        # Schach9x9 source (TypeScript)
-│   │   ├── ai/           # AI engine, WASM bridge, personalities
+│   │   ├── ai/           # AI engine, personalities
 │   │   ├── campaign/     # Single-player campaign mode
 │   │   ├── pieces/       # Piece skins (classic, modern, pixel, neon, etc.)
 │   │   ├── ui/           # BoardRenderer, OverlayManager, TutorUI, etc.
@@ -67,7 +67,7 @@ base3/
 ├── tests/                # Unit tests (Vitest)
 ├── e2e/                  # Playwright E2E tests (Schach9x9)
 ├── tests-e2e/            # Playwright E2E tests (Trischach)
-├── tests/mocks/          # Test mocks (WASM, etc.)
+├── tests/mocks/          # Test mocks (engine, etc.)
 └── Config: package.json, tsconfig*.json, vite.config*.ts, etc.
 ```
 
@@ -78,11 +78,10 @@ base3/
 | Script | Description |
 |--------|-------------|
 | `npm install` | Install all dependencies |
-| `npm run build` | Build WASM + both games + landing |
+| `npm run build` | Build both games + landing |
 | `npm run build:schach9x9` | Build only Schach9x9 |
 | `npm run build:trischach` | Build only Trischach |
 | `npm run build:landing` | Build only landing page |
-| `npm run wasm:build` | Compile Rust WASM engine |
 | `npm run dev:schach9x9` | Dev server for Schach9x9 |
 | `npm run dev:trischach` | Dev server for Trischach |
 | `npm run test` | Run all unit tests |
@@ -106,7 +105,7 @@ base3/
   - Nachtmahr (camel + zebra leaper)
   - Erzengel (Queen + Knight)
 - **Modes**: Classic, Standard (with new pieces), Campaign, Setup
-- **AI**: WASM-accelerated Rust engine + JS fallback, personalities, opening book (depth 25+)
+- **AI**: JS search engine (WASM removed in v1.1.1; JS is the sole engine), personalities, opening book (depth 25+)
 - **Features**: 3D battle animations (Three.js), PWA/offline, tutorials, puzzles, shop, statistics
 - **Accessibility**: Keyboard nav, screen reader support, touch optimized
 
@@ -140,18 +139,18 @@ base3/
 
 ```yaml
 # .github/workflows/ci.yml
-1. setup       → cache + deps + WASM build
+1. setup       → cache + deps
 2. quality     → lint + typecheck
 3. test-trischach → ~347 unit tests
    test-schach9x9  → ~1843 unit tests (4 shards, parallel)
-4. build       → WASM + 3 Vite builds (landing, schach9x9, trischach)
+4. build       → 3 Vite builds (landing, schach9x9, trischach)
 5. deploy      → GitHub Pages (on push to main)
 ```
 
 - **Branch**: `main` (protected), auto-deploy on push
 - **Node**: 24 LTS
 - **Actions**: checkout@v5, setup-node@v5, cache@v5
-- **Cache**: npm + cargo for fast builds
+- **Cache**: npm cache for fast builds (WASM removed in v1.1.1; JS engine only, no cargo/rust caches)
 
 ---
 
@@ -174,7 +173,7 @@ Run `npm run typecheck` to verify both projects.
 - ~2253 unit tests across both games (Vitest + happy-dom + jsdom)
 - 4-way sharded Schach9x9 tests for CI parallelism
 - E2E tests via Playwright (Schach9x9 + Trischach)
-- WASM mocked in CI test job, real build in setup job
+- JS engine runs directly in CI test + build jobs (no WASM compile/mock needed since v1.1.1)
 - Coverage thresholds: 75% statements / 65% branches / 70% functions / 75% lines
 
 ---
