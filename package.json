@@ -1,6 +1,6 @@
 {
   "name": "base3",
-  "version": "1.1.12",
+  "version": "1.1.14",
   "description": "Merged project: Schach9x9 (9x9 chess) + Trischach (3-player hexagonal chess)",
   "type": "module",
   "scripts": {

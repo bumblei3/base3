@@ -62,6 +62,24 @@ exports[`Visual DOM Snapshot Tests > Initial setup phase snapshot 1`] = `
     <style>
       /* Game-specific overrides for nav */
       .top-nav { z-index: 1000; }
+
+      /* Alpha badge in game header */
+      .alpha-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.2rem 0.6rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        line-height: 1;
+        color: #fbbf24;
+        background: rgba(245, 158, 11, 0.12);
+        border: 1px solid rgba(245, 158, 11, 0.35);
+        border-radius: 999px;
+        white-space: nowrap;
+        user-select: none;
+      }
     </style>
   
 
@@ -415,6 +433,7 @@ exports[`Visual DOM Snapshot Tests > Initial setup phase snapshot 1`] = `
           </div>
           <div id="status-display" data-testid="status-display" class="status-pill">Weiß: Wähle einen Korridor für den König</div>
           <div class="game-header-right">
+            <span class="alpha-badge" title="Alpha-Version — aktiv in Entwicklung, nur zu Demonstrationszwecken">α Alpha</span>
             <button id="menu-btn" class="icon-btn" aria-label="Menü öffnen">
               <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="3" y1="12" x2="21" y2="12"></line>
