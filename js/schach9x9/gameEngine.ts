@@ -241,6 +241,10 @@ export class Game {
     } else if (this.mode === 'standard8x8') {
       this.setupStandard8x8Board();
       this.phase = initialPoints > 0 ? PHASES.SETUP_WHITE_UPGRADES : PHASES.PLAY;
+      // Use the 8x8 board variant string so engine geometry (SQUARE_COUNT/
+      // BOARD_SIZE) and worker shape sync to size 8, not the 9x9 default.
+      this.boardShape = BOARD_VARIANTS.STANDARD_8X8 as unknown as BoardShape;
+      setCurrentBoardShape(this.boardShape);
     } else if (this.mode === 'upgrade') {
       this.points = 25;
       this.initialPoints = 25;
@@ -251,6 +255,8 @@ export class Game {
       this.initialPoints = 15;
       this.phase = PHASES.SETUP_WHITE_UPGRADES;
       this.setupStandard8x8Board();
+      this.boardShape = BOARD_VARIANTS.STANDARD_8X8 as unknown as BoardShape;
+      setCurrentBoardShape(this.boardShape);
     } else if (this.mode === 'cross') {
       // Cross-shaped board mode with setup phase
       this.phase = PHASES.SETUP_WHITE_KING;

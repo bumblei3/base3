@@ -120,7 +120,17 @@ export function setCurrentBoardShape(shape: BoardShape): void {
   currentBoardShape = shape;
   // Keep the integer-board engine geometry (SQUARE_COUNT / BOARD_SIZE in
   // BoardDefinitions) in sync with the active variant so 8x8 and 9x9 both work.
-  const size = BOARD_SIZES[shape as BoardVariant];
+  // Accepts both board-variant strings ('9x9'/'8x8') and game-mode shapes
+  // ('standard'/'cross'/'standard8x8'/'upgrade8x8').
+  const SHAPE_TO_SIZE: Record<string, number> = {
+    standard: 9,
+    '9x9': 9,
+    cross: 9,
+    standard8x8: 8,
+    '8x8': 8,
+    upgrade8x8: 8,
+  };
+  const size = SHAPE_TO_SIZE[shape as string];
   if (size) {
     setBoardSize(size);
   }
