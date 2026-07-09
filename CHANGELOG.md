@@ -4,6 +4,11 @@ Alle nennenswerten Änderungen an diesem Projekt werden in dieser Datei dokument
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/),
 und das Projekt folgt [Semantic Versioning](https://semver.org/).
 
+## [1.1.10] - 2026-07-09
+
+### Fixed
+- **CI red (Shard 4/4)**: `AIController_coverage.test.ts` erwartete noch das alte `updateAnalysisStats`-Format (`Tiefe: 5/10`). Durch den i18n-Refactor (v1.1.8) nutzt die Funktion jetzt `t('analysis.depthNodes', …)` → `Tiefe: 5 | Knoten: 1.000.000`. Test angepasst, sodass er das Verhalten (Tiefe + de-DE-formatierte Knoten landen im DOM) prüft, nicht den i18n-Lookup selbst.
+
 ## [1.1.9] - 2026-07-09
 
 ### Bugfix

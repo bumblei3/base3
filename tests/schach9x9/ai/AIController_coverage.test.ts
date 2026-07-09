@@ -333,7 +333,10 @@ describe('AIController Coverage Boost', () => {
 
   test('updateAnalysisStats - formats nodes correctly', () => {
     controller.updateAnalysisStats({ depth: 5, maxDepth: 10, nodes: 1000000 });
-    expect(document.getElementById('analysis-engine-info')?.textContent).toContain('Tiefe: 5/10');
+    const text = document.getElementById('analysis-engine-info')?.textContent ?? '';
+    expect(text).toContain('Tiefe: 5');
+    expect(text).toContain('1.000.000'); // de-DE thousand separator
+    expect(text).not.toContain('Tiefe: 5/10'); // old format gone
   });
 
   describe('AI Setup Phase', () => {
