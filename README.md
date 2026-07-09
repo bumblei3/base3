@@ -6,6 +6,8 @@ Two chess variants in one repository:
 - **Schach9x9** — 9×9 board with new pieces (Kanzler, Wächter, Nachtmahr, Erzengel)
 - **Trischach** — 3-player hexagonal chess with Rock-Paper-Scissors combat mechanics
 
+> ⚠️ **Alpha / Demo** — actively in development, demonstration purposes only, not for production use.
+
 [![CI](https://github.com/bumblei3/base3/actions/workflows/ci.yml/badge.svg)](https://github.com/bumblei3/base3/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/bumblei3/base3)](https://github.com/bumblei3/base3/releases)
 [![License](https://img.shields.io/github/license/bumblei3/base3)](LICENSE)

@@ -4,6 +4,14 @@ Alle nennenswerten Änderungen an diesem Projekt werden in dieser Datei dokument
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/),
 und das Projekt folgt [Semantic Versioning](https://semver.org/).
 
+## [1.1.12] - 2026-07-09
+
+### Changed
+- **Alpha-Status kenntlich gemacht** (Demo-Hinweise in beiden Frontends):
+  - `index.html` (Landing): gelbe `⚠️ Alpha-Version — aktiv in Entwicklung. Nur zu Demonstrationszwecken, nicht für den Produktionseinsatz.`-Banner via neue `.dev-status-note`-CSS-Klasse.
+  - `index.schach9x9.html`: `α Alpha`-Badge im Game-Header (`.alpha-badge`, `title`-Tooltip mit Demo-Hinweis).
+  - Zweck: Besucher vor Produktionseinsatz warnen (Repo ist in aktiver Entwicklung).
+
 ## [1.1.11] - 2026-07-09
 
 ### Changed
