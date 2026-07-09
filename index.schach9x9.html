@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#0a0e27" />
     <title>Schach 9x9</title>
     <link rel="manifest" href="manifest.json" />
-    <link rel="icon" type="image/png" href="/schach9x9/icon-192.png" />
+    <link rel="icon" type="image/png" href="./icon-192.png" />
     <link rel="stylesheet" href="css/design-tokens.css" />
     <link rel="stylesheet" href="css/base.css" />
     <link rel="stylesheet" href="css/nav.css" />
@@ -73,7 +73,7 @@
 
     <!-- Top Navigation -->
     <nav class="top-nav" role="navigation" aria-label="Hauptnavigation">
-      <a href="/" class="nav-brand">
+      <a href="../" class="nav-brand">
         <span class="logo">♟</span>
         <span>Base3</span>
       </a>
@@ -82,19 +82,19 @@
       </button>
       <ul class="nav-links">
         <li>
-          <a href="/">
+          <a href="../">
             <span class="icon">🏠</span>
             <span>Start</span>
           </a>
         </li>
         <li>
-          <a href="/schach9x9/" class="active" aria-current="page">
+          <a href="./" class="active" aria-current="page">
             <span class="icon">♟️</span>
             <span>Schach9x9</span>
           </a>
         </li>
         <li>
-          <a href="/trischach/">
+          <a href="../trischach/">
             <span class="icon">⬡</span>
             <span>Trischach</span>
           </a>
@@ -405,7 +405,7 @@
         <!-- Game Header -->
         <header class="game-header">
           <div class="game-header-left">
-            <a href="/" class="back-link" aria-label="Zurück zur Startseite">
+            <a href="../" class="back-link" aria-label="Zurück zur Startseite">
               <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none">
                 <path d="M19 12H5M12 19l-7-7 7-7"/>
               </svg>
@@ -881,7 +881,7 @@
     </div><!-- end main-content -->
 
     <!-- Service Worker Registration -->
-    <script type="module" src="/js/schach9x9/main.ts"></script>
+    <script type="module" src="./js/schach9x9/main.js"></script>
 
       const toggle = document.querySelector('.nav-toggle');
       const navLinks = document.querySelector('.nav-links');

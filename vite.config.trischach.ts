@@ -12,9 +12,11 @@ export default defineConfig({
     rollupOptions: {
       input: {
         index: resolve(__dirname, 'index.trischach.html'),
+        'js/ai-worker': resolve(__dirname, 'trischach/js/ai-worker.js'),
       },
       output: {
-        entryFileNames: 'js/[name].js',
+        entryFileNames: (chunk) =>
+          chunk.name === 'js/ai-worker' ? 'ai-worker.js' : 'js/[name].js',
         chunkFileNames: 'js/[name].js',
         assetFileNames: 'assets/[name].[ext]',
         format: 'es',
