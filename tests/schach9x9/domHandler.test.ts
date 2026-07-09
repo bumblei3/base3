@@ -1,5 +1,10 @@
 import { describe, expect, test, beforeEach, vi } from 'vitest';
 
+// Shared mock fns so tests can assert on them.
+const mockGeneratePGN = vi.fn(() => 'MOCK PGN');
+const mockCopyPGN = vi.fn();
+const mockDownloadPGN = vi.fn();
+
 // Mock all internal dependencies of DOMHandler BEFORE importing it
 vi.mock('@schach9x9/ui', () => ({
   renderBoard: vi.fn(),
@@ -8,10 +13,10 @@ vi.mock('@schach9x9/ui', () => ({
   clearPieceCache: vi.fn(),
 }));
 
-vi.mock('../js/utils/PGNGenerator.js', () => ({
-  generatePGN: vi.fn(() => 'MOCK PGN'),
-  copyPGNToClipboard: vi.fn(),
-  downloadPGN: vi.fn(),
+vi.mock('../../js/schach9x9/utils/PGNGenerator.js', () => ({
+  generatePGN: mockGeneratePGN,
+  copyPGNToClipboard: mockCopyPGN,
+  downloadPGN: mockDownloadPGN,
 }));
 
 vi.mock('@schach9x9/sounds', () => ({
@@ -444,13 +449,20 @@ describe('DOMHandler', () => {
     expect(overlay.classList.contains('hidden')).toBe(true);
   });
 
-  test('should handle PGN export "Keine Züge" case', () => {
+  test('should export PGN even with no moves (headers-only)', async () => {
     const exportBtn = document.getElementById('export-pgn-btn')!;
     app.game.moveHistory = [];
     (window as any).alert = vi.fn();
 
     exportBtn.click();
-    expect((window as any).alert).toHaveBeenCalledWith('Keine Züge zum Exportieren!');
+    // Handler is async (awaits clipboard write) — flush the microtask.
+    await new Promise((r) => setTimeout(r, 0));
+
+    // A fresh game must still export a valid PGN (headers-only), not alert.
+    expect((window as any).alert).not.toHaveBeenCalled();
+    expect(mockGeneratePGN).toHaveBeenCalled();
+    // downloadPGN is the fallback when clipboard write is unavailable (jsdom).
+    expect(mockDownloadPGN).toHaveBeenCalled();
   });
 
   test('should handle standard 8x8 mode start', () => {

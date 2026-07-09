@@ -29,10 +29,14 @@ vi.mock('@schach9x9/chess-pieces', () => ({
   setPieceSkin: vi.fn(),
 }));
 
-vi.mock('../../js/utils/PGNGenerator.js', () => ({
-  generatePGN: vi.fn(() => 'MOCK PGN'),
-  copyPGNToClipboard: vi.fn(),
-  downloadPGN: vi.fn(),
+const mockGeneratePGN = vi.fn(() => 'MOCK PGN');
+const mockCopyPGN = vi.fn();
+const mockDownloadPGN = vi.fn();
+
+vi.mock('../../../js/schach9x9/utils/PGNGenerator.js', () => ({
+  generatePGN: mockGeneratePGN,
+  copyPGNToClipboard: mockCopyPGN,
+  downloadPGN: mockDownloadPGN,
 }));
 
 // Mock URL methods for JSDOM
@@ -184,11 +188,16 @@ describe('DOMHandler Comprehensive Coverage', () => {
     expect(spy).not.toHaveBeenCalled();
   });
 
-  it('Edge Case: should alert if exporting PGN with no moves', () => {
+  it('Edge Case: should export PGN (headers-only) even with no moves, not alert', async () => {
     domHandler.init();
     window.alert = vi.fn();
     document.getElementById('export-pgn-btn')!.click();
-    expect(window.alert).toHaveBeenCalledWith(expect.stringContaining('Keine Züge'));
+    // Handler is async (awaits clipboard write) — flush the microtask.
+    await new Promise((r) => setTimeout(r, 0));
+    expect(window.alert).not.toHaveBeenCalled();
+    expect(mockGeneratePGN).toHaveBeenCalled();
+    // clipboard mock returns undefined (falsy) -> download fallback is used
+    expect(mockDownloadPGN).toHaveBeenCalled();
   });
 
   it('Edge Case: should reload page on restart button confirm', () => {
