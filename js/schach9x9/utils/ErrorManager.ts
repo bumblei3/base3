@@ -1,69 +1,61 @@
 /**
  * ErrorManager.ts
- * Centralized error handling and reporting.
+ * Centralized error handling and self-contained observability.
  *
- * Forwards errors to Sentry when a DSN is configured (VITE_SENTRY_DSN in
- * production). Without a DSN the manager is a no-op sink so the game never
- * breaks for lack of an error-tracking account.
+ * No third-party error tracker (Sentry was removed — the user prefers a
+ * self-contained, no-account setup). Errors are surfaced to the user (toast /
+ * critical overlay) AND recorded in an in-memory ring buffer so they can be
+ * inspected and exported (copy / download) from the Settings panel for manual
+ * bug reports.
  */
 import { logger } from '../logger.js';
 import { notificationUI } from '../ui/NotificationUI.js';
 
-type SentryCapture = (_error: unknown, _context?: Record<string, unknown>) => void;
+export type LogLevelName = 'error' | 'warn';
+
+export interface LogEntry {
+  timestamp: string;
+  level: LogLevelName;
+  context: string;
+  message: string;
+  /** Full stack trace when available (errors only). */
+  stack?: string;
+}
+
+const DEFAULT_BUFFER_SIZE = 200;
 
 export class ErrorManager {
   private initialized: boolean = false;
-  /** Sentry capture fn, resolved lazily on init() when a DSN is present. */
-  private sentryCapture: SentryCapture | null = null;
-  /** Release/version tag forwarded to Sentry for grouping. */
-  private release: string | undefined = undefined;
+  private buffer: LogEntry[] = [];
+  private readonly maxSize: number;
   /** Bound handlers so removeEventListener (clean teardown) keeps working. */
   private readonly boundOnError = (event: ErrorEvent) => this.onWindowError(event);
   private readonly boundOnRejection = (event: PromiseRejectionEvent) =>
     this.handleError(event.reason, { context: 'Promise', meta: { type: 'unhandledRejection' } });
 
-  constructor() {
-    this.initialized = false;
+  constructor(maxSize: number = DEFAULT_BUFFER_SIZE) {
+    this.maxSize = maxSize;
   }
 
-  async init(dsnOverride?: string): Promise<void> {
+  init(): void {
     if (this.initialized) return;
 
     // Attach global listeners synchronously so errors are caught immediately,
-    // even before the (async) Sentry SDK has finished loading.
+    // even before any async setup has finished.
     window.addEventListener('error', this.boundOnError as EventListener);
     window.addEventListener('unhandledrejection', this.boundOnRejection as EventListener);
     this.initialized = true;
 
-    const dsn = dsnOverride ?? import.meta.env.VITE_SENTRY_DSN;
-    this.release = import.meta.env.VITE_APP_VERSION;
-
-    if (dsn) {
-      try {
-        const Sentry = await import('@sentry/browser');
-        Sentry.init({
-          dsn,
-          environment: import.meta.env.MODE,
-          release: this.release,
-          integrations: [
-            Sentry.browserTracingIntegration(),
-            Sentry.replayIntegration({ maskAllText: false, blockAllMedia: false }),
-          ],
-          tracesSampleRate: 0.1,
-          replaysSessionSampleRate: 0.1,
-          replaysOnErrorSampleRate: 1.0,
-        });
-        // Use addEventListener-style capture so we always have a live fn.
-        this.sentryCapture = (error, context) => Sentry.captureException(error, context as never);
-        logger.info('ErrorManager: Sentry forwarding enabled');
-      } catch (e) {
-        // Never let observability setup break the game.
-        logger.warn('ErrorManager: Sentry init failed, continuing without it', e);
-        this.sentryCapture = null;
-      }
-    }
-
     logger.info('ErrorManager initialized');
+  }
+
+  /** Detach global listeners and clear the buffer. Used by tests for isolation. */
+  release(): void {
+    if (!this.initialized) return;
+    window.removeEventListener('error', this.boundOnError as EventListener);
+    window.removeEventListener('unhandledrejection', this.boundOnRejection as EventListener);
+    this.initialized = false;
+    this.buffer = [];
   }
 
   private onWindowError(event: ErrorEvent): void {
@@ -74,7 +66,7 @@ export class ErrorManager {
   }
 
   /**
-   * Handle an error: log it, optionally show UI, and forward to Sentry when enabled.
+   * Handle an error: record it, log it, optionally show UI.
    */
   handleError(
     error: unknown,
@@ -83,15 +75,9 @@ export class ErrorManager {
     const context = options.context || 'App';
     const isCritical = options.critical || false;
 
-    // Forward to Sentry before any UI side effects.
-    if (this.sentryCapture) {
-      this.sentryCapture(error, {
-        context,
-        critical: isCritical,
-        release: this.release,
-        ...(options.meta ?? {}),
-      });
-    }
+    const message = error instanceof Error ? error.message : String(error);
+    const stack = error instanceof Error ? error.stack : undefined;
+    this.record('error', context, message, stack);
 
     // Log to internal logger
     logger.error(`[${context}]`, error);
@@ -100,8 +86,7 @@ export class ErrorManager {
       this.showCriticalError(error);
     } else {
       // Show toast for non-critical errors
-      const msg = error instanceof Error ? error.message : String(error);
-      notificationUI.show(msg, 'error', `Fehler (${context})`);
+      notificationUI.show(message, 'error', `Fehler (${context})`);
     }
   }
 
@@ -109,8 +94,44 @@ export class ErrorManager {
    * Report a warning (non-blocking issue)
    */
   warning(message: string, context: string = 'App'): void {
+    this.record('warn', context, message);
     logger.warn(`[${context}]`, message);
     notificationUI.show(message, 'warning', `Warnung (${context})`);
+  }
+
+  /** Push an entry into the ring buffer, dropping the oldest when over capacity. */
+  private record(level: LogLevelName, context: string, message: string, stack?: string): void {
+    this.buffer.push({
+      timestamp: new Date().toISOString(),
+      level,
+      context,
+      message,
+      ...(stack ? { stack } : {}),
+    });
+    if (this.buffer.length > this.maxSize) {
+      this.buffer.splice(0, this.buffer.length - this.maxSize);
+    }
+  }
+
+  /** Snapshot of the recorded log entries (oldest first). */
+  getLog(): readonly LogEntry[] {
+    return this.buffer;
+  }
+
+  /** Clear the in-memory log buffer. */
+  clearLog(): void {
+    this.buffer = [];
+  }
+
+  /** Plain-text representation of the buffer for manual bug reports. */
+  exportLog(): string {
+    if (this.buffer.length === 0) return '(keine Einträge)';
+    return this.buffer
+      .map((e) => {
+        const head = `${e.timestamp} [${e.level}] [${e.context}] ${e.message}`;
+        return e.stack ? `${head}\n${e.stack}` : head;
+      })
+      .join('\n');
   }
 
   /**
@@ -121,7 +142,7 @@ export class ErrorManager {
 
     // Fallback if overlay doesn't exist
     if (!errorOverlay) {
-      alert(`KRITISCHER FEHLER:\n${error instanceof Error ? error.message : String(error)}`);
+      window.alert(`KRITISCHER FEHLER:\n${error instanceof Error ? error.message : String(error)}`);
       return;
     }
 

@@ -251,3 +251,23 @@
   margin-bottom: var(--spacing-md);
   font-size: var(--typography-body-lg-font-size);
 }
+
+.setting-hint {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  margin: 0 0 var(--spacing-md);
+  line-height: 1.4;
+}
+
+.log-export-status {
+  min-height: 1.2rem;
+  font-size: 0.8rem;
+  color: var(--color-accent-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.log-export-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+}

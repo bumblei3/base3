@@ -13,6 +13,7 @@ import { showToast } from '../ui/OverlayManager.js';
 import { generatePGN, copyPGNToClipboard, downloadPGN } from '../utils/PGNGenerator.js';
 import { shareCurrentGame } from '../utils/share.js';
 import { soundManager } from '../sounds.js';
+import { errorManager } from '../utils/ErrorManager.js';
 import type { GameLike } from '../types/game.js';
 import { setPieceSkin } from '../chess-pieces.js';
 import { CampaignUI } from './CampaignUI.js';
@@ -867,6 +868,9 @@ export class DOMHandler {
       });
     }
 
+    // --- Error log export (self-contained observability, no Sentry) ---
+    this.setupErrorLogExport();
+
     const mentorSelect = document.getElementById(
       'ki-mentor-level-select'
     ) as HTMLSelectElement | null;
@@ -939,6 +943,62 @@ export class DOMHandler {
       } else {
         resumeBtn.classList.add('hidden');
       }
+    }
+  }
+
+  /**
+   * Wire up the local error-log export controls in the Settings panel.
+   * Self-contained: copy / download / clear the in-memory error buffer
+   * (no third-party error tracker).
+   */
+  private setupErrorLogExport(): void {
+    const statusEl = document.getElementById('log-export-status');
+
+    const setStatus = (msg: string) => {
+      if (statusEl) statusEl.textContent = msg;
+    };
+
+    const copyBtn = document.getElementById('copy-log-btn');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', async () => {
+        const dump = errorManager.exportLog();
+        try {
+          if (navigator.clipboard?.writeText) {
+            await navigator.clipboard.writeText(dump);
+            setStatus(`Kopiert (${errorManager.getLog().length} Einträge).`);
+          } else {
+            setStatus('Zwischenablage nicht verfügbar — nutze "Als .txt speichern".');
+          }
+        } catch {
+          setStatus('Kopieren fehlgeschlagen — nutze "Als .txt speichern".');
+        }
+      });
+    }
+
+    const downloadBtn = document.getElementById('download-log-btn');
+    if (downloadBtn) {
+      downloadBtn.addEventListener('click', () => {
+        const dump = errorManager.exportLog();
+        const blob = new Blob([dump], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+        a.href = url;
+        a.download = `base3-error-log-${stamp}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        setStatus(`Gespeichert (${errorManager.getLog().length} Einträge).`);
+      });
+    }
+
+    const clearBtn = document.getElementById('clear-log-btn');
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => {
+        errorManager.clearLog();
+        setStatus('Protokoll geleert.');
+      });
     }
   }
 }

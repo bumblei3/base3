@@ -4,6 +4,28 @@ Alle nennenswerten Änderungen an diesem Projekt werden in dieser Datei dokument
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/),
 und das Projekt folgt [Semantic Versioning](https://semver.org/).
 
+## [1.1.6] - 2026-07-09
+
+### Hinzugefügt
+- **Eigenbau-Observability (P0.1)**: ErrorManager hält jetzt einen lokalen
+  In-Memory-Ring-Buffer (200 Einträge) aller Fehler/Warnungen statt eines
+  Sentry-Forwards. Neu: `getLog()`, `clearLog()`, `exportLog()` (Plain-Text-Dump).
+- **Fehlerprotokoll-Export im Settings-Panel** (`index.schach9x9.html`):
+  Buttons "Protokoll kopieren" / "Als .txt speichern" / "Leeren" — für
+  manuelle Bug-Reports, ohne externen Dienst/Account. Verdrahtung in
+  `ui/DOMHandler.ts` (`setupErrorLogExport`).
+
+### Entfernt
+- **`@sentry/browser` Dependency komplett entfernt** (radikal-clean): Sentry
+  war vom User gestrichen (kein sentry.io-Account, self-contained bevorzugt).
+  Dep aus `package.json` + Lockfiles (`package-lock.json`, `pnpm-lock.yaml`),
+  Sentry-Init-Block aus `js/schach9x9/main.ts` und `js/trischach/main.ts`
+  entfernt. ErrorManager ist nun vollständig Sentry-frei.
+
+### Dokumentation
+- **FUTURE_PLAN.md / ROADMAP_AAA.md** auf Stand v1.1.6: P0.1 als erledigt
+  markiert (Eigenbau-Log statt Sentry). Observability-Spalte auf ✅ gesetzt.
+
 ## [1.1.5] - 2026-07-09
 
 ### Hinzugefügt

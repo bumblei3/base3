@@ -22,7 +22,7 @@
 | Performance | ✅ (Initial) | Bundle < 200KB gzip, 3D lazy |
 | Accessibility | ✅ | WCAG 2.1 AA (0 violations) |
 | Security | ✅ | CSP + `npm audit` clean |
-| Observability | ⚠️ | ErrorManager da; Sentry GESTRICHEN (kein sentry.io-Account) — Eigenbau-Log statt DSN |
+| Observability | ✅ | ErrorManager mit lokalem Log-Ring-Buffer + Export (Copy/Download) im Settings-Panel; Sentry-Dep entfernt |
 | AI Engine | ⚠️ | JS-only (WASM weg) → Performance-Pfad wichtiger (Main-Thread-Suche) |
 | Platform Polish | ⬜ | PWA Excellence (installierbar/offline) offen |
 
@@ -34,10 +34,12 @@ Ranking nach: Impact × Testbarkeit ÷ Risiko.
 
 ### P0 — Schnelle Wins (je 0.5–1 Tag, Risiko niedrig)
 
-**P0.1 Observability — Sentry GESTRICHEN, Eigenbau-Log statt DSN**
-- Status: Sentry-Activation (alter P0.1) gestrichen — User will keinen sentry.io-Account (AGENTS/Präferenz: self-contained).
-- `@sentry/browser` ist noch Dep, wird aber nicht als Production-Sink genutzt. Entweder Dep entfernen oder als reiner ErrorManager-Wrapper belassen (kein DSN).
-- Eigenbau-Alternative: `ErrorManager` sammelt Errors; Log-Export (Copy/Download) im Settings/Debug-Panel. Kein externer Signup.
+**P0.1 Observability — ERLEDIGT (v1.1.6)**
+- `@sentry/browser` Dependency komplett entfernt (radikal-clean): kein sentry.io-Account, self-contained.
+- ErrorManager hält einen lokalen In-Memory-Ring-Buffer (200 Einträge) aller Fehler/Warnungen.
+- `getLog()` / `clearLog()` / `exportLog()` (Plain-Text-Dump) als öffentliche API.
+- Settings-Panel zeigt "Fehlerprotokoll"-Sektion mit Copy / Download (.txt) / Leeren-Buttons.
+- E2E-Test `e2e/error-log.spec.ts` deckt Record + Download + Clear ab.
 - Impact: Production-Error-Visibility ohne Third-Party-Account.
 
 **P0.2 Pause-Feature (`p`-Taste) — ERLEDIGT (v1.1.2)**

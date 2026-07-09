@@ -1,53 +1,59 @@
-import { describe, expect, test, vi, beforeEach } from 'vitest';
-
-// Mock @sentry/browser so we can assert captureException is (or isn't) called
-// without a real DSN / network.
-const captureException = vi.fn();
-const initSentry = vi.fn();
-vi.mock('@sentry/browser', () => ({
-  init: (...args: unknown[]) => initSentry(...args),
-  captureException: (...args: unknown[]) => captureException(...args),
-  browserTracingIntegration: vi.fn(),
-  replayIntegration: vi.fn(),
-}));
-
+import { describe, expect, test, vi, beforeEach, afterEach } from 'vitest';
 import { ErrorManager } from '@schach9x9/utils/ErrorManager.js';
+import { logger } from '@schach9x9/logger.js';
 
-describe('ErrorManager Sentry forwarding', () => {
+// The @sentry/browser mock from the old forwarding tests is intentionally gone:
+// ErrorManager is now self-contained (no third-party tracker).
+
+vi.spyOn(logger, 'info').mockImplementation(function () {});
+
+describe('ErrorManager self-contained lifecycle (no Sentry)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    document.body.innerHTML = '';
   });
 
-  test('forwards handled errors to Sentry after init when DSN configured', async () => {
+  test('init attaches global listeners and reports initialization', () => {
     const em = new ErrorManager();
-    await em.init('https://example@sentry.io/123');
-
-    const err = new Error('boom');
-    em.handleError(err, { context: 'Test' });
-
-    expect(captureException).toHaveBeenCalledWith(err, expect.objectContaining({ context: 'Test' }));
-    expect(initSentry).toHaveBeenCalled();
+    em.init();
+    expect(logger.info).toHaveBeenCalledWith('ErrorManager initialized');
+    em.release();
   });
 
-  test('does NOT forward to Sentry when no DSN configured', async () => {
+  test('init is idempotent (does not double-attach)', () => {
+    const addSpy = vi.spyOn(window, 'addEventListener');
     const em = new ErrorManager();
-    await em.init();
-
-    const err = new Error('silent');
-    em.handleError(err, { context: 'Test' });
-
-    expect(captureException).not.toHaveBeenCalled();
-    expect(initSentry).not.toHaveBeenCalled();
+    em.init();
+    const afterFirst = addSpy.mock.calls.length;
+    em.init();
+    expect(addSpy.mock.calls.length).toBe(afterFirst);
+    addSpy.mockRestore();
+    em.release();
   });
 
-  test('global error handler forwards to Sentry when configured', async () => {
+  test('release detaches global listeners and clears the buffer', () => {
+    const removeSpy = vi.spyOn(window, 'removeEventListener');
     const em = new ErrorManager();
-    await em.init('https://example@sentry.io/123');
+    em.init();
+    em.handleError(new Error('before release'), { context: 'Test' });
+    em.release();
+    expect(removeSpy).toHaveBeenCalledWith('error', expect.any(Function));
+    expect(removeSpy).toHaveBeenCalledWith('unhandledrejection', expect.any(Function));
+    // A fresh instance after release should have an empty buffer.
+    const em2 = new ErrorManager();
+    expect(em2.getLog().length).toBe(0);
+    removeSpy.mockRestore();
+  });
 
-    // Our init uses addEventListener, so dispatch a real error event.
-    const evt = new ErrorEvent('error', { message: 'global boom', error: new Error('global boom') });
-    window.dispatchEvent(evt);
-
-    expect(captureException).toHaveBeenCalled();
+  test('does not contact any external error tracker', async () => {
+    // There is no longer a Sentry init path; just ensure init resolves and
+    // recorded errors stay local (exportLog returns only local content).
+    const em = new ErrorManager();
+    em.init();
+    em.handleError(new Error('local only'), { context: 'SelfContained' });
+    const dump = em.exportLog();
+    expect(dump).toContain('local only');
+    expect(dump).not.toContain('sentry');
+    em.release();
   });
 });

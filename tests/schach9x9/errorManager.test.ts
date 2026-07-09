@@ -88,55 +88,13 @@ describe('ErrorManager', () => {
   });
 
   test('should initialize global handlers', () => {
-    // Mock window.onerror
-    const originalOnError = window.onerror;
-    const originalOnUnhandledRejection = window.onunhandledrejection;
-
-    window.onerror = null;
-    (window as any).onunhandledrejection = null;
-
+    // ErrorManager attaches listeners via addEventListener (not window.onerror).
+    const addSpy = vi.spyOn(window, 'addEventListener');
     errorManager.init();
-
-    expect(window.onerror).toBeDefined();
-    expect(window.onunhandledrejection).toBeDefined();
+    expect(addSpy).toHaveBeenCalledWith('error', expect.any(Function));
+    expect(addSpy).toHaveBeenCalledWith('unhandledrejection', expect.any(Function));
     expect(logger.info).toHaveBeenCalledWith('ErrorManager initialized');
-
-    // Test the handlers
-    const errorSpy = vi.spyOn(errorManager, 'handleError');
-
-    // Test onerror
-    if (window.onerror) {
-      (window.onerror as (...args: unknown[]) => void)(
-        'Script Error',
-        'script.js',
-        10,
-        20,
-        new Error('Script Error')
-      );
-      expect(errorSpy).toHaveBeenCalledWith(
-        expect.any(Error),
-        expect.objectContaining({ context: 'Global' })
-      );
-    }
-
-    // Test onunhandledrejection
-    if (window.onunhandledrejection) {
-      const event = {
-        type: 'unhandledrejection',
-        promise: Promise.resolve(), // Just a dummy promise
-        reason: new Error('Async Fail'),
-      };
-
-      (window as any).onunhandledrejection(event as any);
-      expect(errorSpy).toHaveBeenCalledWith(
-        expect.any(Error),
-        expect.objectContaining({ context: 'Promise' })
-      );
-    }
-
-    // Cleanup
-    window.onerror = originalOnError;
-    (window as any).onunhandledrejection = originalOnUnhandledRejection;
+    addSpy.mockRestore();
   });
 });
 

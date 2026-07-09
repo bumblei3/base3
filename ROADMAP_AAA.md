@@ -257,7 +257,7 @@ jobs:
 | 3. Performance | 1W | Mittel | WASM/Worker Stabilität | ✅ 2026-07-07 |
 | 4. A11y | 1W | Niedrig | Design Token Audit | ✅ 2026-07-07 (Trischach Landing + Schach9x9 Main Menu/Board/Shop/Settings = 0 violations) |
 | 5. Security | 1W | Niedrig | CSP Testing | ✅ 2026-07-08 — CSP-Header (`_headers`) + CI-Copy-Step; `npm audit` clean (0 vulns); CSP-Runtime-Test als `playwright.csp.config.mjs` läuft in CI grün |
-| 6. Observability | 1W | Niedrig | Sentry Setup | ⬜ |
+| 6. Observability | 1W | Niedrig | Sentry Setup | ✅ 2026-07-09 (Eigenbau-Log statt Sentry: ErrorManager-Ring-Buffer + Export im Settings-Panel; `@sentry/browser` Dep entfernt) |
 | 7. DX/Docs | 1W | Niedrig | Storybook Config | ✅ 2026-07-08 — Storybook fertig (69d50f0); TypeDoc-API-Docs generiert (docs/api/); CONTRIBUTING.md + CODE_OF_CONDUCT.md + docs/adr/0001 angelegt |
 | 8. Polish | Laufend | Niedrig | Zeit | ⬜ |
 
