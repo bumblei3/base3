@@ -34,7 +34,7 @@ import {
   // Note: Piece constants (PIECE_*, COLOR_*) are re-exported from BoardDefinitions below
 } from './ai/MoveGenerator';
 import {
-  SQUARE_COUNT, PIECE_NONE, PIECE_PAWN, PIECE_KNIGHT, PIECE_BISHOP,
+  SQUARE_COUNT, BOARD_SIZE, PIECE_NONE, PIECE_PAWN, PIECE_KNIGHT, PIECE_BISHOP,
   PIECE_ROOK, PIECE_QUEEN, PIECE_KING, PIECE_ARCHBISHOP, PIECE_CHANCELLOR,
   PIECE_ANGEL, PIECE_NIGHTRIDER, COLOR_WHITE, COLOR_BLACK, TYPE_MASK, COLOR_MASK,
 } from './ai/BoardDefinitions';
@@ -206,6 +206,8 @@ function runWorkerTopMoves(
     workerPendingRequests.set(id, { resolve: resolve as PendingResolve, timer });
 
     const color = turnColor === 'white' ? COLOR_WHITE : COLOR_BLACK;
+    // Ensure the worker uses the correct board geometry for this variant.
+    worker.postMessage({ type: 'setBoardShape', data: { shape: getCurrentBoardShape() } });
     worker.postMessage({
       type: 'getTopMoves',
       id,
@@ -216,7 +218,7 @@ function runWorkerTopMoves(
 
 function convertMoveToResult(move: { from: number; to: number; promotion?: number } | null): MoveResult | null {
   if (!move) return null;
-  const size = 9;
+  const size = BOARD_SIZE;
   return {
     from: { r: Math.floor(move.from / size), c: move.from % size },
     to: { r: Math.floor(move.to / size), c: move.to % size },
@@ -396,13 +398,14 @@ export async function getTopMoves(
   const legalMoves = genLegalInt(board, turnColor);
   if (legalMoves.length === 0) return [];
   function quickEval(b: IntBoard): number {
+    const size = Math.round(Math.sqrt(b.length));
     let s = 0;
-    for (let i = 0; i < SQUARE_COUNT; i++) {
+    for (let i = 0; i < b.length; i++) {
       const p = b[i];
       if (p !== PIECE_NONE) {
         const type = p & TYPE_MASK, pColor = p & COLOR_MASK;
         const val = EVAL_VALUES[type] || 0;
-        const row = Math.floor(i / 9), col = i % 9;
+        const row = Math.floor(i / size), col = i % size;
         const cb = 4 - Math.abs(row - 4) + (4 - Math.abs(col - 4));
         if (pColor === color) s += val + cb * 5; else s -= val + cb * 5;
       }
