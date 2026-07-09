@@ -380,6 +380,16 @@ exports[`Visual DOM Snapshot Tests > Initial setup phase snapshot 1`] = `
                 <button id="export-pgn-btn" class="btn-secondary" data-i18n="file.exportPgn">PGN exportieren</button>
                 <button id="import-pgn-btn" class="btn-secondary" data-i18n="file.importPgn">PGN importieren</button>
               </div>
+              <div class="setting-group">
+                <h3>Fehlerprotokoll</h3>
+                <p class="setting-hint">Lokal gespeicherte Fehler (kein externer Dienst). Für Bug-Reports kopieren oder herunterladen.</p>
+                <div id="log-export-status" class="log-export-status" aria-live="polite"></div>
+                <div class="log-export-actions">
+                  <button id="copy-log-btn" class="btn-secondary" type="button">Protokoll kopieren</button>
+                  <button id="download-log-btn" class="btn-secondary" type="button">Als .txt speichern</button>
+                  <button id="clear-log-btn" class="btn-secondary" type="button">Leeren</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
