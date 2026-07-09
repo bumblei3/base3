@@ -4,6 +4,27 @@ Alle nennenswerten Änderungen an diesem Projekt werden in dieser Datei dokument
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/),
 und das Projekt folgt [Semantic Versioning](https://semver.org/).
 
+## [1.1.5] - 2026-07-09
+
+### Hinzugefügt
+- **PWA Offline-E2E-Test** (`e2e/schach9x9/pwa.spec.ts`): verifiziert, dass die App
+  nach Service-Worker-Precache offline (mit `context.setOffline`) noch lädt
+  (Index + Entry-Script cached). "Offline-spielbar" (AAA-PWA) abgedeckt.
+- **8x8 critical-journey E2E-Tests** (`e2e/standard8x8.spec.ts`): echter Zug + KI-Antwort
+  sowie 8x8-Bauern-Promotion (nur Standard-Pieces, kein 9x9-Engel).
+
+### Behoben
+- **Service Worker Bug** (`public/service-worker.js`): tote/fehlerhafte Origin-Check-Zeile
+  (`!url.origin === self.location.origin`, String-Negation) entfernt.
+- **Eval-Graph-Test** (`e2e/eval-graph.spec.ts`): jsdom-Skip durch echten Browser-Test
+  ersetzt (Analysis-Modus → SVG-Punkt-Klick → `jumpToMove`). Realer Code-Pfad statt Skip.
+
+### Dokumentation
+- **FUTURE_PLAN.md** auf Stand v1.1.5: Sentry (P0.1) gestrichen (kein sentry.io-Account),
+  P0.2/P1.3 als erledigt markiert, P1.1 gemessen (JS-Suche <0.2s, kein Refactor nötig),
+  P1.2 als weitgehend erledigt markiert. P2 bewusst zurückgestellt (extern-abhängig /
+  risikoreicher Refactor ohne unmittelbaren Solo-User-Value).
+
 ## [1.1.4] - 2026-07-08
 
 ### Hinzugefügt
