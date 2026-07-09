@@ -52,16 +52,13 @@ Ranking nach: Impact × Testbarkeit ÷ Risiko.
 
 ### P1 — Mittlere Features (1–3 Tage, Risiko mittel)
 
-**P1.1 AI-Performance-Härtung (post-WASM)**
-- Da WASM weg ist, läuft die JS-Suche im Main-Thread (Tutor/Analysis).
-- Maßnahmen:
-  - `requestIdleCallback` für Analysis (nicht blockierender Main-Thread).
-  - Iterative Deepening mit Yield (alle N Ply pausieren → UI bleibt responsiv).
-  - Optional: Web Worker für `runJsSearch` (war vorbereitet, aber
-    `aiWorker.coverage.test.ts` hatte Bugs — diese fixen).
-- Test: `search.coverage.test.ts` + neuer `aiWorker.test.ts` (Worker-Path grün).
-- Impact: Kein UI-Freeze bei tiefen Suchen (bisher durch WASM kaschiert).
-- Vorab: Benchmarks ent-skippt (`aiBenchmarks.test.ts`) messen, OB ein Freeze real auftritt, bevor refactored wird.
+**P1.1 AI-Performance-Härtung (post-WASM) — GEMESSEN, NICHT NÖTIG (2026-07-09)**
+- Da WASM weg ist, lief die Sorge: JS-Suche im Main-Thread freezed die UI bei tiefen Suchen.
+- Messung (Node, `getBestMoveDetailed`): StartPos D3=0.03s/D4=0.01s, ComplexMidgame D4=0.14s/D5=0.02s.
+  Adaptive-Time-Management (2000ms Budget) + JS-Fallback-Suche terminieren in <0.2s. Kein Freeze.
+- Entscheidung: Refactor (requestIdleCallback / Worker-Yield) würde Risiko ohne Nutzen einführen.
+  First-measure-then-refactor hat hier Verschlimmbesserung verhindert. P1.1 vorerst geschlossen.
+- Falls später echte UI-Blockaden (Analysis bei sehr tiefendepth, große Baumsuchen) auftreten: neu bewerten.
 
 **P1.2 PWA Excellence (Phase 8.1)**
 - Custom Install Prompt (`beforeinstallprompt` capture + Button, nicht Browser-Default).
