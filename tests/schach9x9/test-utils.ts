@@ -36,8 +36,9 @@ export function setupJSDOM(): void {
     ''
   );
   // Strip local JS module script (happy-dom tries to fetch from localhost:3000 in CI)
+  // Matches both absolute ("/js/...") and relative ("./js/...") src paths.
   htmlContent = htmlContent.replace(
-    /<script[^>]*type="module"[^>]*src="\/?js\/[^"]*"[^>]*><\/script>/gi,
+    /<script[^>]*type="module"[^>]*src="(?:\.\/)?js\/[^"]*"[^>]*><\/script>/gi,
     ''
   );
 
