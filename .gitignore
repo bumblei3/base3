@@ -57,6 +57,9 @@ full_coverage_raw.txt
 
 # Misc
 *.cjs
+
+# Hermes agent session data
+.hermes/
 service-worker.js
 favicon.ico
 icon-*.png
