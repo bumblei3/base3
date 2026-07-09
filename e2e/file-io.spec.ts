@@ -48,9 +48,14 @@ test.describe('File I/O (FEN / PGN) @p1_3', () => {
     await expect(page.locator('#board')).toBeVisible();
     await page.waitForFunction(() => (window as any).game?.phase === 'PLAY', { timeout: 10000 });
 
-    // Stub download + save dialog
+    // Stub download + save dialog. Force clipboard write to fail so the app
+    // falls back to a download (deterministic path for this test), then capture
+    // the downloaded blob text. Note: navigator.clipboard is a read-only getter,
+    // so we override the writeText *method* (which is writable), not the object.
     await page.evaluate(() => {
       (window as any).__downloaded = '';
+      // Clipboard write is unavailable in headless context — force the download fallback.
+      (navigator as any).clipboard.writeText = () => Promise.reject(new Error('no clipboard'));
       const origCreate = URL.createObjectURL;
       URL.createObjectURL = (blob: Blob) => {
         void blob.text().then((t) => ((window as any).__downloaded = t));
@@ -67,6 +72,14 @@ test.describe('File I/O (FEN / PGN) @p1_3', () => {
     await page.click('[data-tab="settings"]');
     await page.click('#export-pgn-btn');
 
+    // The download is captured asynchronously: URL.createObjectURL is stubbed to
+    // read blob.text() (a Promise), so __downloaded is populated on a later microtask.
+    // Wait for it instead of reading synchronously to avoid a flaky empty read.
+    await page.waitForFunction(
+      () => typeof (window as any).__downloaded === 'string' && (window as any).__downloaded.includes('[Event'),
+      undefined,
+      { timeout: 5000 }
+    );
     const pgn = await page.evaluate(() => (window as any).__downloaded);
     expect(pgn).toContain('[Event');
     expect(pgn).toContain('[Variant "9x9"]');

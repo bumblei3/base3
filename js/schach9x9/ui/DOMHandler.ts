@@ -322,13 +322,6 @@ export class DOMHandler {
       });
     }
 
-    const exportPgnBtn = document.getElementById('export-pgn-btn');
-    if (exportPgnBtn) {
-      exportPgnBtn.addEventListener('click', () => {
-        if (this.app) this.app.exportPGN();
-      });
-    }
-
     const importPgnBtn = document.getElementById('import-pgn-btn');
     if (importPgnBtn) {
       importPgnBtn.addEventListener('click', () => {
@@ -773,15 +766,11 @@ export class DOMHandler {
     const exportPgnBtn = document.getElementById('export-pgn-btn');
     if (exportPgnBtn) {
       exportPgnBtn.addEventListener('click', async () => {
-        if (!this.game || !this.game.moveHistory || this.game.moveHistory.length === 0) {
-          alert('Keine Züge zum Exportieren!');
-          return;
-        }
+        if (!this.game) return;
         const pgn = generatePGN(this.game);
         const copied = await copyPGNToClipboard(pgn);
-        if (copied) {
-          alert('PGN in die Zwischenablage kopiert!');
-        } else {
+        if (!copied) {
+          // Clipboard unavailable (e.g. headless/permissions) — fall back to a download.
           downloadPGN(pgn);
         }
         if (mainMenu) {
