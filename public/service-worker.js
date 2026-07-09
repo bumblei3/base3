@@ -67,10 +67,7 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(request.url);
 
   // Only handle same-origin GET requests
-  if (request.method !== 'GET' || !url.origin === self.location.origin) return;
-  if (url.origin !== self.location.origin) return;
-
-  // Skip cross-origin (e.g. Google Fonts) — let the browser handle them
+  if (request.method !== 'GET') return;
   if (url.origin !== self.location.origin) return;
 
   if (isStaticAsset(url)) {

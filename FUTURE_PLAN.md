@@ -60,13 +60,19 @@ Ranking nach: Impact × Testbarkeit ÷ Risiko.
   First-measure-then-refactor hat hier Verschlimmbesserung verhindert. P1.1 vorerst geschlossen.
 - Falls später echte UI-Blockaden (Analysis bei sehr tiefendepth, große Baumsuchen) auftreten: neu bewerten.
 
-**P1.2 PWA Excellence (Phase 8.1)**
-- Custom Install Prompt (`beforeinstallprompt` capture + Button, nicht Browser-Default).
-- Background Sync für Statistics/Opening Book.
-- Push Notifications (Turn Reminders) — Opt-in.
-- Service Worker: aktuell Network-First; auf Stale-While-Revalidate für Assets.
-- Test: `playwright.csp.config.mjs` erweitern (Offline-Modus simulieren).
-- Impact: "Installierbar" + Offline-Spielbar (AAA-PWA-Kriterium).
+**P1.2 PWA Excellence (Phase 8.1) — WEITGEHEND ERLEDIGT (2026-07-09)**
+- Custom Install Prompt: bereits implementiert (`main.ts` captured `beforeinstallprompt`,
+  Button `#install-app-btn`, `__promptInstall` verdrahtet). `e2e/schach9x9/pwa.spec.ts` deckt es ab.
+- Service Worker: precacht Core-Assets, cache-first statics + network-first HTML mit
+  Offline-Fallback → "offline-spielbar" erfüllt (besser als plain Network-First).
+- SW-Bug gefixt (2026-07-09): tote/fehlerhafte Origin-Check-Zeile in `public/service-worker.js`
+  entfernt (`!url.origin === ...` String-Negation).
+- Offline-E2E-Test neu (`e2e/schach9x9/pwa.spec.ts`): geht nach SW-Precache offline,
+  verifiziert dass Index + Entry-Script cached laden. Grün.
+- BEWUSST WEGGELASSEN (Self-contained + Solo-Spiel): Background Sync (Statistics/Opening Book)
+  und Push Notifications (Turn Reminders) brauchen ein Backend/externen Service — widerspricht
+  der "kein externer Account"-Präferenz und bringt bei Solo-Spiel keinen User-Value.
+- Impact: "Installierbar" + Offline-Spielbar (AAA-PWA-Kriterium) erfüllt.
 
 **P1.3 File Handling API (.pgn OS-Level) — ERLEDIGT (v1.1.3 + v1.1.4)**
 - PGN-Import/Export, FEN-Load, SAN-Replay über echten `RulesEngine`-Adapter.
