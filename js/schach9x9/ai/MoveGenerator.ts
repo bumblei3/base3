@@ -1,5 +1,4 @@
 import {
-  SQUARE_COUNT,
   PIECE_NONE,
   PIECE_PAWN,
   PIECE_KNIGHT,
@@ -15,8 +14,6 @@ import {
   COLOR_BLACK,
   TYPE_MASK,
   COLOR_MASK,
-  indexToRow,
-  indexToCol,
 } from './BoardDefinitions.js';
 
 // Re-export piece/color constants for consumers
@@ -42,7 +39,12 @@ export type BoardStorage = number[] | Int8Array;
 
 /**
  * Represents a chess move in the integer board engine.
- * Squares are stored as flat indices (0-80) into the 9x9 board.
+ * Squares are stored as flat indices into the (square) board.
+ *
+ * The board geometry is DERIVED FROM THE BOARD LENGTH, not hardcoded, so the
+ * same generator works for 8x8 (length 64) and 9x9 (length 81) boards.
+ * For an N x N board, size = N, the vertical step is ±N, the horizontal step
+ * is ±1, and diagonals are ±(N±1).
  */
 export interface Move {
   from: number;
@@ -64,33 +66,94 @@ export interface UndoInfo {
   piece: number;
 }
 
-// Offsets
-const UP = -9;
-const DOWN = 9;
-const LEFT = -1;
-const RIGHT = 1;
+/**
+ * Board geometry derived from the flat board length. All direction offsets and
+ * index math are expressed in terms of `size` so the move generator is
+ * board-size agnostic (8x8 and 9x9).
+ */
+interface Geom {
+  size: number;
+  UP: number;
+  DOWN: number;
+  LEFT: number;
+  RIGHT: number;
+  KNIGHT: number[];
+  KING: number[];
+  BISHOP: number[];
+  ROOK: number[];
+}
 
-const KNIGHT_OFFSETS = [-19, -17, -11, -7, 7, 11, 17, 19];
-const KING_OFFSETS = [-10, -9, -8, -1, 1, 8, 9, 10];
-const BISHOP_OFFSETS = [-10, -8, 8, 10];
-const ROOK_OFFSETS = [-9, 9, -1, 1];
+const geomCache = new Map<number, Geom>();
+
+function geomFor(size: number): Geom {
+  let g = geomCache.get(size);
+  if (g) return g;
+  const UP = -size;
+  const DOWN = size;
+  const LEFT = -1;
+  const RIGHT = 1;
+  g = {
+    size,
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT,
+    // Knight leaps: (±2,±1) and (±1,±2) in row/col space.
+    KNIGHT: [
+      UP * 2 + LEFT,
+      UP * 2 + RIGHT,
+      UP + LEFT * 2,
+      UP + RIGHT * 2,
+      DOWN + LEFT * 2,
+      DOWN + RIGHT * 2,
+      DOWN * 2 + LEFT,
+      DOWN * 2 + RIGHT,
+    ],
+    // King steps: one square in any direction.
+    KING: [UP + LEFT, UP, UP + RIGHT, LEFT, RIGHT, DOWN + LEFT, DOWN, DOWN + RIGHT],
+    // Bishop/diagonal rays.
+    BISHOP: [UP + LEFT, UP + RIGHT, DOWN + LEFT, DOWN + RIGHT],
+    // Rook/orthogonal rays.
+    ROOK: [UP, DOWN, LEFT, RIGHT],
+  };
+  geomCache.set(size, g);
+  return g;
+}
+
+/** Derive the board dimension (side length) from the flat array length. */
+function boardSize(board: BoardStorage): number {
+  return Math.round(Math.sqrt(board.length));
+}
+
+function rowOf(idx: number, size: number): number {
+  return Math.floor(idx / size);
+}
+
+function colOf(idx: number, size: number): number {
+  return idx % size;
+}
+
+function isValidSquare(idx: number, size: number): boolean {
+  return idx >= 0 && idx < size * size;
+}
 
 /**
  * Generate all legal moves for position
  */
-
 export function getPseudoLegalMoves(): Move[] {
   // Legacy stub for 8x8 tests compatibility
   return [];
 }
 
 export function getAllLegalMoves(board: BoardStorage, turnColor: string): Move[] {
+  const g = geomFor(boardSize(board));
   const color = turnColor === 'white' ? COLOR_WHITE : COLOR_BLACK;
   const enemyColor = turnColor === 'white' ? COLOR_BLACK : COLOR_WHITE;
   const moves: Move[] = [];
+  const size = g.size;
 
   // 1. Generate Pseudo-Legal Moves
-  for (let from = 0; from < SQUARE_COUNT; from++) {
+  for (let from = 0; from < size * size; from++) {
     const piece = board[from];
     if (piece === PIECE_NONE) continue;
     if ((piece & COLOR_MASK) !== color) continue;
@@ -98,9 +161,9 @@ export function getAllLegalMoves(board: BoardStorage, turnColor: string): Move[]
     const type = piece & TYPE_MASK;
 
     if (type === PIECE_PAWN) {
-      generatePawnMoves(board, from, color, moves);
+      generatePawnMoves(board, from, color, moves, g);
     } else {
-      generatePieceMoves(board, from, type, color, moves);
+      generatePieceMoves(board, from, type, color, moves, g);
     }
   }
 
@@ -166,20 +229,25 @@ export function getAllCaptureMoves(board: BoardStorage, turnColor: string): Move
   // Or better, filter moves where target square is not empty.
 }
 
-function generatePawnMoves(board: BoardStorage, from: number, color: number, moves: Move[]): void {
-  const direction = color === COLOR_WHITE ? UP : DOWN;
-  // Board size derived from the flat array length (supports 8x8 and 9x9).
-  const size = Math.round(Math.sqrt(board.length));
+function generatePawnMoves(
+  board: BoardStorage,
+  from: number,
+  color: number,
+  moves: Move[],
+  g: Geom
+): void {
+  const size = g.size;
+  const direction = color === COLOR_WHITE ? g.UP : g.DOWN;
   // White pawns start on the second-to-last rank (row size-2); black pawns on row 1.
   const startWhiteRank = size - 2;
   const startBlackRank = 1;
   const forward = from + direction;
-  const rank = indexToRow(from);
+  const rank = rowOf(from, size);
 
   // Single Push
   if (board[forward] === PIECE_NONE) {
-    const forwardRank = indexToRow(forward);
-    if ((color === COLOR_WHITE && forwardRank === 0) || (color === COLOR_BLACK && forwardRank === 8)) {
+    const forwardRank = rowOf(forward, size);
+    if ((color === COLOR_WHITE && forwardRank === 0) || (color === COLOR_BLACK && forwardRank === size - 1)) {
       // Promotion on reaching last rank
       for (const promo of PROMO_TYPES) {
         moves.push({ from, to: forward, promotion: promo });
@@ -201,15 +269,15 @@ function generatePawnMoves(board: BoardStorage, from: number, color: number, mov
 
   // Captures
   // Left Capture
-  const captureLeft = from + direction + LEFT;
-  if (Math.abs(indexToCol(from) - indexToCol(captureLeft)) === 1) {
+  const captureLeft = from + direction + g.LEFT;
+  if (Math.abs(colOf(from, size) - colOf(captureLeft, size)) === 1) {
     // Prevent wrap
-    if (isValidSquare(captureLeft)) {
+    if (isValidSquare(captureLeft, size)) {
       const target = board[captureLeft];
       if (target !== PIECE_NONE && (target & COLOR_MASK) !== color) {
         // Capture with promotion on last rank
-        const leftRank = indexToRow(captureLeft);
-        if ((color === COLOR_WHITE && leftRank === 0) || (color === COLOR_BLACK && leftRank === 8)) {
+        const leftRank = rowOf(captureLeft, size);
+        if ((color === COLOR_WHITE && leftRank === 0) || (color === COLOR_BLACK && leftRank === size - 1)) {
           for (const promo of PROMO_TYPES) {
             moves.push({ from, to: captureLeft, promotion: promo });
           }
@@ -221,13 +289,13 @@ function generatePawnMoves(board: BoardStorage, from: number, color: number, mov
   }
 
   // Right Capture
-  const captureRight = from + direction + RIGHT;
-  if (Math.abs(indexToCol(from) - indexToCol(captureRight)) === 1) {
-    if (isValidSquare(captureRight)) {
+  const captureRight = from + direction + g.RIGHT;
+  if (Math.abs(colOf(from, size) - colOf(captureRight, size)) === 1) {
+    if (isValidSquare(captureRight, size)) {
       const target = board[captureRight];
       if (target !== PIECE_NONE && (target & COLOR_MASK) !== color) {
-        const rightRank = indexToRow(captureRight);
-        if ((color === COLOR_WHITE && rightRank === 0) || (color === COLOR_BLACK && rightRank === 8)) {
+        const rightRank = rowOf(captureRight, size);
+        if ((color === COLOR_WHITE && rightRank === 0) || (color === COLOR_BLACK && rightRank === size - 1)) {
           for (const promo of PROMO_TYPES) {
             moves.push({ from, to: captureRight, promotion: promo });
           }
@@ -252,7 +320,8 @@ function generatePieceMoves(
   from: number,
   type: number,
   color: number,
-  moves: Move[]
+  moves: Move[],
+  g: Geom
 ): void {
   // Steppers
   if (
@@ -261,11 +330,11 @@ function generatePieceMoves(
     type === PIECE_CHANCELLOR ||
     type === PIECE_ANGEL
   ) {
-    generateSteppingMoves(board, from, KNIGHT_OFFSETS, color, moves);
+    generateSteppingMoves(board, from, g.KNIGHT, color, moves, g);
   }
 
   if (type === PIECE_KING) {
-    generateSteppingMoves(board, from, KING_OFFSETS, color, moves);
+    generateSteppingMoves(board, from, g.KING, color, moves, g);
   }
 
   // Sliders
@@ -275,7 +344,7 @@ function generatePieceMoves(
     type === PIECE_QUEEN ||
     type === PIECE_ANGEL
   ) {
-    generateSlidingMoves(board, from, BISHOP_OFFSETS, color, moves);
+    generateSlidingMoves(board, from, g.BISHOP, color, moves, g);
   }
 
   if (
@@ -284,11 +353,11 @@ function generatePieceMoves(
     type === PIECE_QUEEN ||
     type === PIECE_ANGEL
   ) {
-    generateSlidingMoves(board, from, ROOK_OFFSETS, color, moves);
+    generateSlidingMoves(board, from, g.ROOK, color, moves, g);
   }
 
   if (type === PIECE_NIGHTRIDER) {
-    generateSlidingMoves(board, from, KNIGHT_OFFSETS, color, moves);
+    generateSlidingMoves(board, from, g.KNIGHT, color, moves, g);
   }
 }
 
@@ -297,18 +366,20 @@ function generateSteppingMoves(
   from: number,
   offsets: number[],
   color: number,
-  moves: Move[]
+  moves: Move[],
+  g: Geom
 ): void {
-  const r = indexToRow(from);
-  const c = indexToCol(from);
+  const size = g.size;
+  const r = rowOf(from, size);
+  const c = colOf(from, size);
 
   for (const offset of offsets) {
     const to = from + offset;
-    if (!isValidSquare(to)) continue;
+    if (!isValidSquare(to, size)) continue;
 
     // Wrap check
-    const toR = indexToRow(to);
-    const toC = indexToCol(to);
+    const toR = rowOf(to, size);
+    const toC = colOf(to, size);
     if (Math.abs(toR - r) > 2 || Math.abs(toC - c) > 2) continue; // Knights jump max 2
 
     const target = board[to];
@@ -328,53 +399,42 @@ function generateSlidingMoves(
   from: number,
   offsets: number[],
   color: number,
-  moves: Move[]
+  moves: Move[],
+  g: Geom
 ): void {
-  const r = indexToRow(from);
-  const c = indexToCol(from);
+  const size = g.size;
+  const r = rowOf(from, size);
+  const c = colOf(from, size);
 
   for (const offset of offsets) {
     let to = from;
     for (;;) {
       to += offset;
-      // dist++;
 
-      if (!isValidSquare(to)) break;
+      if (!isValidSquare(to, size)) break;
 
-      // Wrap check: Sliding moves must change row OR col continuously, not jump
-      // Basic check: if dist=1, must be adjacent. If dist=2, must be linear.
-      // Efficient check: precomputed 'distance to edge' is best.
-      // Simple validation:
-      const toR = indexToRow(to);
-      const toC = indexToCol(to);
+      // Wrap/continuity check: a sliding ray must progress by exactly one
+      // row or one column per step (or a knight leap for nightriders).
+      const toR = rowOf(to, size);
+      const toC = colOf(to, size);
 
-      // If wrapping occurred, distance in rows/cols would be large abruptly?
-      // Actually, offsets are constant (-9, -1, etc).
-      // -1 wrapping from col 0 to col 8:
-      // 0 + (-1) = -1 (InvalidSquare). Safe.
-      // 9 + (-1) = 8. (Row 1,Col 0 -> Row 0, Col 8). WRAP!
-      // We need to check column continuity for Horiz/Diag.
-
-      // HORIZONTAL (+/- 1): Row must not change.
-      if (offset === 1 || offset === -1) {
+      if (offset === g.RIGHT || offset === g.LEFT) {
+        // HORIZONTAL: row must not change.
         if (toR !== r) break;
-      }
-      // VERTICAL (+/- 9): Col must not change.
-      if (offset === 9 || offset === -9) {
+      } else if (Math.abs(offset) === size) {
+        // VERTICAL: column must not change.
         if (toC !== c) break;
-      }
-      // DIAGONAL: Row and Col must both change by 1.
-      else if (Math.abs(offset) === 8 || Math.abs(offset) === 10) {
+      } else if (Math.abs(offset) === size + 1 || Math.abs(offset) === size - 1) {
+        // DIAGONAL: row and column must both change by exactly 1.
         const prev = to - offset;
-        const prevR = indexToRow(prev);
-        const prevC = indexToCol(prev);
+        const prevR = rowOf(prev, size);
+        const prevC = colOf(prev, size);
         if (Math.abs(toR - prevR) !== 1 || Math.abs(toC - prevC) !== 1) break;
-      }
-      // KNIGHT: (Nightrider only) Must change 2 rows/1 col or 1 row/2 cols
-      else if (KNIGHT_OFFSETS.includes(offset)) {
+      } else if (g.KNIGHT.includes(offset)) {
+        // NIGHTRIDER: each step is a knight leap (2/1 or 1/2).
         const prev = to - offset;
-        const prevR = indexToRow(prev);
-        const prevC = indexToCol(prev);
+        const prevR = rowOf(prev, size);
+        const prevC = colOf(prev, size);
         const dr = Math.abs(toR - prevR);
         const dc = Math.abs(toC - prevC);
         if (!((dr === 2 && dc === 1) || (dr === 1 && dc === 2))) break;
@@ -432,46 +492,24 @@ export function isSquareAttacked(
   square: number,
   attackerColor: number
 ): boolean {
+  const g = geomFor(boardSize(board));
+  const size = g.size;
+
   // 1. Pawn Attacks
   // Pawns attack diagonally. From 'attackerColor' perspective.
-  // White Pawns attack UP-LEFT (-10) and UP-RIGHT (-8)?
-  // Wait, UP is -9. Left is -1. Up-Left is -10. Up-Right is -8.
-  // Black Pawns attack DOWN-LEFT (+8) and DOWN-RIGHT (+10).
-  // We check if an attacker pawn exists at square - attack_dir.
-
-  // Reverse Check:
-  // If we are checking if White attacks 'square', we check if there is a White pawn at square - (-10) = square + 10 (Down-Right from square).
-  // Basically, we look "backward" along the pawn's attack line.
-
-  const forward = attackerColor === COLOR_WHITE ? UP : DOWN;
-  // Attack sources are behind the target relative to pawn movement
-  // White Pawn attacks 'square' from (square - UP - LEFT) and (square - UP - RIGHT)
-  // = square + 9 + 1 = square + 10
-  // = square + 9 - 1 = square + 8
-
-  // More simply:
-  // Attacker (White) at (r+1, c-1) attacks (r, c).
-  // Check (r+1, c-1) and (r+1, c+1) for White Pawn.
-
-  // Generalized:
-  // Check square - forward - LEFT
-  // Check square - forward - RIGHT
-  // Careful with signs. 'forward' is -9 for White.
-  // Check square - (-9) - (-1) = square + 10.
-  // Check square - (-9) - (1) = square + 8.
-
-  const pawnStartOffsets = [-(forward + LEFT), -(forward + RIGHT)];
+  const forward = attackerColor === COLOR_WHITE ? g.UP : g.DOWN;
+  // Attack sources are behind the target relative to pawn movement.
+  const pawnStartOffsets = [-(forward + g.LEFT), -(forward + g.RIGHT)];
 
   for (const offset of pawnStartOffsets) {
     const from = square + offset;
-    if (isValidSquare(from)) {
+    if (isValidSquare(from, size)) {
       // Check if square is blocked for current board shape
       const shape = getCurrentBoardShape();
       if (shape !== 'standard' && isBlockedSquare(from, shape)) continue;
 
-      // Check wrap
-      // Attack comes from adjacent column
-      if (Math.abs(indexToCol(square) - indexToCol(from)) === 1) {
+      // Check wrap: attack comes from adjacent column
+      if (Math.abs(colOf(square, size) - colOf(from, size)) === 1) {
         const piece = board[from];
         if ((piece & COLOR_MASK) === attackerColor && (piece & TYPE_MASK) === PIECE_PAWN)
           return true;
@@ -480,14 +518,14 @@ export function isSquareAttacked(
   }
 
   // 2. Knight/Stepping Attacks
-  for (const offset of KNIGHT_OFFSETS) {
+  for (const offset of g.KNIGHT) {
     const from = square - offset; // Jump back
-    if (isValidSquare(from)) {
+    if (isValidSquare(from, size)) {
       // Check wrap (Manhattan distance approx or row/col diff)
-      const r = indexToRow(square);
-      const c = indexToCol(square);
-      const fr = indexToRow(from);
-      const fc = indexToCol(from);
+      const r = rowOf(square, size);
+      const c = colOf(square, size);
+      const fr = rowOf(from, size);
+      const fc = colOf(from, size);
       if (Math.abs(r - fr) > 2 || Math.abs(c - fc) > 2) continue;
 
       // Check if square is blocked for current board shape
@@ -510,11 +548,11 @@ export function isSquareAttacked(
   }
 
   // 3. King Attacks (distance 1)
-  for (const offset of KING_OFFSETS) {
+  for (const offset of g.KING) {
     const from = square - offset;
-    if (isValidSquare(from)) {
+    if (isValidSquare(from, size)) {
       // Check wrap (distance 1)
-      if (Math.abs(indexToCol(square) - indexToCol(from)) > 1) continue;
+      if (Math.abs(colOf(square, size) - colOf(from, size)) > 1) continue;
 
       // Check if square is blocked for current board shape
       const shape = getCurrentBoardShape();
@@ -531,32 +569,30 @@ export function isSquareAttacked(
   }
 
   // 4. Sliding Attacks (Rays)
-  // We scan OUT from the square. If we hit a piece, we check if it attacks us.
-
   // Diagonals (Bishop, Queen, Archbishop, Angel)
   if (
-    checkRayAttacks(board, square, BISHOP_OFFSETS, attackerColor, [
+    checkRayAttacks(board, square, g.BISHOP, attackerColor, [
       PIECE_BISHOP,
       PIECE_QUEEN,
       PIECE_ARCHBISHOP,
       PIECE_ANGEL,
-    ])
+    ], g)
   )
     return true;
 
   // Orthogonals (Rook, Queen, Chancellor, Angel)
   if (
-    checkRayAttacks(board, square, ROOK_OFFSETS, attackerColor, [
+    checkRayAttacks(board, square, g.ROOK, attackerColor, [
       PIECE_ROOK,
       PIECE_QUEEN,
       PIECE_CHANCELLOR,
       PIECE_ANGEL,
-    ])
+    ], g)
   )
     return true;
 
   // 5. Nightrider Sliding Knight Attacks
-  if (checkRayAttacks(board, square, KNIGHT_OFFSETS, attackerColor, [PIECE_NIGHTRIDER]))
+  if (checkRayAttacks(board, square, g.KNIGHT, attackerColor, [PIECE_NIGHTRIDER], g))
     return true;
 
   return false;
@@ -567,27 +603,25 @@ function checkRayAttacks(
   square: number,
   ranges: number[],
   attackerColor: number,
-  validTypes: number[]
+  validTypes: number[],
+  g: Geom
 ): boolean {
-  // const r = indexToRow(square);
-  // const c = indexToCol(square);
-
-  // Convert validTypes array to mask or set for speed? Array includes is small enough (size 4).
+  const size = g.size;
 
   for (const offset of ranges) {
     let curr = square;
     for (;;) {
       curr += offset;
-      if (!isValidSquare(curr)) break;
+      if (!isValidSquare(curr, size)) break;
 
       // Wrap checks
-      const cr = indexToRow(curr);
-      const cc = indexToCol(curr);
-      const pr = indexToRow(curr - offset);
-      const pc = indexToCol(curr - offset);
+      const cr = rowOf(curr, size);
+      const cc = colOf(curr, size);
+      const pr = rowOf(curr - offset, size);
+      const pc = colOf(curr - offset, size);
 
       // Should be continuous (dist 1) for non-knight offsets
-      if (KNIGHT_OFFSETS.includes(offset)) {
+      if (g.KNIGHT.includes(offset)) {
         const dr = Math.abs(cr - pr);
         const dc = Math.abs(cc - pc);
         if (!((dr === 2 && dc === 1) || (dr === 1 && dc === 2))) break;
@@ -616,9 +650,8 @@ function checkRayAttacks(
 }
 
 export function findKing(board: BoardStorage, color: number): number {
-  // const kingType = PIECE_KING; // What about Angel? If Angel is royal?
-  // User said "Grand Refactor".
-  for (let i = 0; i < SQUARE_COUNT; i++) {
+  const size = boardSize(board);
+  for (let i = 0; i < size * size; i++) {
     if ((board[i] & TYPE_MASK) === PIECE_KING && (board[i] & COLOR_MASK) === color) return i;
   }
   return -1;
@@ -633,6 +666,7 @@ export function isInCheck(board: BoardStorage, color: number): boolean {
 // Static Exchange Evaluation (SEE) - Full Swap Algorithm
 // Determines if a capture chain is profitable.
 export function see(board: BoardStorage, move: Move): number {
+  const g = geomFor(boardSize(board));
   const PIECE_VALUES: Record<number, number> = {
     [PIECE_PAWN]: 100,
     [PIECE_KNIGHT]: 320,
@@ -681,7 +715,7 @@ export function see(board: BoardStorage, move: Move): number {
     color = color === COLOR_WHITE ? COLOR_BLACK : COLOR_WHITE;
 
     // Find Least Valuable Attacker (LVA) of 'color' attacking 'to'
-    const lva = getLVA(board, to, color, usedSquares);
+    const lva = getLVA(board, to, color, usedSquares, g); // g passed
 
     if (lva === null) break; // No more attackers
 
@@ -703,16 +737,17 @@ function getLVA(
   board: BoardStorage,
   square: number,
   attackerColor: number,
-  usedSquares: Set<number>
+  usedSquares: Set<number>,
+  g: Geom
 ): { square: number; piece: number } | null {
-  // const PIECE_ORDER = [PIECE_PAWN, PIECE_KNIGHT, PIECE_BISHOP, PIECE_ROOK, PIECE_ARCHBISHOP, PIECE_CHANCELLOR, PIECE_QUEEN, PIECE_ANGEL, PIECE_KING];
+  const size = g.size;
 
   // Pawns first (LVA)
-  const forward = attackerColor === COLOR_WHITE ? -9 : 9;
-  const pawnOrigins = [square - forward - 1, square - forward + 1]; // Diagonal backwards from target
+  const forward = attackerColor === COLOR_WHITE ? g.UP : g.DOWN;
+  const pawnOrigins = [square - forward - g.LEFT, square - forward + g.RIGHT]; // Diagonal backwards from target
   for (const pSq of pawnOrigins) {
-    if (!isValidSquare(pSq) || usedSquares.has(pSq)) continue;
-    if (Math.abs(indexToCol(square) - indexToCol(pSq)) !== 1) continue; // Wrap check
+    if (!isValidSquare(pSq, size) || usedSquares.has(pSq)) continue;
+    if (Math.abs(colOf(square, size) - colOf(pSq, size)) !== 1) continue; // Wrap check
     const p = board[pSq];
     if (p !== PIECE_NONE && (p & COLOR_MASK) === attackerColor && (p & TYPE_MASK) === PIECE_PAWN) {
       return { square: pSq, piece: p };
@@ -720,11 +755,11 @@ function getLVA(
   }
 
   // Knights (and pieces with Knight movement)
-  for (const offset of KNIGHT_OFFSETS) {
+  for (const offset of g.KNIGHT) {
     const from = square + offset;
-    if (!isValidSquare(from) || usedSquares.has(from)) continue;
-    if (Math.abs(indexToRow(square) - indexToRow(from)) > 2) continue;
-    if (Math.abs(indexToCol(square) - indexToCol(from)) > 2) continue;
+    if (!isValidSquare(from, size) || usedSquares.has(from)) continue;
+    if (Math.abs(rowOf(square, size) - rowOf(from, size)) > 2) continue;
+    if (Math.abs(colOf(square, size) - colOf(from, size)) > 2) continue;
     const p = board[from];
     if (p !== PIECE_NONE && (p & COLOR_MASK) === attackerColor) {
       const t = p & TYPE_MASK;
@@ -740,28 +775,28 @@ function getLVA(
   }
 
   // Bishops/Diagonals (and Archbishop, Queen, Angel)
-  const diagResult = findRayLVA(board, square, BISHOP_OFFSETS, attackerColor, usedSquares, [
+  const diagResult = findRayLVA(board, square, g.BISHOP, attackerColor, usedSquares, [
     PIECE_BISHOP,
     PIECE_ARCHBISHOP,
     PIECE_QUEEN,
     PIECE_ANGEL,
-  ]);
+  ], g);
   if (diagResult) return diagResult;
 
   // Rooks/Orthogonals (and Chancellor, Queen, Angel)
-  const orthResult = findRayLVA(board, square, ROOK_OFFSETS, attackerColor, usedSquares, [
+  const orthResult = findRayLVA(board, square, g.ROOK, attackerColor, usedSquares, [
     PIECE_ROOK,
     PIECE_CHANCELLOR,
     PIECE_QUEEN,
     PIECE_ANGEL,
-  ]);
+  ], g);
   if (orthResult) return orthResult;
 
   // King (always last, highest value among simple attackers)
-  for (const offset of KING_OFFSETS) {
+  for (const offset of g.KING) {
     const from = square + offset;
-    if (!isValidSquare(from) || usedSquares.has(from)) continue;
-    if (Math.abs(indexToCol(square) - indexToCol(from)) > 1) continue;
+    if (!isValidSquare(from, size) || usedSquares.has(from)) continue;
+    if (Math.abs(colOf(square, size) - colOf(from, size)) > 1) continue;
     const p = board[from];
     if (p !== PIECE_NONE && (p & COLOR_MASK) === attackerColor && (p & TYPE_MASK) === PIECE_KING) {
       return { square: from, piece: p };
@@ -778,8 +813,10 @@ function findRayLVA(
   offsets: number[],
   attackerColor: number,
   usedSquares: Set<number>,
-  validTypes: number[]
+  validTypes: number[],
+  g: Geom
 ): { square: number; piece: number } | null {
+  const size = g.size;
   let bestLVA: { square: number; piece: number } | null = null;
   let bestValue = Infinity;
 
@@ -799,12 +836,12 @@ function findRayLVA(
     let curr = square;
     for (;;) {
       curr += offset;
-      if (!isValidSquare(curr)) break;
+      if (!isValidSquare(curr, size)) break;
 
       // Wrap check
       const prev = curr - offset;
-      if (Math.abs(indexToRow(curr) - indexToRow(prev)) > 1) break;
-      if (Math.abs(indexToCol(curr) - indexToCol(prev)) > 1) break;
+      if (Math.abs(rowOf(curr, size) - rowOf(prev, size)) > 1) break;
+      if (Math.abs(colOf(curr, size) - colOf(prev, size)) > 1) break;
 
       if (usedSquares.has(curr)) continue; // Skip used pieces (X-ray through)
 
@@ -825,10 +862,6 @@ function findRayLVA(
     }
   }
   return bestLVA;
-}
-
-function isValidSquare(idx: number): boolean {
-  return idx >= 0 && idx < SQUARE_COUNT;
 }
 
 /**
@@ -859,22 +892,15 @@ export interface ThreatInfo {
 
 /**
  * Get ALL threats for a given color, including X-ray/hidden attacks.
- * This detects:
- * - Direct attacks (standard)
- * - X-ray attacks: sliding piece attacks through own piece to enemy piece behind
- * - Discovered attack potential: own piece blocks line to enemy king/valuable piece
- * - Battery alignments: two own sliding pieces on same line targeting enemy
- *
- * @param board The integer board
- * @param color COLOR_WHITE or COLOR_BLACK
- * @returns Array of ThreatInfo objects
  */
 export function getAllThreats(board: BoardStorage, color: number): ThreatInfo[] {
+  const g = geomFor(boardSize(board));
+  const size = g.size;
   const threats: ThreatInfo[] = [];
   const enemyColor = color === COLOR_WHITE ? COLOR_BLACK : COLOR_WHITE;
 
   // Iterate all pieces of the given color
-  for (let from = 0; from < SQUARE_COUNT; from++) {
+  for (let from = 0; from < size * size; from++) {
     const piece = board[from];
     if (piece === PIECE_NONE) continue;
     if ((piece & COLOR_MASK) !== color) continue;
@@ -884,12 +910,12 @@ export function getAllThreats(board: BoardStorage, color: number): ThreatInfo[] 
     // Pawn threats
     if (type === PIECE_PAWN) {
       // Pawn attacks (no X-ray for pawns)
-      const forward = color === COLOR_WHITE ? UP : DOWN;
-      const captureOffsets = [forward + LEFT, forward + RIGHT];
+      const forward = color === COLOR_WHITE ? g.UP : g.DOWN;
+      const captureOffsets = [forward + g.LEFT, forward + g.RIGHT];
       for (const offset of captureOffsets) {
         const to = from + offset;
-        if (!isValidSquare(to)) continue;
-        if (Math.abs(indexToCol(from) - indexToCol(to)) !== 1) continue; // Wrap check
+        if (!isValidSquare(to, size)) continue;
+        if (Math.abs(colOf(from, size) - colOf(to, size)) !== 1) continue; // Wrap check
 
         const target = board[to];
         if (target !== PIECE_NONE && (target & COLOR_MASK) === enemyColor) {
@@ -913,19 +939,19 @@ export function getAllThreats(board: BoardStorage, color: number): ThreatInfo[] 
         type === PIECE_ARCHBISHOP ||
         type === PIECE_CHANCELLOR ||
         type === PIECE_ANGEL
-        ? KNIGHT_OFFSETS
+        ? g.KNIGHT
         : type === PIECE_KING
-        ? KING_OFFSETS
-        : null;
+          ? g.KING
+          : null;
 
     if (steppingOffsets) {
-      const r = indexToRow(from);
-      const c = indexToCol(from);
+      const r = rowOf(from, size);
+      const c = colOf(from, size);
       for (const offset of steppingOffsets) {
         const to = from + offset;
-        if (!isValidSquare(to)) continue;
-        const toR = indexToRow(to);
-        const toC = indexToCol(to);
+        if (!isValidSquare(to, size)) continue;
+        const toR = rowOf(to, size);
+        const toC = colOf(to, size);
         if (Math.abs(toR - r) > 2 || Math.abs(toC - c) > 2) continue; // Knights max 2
 
         const shape = getCurrentBoardShape();
@@ -967,7 +993,7 @@ export function getAllThreats(board: BoardStorage, color: number): ThreatInfo[] 
       type === PIECE_QUEEN ||
       type === PIECE_ANGEL
     ) {
-      offsets.push(...BISHOP_OFFSETS);
+      offsets.push(...g.BISHOP);
     }
     if (
       type === PIECE_ROOK ||
@@ -975,10 +1001,10 @@ export function getAllThreats(board: BoardStorage, color: number): ThreatInfo[] 
       type === PIECE_QUEEN ||
       type === PIECE_ANGEL
     ) {
-      offsets.push(...ROOK_OFFSETS);
+      offsets.push(...g.ROOK);
     }
     if (type === PIECE_NIGHTRIDER) {
-      offsets.push(...KNIGHT_OFFSETS);
+      offsets.push(...g.KNIGHT);
     }
 
     // Scan each ray
@@ -987,16 +1013,16 @@ export function getAllThreats(board: BoardStorage, color: number): ThreatInfo[] 
 
       for (;;) {
         curr += offset;
-        if (!isValidSquare(curr)) break;
+        if (!isValidSquare(curr, size)) break;
 
         // Wrap/continuity check (same as generateSlidingMoves)
-        const cr = indexToRow(curr);
-        const cc = indexToCol(curr);
+        const cr = rowOf(curr, size);
+        const cc = colOf(curr, size);
         const prev = curr - offset;
-        const pr = indexToRow(prev);
-        const pc = indexToCol(prev);
+        const pr = rowOf(prev, size);
+        const pc = colOf(prev, size);
 
-        if (KNIGHT_OFFSETS.includes(offset)) {
+        if (g.KNIGHT.includes(offset)) {
           const dr = Math.abs(cr - pr);
           const dc = Math.abs(cc - pc);
           if (!((dr === 2 && dc === 1) || (dr === 1 && dc === 2))) break;
@@ -1010,7 +1036,6 @@ export function getAllThreats(board: BoardStorage, color: number): ThreatInfo[] 
         }
 
         const target = board[curr];
-
         if (target === PIECE_NONE) {
           // Empty square - continue ray
           continue;
@@ -1044,29 +1069,24 @@ export function getAllThreats(board: BoardStorage, color: number): ThreatInfo[] 
           continue;
         }
       }
-
-      // After loop: if we had a blocker, check if there was an X-ray target behind it
-      // (The loop would have found it if it continued, but we break on first enemy hit.
-      // We need a second pass for X-ray detection.)
     }
 
     // SECOND PASS: X-Ray detection for this piece
-    // For each ray, find our own pieces that block the ray, then check what's behind them
     for (const offset of offsets) {
       let curr = from;
       let ourBlockerSquare: number | null = null;
 
       for (;;) {
         curr += offset;
-        if (!isValidSquare(curr)) break;
+        if (!isValidSquare(curr, size)) break;
 
-        const cr = indexToRow(curr);
-        const cc = indexToCol(curr);
+        const cr = rowOf(curr, size);
+        const cc = colOf(curr, size);
         const prev = curr - offset;
-        const pr = indexToRow(prev);
-        const pc = indexToCol(prev);
+        const pr = rowOf(prev, size);
+        const pc = colOf(prev, size);
 
-        if (KNIGHT_OFFSETS.includes(offset)) {
+        if (g.KNIGHT.includes(offset)) {
           const dr = Math.abs(cr - pr);
           const dc = Math.abs(cc - pc);
           if (!((dr === 2 && dc === 1) || (dr === 1 && dc === 2))) break;
@@ -1080,7 +1100,6 @@ export function getAllThreats(board: BoardStorage, color: number): ThreatInfo[] 
         }
 
         const target = board[curr];
-
         if (target === PIECE_NONE) {
           continue;
         }
@@ -1117,14 +1136,14 @@ export function getAllThreats(board: BoardStorage, color: number): ThreatInfo[] 
             // (i.e., moving blocker exposes king or queen behind it)
             // We scan BEYOND the enemy piece to see if there's a king/queen
             let beyond = curr + offset;
-            while (isValidSquare(beyond)) {
-              const br = indexToRow(beyond);
-              const bc = indexToCol(beyond);
+            while (isValidSquare(beyond, size)) {
+              const br = rowOf(beyond, size);
+              const bc = colOf(beyond, size);
               const bprev = beyond - offset;
-              const bpr = indexToRow(bprev);
-              const bpc = indexToCol(bprev);
+              const bpr = rowOf(bprev, size);
+              const bpc = colOf(bprev, size);
 
-              if (KNIGHT_OFFSETS.includes(offset)) {
+              if (g.KNIGHT.includes(offset)) {
                 const dr = Math.abs(br - bpr);
                 const dc = Math.abs(bc - bpc);
                 if (!((dr === 2 && dc === 1) || (dr === 1 && dc === 2))) break;
@@ -1166,11 +1185,6 @@ export function getAllThreats(board: BoardStorage, color: number): ThreatInfo[] 
         }
       }
     }
-
-    // THIRD PASS: Battery detection
-    // Two own sliding pieces on same line = battery threat along that line
-    // This is more positional but valuable for evaluation
-    // (Can be added later if needed)
   }
 
   return threats;
@@ -1182,8 +1196,9 @@ export function getAllThreats(board: BoardStorage, color: number): ThreatInfo[] 
 export function getKingThreats(board: BoardStorage, color: number): ThreatInfo[] {
   // Find enemy king
   let enemyKingSquare = -1;
+  const size = boardSize(board);
   const enemyColor = color === COLOR_WHITE ? COLOR_BLACK : COLOR_WHITE;
-  for (let i = 0; i < SQUARE_COUNT; i++) {
+  for (let i = 0; i < size * size; i++) {
     const p = board[i];
     if (p !== PIECE_NONE && (p & COLOR_MASK) === enemyColor && (p & TYPE_MASK) === PIECE_KING) {
       enemyKingSquare = i;
