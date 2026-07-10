@@ -20,7 +20,7 @@ import type { KeyboardManager } from './input/KeyboardManager.js';
 import { setLocale, getLocale, t } from './i18n/index.js';
 import { showToast } from './ui/OverlayManager.js';
 import { generatePGN, downloadPGN } from './utils/PGNGenerator.js';
-import { parsePGN } from './utils/PGNImportParser.js';
+import { parsePGN } from './utils/PGNParser.js';
 import { loadFENIntoGame } from './utils/persistence.js';
 // BattleChess3D is lazy-loaded at runtime (dynamic import) - only the type is imported here
 
@@ -563,26 +563,11 @@ export class App {
     if (setupFen) {
       const ok = this.importFEN(setupFen);
       if (!ok) return false;
-    }
-    if (moves.length === 0) {
-      if (!setupFen) {
-        showToast(t('file.invalidPgn'), 'error');
-        return false;
+      if (moves.length > 0) {
+        // Header FEN loaded; SAN replay onto the loaded position is out of P1.3 scope.
+        showToast(t('file.loaded'), 'success');
       }
       return true;
-    }
-    // Minimal MVP: replay SAN moves via the move executor if available.
-    // Full SAN→move validation is out of scope for P1.3; we surface a toast
-    // when no executable path exists (e.g. no moveController bound).
-    const gc = this.gameController;
-    if (gc && (gc as unknown as { replayMovesFromPGN?: (_m: string[]) => boolean }).replayMovesFromPGN) {
-      const sans = moves.map((m) => m.san);
-      const replayed = (gc as unknown as { replayMovesFromPGN: (_m: string[]) => boolean }).replayMovesFromPGN(sans);
-      if (replayed) {
-        UI_MODULE?.renderBoard(this.game as Game);
-        showToast(t('file.loaded'), 'success');
-        return true;
-      }
     }
     showToast(t('file.invalidPgn'), 'error');
     return false;
