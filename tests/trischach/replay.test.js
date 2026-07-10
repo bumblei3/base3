@@ -974,37 +974,27 @@ describe("Replay: replayGame generator", () => {
 });
 
 describe("Replay: reconstructGameFromTSPN", () => {
-  test.skip("creates game and controller from parsed TSPN", () => {
-    // Need a more complete mock with pieces for cloneGameState
-    const mockPieces = [
-      {
-        id: "p1",
-        type: "pawn",
-        faction: "fire",
-        pos: { q: 0, r: 5 },
-        symbol: "P",
-        alive: true,
-        hasMoved: false,
-      },
-    ];
-    const MockGameClass = vi.fn().mockImplementation(() => ({
-      pieces: mockPieces,
-      init: vi.fn(),
-      rpsEnabled: true,
-      capturedPieces: { fire: [], water: [], nature: [] },
-      eliminatedFactions: new Set(),
-      currentFaction: "fire",
-      currentFactionIdx: 0,
-      state: "select_piece",
-    }));
+  class MockGameClass {
+    constructor() {
+      this.init = vi.fn();
+      this.rpsEnabled = true;
+      this.capturedPieces = { fire: [], water: [], nature: [] };
+      this.eliminatedFactions = new Set();
+      this.currentFaction = "fire";
+      this.currentFactionIdx = 0;
+      this.state = "select_piece";
+      this.pieces = [];
+      this.moveHistory = [];
+      this.handleCellClick = vi.fn(() => ({}));
+      this.completePromotion = vi.fn();
+    }
+  }
 
+  test("creates game and controller from parsed TSPN (RPS on)", () => {
     const boardCells = generateBoard();
     const parsedTSPN = {
       headers: { RPS: "on" },
-      moves: [
-        { faction: "fire", pieceName: "pawn", target: { q: 0, r: 4 } },
-        { faction: "water", pieceName: "pawn", target: { q: 0, r: 1 } },
-      ],
+      moves: [],
     };
 
     const { game, controller } = reconstructGameFromTSPN(
@@ -1017,29 +1007,7 @@ describe("Replay: reconstructGameFromTSPN", () => {
     expect(controller).toBeInstanceOf(ReplayController);
   });
 
-  test.skip("disables RPS when header is off", () => {
-    const mockPieces = [
-      {
-        id: "p1",
-        type: "pawn",
-        faction: "fire",
-        pos: { q: 0, r: 5 },
-        symbol: "P",
-        alive: true,
-        hasMoved: false,
-      },
-    ];
-    const MockGameClass = vi.fn().mockImplementation(() => ({
-      pieces: mockPieces,
-      init: vi.fn(),
-      rpsEnabled: true,
-      capturedPieces: { fire: [], water: [], nature: [] },
-      eliminatedFactions: new Set(),
-      currentFaction: "fire",
-      currentFactionIdx: 0,
-      state: "select_piece",
-    }));
-
+  test("disables RPS when header is off", () => {
     const boardCells = generateBoard();
     const parsedTSPN = {
       headers: { RPS: "off" },
@@ -1052,6 +1020,21 @@ describe("Replay: reconstructGameFromTSPN", () => {
       boardCells,
     );
     expect(game.rpsEnabled).toBe(false);
+  });
+
+  test("defaults RPS to enabled when header missing", () => {
+    const boardCells = generateBoard();
+    const parsedTSPN = {
+      headers: {},
+      moves: [],
+    };
+
+    const { game } = reconstructGameFromTSPN(
+      parsedTSPN,
+      MockGameClass,
+      boardCells,
+    );
+    expect(game.rpsEnabled).toBe(true);
   });
 });
 
@@ -1105,13 +1088,12 @@ describe("Replay: Export/Import Helpers", () => {
     vi.unstubAllGlobals();
   });
 
-  test.skip("loadGameFromFile reads and parses", async () => {
+  test("loadGameFromFile reads and parses", async () => {
     const tspnContent = `[Event "Test"]
 [Site "Here"]
 
 1. fire_Pawn_0,4`;
 
-    const mockFile = { name: "test.tspn" };
     const mockReader = {
       onload: null,
       onerror: null,
@@ -1120,11 +1102,14 @@ describe("Replay: Export/Import Helpers", () => {
       }),
     };
 
-    vi.stubGlobal(
-      "FileReader",
-      vi.fn(() => mockReader),
-    );
+    class MockFileReader {
+      constructor() {
+        return mockReader;
+      }
+    }
+    vi.stubGlobal("FileReader", MockFileReader);
 
+    const mockFile = { name: "test.tspn" };
     const result = await loadGameFromFile(mockFile);
     expect(result.headers.Event).toBe("Test");
     expect(result.moves.length).toBe(1);
@@ -1145,8 +1130,7 @@ describe("Replay: Export/Import Helpers", () => {
 });
 
 describe("Replay: Round-trip Serialization", () => {
-  // Skip: Test environment difference - works in node directly but not in vitest
-  test.skip("serialize -> parse -> moves preserved", () => {
+  test("serialize -> parse -> moves preserved", () => {
     const game = createMockGame({
       rpsEnabled: true,
       moveHistory: [
@@ -1202,8 +1186,7 @@ describe("Replay: Round-trip Serialization", () => {
     expect(parsed.moves[2].faction).toBe("nature");
   });
 
-  // Skip: Test environment difference - works in node directly but not in vitest
-  test.skip("preserves RPS setting in headers", () => {
+  test("preserves RPS setting in headers", () => {
     const game = createMockGame({ rpsEnabled: true, moveHistory: [] });
     const tspn = serializeGame(game);
     const parsed = parseTSPN(tspn);
