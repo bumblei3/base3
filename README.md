@@ -19,7 +19,7 @@ Two chess variants in one repository:
 | Game | URL |
 |------|-----|
 | **Schach9x9** | https://bumblei3.github.io/schach9x9/ |
-| **Trischach** | https://bumblei3.github.io/base3/trischach/ |
+| **Trischach** | https://bumblei3.github.io/trischach/ |
 | **Landing Page** | https://bumblei3.github.io/base3/ |
 
 ---
