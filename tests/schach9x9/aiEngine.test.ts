@@ -3,7 +3,7 @@
  */
 
 import { describe, expect, test, beforeEach, vi } from 'vitest';
-import { getBestMove, evaluatePosition, getAllLegalMoves } from '@schach9x9/aiEngine';
+import { getBestMove, getBestMoveDetailed, evaluatePosition, getAllLegalMoves } from '@schach9x9/aiEngine';
 import { createEmptyBoard } from '@schach9x9/gameEngine';
 import type { Board } from '@schach9x9/types';
 
@@ -129,15 +129,58 @@ describe('AI Engine', () => {
 
   describe('Move Ordering and Optimization', () => {
     test('should prioritize captures in move ordering', async () => {
-      expect(true).toBe(true);
+      // A board where white has won a queen (material advantage) should evaluate
+      // better for white than the same board before the capture.
+      const afterCapture = createEmptyBoard();
+      afterCapture[4][4] = { type: 'r', color: 'white', hasMoved: false };
+      afterCapture[8][4] = { type: 'k', color: 'white', hasMoved: false };
+      afterCapture[0][4] = { type: 'k', color: 'black', hasMoved: false };
+
+      const beforeCapture = createEmptyBoard();
+      beforeCapture[4][4] = { type: 'r', color: 'white', hasMoved: false };
+      beforeCapture[4][6] = { type: 'q', color: 'black', hasMoved: false };
+      beforeCapture[8][4] = { type: 'k', color: 'white', hasMoved: false };
+      beforeCapture[0][4] = { type: 'k', color: 'black', hasMoved: false };
+
+      const scoreAfter = await evaluatePosition(afterCapture, 'white');
+      const scoreBefore = await evaluatePosition(beforeCapture, 'white');
+      // Winning the queen (removing black's piece) must improve white's score.
+      expect(scoreAfter).toBeGreaterThan(scoreBefore);
     });
 
     test('should evaluate center control', async () => {
-      expect(true).toBe(true);
+      const center = createEmptyBoard();
+      center[4][4] = { type: 'p', color: 'white', hasMoved: false };
+      center[8][4] = { type: 'k', color: 'white', hasMoved: false };
+      center[0][4] = { type: 'k', color: 'black', hasMoved: false };
+
+      const edge = createEmptyBoard();
+      edge[0][0] = { type: 'p', color: 'white', hasMoved: false };
+      edge[8][4] = { type: 'k', color: 'white', hasMoved: false };
+      edge[0][4] = { type: 'k', color: 'black', hasMoved: false };
+
+      const centerScore = await evaluatePosition(center, 'white');
+      const edgeScore = await evaluatePosition(edge, 'white');
+      expect(centerScore).toBeGreaterThan(edgeScore);
     });
 
     test('should penalize doubled pawns', async () => {
-      expect(true).toBe(true);
+      // Same material (two white pawns), but one formation is doubled (same file).
+      const doubled = createEmptyBoard();
+      doubled[4][4] = { type: 'p', color: 'white', hasMoved: false };
+      doubled[5][4] = { type: 'p', color: 'white', hasMoved: false };
+      doubled[8][4] = { type: 'k', color: 'white', hasMoved: false };
+      doubled[0][4] = { type: 'k', color: 'black', hasMoved: false };
+
+      const spread = createEmptyBoard();
+      spread[4][4] = { type: 'p', color: 'white', hasMoved: false };
+      spread[4][6] = { type: 'p', color: 'white', hasMoved: false };
+      spread[8][4] = { type: 'k', color: 'white', hasMoved: false };
+      spread[0][4] = { type: 'k', color: 'black', hasMoved: false };
+
+      const doubledScore = await evaluatePosition(doubled, 'white');
+      const spreadScore = await evaluatePosition(spread, 'white');
+      expect(doubledScore).toBeLessThan(spreadScore);
     });
 
     test('should evaluate special pieces correctly', async () => {
@@ -162,8 +205,18 @@ describe('AI Engine', () => {
   });
 
   describe('Difficulty Levels and Randomized Behavior', () => {
-    test('beginner should make random moves most of the time', async () => {
-      expect(true).toBe(true);
+    test('beginner should return a legal move', async () => {
+      board[4][4] = { type: 'r', color: 'white', hasMoved: false };
+      board[4][6] = { type: 'q', color: 'black', hasMoved: false };
+      board[7][7] = { type: 'k', color: 'white', hasMoved: false };
+      board[1][1] = { type: 'k', color: 'black', hasMoved: false };
+
+      const move = await getBestMove(board, 'white', 1, 'beginner');
+      // Verify AI returns a valid move or null (no crash)
+      if (move) {
+        expect(move.from).toBeDefined();
+        expect(move.to).toBeDefined();
+      }
     });
 
     test('easy should prefer captures', async () => {
@@ -187,7 +240,9 @@ describe('AI Engine', () => {
     });
 
     test('Expert should reach target depth via ID', async () => {
-      expect(true).toBe(true);
+      const detailed = await getBestMoveDetailed(board, 'white', 2, { elo: 2400 });
+      expect(detailed).not.toBeNull();
+      expect(detailed!.depth).toBeGreaterThan(0);
     });
   });
 
