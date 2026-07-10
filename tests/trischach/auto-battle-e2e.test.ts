@@ -229,9 +229,15 @@ describe('Auto Battle', () => {
       15000,
     );
     expect(moved).toBe(true);
-    // ...and the combat overlay is shown.
+    // ...and the combat overlay is shown (poll: it appears asynchronously
+    // right after the move resolves, and stays visible ~2200ms before the
+    // auto-battle loop self-reschedules).
     const overlay = document.getElementById('combat-overlay');
-    expect(overlay?.classList.contains('visible')).toBe(true);
+    const overlayShown = await waitUntil(
+      () => overlay?.classList.contains('visible') === true,
+      5000,
+    );
+    expect(overlayShown).toBe(true);
 
     // The 2200ms combat overlay then self-reschedules triggerAutoMove(), so
     // the loop keeps going: moveHistory keeps growing past the combat. This
