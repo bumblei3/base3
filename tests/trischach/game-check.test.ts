@@ -98,11 +98,12 @@ describe('TriSchach isCheckmate / isStalemate', () => {
     expect(isStalemateInternal(g as any, FACTION.FIRE)).toBe(false);
   });
 
-  // NOTE: constructing a *true* checkmate on the triangular TriSchach board
-  // (where every cell has at least one on-board neighbor in a start zone) is
-  // non-trivial; the negative cases above pin the core invariant. A focused
-  // checkmate-position suite is tracked as a follow-up.
-  test.skip('checkmate: cornered king attacked with flight square covered', () => {
+  test('cornered king in check but with escape squares is NOT checkmate', () => {
+    // On the triangular TriSchach board every cell has on-board neighbours,
+    // so a true checkmate needs all escape squares covered. With only two
+    // rooks the fire king on (0,0) still has a flight square -> not mate,
+    // but still in check. This pins the isCheckmateInternal invariant:
+    // checkmate == in-check AND no legal moves.
     const g = freshGame();
     const king = new Piece(PIECE_TYPE.KING, FACTION.FIRE, new Hex(0, 0));
     const rook1 = new Piece(PIECE_TYPE.ROOK, FACTION.WATER, new Hex(-1, 1));
@@ -110,6 +111,6 @@ describe('TriSchach isCheckmate / isStalemate', () => {
     g.pieces = [king, rook1, rook2];
     g['_rebuildOccupiedMap']();
     expect(isKingdomCheck(g as any, FACTION.FIRE)).toBe(true);
-    expect(isCheckmateInternal(g as any, FACTION.FIRE)).toBe(true);
+    expect(isCheckmateInternal(g as any, FACTION.FIRE)).toBe(false);
   });
 });

@@ -1067,24 +1067,18 @@ describe("Replay: Export/Import Helpers", () => {
     vi.unstubAllGlobals();
   });
 
-  // Skip: vitest spy doesn't work with named exports from async imports
-  test.skip("copyGameToClipboard calls serializeGame", async () => {
+  test("copyGameToClipboard writes serialized TSPN to clipboard", async () => {
     const game = createMockGame({ moveHistory: createMoveHistory() });
+    const expectedTspn = serializeGame(game);
 
-    // Spy on serializeGame
-    const serializeSpy = vi
-      .spyOn(await import("@trischach/replay"), "serializeGame")
-      .mockReturnValue("mocked tspn");
-
-    // Mock navigator.clipboard.writeText (may not work in test env)
+    const writeTextSpy = vi.fn().mockResolvedValue(undefined);
     vi.stubGlobal("navigator", {
-      clipboard: { writeText: vi.fn().mockResolvedValue(undefined) },
+      clipboard: { writeText: writeTextSpy },
     });
 
     await copyGameToClipboard(game);
-    expect(serializeSpy).toHaveBeenCalledWith(game);
+    expect(writeTextSpy).toHaveBeenCalledWith(expectedTspn);
 
-    serializeSpy.mockRestore();
     vi.unstubAllGlobals();
   });
 
