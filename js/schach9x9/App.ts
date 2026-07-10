@@ -20,7 +20,7 @@ import type { KeyboardManager } from './input/KeyboardManager.js';
 import { setLocale, getLocale, t } from './i18n/index.js';
 import { showToast } from './ui/OverlayManager.js';
 import { generatePGN, downloadPGN } from './utils/PGNGenerator.js';
-import { parsePGN } from './utils/PGNParser.js';
+import { PGNParser } from './utils/PGNParser.js';
 import { loadFENIntoGame } from './utils/persistence.js';
 // BattleChess3D is lazy-loaded at runtime (dynamic import) - only the type is imported here
 
@@ -558,7 +558,14 @@ export class App {
    */
   importPGN(pgn: string): boolean {
     if (!this.game) return false;
-    const { headers, moves } = parsePGN(pgn);
+    const parser = new PGNParser();
+    const games = parser.parse(pgn);
+    const game = games[0];
+    if (!game) {
+      showToast(t('file.invalidPgn'), 'error');
+      return false;
+    }
+    const { headers, moves } = game;
     const setupFen = headers.FEN;
     if (setupFen) {
       const ok = this.importFEN(setupFen);
