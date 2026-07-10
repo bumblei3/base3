@@ -300,7 +300,11 @@ export function timeAgo(date: Date | number, locale = 'de-DE'): string {
 
   if (seconds < 60) return 'gerade eben';
   if (seconds < 3600) return `vor ${Math.floor(seconds / 60)} Min.`;
-  if (seconds < 86400) return `vor ${Math.floor(seconds / 3600)} Std.`;
-  if (seconds < 604800) return `vor ${Math.floor(seconds / 86400)} Tagen`;
+  if (seconds < 86400) return `vor ${Math.floor(seconds / 86400)} Tagen`;
   return formatDate(d, locale);
+}
+
+// PWA install prompt capture (Phase 8.1)
+export { PWAInstaller } from './PWAInstaller';
+export type { InstallChoice } from './PWAInstaller';
 }

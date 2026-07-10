@@ -229,7 +229,7 @@ jobs:
 ## 📋 Phase 8: Polish & Platform (Laufend)
 
 ### 8.1 PWA Excellence
-- [ ] **Install Prompt** (Custom, nicht Browser Default)
+- [x] **Install Prompt** (Custom, nicht Browser Default) — `js/shared/utils/PWAInstaller.ts` (getestet, `tests/shared/pwaInstaller.test.ts`), in `js/schach9x9/main.ts` eingehängt; fängt `beforeinstallprompt`, steuert `#install-app-btn` via `onInstallable`/`onInstalled`. Ersetzt vorherigen inline Handler.
 - [ ] **Offline Fallback** (Spielbar ohne Netz: Local AI, Cached Assets)
 - [ ] **Background Sync** (Statistics, Opening Book)
 - [ ] **Push Notifications** (Turn Reminders, Campaign Rewards) — Opt-in

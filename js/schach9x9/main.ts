@@ -3,6 +3,8 @@
  * Application entry point.
  */
 
+import { PWAInstaller } from '../shared/utils/PWAInstaller.js';
+
 const init = async () => {
   try {
     const { App } = await import('./App.js');
@@ -39,35 +41,26 @@ if ('serviceWorker' in navigator && !window.location.search.includes('disable-sw
   }
 }
 
-// Capture the install prompt so we can trigger it from a UI button
-// (browsers only fire this once and don't show a persistent install button).
-interface InstallPromptEvent extends Event {
-  prompt(): Promise<void>;
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
-}
-let deferredInstallPrompt: InstallPromptEvent | null = null;
+// Capture the install prompt via the shared, tested PWAInstaller so we can
+// trigger it from a UI button (browsers only fire this once and don't show a
+// persistent install button). Refactors the previous inline handler into the
+// reusable, unit-tested utility.
 
-window.addEventListener('beforeinstallprompt', (e: Event) => {
-  // Prevent the default mini-infobar from appearing on its own.
-  e.preventDefault();
-  deferredInstallPrompt = e as InstallPromptEvent;
-  // Reveal the install button (hidden by default until the prompt is available).
+const pwaInstaller = new PWAInstaller();
+
+pwaInstaller.onInstallable(() => {
   const btn = document.getElementById('install-app-btn');
   if (btn) btn.classList.remove('hidden');
 });
 
-window.addEventListener('appinstalled', () => {
-  deferredInstallPrompt = null;
+pwaInstaller.onInstalled(() => {
   const btn = document.getElementById('install-app-btn');
   if (btn) btn.classList.add('hidden');
 });
 
 // Expose for DOMHandler (kept minimal — only the prompt trigger is needed).
 (window as unknown as { __promptInstall?: () => Promise<void> }).__promptInstall = async () => {
-  if (!deferredInstallPrompt) return;
-  deferredInstallPrompt.prompt();
-  await deferredInstallPrompt.userChoice;
-  deferredInstallPrompt = null;
+  await pwaInstaller.showPrompt();
   const btn = document.getElementById('install-app-btn');
   if (btn) btn.classList.add('hidden');
 };
