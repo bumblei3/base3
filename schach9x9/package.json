@@ -39,7 +39,7 @@
     "jest-environment-jsdom": "^30.2.0",
     "jsdoc": "^4.0.5",
     "jsdom": "^29.1.1",
-    "prettier": "^3.0.0",
+    "prettier": "^3.9.5",
     "ts-jest": "^29.4.6",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.61.0",
