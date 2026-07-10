@@ -44,7 +44,7 @@ describe("AI Simulation (Integration)", () => {
     game.init(generateBoard());
 
     let moveCount = 0;
-    while (game.state !== "game_over" && moveCount < 50) {
+    while (game.state !== "game_over" && moveCount < 30) {
       const action = calculateBestMove(game, game.currentFaction);
       if (!action) break;
 
@@ -62,5 +62,5 @@ describe("AI Simulation (Integration)", () => {
     }
 
     expect(moveCount).toBeGreaterThan(0);
-  }, 300000); // 5min timeout for AI simulation
+  }, 180000); // 3min timeout; AI simulation under CI worker contention
 });

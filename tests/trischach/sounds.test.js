@@ -7,6 +7,11 @@ describe("Sound System", () => {
     // Reset sounds state - rely on global mocks from vitest.setup.ts
     sounds.ctx = null;
     sounds.enabled = true;
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   test("toggle enables/disables sounds", () => {
@@ -33,7 +38,7 @@ describe("Sound System", () => {
 
   test("playWin creates sound nodes", async () => {
     sounds.playWin();
-    await new Promise(r => setTimeout(r, 1000));
+    await vi.runAllTimersAsync();
     expect(sounds.ctx).toBeInstanceOf(MockAudioContext);
   });
 
@@ -44,13 +49,13 @@ describe("Sound System", () => {
 
   test("playStalemate creates sound nodes", async () => {
     sounds.playStalemate();
-    await new Promise(r => setTimeout(r, 1000));
+    await vi.runAllTimersAsync();
     expect(sounds.ctx).toBeInstanceOf(MockAudioContext);
   });
 
   test("playPromotion creates sound nodes", async () => {
     sounds.playPromotion();
-    await new Promise(r => setTimeout(r, 500));
+    await vi.runAllTimersAsync();
     expect(sounds.ctx).toBeInstanceOf(MockAudioContext);
   });
 
