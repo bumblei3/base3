@@ -235,10 +235,9 @@ jobs:
 - [ ] **Push Notifications** (Turn Reminders, Campaign Rewards) — Opt-in
 
 ### 8.2 Plattform Features
-- [ ] **Share API** (PGN, Position, Replay Link)
-- [ ] **File Handling** (.pgn Import/Export via OS)
-- [ ] **Clipboard API** (FEN, PGN, Move List)
-- [ ] **Keyboard Shortcuts** (Global: `?` Help, `u` Undo, `h` Hint)
+- [x] **File Handling** (.pgn Import/Export via OS) — P1.3 done: Save/Load (IndexedDB), FEN load, PGN import/export wired to Settings panel; see docs/plans/2026-07-08-p1.3-file-handling.md
+- [x] **Clipboard API** (FEN, PGN, Move List) — share.ts, PGNGenerator.ts, ErrorManager.ts use navigator.clipboard.writeText
+- [ ] **Share API** (Replay Link) — PGN/FEN copy done; dedicated share-link endpoint not yet
 
 ### 8.3 Content & Meta
 - [ ] **Opening Book** erweitert (Human Games, Lichess Elite DB)
@@ -293,9 +292,10 @@ Offen (alle "nice to have", kein harter Blocker):
 # - ADRs (Architecture Decision Records) im Repo
 
 # Phase 8.2: Plattform-Features (empfohlen, klein + testbar)
-# - Global Keyboard Shortcuts (? Help, u Undo, h Hint, p Pause)
-# - Share API / Clipboard API (FEN, PGN, Replay-Link)
-# - Custom Install Prompt (PWA)
+# - Keyboard Shortcuts: DONE (input/KeyboardManager.ts + keyboard.test.ts / keyboardManager.test.ts)
+# - File Handling / Clipboard API (FEN, PGN): DONE (P1.3 + share.ts/PGNGenerator.ts)
+# - Share API / Replay-Link: NICHT gemacht (braucht Link-Encoding/Backend)
+# - Custom Install Prompt (PWA): NICHT gemacht
 ```
 
 > Phase 3 (Performance/Bundle) abgehakt: Initial Bundle < 200KB gzip, 3D-Chunk lazy, Deprecation-Warnung entfernt. ui.ts-Barrel-Split bewusst übersprungen (schlechter ROI).
