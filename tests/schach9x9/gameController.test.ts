@@ -267,8 +267,9 @@ describe('GameController', () => {
 
     test('should skip statistics if gameStartTime not set', () => {
       gameController.gameStartTime = null;
+      const saveSpy = vi.spyOn(gameController.statisticsManager, 'saveGame');
       gameController.saveGameToStatistics('win', 'black');
-      expect(true).toBe(true);
+      expect(saveSpy).not.toHaveBeenCalled();
     });
 
     test('should handle corridor placement calculation', () => {
@@ -335,19 +336,19 @@ describe('GameController', () => {
       expect(game.board[7][4]).toEqual({ type: 'k', color: 'white', hasMoved: false });
     });
 
-    test('should block clicks during animation', () => {
+    test('should block clicks during animation', async () => {
       game.isAnimating = true;
       game.phase = PHASES.PLAY;
-      gameController.handleCellClick(4, 4);
-      // Validating blockage by absence of side effects is hard without working mocks
-      expect(true).toBe(true);
+      await gameController.handleCellClick(4, 4);
+      // Clicks during animation must not reach the play handler
+      expect(game.handlePlayClick).not.toHaveBeenCalled();
     });
 
-    test('should block clicks in replay mode', () => {
+    test('should block clicks in replay mode', async () => {
       game.replayMode = true;
       game.phase = PHASES.PLAY;
-      gameController.handleCellClick(4, 4);
-      expect(true).toBe(true);
+      await gameController.handleCellClick(4, 4);
+      expect(game.handlePlayClick).not.toHaveBeenCalled();
     });
   });
 

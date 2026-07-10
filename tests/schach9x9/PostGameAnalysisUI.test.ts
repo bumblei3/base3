@@ -36,10 +36,14 @@ vi.mock('@schach9x9/tutor/PostGameAnalyzer', () => ({
   },
 }));
 
+const mockAnalysisUI = {
+  showSummaryModal: vi.fn(),
+};
+
 vi.mock('@schach9x9/ui/AnalysisUI', () => ({
   AnalysisUI: class MockAnalysisUI {
     constructor(_app: unknown) {}
-    showSummaryModal = vi.fn();
+    showSummaryModal = mockAnalysisUI.showSummaryModal;
   },
 }));
 
@@ -129,7 +133,7 @@ describe('PostGameAnalysisUI', () => {
       // The filter in code: .filter(q => counts[q] > 0)
     });
 
-    test('should wire button click to showPostGameAnalysis', () => {
+    test('should wire button click to showPostGameAnalysis', async () => {
       const game = {
         moveHistory: [],
         playerColor: 'white' as const,
@@ -138,11 +142,13 @@ describe('PostGameAnalysisUI', () => {
 
       showPostGameStats(game, 'win', 'white');
 
-      // Click the button
-      btnEl.click();
+      // showPostGameStats clones the button and attaches the click listener to the clone
+      const liveBtn = document.getElementById('postgame-analysis-btn')!;
+      liveBtn.click();
 
-      // Should not throw
-      expect(true).toBe(true);
+      // The async click handler opens the analysis summary modal
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      expect(mockAnalysisUI.showSummaryModal).toHaveBeenCalled();
     });
 
     test('should handle game without gameController', () => {
