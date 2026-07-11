@@ -1,160 +1,311 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="base3 — Verweis-Repo auf die Schach-Varianten Schach9x9 und Trischach." />
-  <title>base3 — Schach9x9 &amp; Trischach</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#02040a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Base3" />
+  <title>Base3 Chess Platform — Schach9x9 &amp; Trischach</title>
+  <meta name="description" content="Zwei einzigartige Schachvarianten auf einer Plattform. Schach9x9 mit Feenfiguren und Trischach mit 3 Fraktionen." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #070b1f;
-      --bg-2: #0d1330;
-      --fg: #e6ecf7;
-      --muted: #8a98b8;
-      --accent: #31c48d;
-      --accent-2: #4f9bff;
-      --card: rgba(20, 28, 58, 0.66);
-      --card-border: rgba(120, 140, 200, 0.14);
-      --radius: 18px;
-      --shadow: 0 18px 50px -18px rgba(0, 0, 0, 0.7);
+      --color-text-primary: #f1f5f9;
+      --color-text-secondary: #cbd5e1;
+      --color-text-muted: #8a98b8;
+      --color-accent-primary: #6366f1;
+      --color-accent-hover: #818cf8;
+      --color-bg-secondary: #0b1024;
+      --color-bg-glass: rgba(20, 28, 58, 0.55);
+      --color-bg-glass-hover: rgba(28, 38, 74, 0.72);
+      --color-border: rgba(120, 140, 200, 0.16);
+      --color-border-hover: rgba(99, 102, 241, 0.55);
+      --shadow-lg: 0 24px 60px -22px rgba(0, 0, 0, 0.7);
+      --radius-md: 12px;
+      --radius-lg: 14px;
+      --radius-xl: 20px;
+      --radius-full: 999px;
+      --space-xs: 0.5rem;
+      --space-sm: 0.75rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2.25rem;
+      --transition-fast: 0.15s ease;
+      --transition-normal: 0.25s ease;
     }
+
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-      color: var(--fg);
-      background:
-        radial-gradient(1100px 700px at 12% -10%, rgba(79, 155, 255, 0.16), transparent 60%),
-        radial-gradient(900px 600px at 100% 0%, rgba(49, 196, 141, 0.14), transparent 55%),
-        linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
-      background-attachment: fixed;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      padding: clamp(1.5rem, 4vw, 4rem) 1.25rem 2.5rem;
+      font-family: 'Outfit', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      color: var(--color-text-primary);
+      background:
+        radial-gradient(ellipse at 20% 20%, rgba(99, 102, 241, 0.14) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(236, 72, 153, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(16, 185, 129, 0.08) 0%, transparent 60%),
+        linear-gradient(180deg, #05071a 0%, #0a0f28 100%);
+      background-attachment: fixed;
     }
-    .wrap { width: 100%; max-width: 960px; }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: url('data:image/svg+xml;utf8,<svg opacity="0.035" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%25" height="100%25" filter="url(%23n)"/></svg>');
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* Top Navigation */
+    .top-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: var(--space-md) var(--space-xl);
+      border-bottom: 1px solid var(--color-border);
+      backdrop-filter: blur(12px);
+    }
+    .nav-brand { display: flex; align-items: center; gap: var(--space-sm); font-weight: 800; font-size: 1.25rem; color: var(--color-text-primary); text-decoration: none; }
+    .nav-brand .logo { font-size: 1.5rem; }
+    .nav-links { display: flex; gap: var(--space-lg); list-style: none; margin: 0; padding: 0; }
+    .nav-links a { display: flex; align-items: center; gap: 0.45rem; color: var(--color-text-secondary); text-decoration: none; font-weight: 600; transition: color var(--transition-fast); }
+    .nav-links a:hover, .nav-links a.active { color: var(--color-accent-primary); }
+    .nav-toggle { display: none; background: none; border: none; color: var(--color-text-primary); font-size: 1.5rem; cursor: pointer; }
 
     /* Hero */
-    .hero { text-align: center; margin-bottom: 3rem; animation: rise .6s ease both; }
-    .badge {
-      display: inline-flex; align-items: center; gap: .5rem;
-      font-size: .78rem; letter-spacing: .04em; text-transform: uppercase;
-      color: var(--muted);
-      border: 1px solid var(--card-border);
-      background: var(--card);
-      padding: .4rem .8rem; border-radius: 999px;
-      margin-bottom: 1.4rem;
+    .main-content { flex: 1; display: flex; flex-direction: column; }
+    .hero {
+      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: calc(var(--space-xl) * 1.6) var(--space-xl); text-align: center;
     }
-    .badge .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); }
-    h1 {
-      font-size: clamp(2.6rem, 7vw, 4.4rem);
-      line-height: 1.02; margin: 0 0 .6rem; font-weight: 800; letter-spacing: -0.02em;
-      background: linear-gradient(120deg, #fff 10%, var(--accent) 55%, var(--accent-2) 100%);
-      -webkit-background-clip: text; background-clip: text; color: transparent;
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: var(--space-xs);
+      padding: var(--space-xs) var(--space-md);
+      background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.25);
+      border-radius: var(--radius-full); font-size: 0.8rem; color: var(--color-accent-primary);
+      margin-bottom: var(--space-lg); animation: fadeInUp 0.5s ease forwards;
     }
-    .lede { color: var(--muted); font-size: clamp(1rem, 2.4vw, 1.18rem); max-width: 620px; margin: 0 auto; line-height: 1.55; }
+    .hero-badge .dot { width: 7px; height: 7px; background: var(--color-accent-primary); border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+    .hero h1 {
+      font-size: clamp(2.5rem, 7vw, 4.5rem); font-weight: 800; line-height: 1.05; letter-spacing: -0.03em;
+      margin: 0 0 var(--space-lg);
+      background: linear-gradient(135deg, var(--color-text-primary) 0%, var(--color-text-secondary) 50%, var(--color-accent-primary) 100%);
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+      animation: fadeInUp 0.5s ease 0.1s forwards; opacity: 0;
+    }
+    .hero .subtitle {
+      font-size: clamp(1rem, 2.5vw, 1.3rem); color: var(--color-text-secondary); font-weight: 300;
+      margin: 0 0 var(--space-xl); max-width: 560px; line-height: 1.6;
+      animation: fadeInUp 0.5s ease 0.2s forwards; opacity: 0;
+    }
+    .dev-status-note {
+      max-width: 42rem; margin: 0 auto var(--space-xl); padding: var(--space-sm) var(--space-md);
+      background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.25);
+      border-radius: var(--radius-md); color: #fbbf24; font-size: 0.85rem; line-height: 1.4; text-align: center;
+    }
 
-    /* Cards */
-    .games { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.4rem; }
-    .card {
-      position: relative; display: flex; flex-direction: column;
-      text-decoration: none; color: var(--fg);
-      background: var(--card);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius);
-      padding: 1.8rem 1.6rem;
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
-      animation: rise .6s ease both;
+    /* Games Grid */
+    .games-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: var(--space-lg); max-width: 920px; width: 100%; margin: 0 auto; }
+    .game-card {
+      background: var(--color-bg-glass); border: 1px solid var(--color-border); border-radius: var(--radius-xl);
+      padding: var(--space-xl); text-align: center; position: relative; overflow: hidden;
+      backdrop-filter: blur(12px); animation: fadeInUp 0.5s ease forwards; opacity: 0;
+      transition: transform var(--transition-normal), background var(--transition-normal), border-color var(--transition-normal), box-shadow var(--transition-normal);
     }
-    .card:nth-child(2) { animation-delay: .08s; }
-    .card::before {
-      content: ""; position: absolute; inset: 0;
-      background: radial-gradient(420px 200px at var(--mx, 50%) -20%, rgba(49, 196, 141, 0.18), transparent 60%);
-      opacity: 0; transition: opacity .3s ease; pointer-events: none;
-    }
-    .card:hover { transform: translateY(-6px); border-color: var(--accent); box-shadow: 0 26px 60px -20px rgba(49, 196, 141, 0.35); }
-    .card:hover::before { opacity: 1; }
-    .card .glyph { font-size: 2.2rem; margin-bottom: .9rem; }
-    .card h2 { margin: 0 0 .5rem; font-size: 1.5rem; letter-spacing: -0.01em; }
-    .card .tag {
-      display: inline-block; font-size: .72rem; font-weight: 600; letter-spacing: .03em;
-      color: var(--accent); background: rgba(49, 196, 141, 0.12);
-      padding: .25rem .6rem; border-radius: 999px; margin-bottom: 1rem;
-    }
-    .card p { margin: 0 0 1.4rem; color: var(--muted); font-size: .95rem; line-height: 1.55; flex: 1; }
-    .links { display: flex; flex-wrap: wrap; gap: .6rem; }
-    .btn {
-      display: inline-flex; align-items: center; gap: .45rem;
-      font-size: .9rem; font-weight: 600; text-decoration: none;
-      padding: .6rem 1rem; border-radius: 11px; transition: background .2s, transform .15s;
-    }
-    .btn.primary { background: var(--accent); color: #04231a; }
-    .btn.primary:hover { transform: translateY(-2px); background: #3ed79c; }
-    .btn.ghost { color: var(--fg); border: 1px solid var(--card-border); background: rgba(255,255,255,0.03); }
-    .btn.ghost:hover { border-color: var(--accent-2); transform: translateY(-2px); }
+    .game-card:nth-child(1) { animation-delay: 0.3s; }
+    .game-card:nth-child(2) { animation-delay: 0.4s; }
+    .game-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; opacity: 0; transition: opacity var(--transition-normal); }
+    .game-card:hover::before { opacity: 1; }
+    .game-card:hover { transform: translateY(-8px); background: var(--color-bg-glass-hover); border-color: var(--color-border-hover); box-shadow: var(--shadow-lg); }
+    .game-card.schach9x9::before { background: linear-gradient(135deg, #6366f1, #ec4899); }
+    .game-card.trischach::before { background: linear-gradient(135deg, #ff4500, #10b981, #3b82f6); }
 
-    footer {
-      margin-top: 3rem; text-align: center; color: var(--muted);
-      font-size: .82rem; line-height: 1.6; max-width: 620px;
-      border-top: 1px solid var(--card-border); padding-top: 1.6rem;
+    /* Preview Board */
+    .game-preview {
+      width: 120px; height: 120px; margin: 0 auto var(--space-lg); position: relative;
+      border-radius: var(--radius-md); overflow: hidden; background: var(--color-bg-secondary); border: 1px solid var(--color-border);
     }
-    footer a { color: var(--accent); text-decoration: none; }
-    footer a:hover { text-decoration: underline; }
+    .game-preview.schach9x9-preview {
+      background:
+        repeating-linear-gradient(0deg, transparent, transparent 13px, rgba(255,255,255,0.04) 13px, rgba(255,255,255,0.04) 14px),
+        repeating-linear-gradient(90deg, transparent, transparent 13px, rgba(255,255,255,0.04) 13px, rgba(255,255,255,0.04) 14px),
+        var(--color-bg-secondary);
+    }
+    .game-preview.trischach-preview {
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255, 69, 0, 0.12) 0%, transparent 30%),
+        radial-gradient(circle at 20% 80%, rgba(16, 185, 129, 0.12) 0%, transparent 30%),
+        radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.12) 0%, transparent 30%),
+        var(--color-bg-secondary);
+    }
+    .game-preview .piece-icon { position: absolute; font-size: 1.8rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+    .game-preview.schach9x9-preview .piece-icon:nth-child(1) { top: 15%; left: 20%; }
+    .game-preview.schach9x9-preview .piece-icon:nth-child(2) { top: 45%; left: 50%; }
+    .game-preview.schach9x9-preview .piece-icon:nth-child(3) { top: 75%; left: 70%; }
+    .game-preview.trischach-preview .piece-icon:nth-child(1) { top: 20%; left: 50%; color: #ff4500; }
+    .game-preview.trischach-preview .piece-icon:nth-child(2) { top: 60%; left: 20%; color: #10b981; }
+    .game-preview.trischach-preview .piece-icon:nth-child(3) { top: 60%; left: 75%; color: #3b82f6; }
 
-    @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+    .game-card h2 { font-size: 1.5rem; font-weight: 700; margin: 0 0 var(--space-sm); }
+    .game-card .tagline { color: var(--color-text-secondary); font-size: 0.95rem; margin: 0 0 var(--space-lg); line-height: 1.5; }
+    .features-list { list-style: none; text-align: left; margin: 0 0 var(--space-lg); display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-sm) var(--space-md); font-size: 0.85rem; color: var(--color-text-secondary); }
+    .features-list li { display: flex; align-items: center; gap: var(--space-xs); }
+    .features-list li::before { content: '✦'; color: var(--color-accent-primary); font-size: 0.7rem; }
+    .game-card.trischach .features-list li::before { color: #3b82f6; }
+
+    .play-btn {
+      display: inline-flex; align-items: center; gap: var(--space-sm);
+      padding: var(--space-md) var(--space-xl); border-radius: var(--radius-lg);
+      font-weight: 700; font-size: 1rem; text-decoration: none; border: none; cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .game-card.schach9x9 .play-btn { background: linear-gradient(135deg, #6366f1, #ec4899); color: white; }
+    .game-card.schach9x9 .play-btn:hover { background: linear-gradient(135deg, #818cf8, #f472b6); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4); }
+    .game-card.trischach .play-btn { background: linear-gradient(135deg, #ff4500, #10b981, #3b82f6); color: white; }
+    .game-card.trischach .play-btn:hover { background: linear-gradient(135deg, #ff6b35, #34d399, #60a5fa); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255, 69, 0, 0.4); }
+
+    /* Stats */
+    .stats { display: flex; justify-content: center; flex-wrap: wrap; gap: var(--space-xl); padding: var(--space-xl); margin-top: var(--space-xl); border-top: 1px solid var(--color-border); animation: fadeInUp 0.5s ease 0.5s forwards; opacity: 0; }
+    .stat { text-align: center; }
+    .stat-value { font-size: 2rem; font-weight: 800; color: var(--color-accent-primary); }
+    .stat-label { font-size: 0.8rem; color: var(--color-text-muted); margin-top: var(--space-xs); }
+
+    /* Footer */
+    .footer { margin-top: auto; padding: var(--space-lg); border-top: 1px solid var(--color-border); text-align: center; color: var(--color-text-muted); font-size: 0.85rem; }
+    .footer a { color: var(--color-accent-primary); text-decoration: none; transition: color var(--transition-fast); }
+    .footer a:hover { color: var(--color-accent-hover); text-decoration: underline; }
+    .footer-links { display: flex; justify-content: center; gap: var(--space-lg); margin-bottom: var(--space-sm); }
+
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+    @media (max-width: 768px) {
+      .top-nav { padding: var(--space-md); }
+      .nav-links { display: none; position: absolute; top: 100%; right: var(--space-md); flex-direction: column; gap: var(--space-sm); background: var(--color-bg-glass); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-md); backdrop-filter: blur(12px); }
+      .nav-links.open { display: flex; }
+      .nav-toggle { display: block; }
+      .hero { padding: var(--space-xl) var(--space-md); }
+      .games-grid { grid-template-columns: 1fr; max-width: 400px; }
+      .features-list { grid-template-columns: 1fr; }
+    }
     @media (prefers-reduced-motion: reduce) {
       * { animation: none !important; transition: none !important; }
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header class="hero">
-      <span class="badge"><span class="dot"></span> Archiviertes Verweis-Repo</span>
-      <h1>base3</h1>
-      <p class="lede">
-        Ein Index für zwei Schach-Varianten. Die aktive Entwicklung findet in den
-        eigenständigen Projekten <strong>Schach9x9</strong> und <strong>Trischach</strong> statt.
+
+  <!-- Top Navigation -->
+  <nav class="top-nav" role="navigation" aria-label="Hauptnavigation">
+    <a href="./" class="nav-brand">
+      <span class="logo">♟</span>
+      <span>Base3</span>
+    </a>
+    <button class="nav-toggle" aria-label="Menü öffnen" aria-expanded="false">☰</button>
+    <ul class="nav-links">
+      <li><a href="./" class="active" aria-current="page"><span class="icon">🏠</span><span>Start</span></a></li>
+      <li><a href="https://bumblei3.github.io/schach9x9/"><span class="icon">♟️</span><span>Schach9x9</span></a></li>
+      <li><a href="https://bumblei3.github.io/trischach/"><span class="icon">⬡</span><span>Trischach</span></a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <section class="hero">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        Zwei Spiele, eine Plattform
+      </div>
+      <h1>Base3 Chess Platform</h1>
+      <p class="subtitle">
+        Entdecke zwei einzigartige Schachvarianten — vom klassischen 9×9 Brett mit Feenfiguren bis zum strategischen 3-Spieler-Hex-Schach.
       </p>
-    </header>
 
-    <section class="games">
-      <a class="card" href="https://github.com/bumblei3/schach9x9"
-         onmousemove="this.style.setProperty('--mx', (event.clientX-this.getBoundingClientRect().left)+'px')">
-        <div class="glyph">♛</div>
-        <span class="tag">9×9 Schach</span>
-        <h2>Schach9x9</h2>
-        <p>9×9 Brett mit neuen Figuren (Kanzler, Wächter, Nachtmahr, Erzengel), Kampagne,
-          3D-Kämpfe und PWA — offline spielbar.</p>
-        <div class="links">
-          <a class="btn primary" href="https://bumblei3.github.io/schach9x9/">▶ Live-Demo</a>
-          <a class="btn ghost" href="https://github.com/bumblei3/schach9x9">GitHub</a>
-        </div>
-      </a>
+      <p class="dev-status-note">
+        📌 Archiviertes Verweis-Repo (Pointer). Die aktive Entwicklung findet in den eigenständigen Projekten
+        <a href="https://github.com/bumblei3/schach9x9" style="color:#fbbf24">Schach9x9</a> und
+        <a href="https://github.com/bumblei3/trischach" style="color:#fbbf24">Trischach</a> statt.
+      </p>
 
-      <a class="card" href="https://github.com/bumblei3/trischach"
-         onmousemove="this.style.setProperty('--mx', (event.clientX-this.getBoundingClientRect().left)+'px')">
-        <div class="glyph">🔥🌊🌿</div>
-        <span class="tag">3-Spieler Hex</span>
-        <h2>Trischach</h2>
-        <p>3-Spieler Hexagonal-Schach mit Schere-Stein-Papier-Kampf und drei Fraktionen
-          (Feuer, Wasser, Natur).</p>
-        <div class="links">
-          <a class="btn primary" href="https://bumblei3.github.io/trischach/">▶ Live-Demo</a>
-          <a class="btn ghost" href="https://github.com/bumblei3/trischach">GitHub</a>
-        </div>
-      </a>
+      <div class="games-grid">
+        <!-- Schach9x9 -->
+        <article class="game-card schach9x9">
+          <div class="game-preview schach9x9-preview">
+            <span class="piece-icon">♞</span>
+            <span class="piece-icon">♛</span>
+            <span class="piece-icon">♜</span>
+          </div>
+          <h2>Schach9x9</h2>
+          <p class="tagline">9×9 Brett mit Feenfiguren. Nightrider, Chancellor, Archbishop, Angel.</p>
+          <ul class="features-list">
+            <li>Klassisch &amp; Setup-Mode</li>
+            <li>Upgrade-Mode (Bauern → Engel)</li>
+            <li>Kampagnen &amp; Puzzles</li>
+            <li>KI mit Opening Book</li>
+            <li>3D Battle-Chess View</li>
+            <li>Interaktives Tutorial</li>
+          </ul>
+          <a href="https://bumblei3.github.io/schach9x9/" class="play-btn">Spielen →</a>
+        </article>
+
+        <!-- Trischach -->
+        <article class="game-card trischach">
+          <div class="game-preview trischach-preview">
+            <span class="piece-icon">🔥</span>
+            <span class="piece-icon">🌿</span>
+            <span class="piece-icon">🌊</span>
+          </div>
+          <h2>Trischach</h2>
+          <p class="tagline">3-Spieler Hexagonales Schach. Stein-Schere-Papier Kampfmechanik.</p>
+          <ul class="features-list">
+            <li>Drei Fraktionen (Feuer/Natur/Wasser)</li>
+            <li>RPS Combat (Feuer &gt; Natur &gt; Wasser &gt; Feuer)</li>
+            <li>Replay-System (TSPN Format)</li>
+            <li>Opening Book &amp; Puzzles</li>
+            <li>Auto-Battle Turniere</li>
+            <li>KI mit Lernfähigkeit</li>
+          </ul>
+          <a href="https://bumblei3.github.io/trischach/" class="play-btn">Spielen →</a>
+        </article>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats">
+        <div class="stat"><div class="stat-value">2</div><div class="stat-label">Spiele</div></div>
+        <div class="stat"><div class="stat-value">9×9</div><div class="stat-label">Schach9x9 Brett</div></div>
+        <div class="stat"><div class="stat-value">3</div><div class="stat-label">Fraktionen</div></div>
+        <div class="stat"><div class="stat-value">∞</div><div class="stat-label">Möglichkeiten</div></div>
+      </div>
     </section>
+  </main>
 
-    <footer>
-      base3 ist ein reiner Verweis-Repo (Pointer). Der vollständige, frühere Monorepo-Stand
-      ist über die <a href="https://github.com/bumblei3/base3/commits/main">Git-History</a> einsehbar.
-    </footer>
-  </div>
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-links">
+      <a href="https://github.com/bumblei3/base3" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://bumblei3.github.io/schach9x9/" target="_blank" rel="noopener">Schach9x9 Demo</a>
+      <a href="https://bumblei3.github.io/trischach/" target="_blank" rel="noopener">Trischach Demo</a>
+    </div>
+    <p>Base3 Chess Platform — Open Source</p>
+  </footer>
+
+  <!-- Mobile Menu Script -->
+  <script>
+    const toggle = document.querySelector('.nav-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    toggle.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', isOpen);
+    });
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => { navLinks.classList.remove('open'); toggle.setAttribute('aria-expanded', 'false'); });
+    });
+  </script>
 </body>
 </html>
