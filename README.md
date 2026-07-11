@@ -16,14 +16,14 @@ bis zum strategischen 3-Spieler-Hex-Schach.
 
 ### ♟️ Schach9x9
 
-9×9 Brett mit Feenfiguren (Nightrider, Chancellor, Archbishop, Angel).
+9×9 Brett mit Feenfiguren (Erzbischof, Kanzler, Engel).
 
-- Klassisch & Setup-Mode
-- Upgrade-Mode (Bauern → Engel)
-- Kampagnen & Puzzles
-- KI mit Opening Book
-- 3D Battle-Chess View
-- Interaktives Tutorial
+- 9×9 Brett mit Feenfiguren (Erzbischof, Kanzler, Engel)
+- 5 KI-Persönlichkeiten + adaptives Zeitmanagement
+- Engine-Analyse-Modus & Zug-Qualitäts-Indikatoren
+- Kampagnen-Modus & Talentbaum (XP)
+- 3D-Schlachtmodus (Three.js, Skins)
+- PWA & Mobile Ready (Touch, Offline)
 
 ➡️ **[Live-Demo](https://bumblei3.github.io/schach9x9/)** ·
 **[Repository](https://github.com/bumblei3/schach9x9)**
@@ -32,12 +32,12 @@ bis zum strategischen 3-Spieler-Hex-Schach.
 
 3-Spieler Hexagonales Schach mit Stein-Schere-Papier-Kampfmechanik.
 
-- Drei Fraktionen (Feuer 🔥 / Natur 🌿 / Wasser 🌊)
-- RPS Combat (Feuer > Natur > Wasser > Feuer)
-- Replay-System (TSPN Format)
-- Opening Book & Puzzles
-- Auto-Battle Turniere
-- KI mit Lernfähigkeit
+- 3 Fraktionen (Feuer 🔥 / Natur 🌿 / Wasser 🌊)
+- RPS Kampfmechanik (Feuer > Natur > Wasser > Feuer)
+- Engine: Alpha-Beta, 4 Persönlichkeiten, Pondering
+- Auto-Battle Turniere mit Elo-Rating
+- Replay-System (TSPN) & Opening Book
+- PWA & Mobile (Swipe-to-Rotate, Touch)
 
 ➡️ **[Live-Demo](https://bumblei3.github.io/trischach/)** ·
 **[Repository](https://github.com/bumblei3/trischach)**
