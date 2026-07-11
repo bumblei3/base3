@@ -307,4 +307,3 @@ export function timeAgo(date: Date | number, locale = 'de-DE'): string {
 // PWA install prompt capture (Phase 8.1)
 export { PWAInstaller } from './PWAInstaller';
 export type { InstallChoice } from './PWAInstaller';
-}
