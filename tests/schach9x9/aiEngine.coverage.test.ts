@@ -146,12 +146,13 @@ describe('AI Engine - Coverage for Untested Paths', () => {
     test('setProgressCallback should store callback', () => {
       const callback = vi.fn();
       AIEngine.setProgressCallback(callback);
-      expect(true).toBe(true);
+      expect(AIEngine.progressCallback).toBe(callback);
     });
 
     test('setProgressCallback with null should clear callback', () => {
+      AIEngine.setProgressCallback(vi.fn());
       AIEngine.setProgressCallback(null);
-      expect(true).toBe(true);
+      expect(AIEngine.progressCallback).toBeNull();
     });
 
     test('progress callback can be registered without crashing', async () => {

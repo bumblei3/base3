@@ -159,14 +159,12 @@ describe('CampaignUI', () => {
     const grid = document.getElementById('campaign-levels-grid')!;
     const levelBtn = grid.children[0] as HTMLElement;
 
-    // Trigger mouseover
-    levelBtn.dispatchEvent(new MouseEvent('mouseover'));
-
-    // Trigger mouseout
-    levelBtn.dispatchEvent(new MouseEvent('mouseout'));
-
-    // No errors means hover handlers work
-    expect(true).toBe(true);
+    // Hover handlers must run without throwing and the button stays in the grid.
+    expect(() => {
+      levelBtn.dispatchEvent(new MouseEvent('mouseover'));
+      levelBtn.dispatchEvent(new MouseEvent('mouseout'));
+    }).not.toThrow();
+    expect(grid.contains(levelBtn)).toBe(true);
   });
 
   it('should show stars for completed levels', () => {

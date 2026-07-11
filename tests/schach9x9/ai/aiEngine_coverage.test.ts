@@ -117,9 +117,11 @@ describe('AIEngine Coverage Boost', () => {
   });
 
   test('setProgressCallback coverage', () => {
+    const cb = vi.fn();
+    aiEngine.setProgressCallback(cb);
+    expect(aiEngine.progressCallback).toBe(cb);
     aiEngine.setProgressCallback(null as any);
-    aiEngine.setProgressCallback(() => {});
-    expect(true).toBe(true);
+    expect(aiEngine.progressCallback).toBeNull();
   });
 
   test('computeZobristHash coverage', () => {

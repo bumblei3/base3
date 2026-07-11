@@ -307,15 +307,10 @@ describe('AIController Coverage Boost', () => {
       await new Promise(r => setTimeout(r, 10));
     }
 
-    // Trigger error
-    if (worker.onerror) {
-      worker.onerror(new Error('Test Worker Error'));
-    }
-
-    // It should proceed/resolve (fallback or others)
-    // Since we only have 1 worker in this mock setup (wait, initWorkerPool makes hardwareConcurrency=4),
-    // we need to error ALL workers or just verify error logging.
-    expect(true).toBe(true); // Just ensuring no crash
+    // Triggering the worker error handler must not throw and the handler
+    // must have been registered on the worker.
+    expect(worker.onerror).toBeTypeOf('function');
+    expect(() => worker.onerror(new Error('Test Worker Error'))).not.toThrow();
   });
 
   test('getAlgebraicNotation - correct formats', () => {
