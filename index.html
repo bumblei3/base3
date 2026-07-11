@@ -48,20 +48,36 @@
       flex-direction: column;
       font-family: 'Outfit', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
       color: var(--color-text-primary);
-      background:
-        radial-gradient(ellipse at 20% 20%, rgba(99, 102, 241, 0.14) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 80%, rgba(236, 72, 153, 0.12) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 50%, rgba(16, 185, 129, 0.08) 0%, transparent 60%),
-        linear-gradient(180deg, #05071a 0%, #0a0f28 100%);
-      background-attachment: fixed;
+      background: linear-gradient(180deg, #05071a 0%, #0a0f28 100%);
+      overflow-x: hidden;
     }
+    /* Layered glows (animated shimmer) */
     body::before {
       content: '';
       position: fixed;
+      inset: -20%;
+      z-index: -2;
+      background:
+        radial-gradient(40% 40% at 20% 20%, rgba(99, 102, 241, 0.18) 0%, transparent 60%),
+        radial-gradient(45% 45% at 80% 80%, rgba(236, 72, 153, 0.14) 0%, transparent 60%),
+        radial-gradient(40% 40% at 50% 50%, rgba(16, 185, 129, 0.10) 0%, transparent 60%);
+      animation: drift 22s ease-in-out infinite alternate;
+      will-change: transform;
+    }
+    /* Noise overlay */
+    body::after {
+      content: '';
+      position: fixed;
       inset: 0;
+      z-index: -1;
       background: url('data:image/svg+xml;utf8,<svg opacity="0.035" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%25" height="100%25" filter="url(%23n)"/></svg>');
       pointer-events: none;
-      z-index: -1;
+    }
+
+    @keyframes drift {
+      0%   { transform: translate3d(-3%, -2%, 0) scale(1); }
+      50%  { transform: translate3d(3%, 2%, 0) scale(1.08); }
+      100% { transform: translate3d(-2%, 3%, 0) scale(1.02); }
     }
 
     /* Top Navigation */
@@ -101,7 +117,7 @@
     }
     .hero .subtitle {
       font-size: clamp(1rem, 2.5vw, 1.3rem); color: var(--color-text-secondary); font-weight: 300;
-      margin: 0 0 var(--space-xl); max-width: 560px; line-height: 1.6;
+      margin: 0 0 var(--space-xl); max-width: 620px; line-height: 1.6;
       animation: fadeInUp 0.5s ease 0.2s forwards; opacity: 0;
     }
     .dev-status-note {
@@ -109,6 +125,7 @@
       background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.25);
       border-radius: var(--radius-md); color: #fbbf24; font-size: 0.85rem; line-height: 1.4; text-align: center;
     }
+    .dev-status-note a { color: #fbbf24; }
 
     /* Games Grid */
     .games-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: var(--space-lg); max-width: 920px; width: 100%; margin: 0 auto; }
@@ -159,12 +176,21 @@
     .features-list li::before { content: '✦'; color: var(--color-accent-primary); font-size: 0.7rem; }
     .game-card.trischach .features-list li::before { color: #3b82f6; }
 
+    .card-links { display: flex; gap: var(--space-sm); justify-content: center; flex-wrap: wrap; }
     .play-btn {
       display: inline-flex; align-items: center; gap: var(--space-sm);
       padding: var(--space-md) var(--space-xl); border-radius: var(--radius-lg);
       font-weight: 700; font-size: 1rem; text-decoration: none; border: none; cursor: pointer;
       transition: all var(--transition-fast);
     }
+    .ghost-btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: var(--space-md) var(--space-lg); border-radius: var(--radius-lg);
+      font-weight: 600; font-size: 0.95rem; text-decoration: none;
+      color: var(--color-text-primary); border: 1px solid var(--color-border);
+      background: rgba(255,255,255,0.03); transition: all var(--transition-fast);
+    }
+    .ghost-btn:hover { border-color: var(--color-accent-hover); transform: translateY(-2px); }
     .game-card.schach9x9 .play-btn { background: linear-gradient(135deg, #6366f1, #ec4899); color: white; }
     .game-card.schach9x9 .play-btn:hover { background: linear-gradient(135deg, #818cf8, #f472b6); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4); }
     .game-card.trischach .play-btn { background: linear-gradient(135deg, #ff4500, #10b981, #3b82f6); color: white; }
@@ -196,6 +222,7 @@
     }
     @media (prefers-reduced-motion: reduce) {
       * { animation: none !important; transition: none !important; }
+      body::before { animation: none !important; }
     }
   </style>
 </head>
@@ -220,17 +247,18 @@
     <section class="hero">
       <div class="hero-badge">
         <span class="dot"></span>
-        Zwei Spiele, eine Plattform
+        📌 Archiviertes Verweis-Repo
       </div>
       <h1>Base3 Chess Platform</h1>
       <p class="subtitle">
-        Entdecke zwei einzigartige Schachvarianten — vom klassischen 9×9 Brett mit Feenfiguren bis zum strategischen 3-Spieler-Hex-Schach.
+        Zwei einzigartige Schachvarianten auf einer Plattform — vom klassischen 9×9 Brett mit Feenfiguren
+        bis zum strategischen 3-Spieler-Hex-Schach. Code & Entwicklung leben in den eigenständigen Repos.
       </p>
 
       <p class="dev-status-note">
         📌 Archiviertes Verweis-Repo (Pointer). Die aktive Entwicklung findet in den eigenständigen Projekten
-        <a href="https://github.com/bumblei3/schach9x9" style="color:#fbbf24">Schach9x9</a> und
-        <a href="https://github.com/bumblei3/trischach" style="color:#fbbf24">Trischach</a> statt.
+        <a href="https://github.com/bumblei3/schach9x9">Schach9x9</a> und
+        <a href="https://github.com/bumblei3/trischach">Trischach</a> statt.
       </p>
 
       <div class="games-grid">
@@ -251,7 +279,10 @@
             <li>3D Battle-Chess View</li>
             <li>Interaktives Tutorial</li>
           </ul>
-          <a href="https://bumblei3.github.io/schach9x9/" class="play-btn">Spielen →</a>
+          <div class="card-links">
+            <a href="https://bumblei3.github.io/schach9x9/" class="play-btn">Spielen →</a>
+            <a href="https://github.com/bumblei3/schach9x9" class="ghost-btn" target="_blank" rel="noopener">GitHub ↗</a>
+          </div>
         </article>
 
         <!-- Trischach -->
@@ -271,7 +302,10 @@
             <li>Auto-Battle Turniere</li>
             <li>KI mit Lernfähigkeit</li>
           </ul>
-          <a href="https://bumblei3.github.io/trischach/" class="play-btn">Spielen →</a>
+          <div class="card-links">
+            <a href="https://bumblei3.github.io/trischach/" class="play-btn">Spielen →</a>
+            <a href="https://github.com/bumblei3/trischach" class="ghost-btn" target="_blank" rel="noopener">GitHub ↗</a>
+          </div>
         </article>
       </div>
 
