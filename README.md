@@ -15,6 +15,6 @@
 ## Historie
 
 Dieses Repo war ursprünglich ein Monorepo, das Schach9x9 und Trischach zusammen
-hielt (Build, Tests, CI, Docs). Seit 2026-07-11 ist es ein reines Verweis-Repo.
-Der letzte vollständige Monorepo-Stand ist über die Git-History dieses Repos
-einsehbar (`git log` vor dem Conversion-Commit).
+hielt (Build, Tests, CI, Docs). Seit 2026-07-11 (Conversion-Commit `405f403c`)
+ist es ein reines Verweis-Repo. Der letzte vollständige Monorepo-Stand ist über
+die Git-History dieses Repos einsehbar (`git log` vor dem Conversion-Commit).
