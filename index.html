@@ -3,69 +3,158 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="base3 — Verweis-Repo auf die Schach-Varianten Schach9x9 und Trischach." />
   <title>base3 — Schach9x9 &amp; Trischach</title>
   <style>
     :root {
-      --bg: #0a0e27;
-      --fg: #e2e8f0;
+      --bg: #070b1f;
+      --bg-2: #0d1330;
+      --fg: #e6ecf7;
+      --muted: #8a98b8;
       --accent: #31c48d;
-      --muted: #94a3b8;
-      --card: #111634;
+      --accent-2: #4f9bff;
+      --card: rgba(20, 28, 58, 0.66);
+      --card-border: rgba(120, 140, 200, 0.14);
+      --radius: 18px;
+      --shadow: 0 18px 50px -18px rgba(0, 0, 0, 0.7);
     }
     * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       margin: 0;
       min-height: 100vh;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      color: var(--fg);
+      background:
+        radial-gradient(1100px 700px at 12% -10%, rgba(79, 155, 255, 0.16), transparent 60%),
+        radial-gradient(900px 600px at 100% 0%, rgba(49, 196, 141, 0.14), transparent 55%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+      background-attachment: fixed;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      background: var(--bg);
-      color: var(--fg);
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-      padding: 2rem;
+      padding: clamp(1.5rem, 4vw, 4rem) 1.25rem 2.5rem;
     }
-    main { max-width: 640px; width: 100%; text-align: center; }
-    h1 { font-size: 2.4rem; margin: 0 0 0.5rem; }
-    .sub { color: var(--muted); margin: 0 0 2rem; }
-    .cards { display: grid; gap: 1rem; }
-    a.card {
-      display: block;
-      text-decoration: none;
-      color: var(--fg);
+    .wrap { width: 100%; max-width: 960px; }
+
+    /* Hero */
+    .hero { text-align: center; margin-bottom: 3rem; animation: rise .6s ease both; }
+    .badge {
+      display: inline-flex; align-items: center; gap: .5rem;
+      font-size: .78rem; letter-spacing: .04em; text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--card-border);
       background: var(--card);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 12px;
-      padding: 1.25rem 1.5rem;
-      transition: border-color .15s, transform .15s;
+      padding: .4rem .8rem; border-radius: 999px;
+      margin-bottom: 1.4rem;
     }
-    a.card:hover { border-color: var(--accent); transform: translateY(-2px); }
-    a.card h2 { margin: 0 0 .35rem; font-size: 1.3rem; color: var(--accent); }
-    a.card p { margin: 0; color: var(--muted); font-size: .95rem; }
-    .demo { display: inline-block; margin-top: .5rem; font-size: .85rem; color: var(--accent); }
-    footer { margin-top: 2.5rem; color: var(--muted); font-size: .8rem; }
+    .badge .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+    h1 {
+      font-size: clamp(2.6rem, 7vw, 4.4rem);
+      line-height: 1.02; margin: 0 0 .6rem; font-weight: 800; letter-spacing: -0.02em;
+      background: linear-gradient(120deg, #fff 10%, var(--accent) 55%, var(--accent-2) 100%);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .lede { color: var(--muted); font-size: clamp(1rem, 2.4vw, 1.18rem); max-width: 620px; margin: 0 auto; line-height: 1.55; }
+
+    /* Cards */
+    .games { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.4rem; }
+    .card {
+      position: relative; display: flex; flex-direction: column;
+      text-decoration: none; color: var(--fg);
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 1.8rem 1.6rem;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+      animation: rise .6s ease both;
+    }
+    .card:nth-child(2) { animation-delay: .08s; }
+    .card::before {
+      content: ""; position: absolute; inset: 0;
+      background: radial-gradient(420px 200px at var(--mx, 50%) -20%, rgba(49, 196, 141, 0.18), transparent 60%);
+      opacity: 0; transition: opacity .3s ease; pointer-events: none;
+    }
+    .card:hover { transform: translateY(-6px); border-color: var(--accent); box-shadow: 0 26px 60px -20px rgba(49, 196, 141, 0.35); }
+    .card:hover::before { opacity: 1; }
+    .card .glyph { font-size: 2.2rem; margin-bottom: .9rem; }
+    .card h2 { margin: 0 0 .5rem; font-size: 1.5rem; letter-spacing: -0.01em; }
+    .card .tag {
+      display: inline-block; font-size: .72rem; font-weight: 600; letter-spacing: .03em;
+      color: var(--accent); background: rgba(49, 196, 141, 0.12);
+      padding: .25rem .6rem; border-radius: 999px; margin-bottom: 1rem;
+    }
+    .card p { margin: 0 0 1.4rem; color: var(--muted); font-size: .95rem; line-height: 1.55; flex: 1; }
+    .links { display: flex; flex-wrap: wrap; gap: .6rem; }
+    .btn {
+      display: inline-flex; align-items: center; gap: .45rem;
+      font-size: .9rem; font-weight: 600; text-decoration: none;
+      padding: .6rem 1rem; border-radius: 11px; transition: background .2s, transform .15s;
+    }
+    .btn.primary { background: var(--accent); color: #04231a; }
+    .btn.primary:hover { transform: translateY(-2px); background: #3ed79c; }
+    .btn.ghost { color: var(--fg); border: 1px solid var(--card-border); background: rgba(255,255,255,0.03); }
+    .btn.ghost:hover { border-color: var(--accent-2); transform: translateY(-2px); }
+
+    footer {
+      margin-top: 3rem; text-align: center; color: var(--muted);
+      font-size: .82rem; line-height: 1.6; max-width: 620px;
+      border-top: 1px solid var(--card-border); padding-top: 1.6rem;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+    }
   </style>
 </head>
 <body>
-  <main>
-    <h1>base3</h1>
-    <p class="sub">Index / Landing — Verweis auf die beiden eigenständigen Spiele-Repositories.</p>
-    <div class="cards">
-      <a class="card" href="https://github.com/bumblei3/schach9x9">
+  <div class="wrap">
+    <header class="hero">
+      <span class="badge"><span class="dot"></span> Archiviertes Verweis-Repo</span>
+      <h1>base3</h1>
+      <p class="lede">
+        Ein Index für zwei Schach-Varianten. Die aktive Entwicklung findet in den
+        eigenständigen Projekten <strong>Schach9x9</strong> und <strong>Trischach</strong> statt.
+      </p>
+    </header>
+
+    <section class="games">
+      <a class="card" href="https://github.com/bumblei3/schach9x9"
+         onmousemove="this.style.setProperty('--mx', (event.clientX-this.getBoundingClientRect().left)+'px')">
+        <div class="glyph">♛</div>
+        <span class="tag">9×9 Schach</span>
         <h2>Schach9x9</h2>
-        <p>9×9 Schach mit neuen Figuren (Kanzler, Wächter, Nachtmahr, Erzengel), Kampagne, 3D, PWA.</p>
-        <span class="demo">▶ Live-Demo: bumblei3.github.io/schach9x9</span>
+        <p>9×9 Brett mit neuen Figuren (Kanzler, Wächter, Nachtmahr, Erzengel), Kampagne,
+          3D-Kämpfe und PWA — offline spielbar.</p>
+        <div class="links">
+          <a class="btn primary" href="https://bumblei3.github.io/schach9x9/">▶ Live-Demo</a>
+          <a class="btn ghost" href="https://github.com/bumblei3/schach9x9">GitHub</a>
+        </div>
       </a>
-      <a class="card" href="https://github.com/bumblei3/trischach">
+
+      <a class="card" href="https://github.com/bumblei3/trischach"
+         onmousemove="this.style.setProperty('--mx', (event.clientX-this.getBoundingClientRect().left)+'px')">
+        <div class="glyph">🔥🌊🌿</div>
+        <span class="tag">3-Spieler Hex</span>
         <h2>Trischach</h2>
-        <p>3-Spieler Hexagonal-Schach mit Schere-Stein-Papier-Kampf (Feuer 🔥 / Wasser 🌊 / Natur 🌿).</p>
-        <span class="demo">▶ Live-Demo: bumblei3.github.io/trischach</span>
+        <p>3-Spieler Hexagonal-Schach mit Schere-Stein-Papier-Kampf und drei Fraktionen
+          (Feuer, Wasser, Natur).</p>
+        <div class="links">
+          <a class="btn primary" href="https://bumblei3.github.io/trischach/">▶ Live-Demo</a>
+          <a class="btn ghost" href="https://github.com/bumblei3/trischach">GitHub</a>
+        </div>
       </a>
-    </div>
+    </section>
+
     <footer>
-      base3 ist nun ein reiner Verweis-Repo. Die aktive Entwicklung findet in den
-      oben verlinkten Standalone-Repos statt.
+      base3 ist ein reiner Verweis-Repo (Pointer). Der vollständige, frühere Monorepo-Stand
+      ist über die <a href="https://github.com/bumblei3/base3/commits/main">Git-History</a> einsehbar.
     </footer>
-  </main>
+  </div>
 </body>
 </html>
