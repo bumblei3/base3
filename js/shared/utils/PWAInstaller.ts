@@ -23,8 +23,8 @@ export class PWAInstaller {
     private deferredPrompt: BeforeInstallPromptEventLike | null = null;
     private installableCallbacks = new Set<InstallableCallback>();
     private installedCallbacks = new Set<InstalledCallback>();
-    private boundOnBeforeInstallPrompt: (e: Event) => void;
-    private boundOnAppInstalled: (e: Event) => void;
+    private boundOnBeforeInstallPrompt: (_e: Event) => void;
+    private boundOnAppInstalled: (_e: Event) => void;
 
     constructor() {
         this.boundOnBeforeInstallPrompt = this.handleBeforeInstallPrompt.bind(this);
