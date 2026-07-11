@@ -1,76 +1,14 @@
-# Dependencies
-node_modules/
+# base3 — pointer/index repo (no build artifacts)
 
-# Logs
-*.log
-npm-debug.log*
-
-# OS files
+# OS / IDE
 .DS_Store
 Thumbs.db
-
-# IDE
 .vscode/
 .idea/
 *.swp
-*.swo
 
-# Test coverage
-coverage/
-coverage_*.txt
-coverage_full.txt
-coverage_output.txt
-
-# Build output
-dist/
-build/
-*.d.ts
-*.d.ts.map
-*.js.map
-*.spec.js
-*.spec.d.ts
-*.spec.d.ts.map
-
-# Environment variables
-.env
-.env.local
-
-# Playwright
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
-/playwright/.auth/
-
-# TypeScript
-*.tsbuildinfo*
-
-# WASM
-engine-wasm/pkg/
-engine-wasm/target/
-
-# Temp files
-*.tmp
-*.temp
-current_test_run.txt
-full_coverage_raw.txt
-
-# Misc
-*.cjs
+# Logs
+*.log
 
 # Hermes agent session data
 .hermes/
-service-worker.js
-favicon.ico
-icon-*.png
-manifest.json
-*storybook.log
-storybook-static
-
-# NOTE: PWA source assets in public/ must be tracked (they are NOT build output).
-# These negations MUST come AFTER the generic ignores above to take effect.
-!public/service-worker.js
-!public/sw.js
-!public/manifest.json
-!public/icon-192.png
-!public/icon-512.png
