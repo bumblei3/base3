@@ -1,9 +1,11 @@
 # base3
 
-> **Index / Landing-Repo.** base3 ist nun ein reiner Verweis auf die beiden
-> eigenständigen Spiele-Repositories. Der frühere Merge-Monorepo-Code
-> (Schach9x9 + Trischach zusammen) wurde aus diesem Repo entfernt — die
-> aktive Entwicklung findet in den unten stehenden Standalone-Repos statt.
+> 📌 **Archiviertes Verweis-Repo (Pointer).** base3 ist kein aktives Projekt mehr,
+> sondern nur noch ein Index, der auf die beiden eigenständigen Spiele-Repositories
+> verlinkt. Code, Build, Tests und CI des früheren Merge-Monorepos wurden entfernt.
+> Die aktive Entwicklung findet in den unten stehenden Standalone-Repos statt.
+
+**Live:** [bumblei3.github.io/base3](https://bumblei3.github.io/base3/) (diese statische Verweis-Seite)
 
 ## Spiele
 
