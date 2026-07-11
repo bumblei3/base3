@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>base3 — Schach9x9 &amp; Trischach</title>
+  <style>
+    :root {
+      --bg: #0a0e27;
+      --fg: #e2e8f0;
+      --accent: #31c48d;
+      --muted: #94a3b8;
+      --card: #111634;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      padding: 2rem;
+    }
+    main { max-width: 640px; width: 100%; text-align: center; }
+    h1 { font-size: 2.4rem; margin: 0 0 0.5rem; }
+    .sub { color: var(--muted); margin: 0 0 2rem; }
+    .cards { display: grid; gap: 1rem; }
+    a.card {
+      display: block;
+      text-decoration: none;
+      color: var(--fg);
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      transition: border-color .15s, transform .15s;
+    }
+    a.card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    a.card h2 { margin: 0 0 .35rem; font-size: 1.3rem; color: var(--accent); }
+    a.card p { margin: 0; color: var(--muted); font-size: .95rem; }
+    .demo { display: inline-block; margin-top: .5rem; font-size: .85rem; color: var(--accent); }
+    footer { margin-top: 2.5rem; color: var(--muted); font-size: .8rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>base3</h1>
+    <p class="sub">Index / Landing — Verweis auf die beiden eigenständigen Spiele-Repositories.</p>
+    <div class="cards">
+      <a class="card" href="https://github.com/bumblei3/schach9x9">
+        <h2>Schach9x9</h2>
+        <p>9×9 Schach mit neuen Figuren (Kanzler, Wächter, Nachtmahr, Erzengel), Kampagne, 3D, PWA.</p>
+        <span class="demo">▶ Live-Demo: bumblei3.github.io/schach9x9</span>
+      </a>
+      <a class="card" href="https://github.com/bumblei3/trischach">
+        <h2>Trischach</h2>
+        <p>3-Spieler Hexagonal-Schach mit Schere-Stein-Papier-Kampf (Feuer 🔥 / Wasser 🌊 / Natur 🌿).</p>
+        <span class="demo">▶ Live-Demo: bumblei3.github.io/trischach</span>
+      </a>
+    </div>
+    <footer>
+      base3 ist nun ein reiner Verweis-Repo. Die aktive Entwicklung findet in den
+      oben verlinkten Standalone-Repos statt.
+    </footer>
+  </main>
+</body>
+</html>
