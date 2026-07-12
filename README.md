@@ -16,7 +16,7 @@ bis zum strategischen 3-Spieler-Hex-Schach.
 
 ### ♟️ Schach9x9
 
-9×9 Brett mit Feenfiguren (Erzbischof, Kanzler, Engel). *(aktuell: v1.0.3)*
+9×9 Brett mit Feenfiguren (Erzbischof, Kanzler, Engel). *(aktuell: v1.0.4)*
 
 - 9×9 Brett mit Feenfiguren (Erzbischof, Kanzler, Engel)
 - 5 KI-Persönlichkeiten + adaptives Zeitmanagement
@@ -30,7 +30,7 @@ bis zum strategischen 3-Spieler-Hex-Schach.
 
 ### ⬡ Trischach
 
-3-Spieler Hexagonales Schach mit Stein-Schere-Papier-Kampfmechanik. *(aktuell: v1.2.0)*
+3-Spieler Hexagonales Schach mit Stein-Schere-Papier-Kampfmechanik. *(aktuell: v1.2.1)*
 
 - 3 Fraktionen (Feuer 🔥 / Natur 🌿 / Wasser 🌊)
 - RPS Kampfmechanik (Feuer > Natur > Wasser > Feuer)
