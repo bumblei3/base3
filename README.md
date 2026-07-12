@@ -16,11 +16,12 @@ bis zum strategischen 3-Spieler-Hex-Schach.
 
 ### ♟️ Schach9x9
 
-9×9 Brett mit Feenfiguren (Erzbischof, Kanzler, Engel). *(aktuell: v1.0.4)*
+9×9 Brett mit Feenfiguren (Erzbischof, Kanzler, Engel). *(aktuell: v1.1.0)*
 
 - 9×9 Brett mit Feenfiguren (Erzbischof, Kanzler, Engel)
 - 5 KI-Persönlichkeiten + adaptives Zeitmanagement
 - Engine-Analyse-Modus & Zug-Qualitäts-Indikatoren
+- Eröffnungs-Trainer
 - Kampagnen-Modus & Talentbaum (XP)
 - 3D-Schlachtmodus (Three.js, Skins)
 - PWA & Mobile Ready (Touch, Offline)
