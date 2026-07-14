@@ -31,7 +31,7 @@ bis zum strategischen 3-Spieler-Hex-Schach.
 
 ### ⬡ Trischach
 
-3-Spieler Hexagonales Schach mit Stein-Schere-Papier-Kampfmechanik. *(aktuell: v1.3.0)*
+3-Spieler Hexagonales Schach mit Stein-Schere-Papier-Kampfmechanik. *(aktuell: v1.3.1)*
 
 - 3 Fraktionen (Feuer 🔥 / Natur 🌿 / Wasser 🌊)
 - RPS Kampfmechanik (Feuer > Natur > Wasser > Feuer)
