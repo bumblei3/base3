@@ -10,6 +10,19 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0f28'/%3E%3Ctext x='16' y='23' font-size='22' text-anchor='middle' fill='%2331c48d'%3E%E2%99%9F%3C/text%3E%3C/svg%3E" />
   <title>Base3 Chess Platform — Schach9x9 &amp; Trischach</title>
   <meta name="description" content="Zwei einzigartige Schachvarianten auf einer Plattform. Schach9x9 mit Feenfiguren und Trischach mit 3 Fraktionen." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Base3 Chess Platform — Schach9x9 &amp; Trischach" />
+  <meta name="twitter:description" content="9×9 Schach mit Feenfiguren (Erzbischof, Kanzler, Engel) und 3-Spieler Hex-Schach mit Stein-Schere-Papier-Kampf. Beide Spiele als PWA mit KI-Gegner." />
+  <meta name="twitter:site" content="@bumblei3" />
+  <meta name="og:type" content="website" />
+  <meta name="og:title" content="Base3 Chess Platform — Schach9x9 &amp; Trischach" />
+  <meta name="og:description" content="9×9 Schach mit Feenfiguren (Erzbischof, Kanzler, Engel) und 3-Spieler Hex-Schach mit Stein-Schere-Papier-Kampf. Beide Spiele als PWA mit KI-Gegner." />
+  <meta name="og:url" content="https://bumblei3.github.io/base3/" />
+  <meta name="og:image" content="https://bumblei3.github.io/base3/og-image.png" />
+  <meta name="og:image:width" content="1200" />
+  <meta name="og:image:height" content="630" />
+  <meta name="og:locale" content="de_DE" />
+  <link rel="canonical" href="https://bumblei3.github.io/base3/" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
@@ -127,6 +140,41 @@
       border-radius: var(--radius-md); color: #fbbf24; font-size: 0.85rem; line-height: 1.4; text-align: center;
     }
     .dev-status-note a { color: #fbbf24; }
+
+    /* Was ist neu */
+    .whats-new {
+      max-width: 720px; width: 100%; margin: 0 auto var(--space-xl);
+      text-align: left; animation: fadeInUp 0.5s ease 0.35s forwards; opacity: 0;
+    }
+    .whats-new-heading {
+      font-size: 1.1rem; font-weight: 600; color: var(--color-text-secondary);
+      margin: 0 0 var(--space-md); letter-spacing: 0.01em;
+    }
+    .whats-new-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-md);
+    }
+    .whats-new-card {
+      background: var(--color-bg-glass); border: 1px solid var(--color-border); border-radius: var(--radius-lg);
+      padding: var(--space-lg); backdrop-filter: blur(12px);
+      transition: border-color var(--transition-normal), background var(--transition-normal);
+    }
+    .whats-new-card:hover { border-color: var(--color-border-hover); background: var(--color-bg-glass-hover); }
+    .whats-new-card.schach9x9-card { border-left: 3px solid #6366f1; }
+    .whats-new-card.trischach-card { border-left: 3px solid #3b82f6; }
+    .whats-new-label {
+      display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem;
+      font-weight: 600; letter-spacing: 0.02em; color: var(--color-text-secondary);
+      background: rgba(255,255,255,0.05); border: 1px solid var(--color-border);
+      border-radius: 999px; padding: 2px 10px; margin-bottom: var(--space-sm);
+    }
+    .whats-new-card.schach9x9-card .whats-new-label { color: #c7d2fe; border-color: rgba(99,102,241,0.4); }
+    .whats-new-card.trischach-card .whats-new-label { color: #bfdbfe; border-color: rgba(59,130,246,0.4); }
+    .whats-new-list {
+      list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 1rem;
+      font-size: 0.85rem; color: var(--color-text-secondary); line-height: 1.5;
+    }
+    .whats-new-list li { display: flex; align-items: flex-start; gap: var(--space-xs); }
+    .whats-new-list li::before { content: '·'; color: var(--color-accent-primary); font-weight: 700; margin-top: 0.15em; }
 
     /* Games Grid */
     .games-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: var(--space-lg); max-width: 920px; width: 100%; margin: 0 auto; }
@@ -255,7 +303,7 @@
     <section class="hero">
       <div class="hero-badge">
         <span class="dot"></span>
-        📌 Archiviertes Verweis-Repo
+        Aktive Projektplattform — zwei Spiele, ein Repo
       </div>
       <h1>Base3 Chess Platform</h1>
       <p class="subtitle">
@@ -264,10 +312,35 @@
       </p>
 
       <p class="dev-status-note">
-        📌 Archiviertes Verweis-Repo (Pointer). Die aktive Entwicklung findet in den eigenständigen Projekten
+        Die aktive Entwicklung findet in den eigenständigen Projekten
         <a href="https://github.com/bumblei3/schach9x9">Schach9x9</a> und
         <a href="https://github.com/bumblei3/trischach">Trischach</a> statt.
       </p>
+
+      <!-- Was ist neu -->
+      <section class="whats-new" aria-label="Aktuelle Releases">
+        <h2 class="whats-new-heading">Was ist neu</h2>
+        <div class="whats-new-grid">
+          <article class="whats-new-card schach9x9-card">
+            <span class="whats-new-label">Schach9x9 · v1.6.2</span>
+            <ul class="whats-new-list">
+              <li>Interaktiver Post-Game-Replay-Overlay — Partie nach dem Ende Schritt für Schritt wiederbespielbar</li>
+              <li>Opening Book erweitert auf 2604 eindeutige Positionen (v1.6.1)</li>
+              <li>Reproduzierbare Illegal-Move-Tests versionisiert für Debugging</li>
+              <li>Security: js-yaml auf 5.3.0 gesperrt (CVE-2026-59870)</li>
+            </ul>
+          </article>
+          <article class="whats-new-card trischach-card">
+            <span class="whats-new-label">Trischach · v1.4.0</span>
+            <ul class="whats-new-list">
+              <li>NNUE v2 mit Elo-Pipeline und Parallel Search</li>
+              <li>Tutorial-Modus für neue Spieler</li>
+              <li>Replay-Analyse: Partie wiederholbar mit Zug-Kommentaren</li>
+              <li>WTFPL-Lizenz hinzugefügt</li>
+            </ul>
+          </article>
+        </div>
+      </section>
 
       <div class="games-grid">
         <!-- Schach9x9 -->
@@ -278,7 +351,7 @@
             <span class="piece-icon">♜</span>
           </div>
           <h2>Schach9x9</h2>
-          <span class="version-pill">v1.6.2</span>
+          <span class="version-pill">v1.6.2 · 2026-07-20</span>
           <p class="tagline">9×9 Brett mit Feenfiguren. Erzbischof, Kanzler &amp; Engel.</p>
           <ul class="features-list">
             <li>9×9 Brett mit Feenfiguren</li>
@@ -303,7 +376,7 @@
             <span class="piece-icon">🌊</span>
           </div>
           <h2>Trischach</h2>
-          <span class="version-pill">v1.4.0</span>
+          <span class="version-pill">v1.4.0 · 2026-07-16</span>
           <p class="tagline">3-Spieler Hexagonales Schach. Stein-Schere-Papier Kampfmechanik.</p>
           <ul class="features-list">
             <li>3 Fraktionen (Feuer/Natur/Wasser)</li>
@@ -337,7 +410,9 @@
       <a href="https://bumblei3.github.io/schach9x9/" target="_blank" rel="noopener">Schach9x9 Demo</a>
       <a href="https://bumblei3.github.io/trischach/" target="_blank" rel="noopener">Trischach Demo</a>
     </div>
-    <p>Base3 Chess Platform — Open Source</p>
+    <p>Base3 Chess Platform — Open Source<br/>
+      <a href="https://github.com/bumblei3/schach9x9">Schach9x9</a> ·
+      <a href="https://github.com/bumblei3/trischach">Trischach</a></p>
   </footer>
 
   <!-- Mobile Menu Script -->

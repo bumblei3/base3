@@ -46,6 +46,22 @@ bis zum strategischen 3-Spieler-Hex-Schach.
 
 ---
 
+## Was ist neu
+
+### Schach9x9 · v1.6.2 (2026-07-20)
+
+- Interaktiver Post-Game-Replay-Overlay — Partie nach dem Ende Schritt für Schritt wiederbespielbar
+- Opening Book erweitert auf 2604 eindeutige Positionen (v1.6.1, 2026-07-19)
+- Reproduzierbare Illegal-Move-Tests versionisiert für Debugging
+- Security: js-yaml auf 5.3.0 gesperrt (CVE-2026-59870)
+
+### Trischach · v1.4.0 (2026-07-16)
+
+- NNUE v2 mit Elo-Pipeline und Parallel Search
+- Tutorial-Modus für neue Spieler
+- Replay-Analyse: Partie wiederholbar mit Zug-Kommentaren
+- WTFPL-Lizenz hinzugefügt
+
 ## Historie
 
 Dieses Repo war ursprünglich ein Monorepo, das Schach9x9 und Trischach zusammen
