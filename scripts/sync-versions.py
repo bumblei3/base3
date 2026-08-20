@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 """
 sync-versions.py — liest Versionsnummern + Release-Datum aus schach9x9/trischach
-(package.json + git tag) und patcht index.html + README.md.
+(package.json + git tag) und patcht index.html, README.md und FAQ.md.
+
+Ersetzt Version-Pills, JSON-LD (softwareVersion + datePublished),
+whats-new-Labels und die FAQ-/README-Versionszeilen — unabhängig davon,
+welche Version vorher stand. Die Bullet-Texte unter „Was ist neu“ bleiben
+manuell (kommen aus den Changelogs).
 
 Aufruf: python3 scripts/sync-versions.py
         python3 scripts/sync-versions.py --schach-path ../schach9x9 --trischach-path ../trischach
@@ -17,6 +22,10 @@ from pathlib import Path
 BASE3 = Path(__file__).resolve().parent.parent
 INDEX_HTML = BASE3 / "index.html"
 README_MD = BASE3 / "README.md"
+FAQ_MD = BASE3 / "FAQ.md"
+
+VER = r"\d+\.\d+\.\d+"
+DATE = r"\d{4}-\d{2}-\d{2}"
 
 
 def version_from_pkg(pkg_path: Path) -> str:
@@ -39,83 +48,122 @@ def release_date(repo_path: Path, version: str) -> str:
         return "????-??-??"
 
 
+def _sub(pattern: str, repl: str, text: str, flags: int = 0, count: int = 0) -> tuple[str, bool]:
+    new = re.sub(pattern, repl, text, count=count, flags=flags)
+    return new, new != text
+
+
 def patch_index(html_text: str, sv: str, sd: str, tv: str, td: str) -> tuple[str, bool]:
     changed = False
 
-    # version-pills im <span class="version-pill">v1.6.2 · 2026-07-20</span>
-    schach_pat = re.compile(
-        r'(<span class="version-pill">v)' + re.escape(sv) +
-        r'( · \d{4}-\d{2}-\d{2})</span>'
+    def apply(pat: str, repl: str) -> None:
+        nonlocal html_text, changed
+        html_text, hit = _sub(pat, repl, html_text)
+        changed = changed or hit
+
+    apply(
+        rf'(<article class="game-card schach9x9">[\s\S]*?<span class="version-pill">)v{VER}(?: · (?:{DATE})?)?(</span>)',
+        rf"\g<1>v{sv} · {sd}\g<2>",
     )
-    trischach_pat = re.compile(
-        r'(<span class="version-pill">v)' + re.escape(tv) +
-        r'( · \d{4}-\d{2}-\d{2})</span>'
+    apply(
+        rf'(<article class="game-card trischach">[\s\S]*?<span class="version-pill">)v{VER}(?: · (?:{DATE})?)?(</span>)',
+        rf"\g<1>v{tv} · {td}\g<2>",
     )
-
-    def _schach(m):
-        nonlocal changed
-        changed = True
-        return f'{m.group(1)}{sv} · {sd}</span>'
-
-    def _trischach(m):
-        nonlocal changed
-        changed = True
-        return f'{m.group(1)}{tv} · {td}</span>'
-
-    text2 = schach_pat.sub(_schach, html_text)
-    text3 = trischach_pat.sub(_trischach, text2)
-    if changed:
-        return text3, True
-    return html_text, False
+    apply(
+        rf'(<span class="whats-new-label">Schach9x9 · )v{VER}(</span>)',
+        rf"\g<1>v{sv}\g<2>",
+    )
+    apply(
+        rf'(<span class="whats-new-label">Trischach · )v{VER}(</span>)',
+        rf"\g<1>v{tv}\g<2>",
+    )
+    apply(
+        rf'("name": "Schach9x9"[\s\S]*?"softwareVersion": ")v{VER}(")',
+        rf"\g<1>v{sv}\g<2>",
+    )
+    apply(
+        rf'("name": "Schach9x9"[\s\S]*?"datePublished": "){DATE}(")',
+        rf"\g<1>{sd}\g<2>",
+    )
+    apply(
+        rf'("name": "Trischach"[\s\S]*?"softwareVersion": ")v{VER}(")',
+        rf"\g<1>v{tv}\g<2>",
+    )
+    apply(
+        rf'("name": "Trischach"[\s\S]*?"datePublished": "){DATE}(")',
+        rf"\g<1>{td}\g<2>",
+    )
+    return html_text, changed
 
 
 def patch_readme(md_text: str, sv: str, sd: str, tv: str, td: str) -> tuple[str, bool]:
     changed = False
 
-    # README: *(aktuell: v1.6.2)* und ### Schach9x9 · v1.6.2 (2026-07-20)
-    schach_pill_pat = re.compile(r'\(aktuell: v' + re.escape(sv) + r'\)')
-    trischach_pill_pat = re.compile(r'\(aktuell: v' + re.escape(tv) + r'\)')
+    def apply(pat: str, repl: str) -> None:
+        nonlocal md_text, changed
+        md_text, hit = _sub(pat, repl, md_text)
+        changed = changed or hit
 
-    # "Was ist neu": ### Schach9x9 · v1.6.2 (2026-07-20)
-    schach_new_pat = re.compile(r'(### Schach9x9 · v)' + re.escape(sv) + r'(\ \(\d{4}-\d{2}-\d{2}\))')
-    trischach_new_pat = re.compile(r'(### Trischach · v)' + re.escape(tv) + r'(\ \(\d{4}-\d{2}-\d{2}\))')
+    apply(
+        rf"(Feenfiguren \(Erzbischof, Kanzler, Engel\)\. \*\(aktuell: v){VER}(\)\*)",
+        rf"\g<1>{sv}\g<2>",
+    )
+    apply(
+        rf"(Stein-Schere-Papier-Kampfmechanik\. \*\(aktuell: v){VER}(\)\*)",
+        rf"\g<1>{tv}\g<2>",
+    )
+    apply(
+        rf"(### Schach9x9 · v){VER}( \({DATE}\))",
+        rf"\g<1>{sv} ({sd})",
+    )
+    apply(
+        rf"(### Trischach · v){VER}( \({DATE}\))",
+        rf"\g<1>{tv} ({td})",
+    )
+    return md_text, changed
 
-    def _schach_pill(m):
-        nonlocal changed
-        changed = True
-        return f'(aktuell: v{sv})'
 
-    def _trischach_pill(m):
-        nonlocal changed
-        changed = True
-        return f'(aktuell: v{tv})'
+def patch_faq(md_text: str, sv: str, sd: str, tv: str, td: str) -> tuple[str, bool]:
+    changed = False
 
-    def _schach_new(m):
-        nonlocal changed
-        changed = True
-        return f'{m.group(1)}{sv}{m.group(2)}'
+    def apply(pat: str, repl: str) -> None:
+        nonlocal md_text, changed
+        md_text, hit = _sub(pat, repl, md_text)
+        changed = changed or hit
 
-    def _trischach_new(m):
-        nonlocal changed
-        changed = True
-        return f'{m.group(1)}{tv}{m.group(2)}'
-
-    text2 = schach_pill_pat.sub(_schach_pill, md_text)
-    text3 = trischach_pill_pat.sub(_trischach_pill, text2)
-    text4 = schach_new_pat.sub(_schach_new, text3)
-    text5 = trischach_new_pat.sub(_trischach_new, text4)
-
-    if changed:
-        return text5, True
-    return md_text, False
+    apply(
+        rf"(\*\*Schach9x9:\*\* v){VER}( \({DATE}\))",
+        rf"\g<1>{sv} ({sd})",
+    )
+    apply(
+        rf"(\*\*Trischach:\*\* v){VER}( \({DATE}\))",
+        rf"\g<1>{tv} ({td})",
+    )
+    apply(
+        rf"(\*\*Schach9x9 \(v){VER}(\):\*\*)",
+        rf"\g<1>{sv}\g<2>",
+    )
+    apply(
+        rf"(\*\*Trischach \(v){VER}(\):\*\*)",
+        rf"\g<1>{tv}\g<2>",
+    )
+    return md_text, changed
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Sync version pills in base3 from schach9x9 + trischach.")
-    parser.add_argument("--schach-path", default="/home/tobber/schach9x9",
-                        help="Pfad zum schach9x9-Repo (default: /home/tobber/schach9x9)")
-    parser.add_argument("--trischach-path", default="/home/tobber/trischach",
-                        help="Pfad zum trischach-Repo (default: /home/tobber/trischach)")
+    parser = argparse.ArgumentParser(
+        description="Sync version pills in base3 from schach9x9 + trischach."
+    )
+    parser.add_argument(
+        "--schach-path",
+        default="/home/tobber/schach9x9",
+        help="Pfad zum schach9x9-Repo (default: /home/tobber/schach9x9)",
+    )
+    parser.add_argument(
+        "--trischach-path",
+        default="/home/tobber/trischach",
+        help="Pfad zum trischach-Repo (default: /home/tobber/trischach)",
+    )
     args = parser.parse_args()
 
     schach_dir = Path(args.schach_path).expanduser().resolve()
@@ -145,24 +193,30 @@ def main():
     if not sv or not tv:
         print("FEHLER: Versionsnummern konnten nicht gelesen werden", file=sys.stderr)
         sys.exit(1)
+    if sd.startswith("?") or td.startswith("?"):
+        print(
+            f"WARNUNG: Tag-Datum unvollständig (Schach9x9 v{sv}={sd}, Trischach v{tv}={td})",
+            file=sys.stderr,
+        )
 
-    # index.html
-    html_text = INDEX_HTML.read_text(encoding="utf-8")
-    new_html, html_changed = patch_index(html_text, sv, sd, tv, td)
-    if html_changed:
-        INDEX_HTML.write_text(new_html, encoding="utf-8")
-        print(f"index.html: Version-Pills aktualisiert (Schach9x9 v{sv} · {sd}, Trischach v{tv} · {td})")
-    else:
-        print("index.html: keine Änderungen (bereits aktuell)")
+    jobs = (
+        (INDEX_HTML, patch_index, "index.html"),
+        (README_MD, patch_readme, "README.md"),
+        (FAQ_MD, patch_faq, "FAQ.md"),
+    )
+    any_changed = False
+    for path, fn, label in jobs:
+        text = path.read_text(encoding="utf-8")
+        new_text, changed = fn(text, sv, sd, tv, td)
+        if changed:
+            path.write_text(new_text, encoding="utf-8")
+            print(f"{label}: Versionen → Schach9x9 v{sv} · {sd}, Trischach v{tv} · {td}")
+            any_changed = True
+        else:
+            print(f"{label}: keine Änderungen (bereits aktuell)")
 
-    # README.md
-    md_text = README_MD.read_text(encoding="utf-8")
-    new_md, md_changed = patch_readme(md_text, sv, sd, tv, td)
-    if md_changed:
-        README_MD.write_text(new_md, encoding="utf-8")
-        print(f"README.md: Version-Angaben aktualisiert (Schach9x9 v{sv} {sd}, Trischach v{tv} {td})")
-    else:
-        print("README.md: keine Änderungen (bereits aktuell)")
+    if not any_changed:
+        print("Alles bereits auf dem Stand der Nachbar-Repos.")
 
 
 if __name__ == "__main__":

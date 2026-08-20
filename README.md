@@ -56,7 +56,7 @@ bis zum strategischen 3-Spieler-Hex-Schach.
 
 ### ♟️ Schach9x9
 
-9×9 Brett mit Feenfiguren (Erzbischof, Kanzler, Engel). *(aktuell: v1.6.2)*
+9×9 Brett mit Feenfiguren (Erzbischof, Kanzler, Engel). *(aktuell: v1.7.0)*
 
 - 9×9 Brett mit Feenfiguren (Erzbischof, Kanzler, Engel)
 - 5 KI-Persönlichkeiten + adaptives Zeitmanagement
@@ -72,7 +72,7 @@ bis zum strategischen 3-Spieler-Hex-Schach.
 
 ### ⬡ Trischach
 
-3-Spieler Hexagonales Schach mit Stein-Schere-Papier-Kampfmechanik. *(aktuell: v1.4.0)*
+3-Spieler Hexagonales Schach mit Stein-Schere-Papier-Kampfmechanik. *(aktuell: v1.5.0)*
 
 - 3 Fraktionen (Feuer 🔥 / Natur 🌿 / Wasser 🌊)
 - RPS Kampfmechanik (Feuer > Natur > Wasser > Feuer)
@@ -88,19 +88,19 @@ bis zum strategischen 3-Spieler-Hex-Schach.
 
 ## Was ist neu
 
-### Schach9x9 · v1.6.2 (2026-07-20)
+### Schach9x9 · v1.7.0 (2026-08-20)
 
-- Interaktiver Post-Game-Replay-Overlay — Partie nach dem Ende Schritt für Schritt wiederbespielbar
-- Opening Book erweitert auf 2604 eindeutige Positionen (v1.6.1, 2026-07-19)
-- Reproduzierbare Illegal-Move-Tests versionisiert für Debugging
-- Security: js-yaml auf 5.3.0 gesperrt (CVE-2026-59870)
+- Interaktiver Post-Game-Replay — Partie nach dem Ende Zug für Zug nachspielen
+- 8×8-Modus mit vollen Standardregeln (Rochade, En passant, Unterverwandlung)
+- Engine-Bewertung: Läuferpaar, Freibauern, Turm auf der 7. Reihe
+- Position teilen per Link
 
-### Trischach · v1.4.0 (2026-07-16)
+### Trischach · v1.5.0 (2026-08-20)
 
-- NNUE v2 mit Elo-Pipeline und Parallel Search
-- Tutorial-Modus für neue Spieler
-- Replay-Analyse: Partie wiederholbar mit Zug-Kommentaren
-- WTFPL-Lizenz hinzugefügt
+- RPS-Taktik-Puzzles
+- Schlag-Vorschau + Coach-Leiste (RPS Vorteil/Nachteil vor dem Zug)
+- Analyse-Modus mit PV-Linie und RPS-Erklärung
+- Endspiel-Tablebases (KR vs KP, KQ vs KR)
 
 ## Historie
 
