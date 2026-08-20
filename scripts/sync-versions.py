@@ -1,16 +1,15 @@
 #!/usr/bin/env python3
 """
-sync-versions.py — holt Versionsnummern + Release-Datum aus schach9x9 &
-trischach (package.json → git tag date) und patcht index.html + README.md.
+sync-versions.py — holt Versionsnummern + Release-Datum aus schach9x9 & trischach
+(package.json / git describe) und patcht index.html + README.md.
 
-Aufruf aus dem base3-Verzeichnis:
-    python3 scripts/sync-versions.py
-    python3 scripts/sync-versions.py --schach-path /home/tobber/schach9x9 --trischach-path /home/tobber/trischach
+Usage:
+  python3 scripts/sync-versions.py
+  python3 scripts/sync-versions.py --schach-path ../schach9x9 --trischach-path ../trischach
 
-Exit 0 = up-to-date oder gepatcht, Exit 1 = ein Repo nicht gefunden.
+Exit 0 bei up-to-date oder erfolgreich gepatcht, Exit 1 wenn ein Repo fehlt.
 """
 
-from __future__ import annotations
 import argparse
 import json
 import re
@@ -18,124 +17,107 @@ import subprocess
 import sys
 from pathlib import Path
 
-INDEX_HTML = Path("/home/tobber/base3/index.html")
-README_MD = Path("/home/tobber/base3/README.md")
+# Pfade relativ zum base3-Root (wird von __file__ aufgelöst)
+BASE3 = Path(__file__).resolve().parent.parent
+INDEX_HTML = BASE3 / "index.html"
+README_MD = BASE3 / "README.md"
 
 
-def read_version(pkg_json: Path) -> str:
+def read_version_from_pkg(pkg_json: Path) -> str:
+    """Liest die 'version' aus package.json."""
     data = json.loads(pkg_json.read_text(encoding="utf-8"))
     return str(data["version"])
 
 
-def tag_date(repo_dir: Path, version: str) -> str:
-    """Datum des Tags v<version> im Repo (ISO YYYY-MM-DD)."""
-    tag = f"v{version}"
+def tag_date(schach_dir: Path, ver: str) -> str:
+    """Datum des Tags v<ver> aus dem Repo (YYYY-MM-DD)."""
+    tag = f"v{ver}"
     try:
         out = subprocess.check_output(
-            ["git", "log", "-1", "--format=%cd", "--date=short", tag],
-            cwd=repo_dir,
-            text=True,
+            ["git", "log", "-1", "--format=%cd", "--date=short", "--", tag],
+            cwd=schach_dir,
             stderr=subprocess.DEVNULL,
         ).strip()
-        return out
-    except (subprocess.CalledProcessError, FileNotFoundError):
+        return out.decode("utf-8")
+    except Exception:
         return "????"
 
 
-def patch_index_html(html: Path, schach_ver: str, schach_date: str,
-                     trischach_ver: str, trischach_date: str) -> bool:
-    text = html.read_text(encoding="utf-8")
+def patch_index_html(html_text: str, sv: str, sd: str, tv: str, td: str) -> tuple[str, bool]:
+    """Patched index.html mit neuen Version-Pills."""
     changed = False
 
-    # Pattern: <span class="version-pill">v1.6.2 · 2026-07-20</span>
-    schach_re = re.compile(
-        r'(<span class="version-pill">v)' + re.escape(schach_ver) +
-        r'( \xc2\xb7 \d{4}-\d{2}-\d{2})</span>'
+    # Ersetze den Schach9x9-Pill nur wenn Datum fehlt (bereits aktuell = Pill hat Datum)
+    schach_pat = re.compile(
+        r'(<span class="version-pill">v)' +
+        re.escape(sv) +
+        r'( \u00b7 (\d{4}-\d{2}-\d{2})|</span>)'
     )
-    trischach_re = re.compile(
-        r'(<span class="version-pill">v)' + re.escape(trischach_ver) +
-        r'( \xc2\xb7 \d{4}-\d{2}-\d{2})</span>'
+    trischach_pat = re.compile(
+        r'(<span class="version-pill">v)' +
+        re.escape(tv) +
+        r'( \u00b7 \d{4}-\d{2}-\d{2}</span>)'
     )
 
-    def _replace_schach(m):
+    # Ersetze den Schach9x9-Pill
+    def schach_repl(m):
         nonlocal changed
         changed = True
-        return f'{m.group(1)}{schach_ver} \xc2\xb7 {schach_date}</span>'
+        return f'{m.group(1)}{sv} \u00b7 {sd}</span>'
 
-    def _replace_trischach(m):
+    # Ersetze den Trischach-Pill
+    def trischach_repl(m):
         nonlocal changed
         changed = True
-        return f'{m.group(1)}{trischach_ver} \xc2\xb7 {trischach_date}</span>'
+        return f'{m.group(1)}{tv} \u00b7 {td}</span>'
 
-    text2 = schach_re.sub(_replace_schach, text)
-    text3 = trischach_re.sub(_replace_trischach, text2)
+    new_text = schach_pat.sub(schach_repl, html_text)
+    new_text = trischach_pat.sub(trischach_repl, new_text)
 
-    if changed:
-        html.write_text(text3, encoding="utf-8")
-    return changed
+    return new_text, changed
 
 
-def patch_readme(md: Path, schach_ver: str, schach_date: str,
-                 trischach_ver: str, trischach_date: str) -> bool:
-    text = md.read_text(encoding="utf-8")
+def patch_readme(md_text: str, sv: str, sd: str, tv: str, td: str) -> tuple[str, bool]:
+    """Patched README.md mit neuen Version-Angaben."""
     changed = False
 
-    # Spiel-Abschnitt: *(aktuell: v1.6.2)*
-    schach_re = re.compile(r'\(aktuell: v' + re.escape(schach_ver) + r'\)')
-    trischach_re = re.compile(r'\(aktuell: v' + re.escape(trischach_ver) + r'\)')
-
-    def _schach(m):
-        nonlocal changed
-        changed = True
-        return f'(aktuell: v{schach_ver})'
-
-    def _trischach(m):
-        nonlocal changed
-        changed = True
-        return f'(aktuell: v{trischach_ver})'
-
-    text2 = schach_re.sub(_schach, text)
-    text3 = trischach_re.sub(_trischach, text2)
-
-    # "Was ist neu" Sektion: ### Schach9x9 · v1.6.2 (2026-07-20)
-    schach_new_re = re.compile(
-        r'(### Schach9x9 \xc2\xb7 v)' + re.escape(schach_ver) +
-        r'(\ \(\d{4}-\d{2}-\d{2}\))'
+    # Schach9x9: (aktuell: v1.6.2)
+    schach_pat = re.compile(
+        r'\(aktuell: v' + re.escape(sv) + r'\)'
     )
-    trischach_new_re = re.compile(
-        r'(### Trischach \xc2\xb7 v)' + re.escape(trischach_ver) +
-        r'(\ \(\d{4}-\d{2}-\d{2}\))'
+    trischach_pat = re.compile(
+        r'\(aktuell: v' + re.escape(tv) + r'\)'
     )
 
-    def _schach_new(m):
+    def schach_repl(m):
         nonlocal changed
         changed = True
-        return f'{m.group(1)}{schach_ver}{m.group(2)}'
+        return f'(aktuell: v{sv})'
 
-    def _trischach_new(m):
+    def trischach_repl(m):
         nonlocal changed
         changed = True
-        return f'{m.group(1)}{trischach_ver}{m.group(2)}'
+        return f'(aktuell: v{tv})'
 
-    text4 = schach_new_re.sub(_schach_new, text3)
-    text5 = trischach_new_re.sub(_trischach_new, text4)
+    new_text = schach_pat.sub(schach_repl, md_text)
+    new_text = trischach_pat.sub(trischach_repl, new_text)
 
-    if changed:
-        md.write_text(text5, encoding="utf-8")
-    return changed
+    return new_text, changed
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Sync version pills in base3 from sub-repos"
+        description="Syncs version pills in base3/index.html + base3/README.md from the game subrepos."
     )
     parser.add_argument(
-        "--schach-path", default="/home/tobber/schach9x9",
-        help="Pfad zum schach9x9-Verzeichnis",
+        "--schach-path",
+        default="/home/tobber/schach9x9",
+        help="Pfad zum schach9x9-Verzeichnis (standardmäßig /home/tobber/schach9x9)",
     )
     parser.add_argument(
-        "--trischach-path", default="/home/tobber/trischach",
-        help="Pfad zum trischach-Verzeichnis",
+        "--trischach-path",
+        default="/home/tobber/trischach",
+        help="Pfad zum trischach-Verzeichnis (standardmäßig /home/tobber/trischach)",
     )
     args = parser.parse_args()
 
@@ -143,51 +125,63 @@ def main():
     trischach_dir = Path(args.trischach_path).expanduser().resolve()
 
     if not schach_dir.is_dir():
-        print(f"FEHLER: schach9x9 nicht gefunden unter {schach_dir}", file=sys.stderr)
+        print(f"FEHLER: schach9x9-Verzeichnis nicht gefunden: {schach_dir}", file=sys.stderr)
         sys.exit(1)
     if not trischach_dir.is_dir():
-        print(f"FEHLER: trischach nicht gefunden unter {trischach_dir}", file=sys.stderr)
+        print(f"FEHLER: trischach-Verzeichnis nicht gefunden: {trischach_dir}", file=sys.stderr)
         sys.exit(1)
 
-    pkg_schach = schach_dir / "package.json"
-    pkg_trischach = trischach_dir / "package.json"
+    schach_pkg = schach_dir / "package.json"
+    trischach_pkg = trischach_dir / "package.json"
 
-    if not pkg_schach.is_file():
-        print(f"FEHLER: {pkg_schach} nicht gefunden", file=sys.stderr)
+    if not schach_pkg.is_file():
+        print(f"FEHLER: package.json nicht gefunden in {schach_dir}", file=sys.stderr)
         sys.exit(1)
-    if not pkg_trischach.is_file():
-        print(f"FEHLER: {pkg_trischach} nicht gefunden", file=sys.stderr)
+    if not trischach_pkg.is_file():
+        print(f"FEHLER: package.json nicht gefunden in {trischach_dir}", file=sys.stderr)
         sys.exit(1)
 
-    schach_ver = read_version(pkg_schach)
-    trischach_ver = read_version(pkg_trischach)
+    schach_ver = read_version_from_pkg(schach_pkg)
+    trischach_ver = read_version_from_pkg(trischach_pkg)
+
     schach_date = tag_date(schach_dir, schach_ver)
     trischach_date = tag_date(trischach_dir, trischach_ver)
 
-    # index.html
-    idx_changed = patch_index_html(
-        INDEX_HTML, schach_ver, schach_date, trischach_ver, trischach_date
-    )
-    # README.md
-    readme_changed = patch_readme(
-        README_MD, schach_ver, schach_date, trischach_ver, trischach_date
+    # index.html patchen
+    html_text = INDEX_HTML.read_text(encoding="utf-8")
+    new_html, html_changed = patch_index_html(
+        html_text, schach_ver, schach_date, trischach_ver, trischach_date
     )
 
-    print(f"Schach9x9: v{schach_ver} ({schach_date})")
-    print(f"Trischach: v{trischach_ver} ({trischach_date})")
-    print()
-    print(f"index.html aktualisiert: {'JA' if idx_changed else 'Nein (bereits aktuell)'}")
-    print(f"README.md aktualisiert: {'JA' if readme_changed else 'Nein (bereits aktuell)'}")
+    # README.md patchen
+    md_text = README_MD.read_text(encoding="utf-8")
+    new_md, md_changed = patch_readme(
+        md_text, schach_ver, schach_date, trischach_ver, trischach_date
+    )
 
-    if idx_changed or readme_changed:
-        print()
-        print("Git-Commit:"
-              "\n  cd /home/tobber/base3"
-              "\n  git add index.html README.md"
-              "\n  git commit -m \"chore: sync version pills via sync-versions.py\""
-              "\n  git push")
+    if html_changed:
+        INDEX_HTML.write_text(new_html, encoding="utf-8")
+        print("index.html: Version-Pills aktualisiert")
     else:
-        print("\nAlles aktuell — kein Commit nötig.")
+        print("index.html: Version-Pills bereits aktuell")
+
+    if md_changed:
+        README_MD.write_text(new_md, encoding="utf-8")
+        print("README.md: Version-Angaben aktualisiert")
+    else:
+        print("README.md: Version-Angaben bereits aktuell")
+
+    print()
+    print(f"Schach9x9:  v{schach_ver}  ({schach_date})")
+    print(f"Trischach:  v{trischach_ver}  ({trischach_date})")
+
+    if html_changed or md_changed:
+        print()
+        print("Nächste Schritte:")
+        print("  cd /home/tobber/base3")
+        print("  git add index.html README.md")
+        print("  git commit -m 'chore: sync version pills'")
+        print("  git push")
 
 
 if __name__ == "__main__":
