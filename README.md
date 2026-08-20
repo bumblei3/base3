@@ -9,6 +9,46 @@
 
 ---
 
+## Was ist base3?
+
+base3 ist eine statische Landing Page, die als Eintrittspunkt für zwei eigenständige
+Schach-Varianten dient — zwei Experimente an der Grenze dessen, was ein Schachspiel
+sein kann, ohne sich in einen Multiplayer-Komplex zu verrenken.
+
+Die eine Seite ist **Schach9x9**: ein 9×9-Brett mit drei zusätzlichen Figuren
+(Erzbischof, Kanzler, Engel), die das klassische Schach-Puzzle erweitern, ohne
+das Fundament zu zerstören. Fünf KI-Persönlichkeiten, ein Engine-Analyse-Modus und
+ein Eröffnungs-Trainer machen es zu einem Standalone-Schach-Erlebnis mit Tiefe.
+
+Die andere ist **Trischach**: 3-Spieler-Hex-Schach mit Stein-Schere-Papier-Kampfmechanik.
+Drei Fraktionen (Feuer, Natur, Wasser) stehen in einem zyklischen Kampf — nicht nur
+Schach, sondern Schach in einem Ringkampf, in dem die Beziehung zwischen den Fraktionen
+genauso wichtig ist wie der Brettaufbau.
+
+Die Plattform existiert, weil beides zwei Seiten derselben Neugier ist: Schach
+verändern, ohne es zu verlassen. Code, Build, Tests und CI leben in den
+eigenständigen Repos — base3 ist der Türkeiler.
+
+---
+
+## Feenfiguren im Detail
+
+Schach9x9 ergänzt das klassische 8×8-Schachbrett um drei zusätzliche Figuren.
+Die drei "Feenfiguren" sind:
+
+- **Erzbischof** — kombiniert Läufer- und Springerzug in einer Figur.
+  Stärker als ein normaler Springer oder Läufer, aber teuer in der Entwicklung.
+- **Kanzler** — bewegt sich wie ein Turm, kann aber zusätzlich einen Springer-Zug
+  ausführen. Vereint Turm-Kraft mit der Flexibilität eines Springers.
+- **Engel** — eine Defensivfigur, die schützende Züge ermöglicht und tief in die
+  eigenen Linien zurückkehren kann. Weniger aggressiv, aber sehr pflegend.
+
+Die Feenfiguren verändern das Spiel dadurch, dass die Eröffnung und die Bündnis-Theorie
+neue Muster bekommen, ohne dass das klassische Schach-Grundverständnis über Bord geht.
+Wer normales Schach kennt, findet sofort rein, aber die Tiefe kommt von den neuen Figuren.
+
+---
+
 ## Spiele
 
 Zwei einzigartige Schachvarianten — vom klassischen 9×9 Brett mit Feenfiguren

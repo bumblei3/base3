@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://bumblei3.github.io/base3/sitemap.xml
