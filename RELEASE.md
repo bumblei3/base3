@@ -11,6 +11,8 @@ in schach9x9 oder trischach aktualisiert werden.
    - Trischach: https://github.com/bumblei3/trischach/releases
 
 2. Sync die Version-Pills aus den Nachbar-Repos:
+
+   **Lokal (Sub-Repos vorhanden):**
    ```bash
    python3 scripts/sync-versions.py
    ```
@@ -25,8 +27,22 @@ in schach9x9 oder trischach aktualisiert werden.
      --trischach-path /path/to/trischach
    ```
 
-   Das Script nutzt als Fallback die GitHub Releases API, falls das lokale
-   Git-Repo nicht verfügbar ist oder das Tag-Datum nicht gelesen werden kann.
+   **API-Modus (Sub-Repos nicht lokal verfügbar):**
+   ```bash
+   python3 scripts/sync-versions.py --api-mode \
+     --schach-repo-owner bumblei3 \
+     --schach-repo-name schach9x9 \
+     --trischach-repo-owner bumblei3 \
+     --trischach-repo-name trischach
+   ```
+   Das Script fragt GitHub Contents API (package.json) nach der Version und
+   GitHub Releases API (releases/tags/vX.Y.Z) nach dem Release-Datum ab.
+   Repository.owner/name kann auch automatisch aus dem lokalen
+   `package.json`/`repository.url` extrahiert werden, wenn vorhanden.
+   Unauthenticated Requests — öffentliche Repos, rate-limited (~60/h).
+
+   Das Script nutzt als Fallback auch die GitHub Releases API, falls das
+   lokale Git-Repo nicht verfügbar ist oder das Tag-Datum nicht gelesen werden kann.
 
 3. Prüfe die Ausgabe:
    - `index.html`, `README.md`, `FAQ.md` sollten jetzt die neuen Versionen zeigen.
