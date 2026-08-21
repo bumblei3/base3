@@ -6,6 +6,8 @@ in schach9x9 oder trischach aktualisiert werden.
 
 ## Wenn ein Sub-Repo einen Release veröffentlicht
 
+### Manueller Schritt (optional, falls kein Cron-Job gewünscht)
+
 1. Prüfe die neue Version:
    - Schach9x9: https://github.com/bumblei3/schach9x9/releases
    - Trischach: https://github.com/bumblei3/trischach/releases
@@ -58,17 +60,25 @@ in schach9x9 oder trischach aktualisiert werden.
 
    Das `pages.yml`-Workflow deployt automatisch nach dem Push.
 
-## Automatisierung (optional)
+### Automatisierter Pfad (Standard in base3)
 
-Das Sync-Script kann auch in CI oder als cron-Job laufen. Es ist nicht als
-Release-Trigger konfiguriert — ein manueller Schritt oder ein separater
-Dispatcher ist nötig, wenn automatisierte Syncs gewünscht sind.
+base3 hat einen täglichen Cron-Job (`.github/workflows/sync-versions.yml`),
+der jeden Tag um 02:00 UTC `scripts/sync-versions.py --api-mode` ausführt und
+nur bei Änderung commit/pusht. Das löst `pages.yml` aus und hält die
+Version-Pills / JSON-LD / FAQ / README automatisch aktuell, ohne Cross-Repo-Trigger
+oder manuelle Schritte.
+
+Der Cron-Job kann auch manuell getriggert werden:
+```bash
+gh workflow run sync-versions.yml
+```
 
 ## Hinweis
 
-base3 hat nur das `pages.yml`-Workflow (GitHub Pages Deploy) — es gibt kein Code-,
-Build- oder Test-CI hier, weil base3 ein statisches Verweis-Repo ist. Das CI der
-Spiele lebt in den eigenständigen Repos:
+base3 hat das `pages.yml`-Workflow (GitHub Pages Deploy) und das
+`sync-versions.yml`-Workflow (automatischer Version-Pills-Sync). Es gibt kein
+Code-, Build- oder Test-CI hier, weil base3 ein statisches Verweis-Repo ist.
+Das CI der Spiele lebt in den eigenständigen Repos:
 
 - https://github.com/bumblei3/schach9x9/actions
 - https://github.com/bumblei3/trischach/actions
