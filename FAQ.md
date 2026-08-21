@@ -149,8 +149,9 @@ Beiträge sind über die eigenständigen Repos möglich:
 - **Schach9x9:** https://github.com/bumblei3/schach9x9 (Issues, Pull Requests)
 - **Trischach:** https://github.com/bumblei3/trischach (Issues, Pull Requests)
 
-base3 selbst (das Verweis-Repo) benötigt keine Beiträge — außer bei
-Landing-Page-Aktualisierungen (Version-Pills, neue Releases).
+- base3 selbst (das Verweis-Repo) benötigt keine Beiträge — außer bei
+  Landing-Page-Aktualisierungen (Version-Pills, neue Releases).
+  Eine Anleitung steht in [RELEASE.md](RELEASE.md).
 
 ## Ist base3 offline-fähig?
 

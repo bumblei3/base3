@@ -17,6 +17,7 @@ import json
 import re
 import subprocess
 import sys
+import urllib.request
 from pathlib import Path
 
 BASE3 = Path(__file__).resolve().parent.parent
@@ -34,8 +35,12 @@ def version_from_pkg(pkg_path: Path) -> str:
 
 
 def release_date(repo_path: Path, version: str) -> str:
-    """Datum des Tags `v<version>` im Repo (YYYY-MM-DD)."""
+    """Datum des Tags `v<version>` im Repo (YYYY-MM-DD).
+
+    Primär: lokales Git-Tag. Fallback: GitHub Releases API (aus package.json).
+    """
     tag = f"v{version}"
+    # 1) Lokales Git-Tag versuchen
     try:
         out = subprocess.check_output(
             ["git", "log", "-1", "--format=%cd", "--date=short", tag],
@@ -43,9 +48,50 @@ def release_date(repo_path: Path, version: str) -> str:
             stderr=subprocess.DEVNULL,
             text=True,
         ).strip()
-        return out
+        if out and not out.startswith("?"):
+            return out
     except (subprocess.CalledProcessError, FileNotFoundError, ValueError):
-        return "????-??-??"
+        pass
+
+    # 2) Fallback: GitHub API über repository.url aus package.json
+    pkg_path = repo_path / "package.json"
+    if pkg_path.is_file():
+        try:
+            pkg = json.loads(pkg_path.read_text(encoding="utf-8"))
+            repo_url = pkg.get("repository", {}).get("url", "")
+            if repo_url:
+                m = re.search(r"github\.com[/:]([^/]+)/([^/]+)", repo_url)
+                if m:
+                    owner, name = m.group(1), m.group(2)
+                    gd = _release_date_from_github(owner, name, version)
+                    if not gd.startswith("?"):
+                        return gd
+        except (json.JSONDecodeError, OSError):
+            pass
+
+    return "????-??-??"
+
+
+def _release_date_from_github(repo_owner: str, repo_name: str, version: str) -> str:
+    """Fragt GitHub Releases API nach dem Release-Datum für v<version>.
+
+    Rückgabe: YYYY-MM-DD oder '????-??-??' bei Fehler.
+    Unauthenticated Request — public repos, rate-limited (60/h).
+    """
+    tag = f"v{version}"
+    url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/releases/tags/{tag}"
+    try:
+        req = urllib.request.Request(
+            url, headers={"Accept": "application/vnd.github+json"}
+        )
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            published = data.get("published_at") or data.get("created_at") or ""
+            if published:
+                return published[:10]
+    except Exception:
+        pass
+    return "????-??-??"
 
 
 def _sub(pattern: str, repl: str, text: str, flags: int = 0, count: int = 0) -> tuple[str, bool]:
