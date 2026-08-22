@@ -14,14 +14,17 @@
   <meta name="twitter:title" content="Base3 Chess Platform — Schach9x9 &amp; Trischach" />
   <meta name="twitter:description" content="9×9 Schach mit Feenfiguren (Erzbischof, Kanzler, Engel) und 3-Spieler Hex-Schach mit Stein-Schere-Papier-Kampf. Beide Spiele als PWA mit KI-Gegner." />
   <meta name="twitter:site" content="@bumblei3" />
-  <meta name="og:type" content="website" />
-  <meta name="og:title" content="Base3 Chess Platform — Schach9x9 &amp; Trischach" />
-  <meta name="og:description" content="9×9 Schach mit Feenfiguren (Erzbischof, Kanzler, Engel) und 3-Spieler Hex-Schach mit Stein-Schere-Papier-Kampf. Beide Spiele als PWA mit KI-Gegner." />
-  <meta name="og:url" content="https://bumblei3.github.io/base3/" />
-  <meta name="og:image" content="https://bumblei3.github.io/base3/og-image.png" />
-  <meta name="og:image:width" content="1200" />
-  <meta name="og:image:height" content="630" />
-  <meta name="og:locale" content="de_DE" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Base3 Chess Platform — Schach9x9 &amp; Trischach" />
+  <meta property="og:description" content="9×9 Schach mit Feenfiguren (Erzbischof, Kanzler, Engel) und 3-Spieler Hex-Schach mit Stein-Schere-Papier-Kampf. Beide Spiele als PWA mit KI-Gegner." />
+  <meta property="og:url" content="https://bumblei3.github.io/base3/" />
+  <meta property="og:site_name" content="Base3 Chess Platform" />
+  <meta property="og:image" content="https://bumblei3.github.io/base3/og-image.png" />
+  <meta property="og:image:alt" content="Base3 Chess Platform — Schach9x9 & Trischach Preview" />
+  <meta name="twitter:image" content="https://bumblei3.github.io/base3/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content="de_DE" />
   <link rel="canonical" href="https://bumblei3.github.io/base3/" />
   <script type="application/ld+json">
   {
@@ -421,7 +424,10 @@
         <!-- Schach9x9 -->
         <article class="game-card schach9x9">
           <div class="game-preview">
-            <img src="./assets/preview-schach9x9.png" alt="Schach9x9 Brett Vorschau" loading="eager" />
+            <picture>
+              <source srcset="./assets/preview-schach9x9.webp" type="image/webp" />
+              <img src="./assets/preview-schach9x9.png" alt="Schach9x9 Brett Vorschau" width="1536" height="608" loading="eager" decoding="async" />
+            </picture>
           </div>
           <h2>Schach9x9</h2>
           <span class="version-pill">v1.7.0 · 2026-08-20</span>
@@ -444,7 +450,10 @@
         <!-- Trischach -->
         <article class="game-card trischach">
           <div class="game-preview">
-            <img src="./assets/preview-trischach.png" alt="Trischach Hex-Schach Vorschau" loading="eager" />
+            <picture>
+              <source srcset="./assets/preview-trischach.webp" type="image/webp" />
+              <img src="./assets/preview-trischach.png" alt="Trischach Hex-Schach Vorschau" width="1536" height="608" loading="eager" decoding="async" />
+            </picture>
           </div>
           <h2>Trischach</h2>
           <span class="version-pill">v1.5.0 · 2026-08-20</span>
