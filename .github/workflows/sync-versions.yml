@@ -28,7 +28,10 @@ jobs:
           python-version: "3.12"
 
       - name: Run version sync
-        run: python3 scripts/sync-versions.py --api-mode
+        run: |
+          python3 scripts/sync-versions.py --api-mode \
+            --schach-repo-owner bumblei3 --schach-repo-name schach9x9 \
+            --trischach-repo-owner bumblei3 --trischach-repo-name trischach
 
       - name: Commit and push if changed
         run: |
