@@ -38,7 +38,7 @@ der Code hier ist ausschließlich die Landing Page (HTML/CSS).
 
 Die aktuellen Versionen sind:
 
-- **Schach9x9:** v1.9.0 (2026-08-23)
+- **Schach9x9:** v2.0.0 (2026-08-23)
 - **Trischach:** v1.5.0 (2026-08-20)
 
 Die Version-Pills, JSON-LD und README-Angaben lassen sich mit
@@ -50,7 +50,7 @@ Die Texte unter „Was ist neu“ kommen weiterhin per Hand aus den Changelogs.
 Die Landing Page zeigt in der „Was ist neu“-Sektion die wichtigsten Änderungen
 der aktuellen Versionen.
 
-**Schach9x9 (v1.9.0):**
+**Schach9x9 (v2.0.0):**
 - Engine-M1.1: Zobrist-Hash + Quiesce-Fix — ~+230 Elo Stärkegewinn
 - NNUE-Pipeline (Datagen, Trainer, JS-Inference) als Fundament
 - Eval-Knobs: Läuferpaar, Freibauern, LMR/NullMove/Probcut feinjustierbar

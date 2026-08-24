@@ -88,7 +88,7 @@ bis zum strategischen 3-Spieler-Hex-Schach.
 
 ## Was ist neu
 
-### Schach9x9 · v1.9.0 (2026-08-23)
+### Schach9x9 · v2.0.0 (2026-08-23)
 
 - Engine-M1.1: Zobrist-Hash + Quiesce-Fix — ~+230 Elo Stärkegewinn
 - NNUE-Pipeline (Datagen, Trainer, JS-Inference) als Fundament
