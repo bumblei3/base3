@@ -56,7 +56,7 @@ bis zum strategischen 3-Spieler-Hex-Schach.
 
 ### ♟️ Schach9x9
 
-9×9 Brett mit Feenfiguren (Erzbischof, Kanzler, Engel). *(aktuell: v1.7.0)*
+9×9 Brett mit Feenfiguren (Erzbischof, Kanzler, Engel). *(aktuell: v2.0.0)*
 
 - 9×9 Brett mit Feenfiguren (Erzbischof, Kanzler, Engel)
 - 5 KI-Persönlichkeiten + adaptives Zeitmanagement

@@ -57,10 +57,10 @@ der aktuellen Versionen.
 - Position teilen per Link
 
 **Trischach (v1.6.0):**
-- RPS-Taktik-Puzzles
-- Schlag-Vorschau + Coach-Leiste (RPS Vorteil/Nachteil vor dem Zug)
-- Analyse-Modus mit PV-Linie und RPS-Erklärung
-- Endspiel-Tablebases (KR vs KP, KQ vs KR)
+- Deterministisches Tagespuzzle (leicht am Wochenende, medium unter der Woche)
+- Statistik-Dashboard (Partien, Puzzle-Lösequote, Daily-Streak)
+- Feedback-Kanal (GitHub Issue-Template)
+- Test-Suite auf 838 Tests, Branch-Coverage 84.5%
 
 ## Ist base3 noch aktiv?
 
