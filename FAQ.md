@@ -39,7 +39,7 @@ der Code hier ist ausschließlich die Landing Page (HTML/CSS).
 Die aktuellen Versionen sind:
 
 - **Schach9x9:** v2.0.0 (2026-08-23)
-- **Trischach:** v1.5.0 (2026-08-20)
+- **Trischach:** v1.6.0 (2026-08-24)
 
 Die Version-Pills, JSON-LD und README-Angaben lassen sich mit
 `python3 scripts/sync-versions.py` aus den Nachbar-Repos ziehen.
@@ -56,7 +56,7 @@ der aktuellen Versionen.
 - Eval-Knobs: Läuferpaar, Freibauern, LMR/NullMove/Probcut feinjustierbar
 - Position teilen per Link
 
-**Trischach (v1.5.0):**
+**Trischach (v1.6.0):**
 - RPS-Taktik-Puzzles
 - Schlag-Vorschau + Coach-Leiste (RPS Vorteil/Nachteil vor dem Zug)
 - Analyse-Modus mit PV-Linie und RPS-Erklärung
