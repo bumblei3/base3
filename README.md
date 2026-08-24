@@ -72,7 +72,7 @@ bis zum strategischen 3-Spieler-Hex-Schach.
 
 ### ⬡ Trischach
 
-3-Spieler Hexagonales Schach mit Stein-Schere-Papier-Kampfmechanik. *(aktuell: v1.5.0)*
+3-Spieler Hexagonales Schach mit Stein-Schere-Papier-Kampfmechanik. *(aktuell: v1.6.0)*
 
 - 3 Fraktionen (Feuer 🔥 / Natur 🌿 / Wasser 🌊)
 - RPS Kampfmechanik (Feuer > Natur > Wasser > Feuer)
@@ -95,12 +95,12 @@ bis zum strategischen 3-Spieler-Hex-Schach.
 - Eval-Knobs: Läuferpaar, Freibauern, LMR/NullMove/Probcut feinjustierbar
 - Position teilen per Link
 
-### Trischach · v1.5.0 (2026-08-20)
+### Trischach · v1.6.0 (2026-08-24)
 
-- RPS-Taktik-Puzzles
-- Schlag-Vorschau + Coach-Leiste (RPS Vorteil/Nachteil vor dem Zug)
-- Analyse-Modus mit PV-Linie und RPS-Erklärung
-- Endspiel-Tablebases (KR vs KP, KQ vs KR)
+- Deterministisches Tagespuzzle (leicht am Wochenende, medium unter der Woche)
+- Statistik-Dashboard (Partien, Puzzle-Lösequote, Daily-Streak)
+- Feedback-Kanal (GitHub Issue-Template)
+- Test-Suite auf 838 Tests, Branch-Coverage 84.5%
 
 ## Historie
 
