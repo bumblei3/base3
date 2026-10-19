@@ -75,6 +75,18 @@ def test_faq_cards_are_left_aligned():
     assert "text-align: center;" in HTML.split(".faq-q {", 1)[1].split("}", 1)[0]
 
 
+def test_faq_grid_is_two_columns_from_700px():
+    assert ".faq-grid { display: grid; grid-template-columns: 1fr;" in HTML
+    assert "@media (min-width: 700px)" in HTML
+    assert ".faq-grid { grid-template-columns: 1fr 1fr; }" in HTML
+
+
+def test_landing_page_omits_siehe_auch_card():
+    assert '<h3 class="faq-q">Siehe auch</h3>' not in HTML
+    faq = (BASE3 / "FAQ.md").read_text(encoding="utf-8")
+    assert "## Siehe auch" in faq
+
+
 def test_play_faq_uses_demo_names():
     assert ">Schach9x9 Live-Demo</a>" in HTML
     assert ">Trischach Live-Demo</a>" in HTML
