@@ -43,7 +43,9 @@ Die aktuellen Versionen sind:
 
 Die Version-Pills, JSON-LD und README-Angaben lassen sich mit
 `python3 scripts/sync-versions.py` aus den Nachbar-Repos ziehen.
-Die Texte unter „Was ist neu“ kommen weiterhin per Hand aus den Changelogs.
+Die „Was ist neu“-Bullets kommen aus den Release-Notes der jeweiligen
+neuesten Releases (GitHub Releases API) und werden vom selben Script
+aktualisiert.
 
 ## Was gibt es Neues?
 
@@ -51,16 +53,15 @@ Die Landing Page zeigt in der „Was ist neu“-Sektion die wichtigsten Änderun
 der aktuellen Versionen.
 
 **Schach9x9 (v2.0.0):**
-- Engine-M1.1: Zobrist-Hash + Quiesce-Fix — ~+230 Elo Stärkegewinn
-- NNUE-Pipeline (Datagen, Trainer, JS-Inference) als Fundament
-- Eval-Knobs: Läuferpaar, Freibauern, LMR/NullMove/Probcut feinjustierbar
-- Position teilen per Link
+- Kapitel 7–12: Erzbischof-Gabel, Kanzler-Spieß, Engel vs Dame, Nachtreiter-Linien, Feenrat, Imperator-Finale
+- 8 handgemachte Puzzles, jede Lösung engine-verifiziert Matt in 1
+- Perk „Taktik-Genie" wirksam (Tipps in Kampagnen nur mit Perk)
+- Ein Talent pro Feenfigur mit echtem Effekt (+Gold/+XP)
 
 **Trischach (v1.6.0):**
-- Deterministisches Tagespuzzle (leicht am Wochenende, medium unter der Woche)
-- Statistik-Dashboard (Partien, Puzzle-Lösequote, Daily-Streak)
-- Feedback-Kanal (GitHub Issue-Template)
-- Test-Suite auf 838 Tests, Branch-Coverage 84.5%
+- Deterministisches Tagespuzzle: FNV-1a-Auswahl pro Datum aus dem 155-Puzzle-Pool — jeder Spieler bekommt dasselbe Puzzle.
+- Statistik-Dashboard: Partien-/Puzzle-Statistik lokal, plus 💬 Feedback-Button mit GitHub-Issue-Template.
+- Test-Suite 800 → 838 Tests: invariant-first Härtung von board/analysis/ai-core/pwa/rps-puzzle/tutorial/opening-book/game-stats.
 
 ## Ist base3 noch aktiv?
 

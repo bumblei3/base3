@@ -38,7 +38,7 @@ jobs:
           git diff --quiet || {
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add index.html README.md FAQ.md
+            git add index.html README.md FAQ.md sitemap.xml
             git commit -m "chore(base3): sync version pills from schach9x9/trischach (automated)"
             git push
           }

@@ -1,0 +1,33 @@
+name: Check links (dead-link guard)
+
+# Prüft alle ausgehenden Links aus index.html / README.md / FAQ.md.
+# Fängt umbenannte Repos, verschobene Demos oder abgeschaltete Seiten.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    # Wöchentlich Montags 03:00 UTC (nach dem nightly sync)
+    - cron: "0 3 * * 1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: check-links
+  cancel-in-progress: true
+
+jobs:
+  links:
+    name: Outbound links alive?
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check links
+        run: python3 scripts/check-links.py --workers 8 --timeout 20

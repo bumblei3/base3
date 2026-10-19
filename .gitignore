@@ -10,5 +10,13 @@ Thumbs.db
 # Logs
 *.log
 
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Build-Artefakt für den Pages-Deploy (nur index.html + assets/)
+_site/
+
 # Hermes agent session data
 .hermes/

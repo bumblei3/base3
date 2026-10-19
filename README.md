@@ -90,17 +90,50 @@ bis zum strategischen 3-Spieler-Hex-Schach.
 
 ### Schach9x9 · v2.0.0 (2026-08-23)
 
-- Engine-M1.1: Zobrist-Hash + Quiesce-Fix — ~+230 Elo Stärkegewinn
-- NNUE-Pipeline (Datagen, Trainer, JS-Inference) als Fundament
-- Eval-Knobs: Läuferpaar, Freibauern, LMR/NullMove/Probcut feinjustierbar
-- Position teilen per Link
+- Kapitel 7–12: Erzbischof-Gabel, Kanzler-Spieß, Engel vs Dame, Nachtreiter-Linien, Feenrat, Imperator-Finale
+- 8 handgemachte Puzzles, jede Lösung engine-verifiziert Matt in 1
+- Perk „Taktik-Genie" wirksam (Tipps in Kampagnen nur mit Perk)
+- Ein Talent pro Feenfigur mit echtem Effekt (+Gold/+XP)
 
 ### Trischach · v1.6.0 (2026-08-24)
 
-- Deterministisches Tagespuzzle (leicht am Wochenende, medium unter der Woche)
-- Statistik-Dashboard (Partien, Puzzle-Lösequote, Daily-Streak)
-- Feedback-Kanal (GitHub Issue-Template)
-- Test-Suite auf 838 Tests, Branch-Coverage 84.5%
+- Deterministisches Tagespuzzle: FNV-1a-Auswahl pro Datum aus dem 155-Puzzle-Pool — jeder Spieler bekommt dasselbe Puzzle.
+- Statistik-Dashboard: Partien-/Puzzle-Statistik lokal, plus 💬 Feedback-Button mit GitHub-Issue-Template.
+- Test-Suite 800 → 838 Tests: invariant-first Härtung von board/analysis/ai-core/pwa/rps-puzzle/tutorial/opening-book/game-stats.
+
+## CI & Tests
+
+base3 hat vier Workflows (`.github/workflows/`):
+
+| Workflow | Zweck | Trigger |
+|---|---|---|
+| `pages.yml` | Deploy (nur `index.html`, `assets/`, `og-image.png`, `robots.txt`, `sitemap.xml`) | push auf `main` |
+| `sync-versions.yml` | Heiler: Pills/JSON-LD/FAQ/README + „Was ist neu"-Bullets + `sitemap.xml`-lastmod | täglich 02:00 UTC + manuell |
+| `check-sync.yml` | Wächter: failt, wenn committede Pills, Bullets oder `lastmod` veraltet sind | push, täglich 01:55 UTC + manuell |
+| `check-links.yml` | Wächter: alle ausgehenden Links aus den drei Dateien erreichbar? | push, montags 03:00 UTC + manuell |
+
+Die Bullets kommen aus den Release-Notes des jeweils neuesten Releases
+(GitHub Releases API) — im `--api-mode`. Zu lange Zeilen werden gekürzt
+(erst Klammerdetails, dann der abschließende Satz, erst dann hart am Wortrand).
+Ohne `--api-mode` bleibt die „Was ist neu"-Sektion unangetastet
+(`--no-whats-new` schaltet sie grundsätzlich ab).
+
+`check-sync.yml` läuft **bevor** `sync-versions.yml`: ein roter Run heißt, dass
+`sync-versions.py` das Drift-Problem nicht automatisch heilen konnte
+(API-Rate-Limit, fehlende Rechte) und die Seite veraltete Zahlen zeigt.
+`check-links.yml` wertet 403/429/503 als „nicht beurteilbar" und ignoriert
+`<link rel="preconnect">` (ein 404 dort ist normal).
+
+Tests (kein Netz nötig, Fixtures unter `tests/fixtures/`):
+
+```bash
+python3 -m pip install pytest
+python3 -m pytest          # Sync, Sitemap, Validator, Link-Sammlung
+python3 scripts/validate_landing_page.py   # Tag-Balance, JSON-LD, Link-Inventar
+```
+
+Die Patch-Funktionen arbeiten auf Dateikopien in `tmp_path`; nur die
+Versions-/Datumsquellen werden monkeypatcht.
 
 ## Historie
 

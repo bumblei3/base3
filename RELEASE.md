@@ -20,7 +20,8 @@ in schach9x9 oder trischach aktualisiert werden.
    ```
    Das Script liest `package.json` und das Tag-Datum aus den lokalen Repos
    (Standard-Pfade: `/home/tobber/schach9x9`, `/home/tobber/trischach`) und patcht
-   `index.html`, `README.md` und `FAQ.md`.
+   `index.html`, `README.md` und `FAQ.md`. Die „Was ist neu"-Bullets bleiben im
+   lokalen Modus unangetastet (es gibt hier keine Release-Notes).
 
    Bei Bedarf alternative Pfade angeben:
    ```bash
@@ -48,30 +49,59 @@ in schach9x9 oder trischach aktualisiert werden.
 
 3. Prüfe die Ausgabe:
    - `index.html`, `README.md`, `FAQ.md` sollten jetzt die neuen Versionen zeigen.
-   - Die „Was ist neu"-Bullets unterhalb der Version-Pills sind **manuell** und
-     müssen separat aktualisiert werden (sie kommen aus den Changelogs).
+   - Die „Was ist neu“-Bullets werden aus den Release-Notes des neuesten
+     Releases des jeweiligen Repos gezogen (nur im `--api-mode`; im lokalen
+     Modus bleiben sie unangetastet). Mit `--no-whats-new` lässt man sie
+     grundsätzlich aus.
+   - `sitemap.xml`: `lastmod` der Base3-Seite = Datum des letzten Commits an
+     den Inhaltsdateien; die Sub-Repos bekommen ihr Release-Datum. Fehlende
+     Daten (`????-??-??`) überschreiben nichts.
 
-4. Committe die Änderungen:
+4. Verifiziere die Seite:
    ```bash
-   git add index.html README.md FAQ.md
+   python3 -m pytest                                # Unit-Tests
+   python3 scripts/validate_landing_page.py        # Tag-Balance, JSON-LD, Links
+   python3 scripts/check-links.py                  # ausgehende Links live
+   python3 scripts/sync-versions.py --check --api-mode \
+     --schach-repo-owner bumblei3 --schach-repo-name schach9x9 \
+     --trischach-repo-owner bumblei3 --trischach-repo-name trischach
+   ```
+   Der `--check`-Lauf muss exit 0 liefern, sonst ist ein Fixed-Point verletzt
+   (ein zweiter Sync-Lauf darf nichts mehr ändern).
+
+5. Committe die Änderungen:
+   ```bash
+   git add index.html README.md FAQ.md sitemap.xml
    git commit -m "chore(base3): sync versions to Schach9x9 vX.Y.Z + Trischach vA.B.C"
    git push origin main
    ```
 
-   Das `pages.yml`-Workflow deployt automatisch nach dem Push.
+   Das `pages.yml`-Workflow deployt automatisch nach dem Push — mit nur
+   `index.html`, `assets/`, `og-image.png`, `robots.txt` und `sitemap.xml`.
 
 ### Automatisierter Pfad (Standard in base3)
 
 base3 hat einen täglichen Cron-Job (`.github/workflows/sync-versions.yml`),
 der jeden Tag um 02:00 UTC `scripts/sync-versions.py --api-mode` ausführt und
 nur bei Änderung commit/pusht. Das löst `pages.yml` aus und hält die
-Version-Pills / JSON-LD / FAQ / README automatisch aktuell, ohne Cross-Repo-Trigger
-oder manuelle Schritte.
+Version-Pills / JSON-LD / FAQ / README / „Was ist neu" / `sitemap.xml`
+automatisch aktuell, ohne Cross-Repo-Trigger oder manuelle Schritte.
 
 Der Cron-Job kann auch manuell getriggert werden:
 ```bash
 gh workflow run sync-versions.yml
 ```
+
+### Drift prüfen, ohne zu schreiben
+
+```bash
+python3 scripts/sync-versions.py --check --api-mode \
+  --schach-repo-owner bumblei3 --schach-repo-name schach9x9 \
+  --trischach-repo-owner bumblei3 --trischach-repo-name trischach
+```
+
+Endet mit Code 1 und schreibt nichts, wenn `index.html`/`README.md`/`FAQ.md`
+nicht auf dem Stand der Nachbar-Repos sind. Genau so läuft `check-sync.yml`.
 
 ## Hinweis
 

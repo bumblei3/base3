@@ -160,7 +160,7 @@
     .nav-brand .logo { font-size: 1.5rem; }
     .nav-links { display: flex; gap: var(--space-lg); list-style: none; margin: 0; padding: 0; }
     .nav-links a { display: flex; align-items: center; gap: 0.45rem; color: var(--color-text-secondary); text-decoration: none; font-weight: 600; transition: color var(--transition-fast); }
-    .nav-links a:hover, .nav-links a.active { color: var(--color-accent-primary); }
+    .nav-links a:hover, .nav-links a.active { color: var(--color-accent-hover); }
     .nav-toggle { display: none; background: none; border: none; color: var(--color-text-primary); font-size: 1.5rem; cursor: pointer; }
 
     /* Hero */
@@ -173,7 +173,7 @@
       display: inline-flex; align-items: center; gap: var(--space-xs);
       padding: var(--space-xs) var(--space-md);
       background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.25);
-      border-radius: var(--radius-full); font-size: 0.8rem; color: var(--color-accent-primary);
+      border-radius: var(--radius-full); font-size: 0.8rem; color: var(--color-accent-hover);
       margin-bottom: var(--space-lg); animation: fadeInUp 0.5s ease forwards;
     }
     .hero-badge .dot { width: 7px; height: 7px; background: var(--color-accent-primary); border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
@@ -299,10 +299,10 @@
       background: rgba(255,255,255,0.03); transition: all var(--transition-fast);
     }
     .ghost-btn:hover { border-color: var(--color-accent-hover); transform: translateY(-2px); }
-    .game-card.schach9x9 .play-btn { background: linear-gradient(135deg, #6366f1, #ec4899); color: white; }
-    .game-card.schach9x9 .play-btn:hover { background: linear-gradient(135deg, #818cf8, #f472b6); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4); }
-    .game-card.trischach .play-btn { background: linear-gradient(135deg, #ff4500, #10b981, #3b82f6); color: white; }
-    .game-card.trischach .play-btn:hover { background: linear-gradient(135deg, #ff6b35, #34d399, #60a5fa); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255, 69, 0, 0.4); }
+    .game-card.schach9x9 .play-btn { background: linear-gradient(135deg, #4f46e5, #db2777); color: white; }
+    .game-card.schach9x9 .play-btn:hover { background: linear-gradient(135deg, #6366f1, #ec4899); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4); }
+    .game-card.trischach .play-btn { background: linear-gradient(135deg, #c2410c, #047857, #2563eb); color: white; }
+    .game-card.trischach .play-btn:hover { background: linear-gradient(135deg, #ea580c, #059669, #3b82f6); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255, 69, 0, 0.4); }
 
     /* Stats */
     .stats { display: flex; justify-content: center; flex-wrap: wrap; gap: var(--space-xl); padding: var(--space-xl); margin-top: var(--space-xl); border-top: 1px solid var(--color-border); animation: fadeInUp 0.5s ease 0.5s forwards; opacity: 0; }
@@ -312,7 +312,7 @@
 
     /* Footer */
     .footer { margin-top: auto; padding: var(--space-lg); border-top: 1px solid var(--color-border); text-align: center; color: var(--color-text-muted); font-size: 0.85rem; }
-    .footer a { color: var(--color-accent-primary); text-decoration: none; transition: color var(--transition-fast); }
+    .footer a { color: var(--color-accent-hover); text-decoration: none; transition: color var(--transition-fast); }
     .footer a:hover { color: var(--color-accent-hover); text-decoration: underline; }
     .footer-links { display: flex; justify-content: center; gap: var(--space-lg); margin-bottom: var(--space-sm); }
 
@@ -332,9 +332,24 @@
       * { animation: none !important; transition: none !important; }
       body::before { animation: none !important; }
     }
+    /* Accessibility: Skip-Link (nur bei Tastaturfokus sichtbar) */
+    .skip-link {
+      position: absolute; left: -9999px; top: 0; z-index: 100;
+      padding: 0.5rem 1rem; border-radius: 0 0 var(--radius-md) 0;
+      background: #4f46e5; color: #ffffff; font-weight: 700;
+      text-decoration: none;
+    }
+    .skip-link:focus { left: 0; }
+
+    /* Accessibility: sichtbarer Fokus-Ring für Tastaturnutzer */
+    a:focus-visible, button:focus-visible {
+      outline: 2px solid var(--color-accent-hover); outline-offset: 2px;
+    }
+    a:focus:not(:focus-visible), button:focus:not(:focus-visible) { outline: none; }
   </style>
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Zum Inhalt springen</a>
 
   <!-- Top Navigation -->
   <nav class="top-nav" role="navigation" aria-label="Hauptnavigation">
@@ -351,7 +366,7 @@
   </nav>
 
   <!-- Main Content -->
-  <main class="main-content">
+  <main class="main-content" id="main-content">
     <section class="hero">
       <div class="hero-badge">
         <span class="dot"></span>
@@ -402,19 +417,18 @@
           <article class="whats-new-card schach9x9-card">
             <span class="whats-new-label">Schach9x9 · v2.0.0</span>
             <ul class="whats-new-list">
-              <li>Engine-M1.1: Zobrist-Hash + Quiesce-Fix — ~+230 Elo Stärkegewinn</li>
-              <li>NNUE-Pipeline (Datagen, Trainer, JS-Inference) als Fundament</li>
-              <li>Eval-Knobs: Läuferpaar, Freibauern, LMR/NullMove/Probcut feinjustierbar</li>
-              <li>Position teilen per Link</li>
+              <li>Kapitel 7–12: Erzbischof-Gabel, Kanzler-Spieß, Engel vs Dame, Nachtreiter-Linien, Feenrat, Imperator-Finale</li>
+              <li>8 handgemachte Puzzles, jede Lösung engine-verifiziert Matt in 1</li>
+              <li>Perk „Taktik-Genie" wirksam (Tipps in Kampagnen nur mit Perk)</li>
+              <li>Ein Talent pro Feenfigur mit echtem Effekt (+Gold/+XP)</li>
             </ul>
           </article>
           <article class="whats-new-card trischach-card">
             <span class="whats-new-label">Trischach · v1.6.0</span>
             <ul class="whats-new-list">
-              <li>Deterministisches Tagespuzzle (leicht am Wochenende, medium unter der Woche)</li>
-              <li>Statistik-Dashboard (Partien, Puzzle-Lösequote, Daily-Streak)</li>
-              <li>Feedback-Kanal (GitHub Issue-Template)</li>
-              <li>Test-Suite auf 838 Tests, Branch-Coverage 84.5%</li>
+              <li>Deterministisches Tagespuzzle: FNV-1a-Auswahl pro Datum aus dem 155-Puzzle-Pool — jeder Spieler bekommt dasselbe Puzzle.</li>
+              <li>Statistik-Dashboard: Partien-/Puzzle-Statistik lokal, plus 💬 Feedback-Button mit GitHub-Issue-Template.</li>
+              <li>Test-Suite 800 → 838 Tests: invariant-first Härtung von board/analysis/ai-core/pwa/rps-puzzle/tutorial/opening-book/game-stats.</li>
             </ul>
           </article>
         </div>

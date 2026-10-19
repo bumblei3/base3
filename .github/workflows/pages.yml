@@ -22,11 +22,20 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v5
+
+      # Nur ausliefern, was die Seite wirklich referenziert — sonst landen
+      # tests/, scripts/ und .github/ unter der Pages-URL.
+      - name: Stage deploy files
+        run: |
+          mkdir -p _site/assets
+          cp index.html robots.txt sitemap.xml og-image.png _site/
+          cp -r assets/. _site/assets/
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          # Only the static pointer index.html lives at the repo root now.
-          path: .
+          path: _site
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
