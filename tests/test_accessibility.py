@@ -69,6 +69,22 @@ def test_stats_omit_the_slogan():
     assert ">2</div><div class=\"stat-label\">Spiele</div>" in HTML
 
 
+def test_faq_cards_are_left_aligned():
+    assert ".faq-card {" in HTML
+    assert "text-align: left;" in HTML.split(".faq-card {", 1)[1].split("}", 1)[0]
+    assert "text-align: center;" in HTML.split(".faq-q {", 1)[1].split("}", 1)[0]
+
+
+def test_play_faq_uses_demo_names():
+    assert ">Schach9x9 Live-Demo</a>" in HTML
+    assert ">Trischach Live-Demo</a>" in HTML
+    assert ">https://bumblei3.github.io/schach9x9/</a>" not in HTML
+    assert ">https://bumblei3.github.io/trischach/</a>" not in HTML
+    faq = (BASE3 / "FAQ.md").read_text(encoding="utf-8")
+    assert "[Schach9x9 Live-Demo](https://bumblei3.github.io/schach9x9/)" in faq
+    assert "[Trischach Live-Demo](https://bumblei3.github.io/trischach/)" in faq
+
+
 def test_navigation_has_aria_label():
     assert 'aria-label="Hauptnavigation"' in HTML
 

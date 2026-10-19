@@ -21,8 +21,8 @@ das auf die beiden aktiven Repos zeigt.
 Beide Spiele sind als PWA (Progressive Web App) im Browser spielbar.
 Die Live-Demos brauchen keine Installation.
 
-- **Schach9x9 Demo:** https://bumblei3.github.io/schach9x9/
-- **Trischach Demo:** https://bumblei3.github.io/trischach/
+- [Schach9x9 Live-Demo](https://bumblei3.github.io/schach9x9/)
+- [Trischach Live-Demo](https://bumblei3.github.io/trischach/)
 
 ## Wo ist der Quellcode?
 
@@ -73,8 +73,8 @@ base3 selbst hat keine eigene Funktionalität mehr — sie ist ein Index.
 
 ## Wie spiele ich Schach9x9?
 
-Schach9x9 läuft im Browser — keine Installation nötig. Live-Demo:
-https://bumblei3.github.io/schach9x9/
+Schach9x9 läuft im Browser — keine Installation nötig.
+[Schach9x9 Live-Demo](https://bumblei3.github.io/schach9x9/)
 
 - **Regeln:** 9×9 Brett mit den drei Feenfiguren (siehe unten). Zusätzlich gibt
   es einen 8×8-Modus mit klassischen Standardregeln.
