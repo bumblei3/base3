@@ -4,6 +4,11 @@ on:
   schedule:
     # Jeden Tag Nachts (UTC+2 → 02:00 UTC), damit API-Raten frisch sind
     - cron: "0 2 * * *"
+  push:
+    # Direkt nach einem Content-Push, damit der Drift-Wächter (bei 01:55 UTC)
+    # nicht dauerhaft rot steht, nur weil index.html/README.md/FAQ.md sich
+    # durch den Push geändert haben.
+    branches: [main]
   workflow_dispatch:
 
 permissions:
