@@ -27,7 +27,7 @@ genauso wichtig ist wie der Brettaufbau.
 Die Plattform existiert, weil beides zwei Seiten derselben Neugier ist: Schach
 verändern, ohne es zu verlassen. Code, Build und CI der Spiele leben in den
 eigenständigen Repos. base3 ist der Türkeiler: die Landing Page mit eigenen
-Tests und vier Workflows.
+Tests und fünf Workflows.
 
 ---
 
@@ -103,11 +103,11 @@ bis zum strategischen 3-Spieler-Hex-Schach.
 
 ## CI & Tests
 
-base3 hat vier Workflows (`.github/workflows/`):
+base3 hat fünf Workflows (`.github/workflows/`):
 
 | Workflow | Zweck | Trigger |
 |---|---|---|
-| `pages.yml` | Deploy (`index.html`, `assets/`, `og-image.png`, Icons, `manifest.webmanifest`, `robots.txt`, `sitemap.xml`) | push auf `main` |
+| `pages.yml` | Deploy (`index.html`, `assets/`, `og-image.png`, Icons, `manifest.webmanifest`, `robots.txt`, `sitemap.xml`, Favicons) | push auf `main` |
 | `sync-versions.yml` | Heiler: Pills/JSON-LD/FAQ/README + „Was ist neu"-Bullets + `sitemap.xml`-lastmod | täglich 02:00 UTC + manuell |
 | `check-sync.yml` | Wächter: failt, wenn committede Pills, Bullets oder `lastmod` veraltet sind | push, täglich 01:55 UTC + manuell |
 | `check-links.yml` | Wächter: alle ausgehenden Links aus den drei Dateien erreichbar? | push, montags 03:00 UTC + manuell |
