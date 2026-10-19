@@ -156,9 +156,10 @@ Beiträge sind über die eigenständigen Repos möglich:
 
 ## Ist base3 offline-fähig?
 
-base3 selbst ist eine statische GitHub-Pages-Seite — sie ist nicht als PWA
-konzipiert und braucht eine Internetverbindung. Die **Spiel-Demos** (Schach9x9,
-Trischach) sind nach dem ersten Laden als PWA offline-fähig.
+base3 lässt sich über das Web-Manifest unter /base3/ auf den Home-Bildschirm
+legen. Die Seite selbst bleibt eine statische GitHub-Pages-Seite und braucht eine
+Internetverbindung. Die **Spiel-Demos** (Schach9x9, Trischach) sind nach dem
+ersten Laden als PWA offline-fähig.
 
 ## Siehe auch
 

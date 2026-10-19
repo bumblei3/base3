@@ -56,6 +56,12 @@ def test_patch_index_updates_every_version_slot():
     assert '"softwareVersion": "v9.9.9"' in out
     assert '"datePublished": "2099-01-01"' in out
     assert '<span class="whats-new-label">Schach9x9 · v9.9.9</span>' in out
+    assert '<span class="how-to-label">Schach9x9</span>' in out
+    assert '<span class="how-to-label">Trischach</span>' in out
+    assert 'how-to-label">Schach9x9 · v' not in out
+    assert 'how-to-label">Trischach · v' not in out
+    assert "<b>Schach9x9:</b> v9.9.9 (2099-01-01)" in out
+    assert "<b>Trischach:</b> v8.8.8 (2099-02-02)" in out
 
 
 def test_patch_index_is_idempotent():
@@ -69,6 +75,13 @@ def test_patch_index_noop_when_already_current():
     once, _ = sv.patch_index(ORIGINAL_INDEX, *NEW)
     _, changed = sv.patch_index(once, *NEW)
     assert not changed
+
+
+def test_index_faq_lists_replace_fake_bullets():
+    assert '<h3 class="faq-q">Was gibt es Neues?</h3>' not in ORIGINAL_INDEX
+    assert "faq-a\">•" not in ORIGINAL_INDEX
+    assert '<li><b>Schach9x9:</b> v2.0.0 (2026-08-23)</li>' in ORIGINAL_INDEX
+    assert 'href="https://github.com/bumblei3/schach9x9">Issues, Pull Requests</a>' in ORIGINAL_INDEX
 
 
 def test_patch_index_keeps_unknown_version_shape():

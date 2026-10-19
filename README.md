@@ -1,9 +1,8 @@
 # base3 — Chess Platform
 
-> 📌 **Archiviertes Verweis-Repo (Pointer).** base3 ist kein aktives Projekt mehr,
-> sondern nur noch ein Index, der auf die beiden eigenständigen Spiele-Repositories
-> verlinkt. Code, Build, Tests und CI des früheren Merge-Monorepos wurden entfernt.
-> Die aktive Entwicklung findet in den unten stehenden Standalone-Repos statt.
+> 📌 **Verweis-Repo (Pointer).** base3 ist die aktive Landing Page für zwei
+> eigenständige Spiele. Der Code des früheren Merge-Monorepos ist entfernt.
+> Tests und CI hier gelten für die Seite. Die Spiele leben in den Standalone-Repos.
 
 🌐 **Live:** [bumblei3.github.io/base3](https://bumblei3.github.io/base3/)
 
@@ -26,8 +25,9 @@ Schach, sondern Schach in einem Ringkampf, in dem die Beziehung zwischen den Fra
 genauso wichtig ist wie der Brettaufbau.
 
 Die Plattform existiert, weil beides zwei Seiten derselben Neugier ist: Schach
-verändern, ohne es zu verlassen. Code, Build, Tests und CI leben in den
-eigenständigen Repos — base3 ist der Türkeiler.
+verändern, ohne es zu verlassen. Code, Build und CI der Spiele leben in den
+eigenständigen Repos. base3 ist der Türkeiler: die Landing Page mit eigenen
+Tests und vier Workflows.
 
 ---
 
@@ -107,7 +107,7 @@ base3 hat vier Workflows (`.github/workflows/`):
 
 | Workflow | Zweck | Trigger |
 |---|---|---|
-| `pages.yml` | Deploy (nur `index.html`, `assets/`, `og-image.png`, `robots.txt`, `sitemap.xml`) | push auf `main` |
+| `pages.yml` | Deploy (`index.html`, `assets/`, `og-image.png`, Icons, `manifest.webmanifest`, `robots.txt`, `sitemap.xml`) | push auf `main` |
 | `sync-versions.yml` | Heiler: Pills/JSON-LD/FAQ/README + „Was ist neu"-Bullets + `sitemap.xml`-lastmod | täglich 02:00 UTC + manuell |
 | `check-sync.yml` | Wächter: failt, wenn committede Pills, Bullets oder `lastmod` veraltet sind | push, täglich 01:55 UTC + manuell |
 | `check-links.yml` | Wächter: alle ausgehenden Links aus den drei Dateien erreichbar? | push, montags 03:00 UTC + manuell |

@@ -2,14 +2,22 @@
   "name": "Base3 — Schach9x9 & Trischach",
   "short_name": "Base3",
   "description": "Plattform für zwei Schachvarianten: Schach9x9 mit Feenfiguren und Trischach im 3-Fraktionen-Stil.",
-  "start_url": "/",
+  "id": "/base3/",
+  "start_url": "/base3/",
+  "scope": "/base3/",
   "display": "standalone",
   "background_color": "#02040a",
-  "theme_color": "#0a0f28",
+  "theme_color": "#02040a",
   "icons": [
     {
-      "src": "/apple-touch-icon.png",
-      "sizes": "180x180",
+      "src": "/base3/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/base3/icon-512.png",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     }

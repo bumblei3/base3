@@ -606,25 +606,29 @@ def patch_index(
         )
         apply(pat, repl)
 
+    def faq_version(label: str, ver: str, date: str) -> None:
+        """FAQ-Liste „Welche Versionen sind aktuell?“: unbekanntes Datum stehen lassen."""
+        pat = (
+            rf"(<li><b>{label}:</b> )v{VER}"
+            rf"( \({DATE_SLOT}\))?(</li>)"
+        )
+        repl = (
+            rf"\g<1>v{ver}\g<2>\g<3>"
+            if date.startswith("?")
+            else rf"\g<1>v{ver} ({date})\g<3>"
+        )
+        apply(pat, repl)
+
     pill("schach9x9", sv, sd)
     pill("trischach", tv, td)
+    faq_version("Schach9x9", sv, sd)
+    faq_version("Trischach", tv, td)
     apply(
         rf'(<span class="whats-new-label">Schach9x9 · )v{VER}(</span>)',
         rf"\g<1>v{sv}\g<2>",
     )
     apply(
         rf'(<span class="whats-new-label">Trischach · )v{VER}(</span>)',
-        rf"\g<1>v{tv}\g<2>",
-    )
-    # Neue "Wie spielt man?"-Sektion: dieselben Labels wie der Sync selber
-    # pflegt (Pills/Whats-new) – sonst würden alte Versions-Strings im HTML
-    # durch den Heiler nicht ersetzt werden.
-    apply(
-        rf'(<span class="how-to-label">Schach9x9 · )v{VER}(</span>)',
-        rf"\g<1>v{sv}\g<2>",
-    )
-    apply(
-        rf'(<span class="how-to-label">Trischach · )v{VER}(</span>)',
         rf"\g<1>v{tv}\g<2>",
     )
     apply(

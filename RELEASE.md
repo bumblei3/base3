@@ -76,8 +76,9 @@ in schach9x9 oder trischach aktualisiert werden.
    git push origin main
    ```
 
-   Das `pages.yml`-Workflow deployt automatisch nach dem Push — mit nur
-   `index.html`, `assets/`, `og-image.png`, `robots.txt` und `sitemap.xml`.
+   Das `pages.yml`-Workflow deployt automatisch nach dem Push — mit
+   `index.html`, `assets/`, `og-image.png`, den Icons, `manifest.webmanifest`,
+   `robots.txt` und `sitemap.xml`.
 
 ### Automatisierter Pfad (Standard in base3)
 

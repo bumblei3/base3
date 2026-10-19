@@ -33,18 +33,24 @@ def test_index_unknown_date_is_not_written():
     # Version-Pills in den Game-Cards werden ersetzt
     assert '<span class="version-pill">v9.9.9 · 2026-08-23</span>' in out
     assert '<span class="version-pill">v8.8.8 · 2026-08-24</span>' in out
-    # Inhalte in FAQ bleiben unverändert (keine Version-Pills)
-    assert "Welche Versionen sind aktuell?" in out
+    # FAQ-Versionsliste: Nummer nachziehen, bekanntes Datum stehen lassen.
+    assert "<b>Schach9x9:</b> v9.9.9 (2026-08-23)" in out
+    assert "<b>Trischach:</b> v8.8.8 (2026-08-24)" in out
 
 
 def test_index_repairs_existing_placeholder():
     broken = ORIGINAL_INDEX.replace("v2.0.0 · 2026-08-23", f"v2.0.0 · {UNKNOWN}")
     broken = broken.replace('"datePublished": "2026-08-23"', f'"datePublished": "{UNKNOWN}"')
+    broken = broken.replace(
+        "<b>Schach9x9:</b> v2.0.0 (2026-08-23)",
+        f"<b>Schach9x9:</b> v2.0.0 ({UNKNOWN})",
+    )
     out, changed = sv.patch_index(broken, "9.9.9", "2099-01-01", "8.8.8", "2099-02-02")
     assert changed
     assert UNKNOWN not in out, "Platzhalter muss ersetzt werden"
     assert "v9.9.9 · 2099-01-01" in out
     assert '"datePublished": "2099-01-01"' in out
+    assert "<b>Schach9x9:</b> v9.9.9 (2099-01-01)" in out
 
 
 def test_index_placeholder_is_idempotent():

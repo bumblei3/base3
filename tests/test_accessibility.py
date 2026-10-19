@@ -56,6 +56,19 @@ def test_focus_visible_styles_exist():
     assert ":focus:not(:focus-visible)" in HTML
 
 
+def test_how_to_label_uses_the_pill_rule():
+    assert ".whats-new-label,\n    .how-to-label {" in HTML
+
+
+def test_how_to_labels_do_not_shrink():
+    assert ".how-to-list li strong { flex: none; white-space: nowrap; }" in HTML
+
+
+def test_stats_omit_the_slogan():
+    assert "Möglichkeiten" not in HTML
+    assert ">2</div><div class=\"stat-label\">Spiele</div>" in HTML
+
+
 def test_navigation_has_aria_label():
     assert 'aria-label="Hauptnavigation"' in HTML
 

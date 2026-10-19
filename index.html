@@ -11,8 +11,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Base3" />
   <!-- PWA-Installierung: Home-Screen-Icon und manifest. -->
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="/base3/apple-touch-icon.png" />
+  <link rel="manifest" href="/base3/manifest.webmanifest" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0f28'/%3E%3Ctext x='16' y='23' font-size='22' text-anchor='middle' fill='%2331c48d'%3E%E2%99%9F%3C/text%3E%3C/svg%3E" />
   <title>Base3 Chess Platform — Schach9x9 &amp; Trischach</title>
   <meta name="description" content="Zwei einzigartige Schachvarianten auf einer Plattform. Schach9x9 mit Feenfiguren und Trischach mit 3 Fraktionen." />
@@ -235,7 +235,8 @@
     .whats-new-card:hover { border-color: var(--color-border-hover); background: var(--color-bg-glass-hover); }
     .whats-new-card.schach9x9-card { border-left: 3px solid #6366f1; }
     .whats-new-card.trischach-card { border-left: 3px solid #3b82f6; }
-    .whats-new-label {
+    .whats-new-label,
+    .how-to-label {
       display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem;
       font-weight: 600; letter-spacing: 0.02em; color: var(--color-text-secondary);
       background: rgba(255,255,255,0.05); border: 1px solid var(--color-border);
@@ -323,7 +324,8 @@
     .how-to-card.schach9x9-card .how-to-label { color: #c7d2fe; border-color: rgba(99,102,241,0.4); }
     .how-to-card.trischach-card .how-to-label { color: #bfdbfe; border-color: rgba(59,130,246,0.4); }
     .how-to-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.4rem 1rem; font-size: 0.9rem; color: var(--color-text-secondary); line-height: 1.55; }
-    .how-to-list li { display: flex; gap: var(--space-xs); }
+    .how-to-list li { display: flex; gap: var(--space-xs); align-items: flex-start; }
+    .how-to-list li strong { flex: none; white-space: nowrap; }
     .how-to-list li::before { content: '•'; color: var(--color-accent-primary); font-weight: 700; }
 
     /* Häufige Fragen */
@@ -404,7 +406,7 @@
     <section class="hero">
       <div class="hero-badge">
         <span class="dot"></span>
-        Aktive Projektplattform — zwei Spiele, ein Repo
+        Aktive Projektplattform — zwei Spiele, zwei Repos
       </div>
       <h1>Base3 Chess Platform</h1>
       <p class="subtitle">
@@ -424,7 +426,7 @@
         <p class="platform-text">
           base3 vereint zwei Experimente an der Grenze dessen, was Schach sein kann —
           ohne sich zu vergrößern, ohne Multiplayer-Komplex, ohne Runterfahren auf Konvention.
-          Das Eine ist tiefes, ruhiges Schaffin im 9×9 mit drei zusätzlichen Figuren.
+          Das Eine ist tiefes, ruhiges Schach im 9×9 mit drei zusätzlichen Figuren.
           Das Andere ist ein Ringkampf auf sechseckigem Brett, in dem drei Fraktionen
           in Stein-Schere-Papier-Beziehungen stehen. Beide teilen nur einen Ursprung:
           Neugier auf Schach-Regeln, mehr Raum geben, ohne das Spiel zu zerstören.
@@ -531,7 +533,7 @@
         <h2 class="how-to-heading">Wie spielt man?</h2>
         <div class="how-to-grid">
           <article class="how-to-card schach9x9-card">
-            <span class="how-to-label">Schach9x9 · v2.0.0</span>
+            <span class="how-to-label">Schach9x9</span>
             <ul class="how-to-list">
               <li><strong>Regeln:</strong> 9×9 Brett mit den drei Feenfiguren (Erzbischof, Kanzler, Engel); zusätzlich 8×8-Modus mit klassischen Standardregeln.</li>
               <li><strong>Starten:</strong> Klassisches Spiel, Kampagnen-Modus oder Eröffnungs-Trainer.</li>
@@ -540,7 +542,7 @@
             </ul>
           </article>
           <article class="how-to-card trischach-card">
-            <span class="how-to-label">Trischach · v1.6.0</span>
+            <span class="how-to-label">Trischach</span>
             <ul class="how-to-list">
               <li><strong>Spielbrett:</strong> 3-Spieler-Hex-Schach auf einem sechseckigen Brett.</li>
               <li><strong>Kampf:</strong> Stein-Schere-Papier-Mechanik — Feuer &gt; Natur &gt; Wasser &gt; Feuer.</li>
@@ -568,11 +570,10 @@
           </article>
           <article class="faq-card">
             <h3 class="faq-q">Welche Versionen sind aktuell?</h3>
-            <p class="faq-a">• <b>Schach9x9:</b> v2.0.0 (2026-08-23)<br/>• <b>Trischach:</b> v1.6.0 (2026-08-24)</p>
-          </article>
-          <article class="faq-card">
-            <h3 class="faq-q">Was gibt es Neues?</h3>
-            <p class="faq-a">• <b>Schach9x9 (v2.0.0):</b> Kapitel 7–12: Erzbischof-Gabel, Kanzler-Spieß, Engel vs Dame, Nachtreiter-Linien, Feenrat, Imperator-Finale; 8 handgemachte Puzzles, jede Lösung engine-verifiziert Matt in 1; Perk „Taktik-Genie" wirksam; Ein Talent pro Feenfigur.<br/>• <b>Trischach (v1.6.0):</b> Deterministisches Tagespuzzle; Statistik-Dashboard + 💬 Feedback-Button; Test-Suite 800 → 838 Tests.</p>
+            <ul class="faq-links">
+              <li><b>Schach9x9:</b> v2.0.0 (2026-08-23)</li>
+              <li><b>Trischach:</b> v1.6.0 (2026-08-24)</li>
+            </ul>
           </article>
           <article class="faq-card">
             <h3 class="faq-q">Ist base3 noch aktiv?</h3>
@@ -584,7 +585,12 @@
           </article>
           <article class="faq-card">
             <h3 class="faq-q">Wie verändert sich das Spiel durch 9×9?</h3>
-            <p class="faq-a">• Längere Partien mit mehr Entwicklungsmöglichkeiten<br/>• Andere Eröffnungen — bekannte 8×8-Eröffnungen lassen sich nicht 1:1 übernehmen<br/>• Neue Figurenwerte — Engel wertvoll für das Gefüge, Erzbischof für den Angriff<br/>• KI-Personen — nicht nur stärker/schwächer, sondern unterschiedliche Strategiegewichte</p>
+            <ul class="faq-links">
+              <li>Längere Partien mit mehr Entwicklungsmöglichkeiten</li>
+              <li>Andere Eröffnungen — bekannte 8×8-Eröffnungen lassen sich nicht 1:1 übernehmen</li>
+              <li>Neue Figurenwerte — Engel wertvoll für das Gefüge, Erzbischof für den Angriff</li>
+              <li>KI-Personen — nicht nur stärker/schwächer, sondern unterschiedliche Strategiegewichte</li>
+            </ul>
           </article>
           <article class="faq-card">
             <h3 class="faq-q">Wie funktioniert Trischach?</h3>
@@ -596,15 +602,25 @@
           </article>
           <article class="faq-card">
             <h3 class="faq-q">Wie kann ich beitragen?</h3>
-            <p class="faq-a">• <b>Schach9x9:</b> https://github.com/bumblei3/schach9x9 (Issues, Pull Requests)<br/>• <b>Trischach:</b> https://github.com/bumblei3/trischach (Issues, Pull Requests)<br/>base3 selbst (das Verweis-Repo) benötigt keine Beiträge — außer bei Landing-Page-Aktualisierungen (Version-Pills, neue Releases).</p>
+            <p class="faq-a">base3 selbst (das Verweis-Repo) benötigt keine Beiträge — außer bei Landing-Page-Aktualisierungen (Version-Pills, neue Releases).</p>
+            <ul class="faq-links">
+              <li><b>Schach9x9:</b> <a href="https://github.com/bumblei3/schach9x9">Issues, Pull Requests</a></li>
+              <li><b>Trischach:</b> <a href="https://github.com/bumblei3/trischach">Issues, Pull Requests</a></li>
+            </ul>
           </article>
           <article class="faq-card">
             <h3 class="faq-q">Ist base3 offline-fähig?</h3>
-            <p class="faq-a">base3 selbst ist eine statische GitHub-Pages-Seite — sie ist nicht als PWA konzipiert und braucht eine Internetverbindung. Die <b>Spiel-Demos</b> (Schach9x9, Trischach) sind nach dem ersten Laden als PWA offline-fähig.</p>
+            <p class="faq-a">base3 lässt sich über das Web-Manifest unter /base3/ auf den Home-Bildschirm legen. Die Seite selbst bleibt eine statische GitHub-Pages-Seite und braucht eine Internetverbindung. Die <b>Spiel-Demos</b> (Schach9x9, Trischach) sind nach dem ersten Laden als PWA offline-fähig.</p>
           </article>
           <article class="faq-card">
             <h3 class="faq-q">Siehe auch</h3>
-            <p class="faq-a">• <a href="https://bumblei3.github.io/schach9x9/">Schach9x9 Live-Demo</a><br/>• <a href="https://bumblei3.github.io/trischach/">Trischach Live-Demo</a><br/>• <a href="https://github.com/bumblei3/base3">GitHub — base3</a><br/>• <a href="https://github.com/bumblei3/schach9x9">GitHub — Schach9x9</a><br/>• <a href="https://github.com/bumblei3/trischach">GitHub — Trischach</a></p>
+            <ul class="faq-links">
+              <li><a href="https://bumblei3.github.io/schach9x9/">Schach9x9 Live-Demo</a></li>
+              <li><a href="https://bumblei3.github.io/trischach/">Trischach Live-Demo</a></li>
+              <li><a href="https://github.com/bumblei3/base3">GitHub — base3</a></li>
+              <li><a href="https://github.com/bumblei3/schach9x9">GitHub — Schach9x9</a></li>
+              <li><a href="https://github.com/bumblei3/trischach">GitHub — Trischach</a></li>
+            </ul>
           </article>
         </div>
       </section>
@@ -614,7 +630,6 @@
         <div class="stat"><div class="stat-value">2</div><div class="stat-label">Spiele</div></div>
         <div class="stat"><div class="stat-value">9×9</div><div class="stat-label">Schach9x9 Brett</div></div>
         <div class="stat"><div class="stat-value">3</div><div class="stat-label">Fraktionen</div></div>
-        <div class="stat"><div class="stat-value">∞</div><div class="stat-label">Möglichkeiten</div></div>
       </div>
   </section>
   </main>
