@@ -69,6 +69,23 @@ def test_stats_omit_the_slogan():
     assert ">2</div><div class=\"stat-label\">Spiele</div>" in HTML
 
 
+def test_platform_cards_stack_below_768px():
+    mobile = HTML.split("@media (max-width: 768px)", 1)[1].split("@media", 1)[0]
+    assert ".platform-cards { grid-template-columns: 1fr; }" in mobile
+    assert ".platform-cards { display: grid; grid-template-columns: 1fr 1fr;" in HTML
+
+
+def test_platform_intro_is_left_aligned():
+    assert "text-align: left;" in HTML.split(".platform-text {", 1)[1].split("}", 1)[0]
+    assert "text-align: left;" in HTML.split(".platform-card {", 1)[1].split("}", 1)[0]
+    assert "text-align: center;" in HTML.split(".platform-heading {", 1)[1].split("}", 1)[0]
+
+
+def test_how_to_cards_are_left_aligned():
+    assert "text-align: left;" in HTML.split(".how-to-card {", 1)[1].split("}", 1)[0]
+    assert "text-align: center;" in HTML.split(".how-to-heading {", 1)[1].split("}", 1)[0]
+
+
 def test_faq_cards_are_left_aligned():
     assert ".faq-card {" in HTML
     assert "text-align: left;" in HTML.split(".faq-card {", 1)[1].split("}", 1)[0]

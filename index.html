@@ -204,10 +204,10 @@
 
     /* Plattform-Einleitung */
     .platform-intro { max-width: 720px; width: 100%; margin: 0 auto var(--space-xl); animation: fadeInUp 0.5s ease 0.3s forwards; opacity: 0; }
-    .platform-heading { font-size: 1.1rem; font-weight: 600; color: var(--color-text-secondary); margin: 0 0 var(--space-md); letter-spacing: 0.01em; }
-    .platform-text { font-size: 0.95rem; color: var(--color-text-secondary); line-height: 1.6; margin-bottom: var(--space-lg); }
+    .platform-heading { font-size: 1.1rem; font-weight: 600; color: var(--color-text-secondary); margin: 0 0 var(--space-md); letter-spacing: 0.01em; text-align: center; }
+    .platform-text { font-size: 0.95rem; color: var(--color-text-secondary); line-height: 1.6; margin-bottom: var(--space-lg); text-align: left; }
     .platform-cards { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md); }
-    .platform-card { background: var(--color-bg-glass); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-md); backdrop-filter: blur(12px); }
+    .platform-card { background: var(--color-bg-glass); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-md); backdrop-filter: blur(12px); text-align: left; }
     .platform-card.schach9x9-card { border-left: 3px solid #6366f1; }
     .platform-card.trischach-card { border-left: 3px solid #3b82f6; }
     .platform-label { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.02em; color: var(--color-text-secondary); background: rgba(255,255,255,0.05); border: 1px solid var(--color-border); border-radius: 999px; padding: 2px 10px; margin-bottom: var(--space-sm); }
@@ -316,9 +316,9 @@
       max-width: 920px; width: 100%; margin: 0 auto var(--space-xl);
       animation: fadeInUp 0.5s ease 0.6s forwards; opacity: 0;
     }
-    .how-to-heading { font-size: 1.25rem; font-weight: 700; color: var(--color-text-primary); margin: 0 0 var(--space-md); letter-spacing: 0.01em; }
+    .how-to-heading { font-size: 1.25rem; font-weight: 700; color: var(--color-text-primary); margin: 0 0 var(--space-md); letter-spacing: 0.01em; text-align: center; }
     .how-to-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-md); }
-    .how-to-card { background: var(--color-bg-glass); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-lg); backdrop-filter: blur(12px); }
+    .how-to-card { background: var(--color-bg-glass); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-lg); backdrop-filter: blur(12px); text-align: left; }
     .how-to-card.schach9x9-card { border-left: 3px solid #6366f1; }
     .how-to-card.trischach-card { border-left: 3px solid #3b82f6; }
     .how-to-card.schach9x9-card .how-to-label { color: #c7d2fe; border-color: rgba(99,102,241,0.4); }
@@ -366,6 +366,7 @@
       .hero { padding: var(--space-xl) var(--space-md); }
       .games-grid { grid-template-columns: 1fr; max-width: 400px; }
       .features-list { grid-template-columns: 1fr; }
+      .platform-cards { grid-template-columns: 1fr; }
     }
     @media (prefers-reduced-motion: reduce) {
       * { animation: none !important; transition: none !important; }
