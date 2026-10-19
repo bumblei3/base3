@@ -310,6 +310,22 @@
     .game-card.trischach .play-btn { background: linear-gradient(135deg, #c2410c, #047857, #2563eb); color: white; }
     .game-card.trischach .play-btn:hover { background: linear-gradient(135deg, #ea580c, #059669, #3b82f6); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255, 69, 0, 0.4); }
 
+    /* Wie spielt man? */
+    .how-to {
+      max-width: 920px; width: 100%; margin: 0 auto var(--space-xl);
+      animation: fadeInUp 0.5s ease 0.6s forwards; opacity: 0;
+    }
+    .how-to-heading { font-size: 1.25rem; font-weight: 700; color: var(--color-text-primary); margin: 0 0 var(--space-md); letter-spacing: 0.01em; }
+    .how-to-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-md); }
+    .how-to-card { background: var(--color-bg-glass); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-lg); backdrop-filter: blur(12px); }
+    .how-to-card.schach9x9-card { border-left: 3px solid #6366f1; }
+    .how-to-card.trischach-card { border-left: 3px solid #3b82f6; }
+    .how-to-card.schach9x9-card .how-to-label { color: #c7d2fe; border-color: rgba(99,102,241,0.4); }
+    .how-to-card.trischach-card .how-to-label { color: #bfdbfe; border-color: rgba(59,130,246,0.4); }
+    .how-to-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.4rem 1rem; font-size: 0.9rem; color: var(--color-text-secondary); line-height: 1.55; }
+    .how-to-list li { display: flex; gap: var(--space-xs); }
+    .how-to-list li::before { content: '•'; color: var(--color-accent-primary); font-weight: 700; }
+
     /* Stats */
     .stats { display: flex; justify-content: center; flex-wrap: wrap; gap: var(--space-xl); padding: var(--space-xl); margin-top: var(--space-xl); border-top: 1px solid var(--color-border); animation: fadeInUp 0.5s ease 0.5s forwards; opacity: 0; }
     .stat { text-align: center; }
@@ -497,6 +513,30 @@
           </div>
         </article>
       </div>
+
+      <!-- Wie spielt man? -->
+      <section class="how-to" aria-label="Spielanleitung">
+        <h2 class="how-to-heading">Wie spielt man?</h2>
+        <div class="how-to-grid">
+          <article class="how-to-card schach9x9-card">
+            <span class="how-to-label">Schach9x9 · v2.0.0</span>
+            <ul class="how-to-list">
+              <li><strong>Regeln:</strong> 9×9 Brett mit den drei Feenfiguren (Erzbischof, Kanzler, Engel); zusätzlich 8×8-Modus mit klassischen Standardregeln.</li>
+              <li><strong>Starten:</strong> Klassisches Spiel, Kampagnen-Modus oder Eröffnungs-Trainer.</li>
+              <li><strong>KI-Gegner:</strong> Fünf Persönlichkeiten, jede mit eigener Stärke und Spielweise.</li>
+              <li><strong>Offline:</strong> Nach dem ersten Laden lässt sich die PWA installieren, dann spielst du auch ohne Verbindung.</li>
+            </ul>
+          </article>
+          <article class="how-to-card trischach-card">
+            <span class="how-to-label">Trischach · v1.6.0</span>
+            <ul class="how-to-list">
+              <li><strong>Spielbrett:</strong> 3-Spieler-Hex-Schach auf einem sechseckigen Brett.</li>
+              <li><strong>Kampf:</strong> Stein-Schere-Papier-Mechanik — Feuer &gt; Natur &gt; Wasser &gt; Feuer.</li>
+              <li><strong>Turniere:</strong> Auto-Battle Turniere mit Elo-Rating.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
 
       <!-- Stats -->
       <div class="stats">

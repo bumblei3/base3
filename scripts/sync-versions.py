@@ -616,6 +616,17 @@ def patch_index(
         rf'(<span class="whats-new-label">Trischach · )v{VER}(</span>)',
         rf"\g<1>v{tv}\g<2>",
     )
+    # Neue "Wie spielt man?"-Sektion: dieselben Labels wie der Sync selber
+    # pflegt (Pills/Whats-new) – sonst würden alte Versions-Strings im HTML
+    # durch den Heiler nicht ersetzt werden.
+    apply(
+        rf'(<span class="how-to-label">Schach9x9 · )v{VER}(</span>)',
+        rf"\g<1>v{sv}\g<2>",
+    )
+    apply(
+        rf'(<span class="how-to-label">Trischach · )v{VER}(</span>)',
+        rf"\g<1>v{tv}\g<2>",
+    )
     apply(
         rf'("name": "Schach9x9"[\s\S]*?"softwareVersion": ")v{VER}(")',
         rf"\g<1>v{sv}\g<2>",
