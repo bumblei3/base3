@@ -30,7 +30,11 @@ def test_index_unknown_date_is_not_written():
     out, changed = sv.patch_index(ORIGINAL_INDEX, "9.9.9", UNKNOWN, "8.8.8", UNKNOWN)
     assert "v9.9.9 · 2026-08-23" in out, "bekanntes Datum muss stehen bleiben"
     assert UNKNOWN not in out
-    assert "v2.0.0" not in out
+    # Version-Pills in den Game-Cards werden ersetzt
+    assert '<span class="version-pill">v9.9.9 · 2026-08-23</span>' in out
+    assert '<span class="version-pill">v8.8.8 · 2026-08-24</span>' in out
+    # Inhalte in FAQ bleiben unverändert (keine Version-Pills)
+    assert "Welche Versionen sind aktuell?" in out
 
 
 def test_index_repairs_existing_placeholder():

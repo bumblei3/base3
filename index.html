@@ -326,6 +326,18 @@
     .how-to-list li { display: flex; gap: var(--space-xs); }
     .how-to-list li::before { content: '•'; color: var(--color-accent-primary); font-weight: 700; }
 
+    /* Häufige Fragen */
+    .faq { max-width: 920px; margin: 0 auto var(--space-xl); animation: fadeInUp 0.5s ease 0.7s forwards; opacity: 0; }
+    .faq-heading { font-size: 1.25rem; font-weight: 700; color: var(--color-text-primary); margin: 0 0 var(--space-md); letter-spacing: 0.01em; }
+    .faq-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-md); }
+    .faq-card { background: var(--color-bg-glass); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-md); backdrop-filter: blur(12px); }
+    .faq-links { margin: 0.35rem 0 0 0; padding-left: 1.1rem; font-size: 0.85rem; color: var(--color-text-primary); line-height: 1.6; }
+    .faq-links a { color: var(--color-accent-primary); }
+    .faq-q { font-size: 0.85rem; font-weight: 600; color: var(--color-text-secondary); margin: 0 0 var(--space-xs); text-transform: uppercase; letter-spacing: 0.04em; }
+    .faq-a { font-size: 0.9rem; color: var(--color-text-primary); line-height: 1.6; }
+    .faq a { color: var(--color-accent-primary); }
+    .faq a:hover { color: var(--color-accent-primary); }
+
     /* Stats */
     .stats { display: flex; justify-content: center; flex-wrap: wrap; gap: var(--space-xl); padding: var(--space-xl); margin-top: var(--space-xl); border-top: 1px solid var(--color-border); animation: fadeInUp 0.5s ease 0.5s forwards; opacity: 0; }
     .stat { text-align: center; }
@@ -538,6 +550,65 @@
         </div>
       </section>
 
+      <!-- FAQ -->
+      <section class="faq" aria-label="Häufige Fragen">
+        <h2 class="faq-heading">Häufige Fragen</h2>
+        <div class="faq-grid">
+          <article class="faq-card">
+            <h3 class="faq-q">Was ist base3?</h3>
+            <p class="faq-a">base3 ist eine statische Landing Page, die als Eintrittspunkt für zwei eigenständige Schach-Varianten dient — zwei Experimente an der Grenze dessen, was ein Schachspiel sein kann, ohne sich in einen Multiplayer-Komplex zu verrenken.</p>
+          </article>
+          <article class="faq-card">
+            <h3 class="faq-q">Wo kann ich spielen?</h3>
+            <p class="faq-a">Beide Spiele sind als PWA im Browser spielbar. Die Live-Demos brauchen keine Installation:</p>
+            <ul class="faq-links">
+              <li><a href="https://bumblei3.github.io/schach9x9/">https://bumblei3.github.io/schach9x9/</a></li>
+              <li><a href="https://bumblei3.github.io/trischach/">https://bumblei3.github.io/trischach/</a></li>
+            </ul>
+          </article>
+          <article class="faq-card">
+            <h3 class="faq-q">Welche Versionen sind aktuell?</h3>
+            <p class="faq-a">• <b>Schach9x9:</b> v2.0.0 (2026-08-23)<br/>• <b>Trischach:</b> v1.6.0 (2026-08-24)</p>
+          </article>
+          <article class="faq-card">
+            <h3 class="faq-q">Was gibt es Neues?</h3>
+            <p class="faq-a">• <b>Schach9x9 (v2.0.0):</b> Kapitel 7–12: Erzbischof-Gabel, Kanzler-Spieß, Engel vs Dame, Nachtreiter-Linien, Feenrat, Imperator-Finale; 8 handgemachte Puzzles, jede Lösung engine-verifiziert Matt in 1; Perk „Taktik-Genie" wirksam; Ein Talent pro Feenfigur.<br/>• <b>Trischach (v1.6.0):</b> Deterministisches Tagespuzzle; Statistik-Dashboard + 💬 Feedback-Button; Test-Suite 800 → 838 Tests.</p>
+          </article>
+          <article class="faq-card">
+            <h3 class="faq-q">Ist base3 noch aktiv?</h3>
+            <p class="faq-a">base3 als Landing Page ist aktiv — sie wird gepflegt, wenn die Subprojekte Releases haben. Die Entwicklung findet jedoch in den eigenständigen Repos statt.</p>
+          </article>
+          <article class="faq-card">
+            <h3 class="faq-q">Was sind Feenfiguren?</h3>
+            <p class="faq-a">Schach9x9 ergänzt das 8×8-Schachbrett auf einem 9×9-Brett: Erzbischof (Läufer+Springer), Kanzler (Turm+Springer), Engel (Defensiv). Wer normales Schach kennt, findet sofort rein; die Tiefe kommt von den neuen Figuren.</p>
+          </article>
+          <article class="faq-card">
+            <h3 class="faq-q">Wie verändert sich das Spiel durch 9×9?</h3>
+            <p class="faq-a">• Längere Partien mit mehr Entwicklungsmöglichkeiten<br/>• Andere Eröffnungen — bekannte 8×8-Eröffnungen lassen sich nicht 1:1 übernehmen<br/>• Neue Figurenwerte — Engel wertvoll für das Gefüge, Erzbischof für den Angriff<br/>• KI-Personen — nicht nur stärker/schwächer, sondern unterschiedliche Strategiegewichte</p>
+          </article>
+          <article class="faq-card">
+            <h3 class="faq-q">Wie funktioniert Trischach?</h3>
+            <p class="faq-a">Trischach ist 3-Spieler-Schach auf einem sechseckigen Brett. Drei Fraktionen — Feuer 🔥, Natur 🌿, Wasser 🌊 — stehen in einem zyklischen Kampf: Feuer &gt; Natur &gt; Wasser &gt; Feuer. Das Spiel ist eine permanente Neu-Berechnung von Allianzen und Risiken — nicht nur „wer schlägt wen", sondern „wer steht wie zueinander".</p>
+          </article>
+          <article class="faq-card">
+            <h3 class="faq-q">Gibt es Blog, Roadmap oder Newsletter?</h3>
+            <p class="faq-a">Nein — base3 ist eine statische Landing Page ohne Blog oder Newsletter. Änderungen und Releases werden ausschließlich über die GitHub-Repos kommuniziert (Changelog, Releases).</p>
+          </article>
+          <article class="faq-card">
+            <h3 class="faq-q">Wie kann ich beitragen?</h3>
+            <p class="faq-a">• <b>Schach9x9:</b> https://github.com/bumblei3/schach9x9 (Issues, Pull Requests)<br/>• <b>Trischach:</b> https://github.com/bumblei3/trischach (Issues, Pull Requests)<br/>base3 selbst (das Verweis-Repo) benötigt keine Beiträge — außer bei Landing-Page-Aktualisierungen (Version-Pills, neue Releases).</p>
+          </article>
+          <article class="faq-card">
+            <h3 class="faq-q">Ist base3 offline-fähig?</h3>
+            <p class="faq-a">base3 selbst ist eine statische GitHub-Pages-Seite — sie ist nicht als PWA konzipiert und braucht eine Internetverbindung. Die <b>Spiel-Demos</b> (Schach9x9, Trischach) sind nach dem ersten Laden als PWA offline-fähig.</p>
+          </article>
+          <article class="faq-card">
+            <h3 class="faq-q">Siehe auch</h3>
+            <p class="faq-a">• <a href="https://bumblei3.github.io/schach9x9/">Schach9x9 Live-Demo</a><br/>• <a href="https://bumblei3.github.io/trischach/">Trischach Live-Demo</a><br/>• <a href="https://github.com/bumblei3/base3">GitHub — base3</a><br/>• <a href="https://github.com/bumblei3/schach9x9">GitHub — Schach9x9</a><br/>• <a href="https://github.com/bumblei3/trischach">GitHub — Trischach</a></p>
+          </article>
+        </div>
+      </section>
+
       <!-- Stats -->
       <div class="stats">
         <div class="stat"><div class="stat-value">2</div><div class="stat-label">Spiele</div></div>
@@ -545,7 +616,7 @@
         <div class="stat"><div class="stat-value">3</div><div class="stat-label">Fraktionen</div></div>
         <div class="stat"><div class="stat-value">∞</div><div class="stat-label">Möglichkeiten</div></div>
       </div>
-    </section>
+  </section>
   </main>
 
   <!-- Footer -->
