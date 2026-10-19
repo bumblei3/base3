@@ -49,8 +49,8 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install pytest
-        run: pip install pytest
+      - name: Install test dependencies
+        run: pip install pytest pillow
 
       - name: Run tests
         run: python3 -m pytest
