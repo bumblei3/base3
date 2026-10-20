@@ -130,15 +130,19 @@ def _release_date_from_github(repo_owner: str, repo_name: str, version: str) -> 
 
 
 def _get_base_lastmod() -> str:
-    """Datum des letzten Commits, der index.html / README.md / FAQ.md / sitemap.xml geändert hat.
+    """Datum des letzten Commits, der index.html / README.md / FAQ.md geändert hat (sitemap.xml ausgeschlossen, da selbstgeneriert).
 
     Fallback: Heutiges Datum (z. B. CI-Runner ohne lokale History für diese Pfade).
     """
     try:
-        targets = [str(p.relative_to(BASE3)) for p in (INDEX_HTML, README_MD, FAQ_MD, SITEMAP_XML)]
+        # Sitemap bewusst ausgeschlossen: er wird von diesem Script selbst
+        # geschrieben; sonst würde der Heiler-Commit (toucht nur sitemap.xml)
+        # base_lastmod auf sein eigenes UTC-Datum ziehen und bei jedem Lauf
+        # um einen Tag zurückdriften.
+        targets = [str(p.relative_to(BASE3)) for p in (INDEX_HTML, README_MD, FAQ_MD)]
     except ValueError:
         # Dateien liegen außerhalb des Repos (z. B. Test-Redirect) → absolut
-        targets = [str(p) for p in (INDEX_HTML, README_MD, FAQ_MD, SITEMAP_XML)]
+        targets = [str(p) for p in (INDEX_HTML, README_MD, FAQ_MD)]
     try:
         out = subprocess.run(
             ["git", "log", "-1", "--format=%cs", "--", *targets],
