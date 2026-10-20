@@ -55,9 +55,9 @@ def test_patch_index_updates_every_version_slot():
     assert "v8.8.8 · 2099-02-02" in out
     assert '"softwareVersion": "v9.9.9"' in out
     assert '"datePublished": "2099-01-01"' in out
-    assert '<span class="whats-new-label">Schach9x9 · v9.9.9</span>' in out
-    assert '<span class="how-to-label">Schach9x9</span>' in out
-    assert '<span class="how-to-label">Trischach</span>' in out
+    assert '<h3 class="whats-new-label">Schach9x9 · v9.9.9</h3>' in out
+    assert '<h3 class="how-to-label">Schach9x9</h3>' in out
+    assert '<h3 class="how-to-label">Trischach</h3>' in out
     assert 'how-to-label">Schach9x9 · v' not in out
     assert 'how-to-label">Trischach · v' not in out
     assert "<b>Schach9x9:</b> v9.9.9 (2099-01-01)" in out

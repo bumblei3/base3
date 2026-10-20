@@ -72,5 +72,11 @@ jobs:
       - name: Validate page (tags, JSON-LD, links)
         run: python3 scripts/validate_landing_page.py
 
+      # Echter Standardcheck (W3C Nu): findet Verstöße, die der eigene
+      # Tag-Balance-Check nicht sieht (z. B. rohe Leerzeichen in einem
+      # data:-URI). --strict: Warnungen zählen wie Fehler.
+      - name: Validate HTML (W3C Nu, strict)
+        run: python3 scripts/validate-html.py --strict
+
       - name: Check WCAG contrast
         run: python3 scripts/check-contrast.py

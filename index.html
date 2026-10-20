@@ -13,7 +13,7 @@
   <!-- PWA-Installierung: Home-Screen-Icon und manifest. -->
   <link rel="apple-touch-icon" href="/base3/apple-touch-icon.png" />
   <link rel="manifest" href="/base3/manifest.webmanifest" />
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0f28'/%3E%3Ctext x='16' y='23' font-size='22' text-anchor='middle' fill='%2331c48d'%3E%E2%99%9F%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%230a0f28'/%3E%3Ctext%20x='16'%20y='23'%20font-size='22'%20text-anchor='middle'%20fill='%2331c48d'%3E%E2%99%9F%3C/text%3E%3C/svg%3E" />
   <link rel="icon" type="image/png" sizes="32x32" href="/base3/favicon-32.png" />
   <link rel="shortcut icon" href="/base3/favicon.ico" />
   <title>Base3 Chess Platform — Schach9x9 &amp; Trischach</title>
@@ -305,7 +305,7 @@
     .platform-card { background: var(--color-bg-glass); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-md); backdrop-filter: blur(12px); text-align: left; }
     .platform-card.schach9x9-card { border-left: 3px solid #6366f1; }
     .platform-card.trischach-card { border-left: 3px solid #3b82f6; }
-    .platform-label { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.02em; color: var(--color-text-secondary); background: rgba(255,255,255,0.05); border: 1px solid var(--color-border); border-radius: 999px; padding: 2px 10px; margin-bottom: var(--space-sm); }
+    .platform-label { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.02em; color: var(--color-text-secondary); background: rgba(255,255,255,0.05); border: 1px solid var(--color-border); border-radius: 999px; padding: 2px 10px; margin: 0 0 var(--space-sm); }
     .platform-card.schach9x9-card .platform-label { color: #c7d2fe; border-color: rgba(99,102,241,0.4); }
     .platform-card.trischach-card .platform-label { color: #bfdbfe; border-color: rgba(59,130,246,0.4); }
     .platform-card p { font-size: 0.82rem; color: var(--color-text-muted); line-height: 1.5; margin: 0; }
@@ -335,7 +335,7 @@
       display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem;
       font-weight: 600; letter-spacing: 0.02em; color: var(--color-text-secondary);
       background: rgba(255,255,255,0.05); border: 1px solid var(--color-border);
-      border-radius: 999px; padding: 2px 10px; margin-bottom: var(--space-sm);
+      border-radius: 999px; padding: 2px 10px; margin: 0 0 var(--space-sm);
     }
     .whats-new-card.schach9x9-card .whats-new-label { color: #c7d2fe; border-color: rgba(99,102,241,0.4); }
     .whats-new-card.trischach-card .whats-new-label { color: #bfdbfe; border-color: rgba(59,130,246,0.4); }
@@ -487,7 +487,7 @@
   <a href="#main-content" class="skip-link">Zum Inhalt springen</a>
 
   <!-- Top Navigation -->
-  <nav class="top-nav" role="navigation" aria-label="Hauptnavigation">
+  <nav class="top-nav" aria-label="Hauptnavigation">
     <a href="./" class="nav-brand">
       <span class="logo">♟</span>
       <span>Base3</span>
@@ -532,12 +532,12 @@
         </p>
         <div class="platform-cards">
           <article class="platform-card schach9x9-card">
-            <span class="platform-label">Schach9x9</span>
+            <h3 class="platform-label">Schach9x9</h3>
             <p>9×9 Brett, Feenfiguren (Erzbischof, Kanzler, Engel), 5 KI-Persönlichkeiten,
                Engine-Analyse, Eröffnungs-Trainer, Kampagnen, 3D-Schlachtmodus.</p>
           </article>
           <article class="platform-card trischach-card">
-            <span class="platform-label">Trischach</span>
+            <h3 class="platform-label">Trischach</h3>
             <p>3-Spieler-Hex-Schach, 3 Fraktionen (Feuer/Natur/Wasser),
                Stein-Schere-Papier-Kampf, Alpha-Beta, Auto-Battle-Turniere mit Elo,
                Replay-System (TSPN).</p>
@@ -550,7 +550,7 @@
         <h2 class="whats-new-heading">Was ist neu</h2>
         <div class="whats-new-grid">
           <article class="whats-new-card schach9x9-card">
-            <span class="whats-new-label">Schach9x9 · v2.0.0</span>
+            <h3 class="whats-new-label">Schach9x9 · v2.0.0</h3>
             <ul class="whats-new-list">
               <li>Kapitel 7–12: Erzbischof-Gabel, Kanzler-Spieß, Engel vs Dame, Nachtreiter-Linien, Feenrat, Imperator-Finale</li>
               <li>8 handgemachte Puzzles, jede Lösung engine-verifiziert Matt in 1</li>
@@ -559,7 +559,7 @@
             </ul>
           </article>
           <article class="whats-new-card trischach-card">
-            <span class="whats-new-label">Trischach · v1.6.0</span>
+            <h3 class="whats-new-label">Trischach · v1.6.0</h3>
             <ul class="whats-new-list">
               <li>Deterministisches Tagespuzzle: FNV-1a-Auswahl pro Datum aus dem 155-Puzzle-Pool — jeder Spieler bekommt dasselbe Puzzle.</li>
               <li>Statistik-Dashboard: Partien-/Puzzle-Statistik lokal, plus 💬 Feedback-Button mit GitHub-Issue-Template.</li>
@@ -632,7 +632,7 @@
         <h2 class="how-to-heading">Wie spielt man?</h2>
         <div class="how-to-grid">
           <article class="how-to-card schach9x9-card">
-            <span class="how-to-label">Schach9x9</span>
+            <h3 class="how-to-label">Schach9x9</h3>
             <ul class="how-to-list">
               <li><strong>Regeln:</strong> 9×9 Brett mit den drei Feenfiguren (Erzbischof, Kanzler, Engel); zusätzlich 8×8-Modus mit klassischen Standardregeln.</li>
               <li><strong>Starten:</strong> Klassisches Spiel, Kampagnen-Modus oder Eröffnungs-Trainer.</li>
@@ -641,7 +641,7 @@
             </ul>
           </article>
           <article class="how-to-card trischach-card">
-            <span class="how-to-label">Trischach</span>
+            <h3 class="how-to-label">Trischach</h3>
             <ul class="how-to-list">
               <li><strong>Spielbrett:</strong> 3-Spieler-Hex-Schach auf einem sechseckigen Brett.</li>
               <li><strong>Kampf:</strong> Stein-Schere-Papier-Mechanik — Feuer &gt; Natur &gt; Wasser &gt; Feuer.</li>

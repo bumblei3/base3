@@ -141,12 +141,21 @@ nicht dass die Seite vollständig ist — genau das passierte, als drei in
 `index.html` referenzierte Dateien in der Staged-Liste fehlten und live 404
 lieferten, während jeder Job grün war.
 
+`scripts/validate-html.py` schickt die Seite an den **W3C-Nu-Validator** und
+läuft in `check-sync.yml` mit `--strict` (Warnungen zählen wie Fehler). Der
+eigene Tag-Balance-Check ist blind für Standard-Verstöße, die der Browser
+gnädig repariert — so blieb ein `data:`-URI mit rohen Leerzeichen im `href`
+unbemerkt. Ist der Fremddienst nicht erreichbar, meldet das Script
+„NICHT PRÜFBAR" und endet mit 0 (Lint, kein Korrektheits-Gate); mit
+`--require-api` wird auch das zum Fehler.
+
 Tests (kein Netz nötig, Fixtures unter `tests/fixtures/`):
 
 ```bash
 python3 -m pip install pytest
 python3 -m pytest          # Sync, Sitemap, Validator, Deploy-Liste, FAQ-Schema, Live-Ableitung
 python3 scripts/validate_landing_page.py   # Tag-Balance, JSON-LD, Link-Inventar
+python3 scripts/validate-html.py --strict  # echter HTML-Standardcheck (W3C Nu, braucht Netz)
 python3 scripts/check-deployed.py          # Live-Seite == Repo? (braucht Netz)
 python3 scripts/sync-faq-schema.py --check # FAQPage-JSON-LD == FAQ-Sektion?
 ```

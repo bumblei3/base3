@@ -129,3 +129,22 @@ def test_images_have_alt_text():
 
 def test_language_attribute_set():
     assert '<html lang="de">' in HTML
+
+
+def test_every_article_has_a_heading():
+    """Offline-Spiegel der Nu-Warnung „Article lacks heading".
+
+    Eine <article> ohne h2-h6 ist für Screenreader kein Sprungziel und wird vom
+    W3C-Validator beanstandet (scripts/validate-html.py --strict prüft dasselbe
+    online). Die Karten-Labels (platform/whats-new/how-to) sind deshalb <h3>.
+    """
+    import re
+
+    articles = re.findall(r"<article[^>]*>(.*?)</article>", HTML, re.S)
+    assert articles, "keine <article> gefunden"
+    without = [
+        card.strip()[:60]
+        for card in articles
+        if not re.search(r"<h[2-6][^>]*>", card)
+    ]
+    assert not without, f"<article> ohne Überschrift: {without}"

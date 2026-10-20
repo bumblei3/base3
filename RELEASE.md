@@ -62,6 +62,7 @@ in schach9x9 oder trischach aktualisiert werden.
    python3 -m pytest                                # Unit-Tests
    python3 scripts/validate_landing_page.py        # Tag-Balance, JSON-LD, Links
    python3 scripts/check-links.py                  # ausgehende Links live
+   python3 scripts/validate-html.py --strict       # HTML-Standard (W3C Nu)
    python3 scripts/check-deployed.py               # Live-Seite == Repo (nach dem Deploy)
    python3 scripts/sync-faq-schema.py --check      # FAQPage-JSON-LD == FAQ-Sektion?
    python3 scripts/sync-versions.py --check --api-mode \

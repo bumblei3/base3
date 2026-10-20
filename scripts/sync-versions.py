@@ -624,11 +624,14 @@ def patch_index(
     faq_version("Schach9x9", sv, sd)
     faq_version("Trischach", tv, td)
     apply(
-        rf'(<span class="whats-new-label">Schach9x9 · )v{VER}(</span>)',
+        # Tag-agnostisch: das Label ist ein <h3> (Überschrift im Artikel, war
+        # früher <span>). Ein Muster, das am Tag klebt, patcht nach einer
+        # Markup-Änderung still gar nicht mehr — deshalb nur auf die Klasse.
+        rf'(class="whats-new-label">Schach9x9 · )v{VER}(</)',
         rf"\g<1>v{sv}\g<2>",
     )
     apply(
-        rf'(<span class="whats-new-label">Trischach · )v{VER}(</span>)',
+        rf'(class="whats-new-label">Trischach · )v{VER}(</)',
         rf"\g<1>v{tv}\g<2>",
     )
     apply(
