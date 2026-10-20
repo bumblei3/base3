@@ -29,7 +29,7 @@ _spec.loader.exec_module(cd)
     [
         ("./assets/preview-schach9x9.webp", "assets/preview-schach9x9.webp"),
         ("/base3/icon-192.png", "icon-192.png"),
-        ("https://bumblei3.github.io/base3/og-image.webp", "og-image.webp"),
+        ("https://bumblei3.github.io/base3/og-image.png", "og-image.png"),
         ("image/webp", None),
         ("1200", None),
         ("dark", None),
@@ -55,7 +55,7 @@ def test_staged_includes_recursive_assets():
 def test_expected_urls_cover_referenced_and_staged():
     urls = cd.expected_urls(cd.DEFAULT_BASE_URL)
     # von der Seite referenziert — genau die Dateien, die live 404 waren
-    assert urls["og-image.webp"] == "https://bumblei3.github.io/base3/og-image.webp"
+    assert urls["og-image.png"] == "https://bumblei3.github.io/base3/og-image.png"
     assert urls["favicon.ico"].endswith("/favicon.ico")
     assert urls["favicon-32.png"].endswith("/favicon-32.png")
     # gestaged, aber nicht verlinkt

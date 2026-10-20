@@ -32,11 +32,15 @@
   <meta property="og:description" content="9×9 Schach mit Feenfiguren (Erzbischof, Kanzler, Engel) und 3-Spieler Hex-Schach mit Stein-Schere-Papier-Kampf. Beide Spiele als PWA mit KI-Gegner." />
   <meta property="og:url" content="https://bumblei3.github.io/base3/" />
   <meta property="og:site_name" content="Base3 Chess Platform" />
-  <meta property="og:image" content="https://bumblei3.github.io/base3/og-image.webp" />
-  <meta property="og:image:type" content="image/webp" />
-  <meta property="og:image:secure_url" content="https://bumblei3.github.io/base3/og-image.webp" />
+  <!-- og:image muss PNG/JPEG sein: LinkedIn ignoriert WebP bei og:image und
+       zeigt dann eine Karte ohne Bild. Das Tag wird nur von Crawlern geladen,
+       nie vom Besucher — darum darf es hier ruhig die 33 KB PNG sein, die im
+       Repo schon lag, aber nie referenziert wurde. -->
+  <meta property="og:image" content="https://bumblei3.github.io/base3/og-image.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:secure_url" content="https://bumblei3.github.io/base3/og-image.png" />
   <meta property="og:image:alt" content="Base3 Chess Platform — Schach9x9 & Trischach Preview" />
-  <meta name="twitter:image" content="https://bumblei3.github.io/base3/og-image.webp" />
+  <meta name="twitter:image" content="https://bumblei3.github.io/base3/og-image.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:locale" content="de_DE" />

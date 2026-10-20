@@ -79,6 +79,38 @@ def test_og_image_has_social_dimensions():
         assert im.size == (1200, 630), f"og-image ist {im.size}, erwartet 1200x630"
 
 
+def test_og_image_is_a_format_every_crawler_supports():
+    """LinkedIn ignoriert WebP bei og:image und zeigt dann eine Karte ohne Bild;
+    Slack/WhatsApp/Telegram akzeptieren es nur unzuverlässig. og:image wird nur
+    von Crawlern geladen — nie vom Besucher — darum schlägt hier
+    Universalkompatibilität die Dateigröße."""
+    urls = re.findall(
+        r'(?:property|name)="(?:og:image|og:image:secure_url|twitter:image)"'
+        r'\s+content="([^"]+)"',
+        HTML,
+    )
+    assert urls, "keine og:image-Angabe gefunden"
+    for url in urls:
+        assert re.search(r"\.(png|jpe?g|gif)$", url), (
+            f"og:image {url}: LinkedIn unterstützt WebP/SVG nicht"
+        )
+
+
+def test_og_image_type_matches_the_file():
+    """og:image:type muss zur Dateiendung passen — ein webp:type auf eine
+    PNG-URL verhindert die Anzeige in manchen Crawlern."""
+    image = re.search(
+        r'property="og:image"\s+content="[^"]*\.(\w+)"', HTML
+    )
+    assert image, "og:image ohne erkennbare Dateiendung"
+    declared = re.search(r'property="og:image:type"\s+content="([^"]+)"', HTML)
+    assert declared, "og:image:type fehlt"
+    expected = {"png": "image/png", "jpg": "image/jpeg", "jpeg": "image/jpeg", "gif": "image/gif"}
+    assert declared.group(1) == expected[image.group(1)], (
+        f"og:image ist .{image.group(1)}, aber og:image:type sagt {declared.group(1)}"
+    )
+
+
 def test_color_scheme_is_announced():
     """Dark-Theme ansagen, damit Browser-UI (Scrollbar, Controls) dunkel bleibt."""
     assert 'name="color-scheme"' in HTML
