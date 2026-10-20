@@ -199,3 +199,27 @@ def test_check_mode_passes_after_sync(monkeypatch, tmp_path):
 
     monkeypatch.setattr(sys, "argv", base + ["--check"])
     sv.main()  # kein SystemExit → exit 0
+
+
+HISTORY_WORKFLOWS = ("check-sync.yml", "sync-versions.yml")
+
+
+def test_history_workflows_checkout_full_history():
+    """Die lastmod-Berechnung liest git log — das braucht volle History.
+
+    Bei fetch-depth: 1 hat HEAD keinen Parent; `git log -1 -- <pfade>` sieht
+    dann den Shallow-Rand-Commit (alle Dateien „neu“) und liefert HEADs Datum
+    statt des letzten Content-Commits. Folge: der Drift-Wächter meldet an
+    jedem Tag mit neuem HEAD falschen sitemap-Drift.
+    """
+    for name in HISTORY_WORKFLOWS:
+        text = (BASE3 / ".github" / "workflows" / name).read_text(encoding="utf-8")
+        assert "sync-versions.py" in text, f"{name} ruft sync-versions.py nicht auf"
+        checkouts = text.split("uses: actions/checkout@")[1:]
+        assert checkouts, f"{name}: kein checkout-Schritt gefunden"
+        for i, block in enumerate(checkouts, 1):
+            head = "\n".join(block.splitlines()[:4])
+            assert "fetch-depth: 0" in head, (
+                f"{name}: Checkout #{i} ohne fetch-depth: 0 — "
+                "lastmod würde auf das Shallow-Randdatum fallen"
+            )

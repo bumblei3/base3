@@ -25,7 +25,13 @@ jobs:
     name: Sync version pills
     runs-on: ubuntu-latest
     steps:
+      # Volle History: _get_base_lastmod() liest das Datum des letzten
+      # Commits an index.html/README.md/FAQ.md/sitemap.xml. Bei einem
+      # Shallow-Checkout (fetch-depth: 1) hat HEAD keinen Parent, das
+      # Pathspec-Log liefert deshalb HEADs Datum → falscher Drift.
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
