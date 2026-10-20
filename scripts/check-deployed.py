@@ -123,16 +123,16 @@ def _sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
-def fetch(url: str, timeout: int) -> tuple[int | None, bytes | None, str | None]:
-    """GET; Rückgabe (status, body, fehler)."""
+def fetch(url: str, timeout: int) -> tuple[int | None, bytes | None, str | None, str | None]:
+    """GET; Rückgabe (status, body, fehler, content_type)."""
     req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
     try:
         with urllib.request.urlopen(req, timeout=timeout) as resp:
-            return resp.status, resp.read(), None
+            return resp.status, resp.read(), None, resp.headers.get("Content-Type", "")
     except urllib.error.HTTPError as exc:
-        return exc.code, None, None
+        return exc.code, None, None, exc.headers.get("Content-Type", "") if exc.headers else ""
     except Exception as exc:  # Netz, DNS, Timeout
-        return None, None, str(exc)
+        return None, None, str(exc), ""
 
 
 def check_one(path: str, url: str, timeout: int, attempts: int, delay: int) -> tuple[str, str]:
@@ -143,10 +143,17 @@ def check_one(path: str, url: str, timeout: int, attempts: int, delay: int) -> t
     want = _sha256(local.read_bytes())
     last = "keine Antwort"
     for attempt in range(1, attempts + 1):
-        status, body, error = fetch(url, timeout)
+        status, body, error, content_type = fetch(url, timeout)
         if status == 200 and body is not None:
             got = _sha256(body)
             if got == want:
+                # MIME-Guard: Service Worker und Skripte müssen als JS
+                # ausgeliefert werden, sonst registriert der Browser den
+                # Worker nicht (silently) und die Offline-Fallbacks fallen weg.
+                if path.endswith(".js"):
+                    ct = (content_type or "").lower()
+                    if "javascript" not in ct and "ecmascript" not in ct:
+                        return "FALSCHER MIME", f"Content-Type={content_type!r}, erwartet application/javascript"
                 return "OK", f"{len(body)} B"
             return "ABWEICHUNG", f"live {len(body)} B/{got[:12]} ≠ repo {local.stat().st_size} B/{want[:12]}"
         last = f"HTTP {status}" if status is not None else f"Fehler: {error}"

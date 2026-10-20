@@ -73,13 +73,13 @@ def test_every_expected_file_exists_locally():
 
 def test_check_one_reports_mismatch(monkeypatch):
     """Abweichende Live-Bytes müssen als Fehler durchkommen, nicht als OK."""
-    monkeypatch.setattr(cd, "fetch", lambda url, timeout: (200, b"andere bytes", None))
+    monkeypatch.setattr(cd, "fetch", lambda url, timeout: (200, b"andere bytes", None, "text/html"))
     status, _ = cd.check_one("index.html", "https://example.invalid/", 5, 1, 0)
     assert status == "ABWEICHUNG"
 
 
 def test_check_one_detects_missing_live_file(monkeypatch):
-    monkeypatch.setattr(cd, "fetch", lambda url, timeout: (404, None, None))
+    monkeypatch.setattr(cd, "fetch", lambda url, timeout: (404, None, None, ""))
     status, detail = cd.check_one("favicon.ico", "https://example.invalid/favicon.ico", 5, 1, 0)
     assert status == "NICHT ERREICHBAR"
     assert "404" in detail
@@ -87,5 +87,21 @@ def test_check_one_detects_missing_live_file(monkeypatch):
 
 def test_check_one_ok_on_identical_bytes(monkeypatch):
     payload = (BASE3 / "robots.txt").read_bytes()
-    monkeypatch.setattr(cd, "fetch", lambda url, timeout: (200, payload, None))
+    monkeypatch.setattr(cd, "fetch", lambda url, timeout: (200, payload, None, "text/plain"))
     assert cd.check_one("robots.txt", "https://example.invalid/robots.txt", 5, 1, 0)[0] == "OK"
+
+
+def test_check_one_rejects_wrong_mime_for_js(monkeypatch):
+    """Service Worker muss als application/javascript ausgeliefert werden —
+    sonst registriert der Browser ihn nicht und Offline-Fallbacks fallen weg."""
+    payload = (BASE3 / "sw.js").read_bytes()
+    monkeypatch.setattr(cd, "fetch", lambda url, timeout: (200, payload, None, "text/plain"))
+    status, detail = cd.check_one("sw.js", "https://example.invalid/sw.js", 5, 1, 0)
+    assert status == "FALSCHER MIME"
+    assert "application/javascript" in detail
+
+
+def test_check_one_accepts_correct_mime_for_js(monkeypatch):
+    payload = (BASE3 / "sw.js").read_bytes()
+    monkeypatch.setattr(cd, "fetch", lambda url, timeout: (200, payload, None, "application/javascript"))
+    assert cd.check_one("sw.js", "https://example.invalid/sw.js", 5, 1, 0)[0] == "OK"
