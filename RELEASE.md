@@ -62,10 +62,14 @@ in schach9x9 oder trischach aktualisiert werden.
    python3 -m pytest                                # Unit-Tests
    python3 scripts/validate_landing_page.py        # Tag-Balance, JSON-LD, Links
    python3 scripts/check-links.py                  # ausgehende Links live
+   python3 scripts/check-deployed.py               # Live-Seite == Repo (nach dem Deploy)
    python3 scripts/sync-versions.py --check --api-mode \
      --schach-repo-owner bumblei3 --schach-repo-name schach9x9 \
      --trischach-repo-owner bumblei3 --trischach-repo-name trischach
    ```
+   `check-deployed.py` läuft in CI automatisch als Job `Verify live deployment`
+   in `pages.yml`; lokal ist es der einzige Weg, eine grüne Deploy-Auslieferung
+   mit 404-Lücken zu erkennen (Staged-Liste ≠ referenzierte Dateien).
    Der `--check`-Lauf muss exit 0 liefern, sonst ist ein Fixed-Point verletzt
    (ein zweiter Sync-Lauf darf nichts mehr ändern).
 

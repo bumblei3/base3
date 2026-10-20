@@ -41,3 +41,22 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  # Ein grüner Deploy beweist nur, dass das Artefakt hochgeladen wurde — nicht,
+  # dass die Seite vollständig ist (genau das war schon der Fall: drei
+  # referenzierte Dateien fehlten in der Staged-Liste und waren live 404).
+  # Der Check vergleicht die ausgelieferten Bytes mit den Repo-Dateien.
+  verify:
+    name: Verify live deployment
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compare live site with repo (SHA-256)
+        run: python3 scripts/check-deployed.py

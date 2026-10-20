@@ -27,7 +27,7 @@ genauso wichtig ist wie der Brettaufbau.
 Die Plattform existiert, weil beides zwei Seiten derselben Neugier ist: Schach
 verändern, ohne es zu verlassen. Code, Build und CI der Spiele leben in den
 eigenständigen Repos. base3 ist der Türkeiler: die Landing Page mit eigenen
-Tests und fünf Workflows.
+Tests und vier Workflows.
 
 ---
 
@@ -103,11 +103,12 @@ bis zum strategischen 3-Spieler-Hex-Schach.
 
 ## CI & Tests
 
-base3 hat fünf Workflows (`.github/workflows/`):
+base3 hat vier Workflows (`.github/workflows/`) — GitHub listet zusätzlich
+`Dependabot Updates` als fünften, dafür gibt es hier aber keine Datei:
 
 | Workflow | Zweck | Trigger |
 |---|---|---|
-| `pages.yml` | Deploy (`index.html`, `assets/`, `og-image.png`, Icons, `manifest.webmanifest`, `robots.txt`, `sitemap.xml`, Favicons) | push auf `main` |
+| `pages.yml` | Deploy der Staged-Liste (`index.html`, `assets/`, `og-image.png` **+** `og-image.webp`, Icons + Favicons, `manifest.webmanifest`, `robots.txt`, `sitemap.xml`); danach Job `Verify live deployment` | push auf `main` |
 | `sync-versions.yml` | Heiler: Pills/JSON-LD/FAQ/README + „Was ist neu"-Bullets + `sitemap.xml`-lastmod | täglich 02:00 UTC + manuell |
 | `check-sync.yml` | Wächter: failt, wenn committede Pills, Bullets oder `lastmod` veraltet sind | push, täglich 01:55 UTC + manuell |
 | `check-links.yml` | Wächter: alle ausgehenden Links aus den drei Dateien erreichbar? | push, montags 03:00 UTC + manuell |
@@ -124,12 +125,22 @@ Ohne `--api-mode` bleibt die „Was ist neu"-Sektion unangetastet
 `check-links.yml` wertet 403/429/503 als „nicht beurteilbar" und ignoriert
 `<link rel="preconnect">` (ein 404 dort ist normal).
 
+`pages.yml` prüft sich nach dem Deploy selbst nach: der Job
+`Verify live deployment` lädt jede ausgelieferte Datei erneut von der
+Pages-URL und vergleicht sie per SHA-256 mit der Repo-Datei
+(`scripts/check-deployed.py`, mit Retries für die CDN-Propagation). Nötig,
+weil ein grüner Deploy-Run nur beweist, dass *ein* Artefakt hochgeladen wurde,
+nicht dass die Seite vollständig ist — genau das passierte, als drei in
+`index.html` referenzierte Dateien in der Staged-Liste fehlten und live 404
+lieferten, während jeder Job grün war.
+
 Tests (kein Netz nötig, Fixtures unter `tests/fixtures/`):
 
 ```bash
 python3 -m pip install pytest
-python3 -m pytest          # Sync, Sitemap, Validator, Link-Sammlung
+python3 -m pytest          # Sync, Sitemap, Validator, Deploy-Liste, Live-Ableitung
 python3 scripts/validate_landing_page.py   # Tag-Balance, JSON-LD, Link-Inventar
+python3 scripts/check-deployed.py          # Live-Seite == Repo? (braucht Netz)
 ```
 
 Die Patch-Funktionen arbeiten auf Dateikopien in `tmp_path`; nur die
