@@ -228,6 +228,9 @@
       --color-border: rgba(120, 140, 200, 0.16);
       --color-border-hover: rgba(99, 102, 241, 0.55);
       --shadow-lg: 0 24px 60px -22px rgba(0, 0, 0, 0.7);
+      /* Dekorativer Stern für .features-list — als Maske statt Textglyph,
+         damit er nicht im Accessibility-Tree landet. */
+      --star-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1.5l2.7 7.8 7.8 2.7-7.8 2.7L12 22.5l-2.7-7.8-7.8-2.7 7.8-2.7z'/%3E%3C/svg%3E");
       --radius-md: 12px;
       --radius-lg: 14px;
       --radius-xl: 20px;
@@ -415,8 +418,18 @@
     .game-card .tagline { color: var(--color-text-secondary); font-size: 0.95rem; margin: 0 0 var(--space-lg); line-height: 1.5; }
     .features-list { list-style: none; text-align: left; margin: 0 0 var(--space-lg); display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-sm) var(--space-md); font-size: 0.85rem; color: var(--color-text-secondary); }
     .features-list li { display: flex; align-items: center; gap: var(--space-xs); }
-    .features-list li::before { content: '✦'; color: var(--color-accent-primary); font-size: 0.7rem; }
-    .game-card.trischach .features-list li::before { color: #3b82f6; }
+    /* Der Stern ist dekorativ: als Textglyph (content: '✦') landet er im
+       Accessibility-Tree und wird von Screenreadern als „Funkeln“
+       vorgelesen — einmal pro Feature. Als SVG-Hintergrund mit content:''
+       bleibt das Bild identisch, der Knoten entsteht aber gar nicht. */
+    .features-list li::before {
+      content: '';
+      width: 0.7rem; height: 0.7rem; flex: none;
+      background: var(--color-accent-primary);
+      -webkit-mask: var(--star-mask) center / contain no-repeat;
+      mask: var(--star-mask) center / contain no-repeat;
+    }
+    .game-card.trischach .features-list li::before { background: #3b82f6; }
 
     .card-links { display: flex; gap: var(--space-sm); justify-content: center; flex-wrap: wrap; }
     .play-btn {
@@ -560,14 +573,14 @@
   <!-- Top Navigation -->
   <nav class="top-nav" aria-label="Hauptnavigation">
     <a href="./" class="nav-brand">
-      <span class="logo">♟</span>
+      <span class="logo" aria-hidden="true">♟</span>
       <span>Base3</span>
     </a>
     <button class="nav-toggle" aria-label="Menü öffnen" aria-expanded="false">☰</button>
     <ul class="nav-links">
-      <li><a href="./" class="active" aria-current="page"><span class="icon">🏠</span><span>Start</span></a></li>
-      <li><a href="https://bumblei3.github.io/schach9x9/"><span class="icon">♟️</span><span>Schach9x9</span></a></li>
-      <li><a href="https://bumblei3.github.io/trischach/"><span class="icon">⬡</span><span>Trischach</span></a></li>
+      <li><a href="./" class="active" aria-current="page"><span class="icon" aria-hidden="true">🏠</span><span>Start</span></a></li>
+      <li><a href="https://bumblei3.github.io/schach9x9/"><span class="icon" aria-hidden="true">♟️</span><span>Schach9x9</span></a></li>
+      <li><a href="https://bumblei3.github.io/trischach/"><span class="icon" aria-hidden="true">⬡</span><span>Trischach</span></a></li>
     </ul>
   </nav>
 
@@ -633,7 +646,7 @@
             <h3 class="whats-new-label">Trischach · v1.6.0</h3>
             <ul class="whats-new-list">
               <li>Deterministisches Tagespuzzle: FNV-1a-Auswahl pro Datum aus dem 155-Puzzle-Pool — jeder Spieler bekommt dasselbe Puzzle.</li>
-              <li>Statistik-Dashboard: Partien-/Puzzle-Statistik lokal, plus 💬 Feedback-Button mit GitHub-Issue-Template.</li>
+              <li>Statistik-Dashboard: Partien-/Puzzle-Statistik lokal, plus <span aria-hidden="true">💬</span> Feedback-Button mit GitHub-Issue-Template.</li>
               <li>Test-Suite 800 → 838 Tests: invariant-first Härtung von board/analysis/ai-core/pwa/rps-puzzle/tutorial/opening-book/game-stats.</li>
             </ul>
           </article>
@@ -764,7 +777,7 @@
           </article>
           <article class="faq-card">
             <h3 class="faq-q">Wie funktioniert Trischach?</h3>
-            <p class="faq-a">Trischach ist 3-Spieler-Schach auf einem sechseckigen Brett. Drei Fraktionen — Feuer 🔥, Natur 🌿, Wasser 🌊 — stehen in einem zyklischen Kampf: Feuer &gt; Natur &gt; Wasser &gt; Feuer. Das Spiel ist eine permanente Neu-Berechnung von Allianzen und Risiken — nicht nur „wer schlägt wen", sondern „wer steht wie zueinander".</p>
+            <p class="faq-a">Trischach ist 3-Spieler-Schach auf einem sechseckigen Brett. Drei Fraktionen — Feuer <span aria-hidden="true">🔥</span>, Natur <span aria-hidden="true">🌿</span>, Wasser <span aria-hidden="true">🌊</span> — stehen in einem zyklischen Kampf: Feuer &gt; Natur &gt; Wasser &gt; Feuer. Das Spiel ist eine permanente Neu-Berechnung von Allianzen und Risiken — nicht nur „wer schlägt wen", sondern „wer steht wie zueinander".</p>
           </article>
           <article class="faq-card">
             <h3 class="faq-q">Gibt es Blog, Roadmap oder Newsletter?</h3>

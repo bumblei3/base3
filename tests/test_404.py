@@ -66,6 +66,15 @@ def test_no_javascript_needed():
     assert "<script" not in HTML, "404.html sollte ohne JavaScript auskommen"
 
 
+def test_decorative_emoji_are_hidden_from_screen_readers():
+    """Die Karten-Icons sind dekorativ — das Label folgt direkt. Ohne
+    aria-hidden liest der Screenreader „Haus Zur Startseite“."""
+    cards = re.findall(r'<a class="card"[^>]*><span([^>]*)>([^<]+)</span><span>', HTML)
+    assert len(cards) == 4, f"{len(cards)} Karten statt 4"
+    for attrs, emoji in cards:
+        assert 'aria-hidden="true"' in attrs, f"{emoji} ist nicht aria-hidden"
+
+
 def test_links_to_both_games_and_the_start():
     for target in (
         'href="/base3/"',

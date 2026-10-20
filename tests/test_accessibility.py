@@ -172,3 +172,55 @@ def test_mobile_nav_works_without_javascript():
     assert re.search(r"\.nav-toggle\s*\{\s*display:\s*none", HTML)
     # Fallback im Mobile-Block: sichtbar und umbrechend
     assert "flex-wrap: wrap; justify-content: flex-end;" in HTML
+
+
+def test_decorative_emoji_are_hidden_from_screen_readers():
+    """Emoji neben dem sie beschreibenden Wort sind dekorativ. Ohne
+    aria-hidden liest der Screenreader beides vor („Haus Start“,
+    „Feuer Feuer“) — das Doppelte ist reines Rauschen."""
+    import re
+
+    for icon, label in (("🏠", "Start"), ("♟️", "Schach9x9"), ("⬡", "Trischach")):
+        match = re.search(
+            r'<span class="icon"([^>]*)>' + re.escape(icon) + r"</span><span>" + label,
+            HTML,
+        )
+        assert match, f"Icon {icon} mit Label {label} nicht gefunden"
+        assert 'aria-hidden="true"' in match.group(1), f"{icon} ist nicht aria-hidden"
+
+    assert '<span class="logo" aria-hidden="true">♟</span>' in HTML, (
+        "das Logo-Symbol ist dekorativ (das Wort Base3 folgt direkt)"
+    )
+    # Inline-Emoji, die ihr eigenes Wort wiederholen: jede Stelle im sichtbaren
+    # Text muss in einem aria-hidden-Span stehen. Das JSON-LD liegt in einem
+    # <script> und wird deshalb ausgenommen.
+    import re as _re
+
+    body = _re.sub(r"<script.*?</script>", "", HTML.split("</style>", 1)[1], flags=_re.S)
+    for emoji in ("🔥", "🌿", "🌊", "💬"):
+        found = 0
+        start = 0
+        while True:
+            i = body.find(emoji, start)
+            if i < 0:
+                break
+            found += 1
+            assert body[:i].endswith('<span aria-hidden="true">'), (
+                f"{emoji} steht ungeschützt im Text"
+            )
+            start = i + 1
+        assert found, f"{emoji} kommt im Seiten-Text nicht mehr vor"
+
+
+def test_features_star_is_not_a_text_glyph():
+    """content: '✦' landet im Accessibility-Tree und wird pro Feature als
+    „Funkeln“ vorgelesen. Als SVG-Maske mit content:'' entsteht der Knoten
+    nicht — das Bild bleibt identisch."""
+    import re
+
+    rule = re.search(r"\.features-list li::before\s*\{([^}]*)\}", HTML)
+    assert rule, "Regel für .features-list li::before fehlt"
+    body = rule.group(1)
+    assert "content: ''" in body, "Stern muss mit content:'' gerendert werden"
+    assert "mask" in body, "Stern muss als SVG-Maske gerendert werden"
+    assert "✦" not in body, "✦ als Textglyph würde vorgelesen"
