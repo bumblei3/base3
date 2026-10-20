@@ -193,23 +193,24 @@ def test_decorative_emoji_are_hidden_from_screen_readers():
     )
     # Inline-Emoji, die ihr eigenes Wort wiederholen: jede Stelle im sichtbaren
     # Text muss in einem aria-hidden-Span stehen. Das JSON-LD liegt in einem
-    # <script> und wird deshalb ausgenommen.
+    # <script> und wird deshalb ausgenommen. Welche Emoji auftauchen, hängt vom
+    # Inhalt der Release-Notes ab — geprüft wird das Wrapping, nicht die
+    # Präsenz.
     import re as _re
 
     body = _re.sub(r"<script.*?</script>", "", HTML.split("</style>", 1)[1], flags=_re.S)
-    for emoji in ("🔥", "🌿", "🌊", "💬"):
-        found = 0
+    for emoji in ("🔥", "🌿", "🌊", "💬", "♟", "⬡", "🏠", "🐙"):
         start = 0
         while True:
             i = body.find(emoji, start)
             if i < 0:
                 break
-            found += 1
-            assert body[:i].endswith('<span aria-hidden="true">'), (
-                f"{emoji} steht ungeschützt im Text"
+            tag_start = body.rfind("<span", 0, i)
+            tag = body[tag_start : body.find(">", tag_start)]
+            assert 'aria-hidden="true"' in tag, (
+                f"{emoji} steht ungeschützt im Text: <{tag}>"
             )
             start = i + 1
-        assert found, f"{emoji} kommt im Seiten-Text nicht mehr vor"
 
 
 def test_features_star_is_not_a_text_glyph():

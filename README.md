@@ -78,7 +78,7 @@ bis zum strategischen 3-Spieler-Hex-Schach.
 
 ### ⬡ Trischach
 
-3-Spieler Hexagonales Schach mit Stein-Schere-Papier-Kampfmechanik. *(aktuell: v1.6.0)*
+3-Spieler Hexagonales Schach mit Stein-Schere-Papier-Kampfmechanik. *(aktuell: v1.7.0)*
 
 - 3 Fraktionen (Feuer 🔥 / Natur 🌿 / Wasser 🌊)
 - RPS Kampfmechanik (Feuer > Natur > Wasser > Feuer)
@@ -101,11 +101,9 @@ bis zum strategischen 3-Spieler-Hex-Schach.
 - Perk „Taktik-Genie" wirksam (Tipps in Kampagnen nur mit Perk)
 - Ein Talent pro Feenfigur mit echtem Effekt (+Gold/+XP)
 
-### Trischach · v1.6.0 (2026-08-24)
+### Trischach · v1.7.0 (2026-10-20)
 
-- Deterministisches Tagespuzzle: FNV-1a-Auswahl pro Datum aus dem 155-Puzzle-Pool — jeder Spieler bekommt dasselbe Puzzle.
-- Statistik-Dashboard: Partien-/Puzzle-Statistik lokal, plus 💬 Feedback-Button mit GitHub-Issue-Template.
-- Test-Suite 800 → 838 Tests: invariant-first Härtung von board/analysis/ai-core/pwa/rps-puzzle/tutorial/opening-book/game-stats.
+- Code-Splitting — game.ts in separate chunk
 
 ## CI & Tests
 

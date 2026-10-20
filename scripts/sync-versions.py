@@ -184,20 +184,58 @@ BULLET_STOP = re.compile(
     r"full changelog|voller changelog|what'?s changed|compare:", re.IGNORECASE
 )
 
+# GitHubs PR-Autoliste: „* feat: Text by @user in https://…/pull/164".
+# Erst Attribution und URL entfernen, dann entscheidet der Änderungstyp.
+PR_ATTRIBUTION = re.compile(r"\s+by\s+@[\w\[\].-]+\s+in\s+\S+", re.IGNORECASE)
 
-def clean_bullet(line: str) -> str | None:
+# Nicht nutzerseitig — das gehört nicht auf eine Landing Page: Abhängigkeits-
+# Bumps, Hausaltung, reine Interna. Wird auf den Typ-Präfix und Schlagworte
+# geprüft, bevor der Präfix selbst entfernt wird.
+NON_USER_FACING = re.compile(
+    r"^(?:chore|ci|docs|build|style|refactor|test|release)\b"
+    r"|\bbump\b|\bdependabot\b|\bpseudo-?\s?dependenc",
+    re.IGNORECASE,
+)
+
+
+def clean_bullet(line: str, *, pr_list: bool = False) -> str | None:
     """Macht aus einer Markdown-Bulletzeile einen kurzen, flachen Listeneintrag.
 
     Rückgabe: bereinigter Text oder None, wenn die Zeile kein nutzbarer
     Bullet ist (PR-Autoliste, Linkzeile, zu kurz, ...).
+
+    pr_list=False (Standard) für handgeschriebene Highlights: dort genügt die
+    strenge Regel — alles mit URL oder `by @` ist PR-Autoliste und gehört
+    nicht auf die Landing Page.
+
+    pr_list=True für die automatisch generierte „What's Changed"-Liste. Dort
+    ist die URL nur Anhängsel, ausgewertet wird der vorangestellte
+    Änderungstyp. So kommt ein echtes Feature auf die Karte, während
+    Dependabot-Bumps und Hausaltung durchfallen.
     """
     t = line.strip()
     if not re.match(r"^[-*+]\s+", t):
         return None
     t = re.sub(r"^[-*+]\s+", "", t)
-    # PR-Autolisten ("* feat(x): ... by @user in https://...") und URL-Zeilen
-    # gehören nicht auf die Landing Page.
-    if re.search(r"https?://|by @|pull/\d+", t):
+    if pr_list:
+        # „… by @bumblei3 in https://…/pull/164" → „…"
+        t = PR_ATTRIBUTION.sub("", t)
+        t = re.sub(r"https?://\S+", "", t)
+        t = re.sub(r"\bpull/\d+", "", t)
+        t = t.strip(" \t:;,")
+        if NON_USER_FACING.search(t):
+            return None
+        # Konventioneller Präfix wie „feat:" passt nicht auf die Karte.
+        t = re.sub(
+            r"^(?:feat|fix|perf|refactor|chore|ci|docs|build|style|test|release)"
+            r"(?:\([^)]*\))?!?:\s*",
+            "",
+            t,
+            flags=re.I,
+        )
+    elif re.search(r"https?://|by @|pull/\d+", t):
+        # PR-Autolisten ("* feat(x): ... by @user in https://...") und
+        # URL-Zeilen gehören nicht auf die Landing Page.
         return None
     t = re.sub(r"\((?:#\d+(?:\s*[–-]\s*#?\d+)?)\)", "", t)  # (#140) / (#142–144)
     t = re.sub(r"\[([^\]]+)\]\([^)]*\)", r"\1", t)  # [Text](URL) → Text
@@ -225,20 +263,40 @@ def clean_bullet(line: str) -> str | None:
     return t[:BULLET_MAX_LEN].rsplit(" ", 1)[0].rstrip(" ,;:-–—") + "…"
 
 
+def _collect(lines: list[str], *, pr_list: bool = False) -> list[str]:
+    out: list[str] = []
+    for line in lines:
+        if not pr_list and BULLET_STOP.search(line):
+            break
+        bullet = clean_bullet(line, pr_list=pr_list)
+        if bullet and bullet not in out:
+            out.append(bullet)
+    return out
+
+
 def extract_bullets(body: str | None, max_n: int = WHATS_NEW_MAX) -> list[str]:
-    """Zieht bis zu max_n Highlights aus einem Release-Body (Markdown)."""
+    """Zieht bis zu max_n Highlights aus einem Release-Body (Markdown).
+
+    Handgeschriebene Highlights (vor „What's Changed") gewinnen — die sind
+    für die Karte geschrieben. Hat ein Release nur die automatisch generierte
+    PR-Liste, werden daraus die nutzerseitigen Änderungen gesiebt.
+
+    Ohne diesen Zweitpfad bliebe die Karte bei einer neuen Version stehen und
+    zeigte weiter die Bullets der vorherigen — das ist genau die Falle, in die
+    Trischach v1.7.0 geraten war: ein reines „What's Changed"-Release, keine
+    Bullet davor, also Stillstand bei altem Inhalt.
+    """
     if not body:
         return []
-    bullets: list[str] = []
+    head: list[str] = []
     for line in body.splitlines():
         if BULLET_STOP.search(line):
             break
-        bullet = clean_bullet(line)
-        if bullet and bullet not in bullets:
-            bullets.append(bullet)
-        if len(bullets) >= max_n:
-            break
-    return bullets
+        head.append(line)
+    bullets = _collect(head)
+    if bullets:
+        return bullets[:max_n]
+    return _collect(body.splitlines(), pr_list=True)[:max_n]
 
 
 def _extract_repo_owner_name(repo_url: str) -> tuple[str, str] | None:
@@ -539,8 +597,32 @@ def main():
         print("Alles bereits auf dem Stand der Nachbar-Repos.")
 
 
+# Dekorative Bildschrift-Symbole, die ein Wort nur wiederholen. Bewusst OHNE
+# Pfeile (U+2190–U+21FF): „800 → 838“ trägt Bedeutung — ein aria-hidden darüber
+# würde sie zerstören. \uFE0F? hängt den Variationsselektor an die Basis, sonst
+# bliebe er außen und beschädigte das Emoji.
+DECORATIVE_EMOJI = re.compile(
+    "[\U0001F000-\U0001FAFF\u2600-\u26FF\u2700-\u27BF\u2B00-\u2BFF]\uFE0F?"
+)
+
+
+def _hide_decorative_emoji(escaped: str) -> str:
+    """Wrapped dekorative Emoji in einen aria-hidden-Span.
+
+    Läuft über bereits escaptem Text, damit die Spans selbst nicht escapt
+    werden. Ohne den Span liest der Screenreader das Wort doppelt („Feuer
+    Feuer“), wo das Emoji es nur illustriert.
+    """
+    return DECORATIVE_EMOJI.sub(
+        lambda m: f'<span aria-hidden="true">{m.group()}</span>', escaped
+    )
+
+
 def _render_bullet_list(indent: str, bullets: list[str]) -> str:
-    return "".join(f"{indent}<li>{html.escape(b, quote=False)}</li>\n" for b in bullets)
+    return "".join(
+        f"{indent}<li>{_hide_decorative_emoji(html.escape(b, quote=False))}</li>\n"
+        for b in bullets
+    )
 
 
 def _replace_bullet_list(html_text: str, card_class: str, bullets: list[str]) -> tuple[str, bool]:

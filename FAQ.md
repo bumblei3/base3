@@ -39,7 +39,7 @@ der Code hier ist ausschließlich die Landing Page (HTML/CSS).
 Die aktuellen Versionen sind:
 
 - **Schach9x9:** v2.0.0 (2026-08-23)
-- **Trischach:** v1.6.0 (2026-08-24)
+- **Trischach:** v1.7.0 (2026-10-20)
 
 Die Version-Pills, JSON-LD und README-Angaben lassen sich mit
 `python3 scripts/sync-versions.py` aus den Nachbar-Repos ziehen.
@@ -58,10 +58,8 @@ der aktuellen Versionen.
 - Perk „Taktik-Genie" wirksam (Tipps in Kampagnen nur mit Perk)
 - Ein Talent pro Feenfigur mit echtem Effekt (+Gold/+XP)
 
-**Trischach (v1.6.0):**
-- Deterministisches Tagespuzzle: FNV-1a-Auswahl pro Datum aus dem 155-Puzzle-Pool — jeder Spieler bekommt dasselbe Puzzle.
-- Statistik-Dashboard: Partien-/Puzzle-Statistik lokal, plus 💬 Feedback-Button mit GitHub-Issue-Template.
-- Test-Suite 800 → 838 Tests: invariant-first Härtung von board/analysis/ai-core/pwa/rps-puzzle/tutorial/opening-book/game-stats.
+**Trischach (v1.7.0):**
+- Code-Splitting — game.ts in separate chunk
 
 ## Ist base3 noch aktiv?
 
