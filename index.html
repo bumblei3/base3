@@ -4,6 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#02040a" />
+  <!-- Progressive Enhancement: die eingeklappte Mobile-Navigation hängt an der
+       .js-Class. Ohne JavaScript (oder bei Ladefehler) bleiben die drei Links
+       sichtbar — nur umbrechend statt eingeklappt. Sonst wären sie auf dem
+       Handy per Media-Query versteckt und der ☰-Button ohne Funktion. -->
+  <script>document.documentElement.classList.add('js');</script>
   <!-- Dark-Theme ansagen: dunkle Scrollleisten, Formular-Controls und
        Firefox-UI statt der hellen Browser-Defaults. -->
   <meta name="color-scheme" content="dark" />
@@ -468,9 +473,12 @@
 
     @media (max-width: 768px) {
       .top-nav { padding: var(--space-md); }
-      .nav-links { display: none; position: absolute; top: 100%; right: var(--space-md); flex-direction: column; gap: var(--space-sm); background: var(--color-bg-glass); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-md); backdrop-filter: blur(12px); }
-      .nav-links.open { display: flex; }
-      .nav-toggle { display: block; }
+      /* Ohne JS: Links sichtbar und umbrechend (Fallback). */
+      .nav-links { flex-wrap: wrap; justify-content: flex-end; gap: var(--space-sm); }
+      /* Mit JS: eingeklapptes Menü hinter dem ☰-Button. */
+      .js .nav-links { display: none; position: absolute; top: 100%; right: var(--space-md); flex-direction: column; gap: var(--space-sm); background: var(--color-bg-glass); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-md); backdrop-filter: blur(12px); }
+      .js .nav-links.open { display: flex; }
+      .js .nav-toggle { display: block; }
       .hero { padding: var(--space-xl) var(--space-md); }
       .games-grid { grid-template-columns: 1fr; max-width: 400px; }
       .features-list { grid-template-columns: 1fr; }

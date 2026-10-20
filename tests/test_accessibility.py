@@ -148,3 +148,27 @@ def test_every_article_has_a_heading():
         if not re.search(r"<h[2-6][^>]*>", card)
     ]
     assert not without, f"<article> ohne Überschrift: {without}"
+
+
+def test_mobile_nav_works_without_javascript():
+    """Ohne JS muss die Navigation benutzbar bleiben.
+
+    Im Mobile-Block war .nav-links per Media-Query versteckt und nur über
+    '.open' (vom ☰-Button per JS gesetzt) sichtbar — ohne JavaScript war die
+    Navigation damit auf dem Handy nicht erreichbar. Das Einklappen hängt
+    deshalb an der .js-Class, die ein früher Inline-Script im <head> setzt.
+    """
+    import re
+
+    head = HTML.split("</head>")[0]
+    assert "document.documentElement.classList.add('js')" in head, (
+        "die .js-Class muss vor dem ersten Rendern gesetzt werden"
+    )
+    assert ".js .nav-links {" in HTML, "das Einklappen muss auf .js beschränkt sein"
+    assert ".js .nav-toggle {" in HTML
+    # Nichts versteckt die Links ohne .js
+    assert not re.search(r"(?<!\.js )\.nav-links\s*\{\s*display:\s*none", HTML)
+    # Der Button bleibt ohne JS unsichtbar (sonst ein Bedienelement ohne Funktion)
+    assert re.search(r"\.nav-toggle\s*\{\s*display:\s*none", HTML)
+    # Fallback im Mobile-Block: sichtbar und umbrechend
+    assert "flex-wrap: wrap; justify-content: flex-end;" in HTML

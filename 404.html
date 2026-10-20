@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#02040a" />
+  <meta name="color-scheme" content="dark" />
+  <!-- Fehlerseite: nicht indexieren, sie ist kein Inhalt. -->
+  <meta name="robots" content="noindex, follow" />
+  <title>404 — Seite nicht gefunden | Base3</title>
+  <style>
+    /* Schriften selbst gehostet (siehe assets/fonts/README.md) — gleiche Dateien
+       wie auf der Landing Page, bei Wiederbesuch bereits im Cache. */
+    @font-face {
+      font-family: 'Outfit';
+      font-style: normal;
+      font-weight: 300 800;
+      font-display: swap;
+      src: url('./assets/fonts/outfit-latin.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'JetBrains Mono';
+      font-style: normal;
+      font-weight: 400 600;
+      font-display: swap;
+      src: url('./assets/fonts/jetbrains-mono-latin.woff2') format('woff2');
+    }
+    :root {
+      --color-text-primary: #f1f5f9;
+      --color-text-secondary: #cbd5e1;
+      --color-text-muted: #8a98b8;
+      --color-accent-hover: #818cf8;
+      --color-bg-glass: rgba(20, 28, 58, 0.55);
+      --color-border: rgba(120, 140, 200, 0.16);
+      --color-border-hover: rgba(99, 102, 241, 0.55);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      padding: 2rem 1.25rem; background: #02040a;
+      background-image: radial-gradient(circle at 20% 0%, rgba(99, 102, 241, 0.18), transparent 55%),
+                        radial-gradient(circle at 85% 15%, rgba(59, 130, 246, 0.14), transparent 50%);
+      color: var(--color-text-primary);
+      font-family: 'Outfit', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.6; text-align: center;
+    }
+    main { max-width: 640px; width: 100%; }
+    .brand { font-weight: 800; font-size: 1.1rem; letter-spacing: 0.01em; margin: 0 0 2rem; }
+    .code {
+      font-family: 'JetBrains Mono', monospace; font-size: 3.5rem; font-weight: 600;
+      letter-spacing: 0.04em; margin: 0 0 0.5rem; color: var(--color-accent-hover);
+    }
+    h1 { font-size: 1.5rem; font-weight: 700; margin: 0 0 0.75rem; }
+    p { color: var(--color-text-muted); margin: 0 auto 2rem; max-width: 46ch; }
+    ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; text-align: left; }
+    @media (min-width: 480px) { ul { grid-template-columns: 1fr 1fr; } }
+    a.card {
+      display: flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1rem;
+      background: var(--color-bg-glass); border: 1px solid var(--color-border);
+      border-radius: 14px; color: var(--color-text-secondary); text-decoration: none;
+      font-weight: 600; font-size: 0.92rem; transition: border-color 0.15s ease, color 0.15s ease;
+    }
+    a.card:hover, a.card:focus-visible { border-color: var(--color-border-hover); color: var(--color-accent-hover); }
+    .hint { margin: 2rem 0 0; font-size: 0.82rem; color: var(--color-text-muted); }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="brand">♟ Base3</p>
+    <p class="code">404</p>
+    <h1>Diese Seite gibt es nicht</h1>
+    <p>
+      Die Adresse zeigt auf nichts — vermutlich ein alter Link oder ein Tippfehler.
+      Beide Spiele sind direkt erreichbar:
+    </p>
+    <ul>
+      <li><a class="card" href="/base3/"><span>🏠</span><span>Zur Startseite</span></a></li>
+      <li><a class="card" href="https://bumblei3.github.io/schach9x9/"><span>♟️</span><span>Schach9x9 spielen</span></a></li>
+      <li><a class="card" href="https://bumblei3.github.io/trischach/"><span>⬡</span><span>Trischach spielen</span></a></li>
+      <li><a class="card" href="https://github.com/bumblei3/base3"><span>🐙</span><span>Repository</span></a></li>
+    </ul>
+    <p class="hint">base3 ist die Landing Page für zwei Schachvarianten — Schach9x9 und Trischach.</p>
+  </main>
+</body>
+</html>

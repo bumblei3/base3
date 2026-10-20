@@ -108,9 +108,9 @@ base3 hat vier Workflows (`.github/workflows/`) — GitHub listet zusätzlich
 
 | Workflow | Zweck | Trigger |
 |---|---|---|
-| `pages.yml` | Deploy der Staged-Liste (`index.html`, `assets/`, `og-image.png` **+** `og-image.webp`, Icons + Favicons, `manifest.webmanifest`, `robots.txt`, `sitemap.xml`); danach Job `Verify live deployment` | push auf `main` |
+| `pages.yml` | Deploy der Staged-Liste (`index.html`, **`404.html`**, `assets/`, `og-image.png` **+** `og-image.webp`, Icons + Favicons, `manifest.webmanifest`, `robots.txt`, `sitemap.xml`); danach Job `Verify live deployment` | push auf `main` |
 | `sync-versions.yml` | Heiler: Pills/JSON-LD/FAQ/README + „Was ist neu"-Bullets + `sitemap.xml`-lastmod + FAQPage-Schema | täglich 02:00 UTC + manuell |
-| `check-sync.yml` | Wächter: failt, wenn committede Pills, Bullets oder `lastmod` veraltet sind oder das FAQPage-Schema von der FAQ-Sektion abweicht | push, täglich 01:55 UTC + manuell |
+| `check-sync.yml` | Wächter: failt, wenn committede Pills, Bullets oder `lastmod` veraltet sind oder das FAQPage-Schema von der FAQ-Sektion abweicht; prüft zusätzlich pytest, `validate_landing_page.py`, den W3C-Nu-HTML-Check und den WCAG-Kontrast | push, PR, täglich 01:55 UTC + manuell |
 | `check-links.yml` | Wächter: alle ausgehenden Links aus den drei Dateien erreichbar? | push, montags 03:00 UTC + manuell |
 
 Die Bullets kommen aus den Release-Notes des jeweils neuesten Releases
@@ -156,13 +156,20 @@ Vorher kam die Font-CSS als render-blockender Cross-Origin-Request von
 Besuchers ging an Google. `scripts/fetch-fonts.py` lädt die Dateien neu (Netz
 nötig), `tests/test_fonts.py` hält den Zustand „alles lokal" fest.
 
+Fehlerseiten liefert Pages aus `404.html` (im Deploy-Artefakt, `noindex`, ohne
+JavaScript, gleiche Schriften wie die Landing Page). Die Mobile-Navigation hängt
+an der `.js`-Class, die ein früher Inline-Script setzt: ohne JavaScript bleiben
+die drei Links sichtbar und umbrechend, statt hinter einem funktionslosen
+☰-Button zu verschwinden. Action-Updates kommen gruppiert als eine PR pro Woche
+(`.github/dependabot.yml`), geprüft von `check-sync.yml` (jetzt auch bei PRs).
+
 Tests (kein Netz nötig, Fixtures unter `tests/fixtures/`):
 
 ```bash
 python3 -m pip install pytest
 python3 -m pytest          # Sync, Sitemap, Validator, Deploy-Liste, FAQ-Schema, Schriften, Live-Ableitung
 python3 scripts/validate_landing_page.py   # Tag-Balance, JSON-LD, Link-Inventar
-python3 scripts/validate-html.py --strict  # echter HTML-Standardcheck (W3C Nu, braucht Netz)
+python3 scripts/validate-html.py --strict --file index.html --file 404.html  # HTML-Standard (W3C Nu)
 python3 scripts/check-deployed.py          # Live-Seite == Repo? (braucht Netz)
 python3 scripts/sync-faq-schema.py --check # FAQPage-JSON-LD == FAQ-Sektion?
 python3 scripts/fetch-fonts.py             # Schriften neu laden (nur bei Font-Update)

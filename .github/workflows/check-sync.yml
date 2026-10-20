@@ -9,6 +9,10 @@ name: Check version pills (drift guard)
 on:
   push:
     branches: [main]
+  # Auch bei PRs: damit z. B. Dependabot-Action-Bumps (dependabot.yml) validiert
+  # werden. Pusht nichts, deployt nichts — nur prüfen.
+  pull_request:
+    branches: [main]
   workflow_dispatch:
   schedule:
     - cron: "55 1 * * *"
@@ -76,7 +80,7 @@ jobs:
       # Tag-Balance-Check nicht sieht (z. B. rohe Leerzeichen in einem
       # data:-URI). --strict: Warnungen zählen wie Fehler.
       - name: Validate HTML (W3C Nu, strict)
-        run: python3 scripts/validate-html.py --strict
+        run: python3 scripts/validate-html.py --strict --file index.html --file 404.html
 
       - name: Check WCAG contrast
         run: python3 scripts/check-contrast.py
