@@ -487,6 +487,42 @@
     @media (prefers-reduced-motion: reduce) {
       * { animation: none !important; transition: none !important; }
       body::before { animation: none !important; }
+      /* Wichtig: die Einblend-Regeln starten bei opacity: 0 und werden nur durch
+         die Animation sichtbar. Mit 'animation: none' blieb die Seite sonst leer
+         (Überschrift, Karten, FAQ, Statistik) — für Nutzer mit reduzierter
+         Bewegung. Deshalb hier ausdrücklich auf 1 setzen. */
+      .hero h1, .hero .subtitle, .platform-intro, .whats-new,
+      .game-card, .how-to, .faq, .stats { opacity: 1 !important; }
+    }
+
+    /* Druck: Papier ist weiß und Hintergründe werden nicht gedruckt — ohne diese
+       Regeln landeten die hellen Textfarben (#f1f5f9 …) auf weißem Papier. Die
+       Anleitung ('Wie spielt man?', Regeln) ist genau das, was Leute ausdrucken. */
+    @media print {
+      :root {
+        --color-text-primary: #111;
+        --color-text-secondary: #222;
+        --color-text-muted: #444;
+        --color-border: #bbb;
+        --color-bg-glass: #fff;
+        --color-bg-glass-hover: #fff;
+      }
+      body { background: #fff; color: #111; }
+      body::before, .top-nav, .hero-badge, .skip-link { display: none; }
+      /* Auch hier: ohne Animation wäre der Startzustand opacity: 0. */
+      .hero h1, .hero .subtitle, .platform-intro, .whats-new,
+      .game-card, .how-to, .faq, .stats { animation: none !important; opacity: 1 !important; }
+      .platform-card, .whats-new-card, .how-to-card, .faq-card, .game-card {
+        background: #fff; border: 1px solid #bbb; box-shadow: none;
+        break-inside: avoid; backdrop-filter: none;
+      }
+      .game-card::before, .platform-card::before { display: none; }
+      a { color: #111; text-decoration: underline; }
+      /* Papier hat kein Klicken: das Ziel mitschreiben. */
+      main a[href^="http"]::after {
+        content: " (" attr(href) ")"; font-size: 0.78em; color: #444; word-break: break-all;
+      }
+      h1, h2, h3 { break-after: avoid; }
     }
     /* Accessibility: Skip-Link (nur bei Tastaturfokus sichtbar) */
     .skip-link {
