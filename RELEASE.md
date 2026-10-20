@@ -63,6 +63,7 @@ in schach9x9 oder trischach aktualisiert werden.
    python3 scripts/validate_landing_page.py        # Tag-Balance, JSON-LD, Links
    python3 scripts/check-links.py                  # ausgehende Links live
    python3 scripts/check-deployed.py               # Live-Seite == Repo (nach dem Deploy)
+   python3 scripts/sync-faq-schema.py --check      # FAQPage-JSON-LD == FAQ-Sektion?
    python3 scripts/sync-versions.py --check --api-mode \
      --schach-repo-owner bumblei3 --schach-repo-name schach9x9 \
      --trischach-repo-owner bumblei3 --trischach-repo-name trischach
@@ -89,7 +90,8 @@ in schach9x9 oder trischach aktualisiert werden.
 base3 hat einen täglichen Cron-Job (`.github/workflows/sync-versions.yml`),
 der jeden Tag um 02:00 UTC `scripts/sync-versions.py --api-mode` ausführt und
 nur bei Änderung commit/pusht. Das löst `pages.yml` aus und hält die
-Version-Pills / JSON-LD / FAQ / README / „Was ist neu" / `sitemap.xml`
+Version-Pills / JSON-LD / FAQ / README / „Was ist neu" / `sitemap.xml` /
+das `FAQPage`-Schema
 automatisch aktuell, ohne Cross-Repo-Trigger oder manuelle Schritte.
 
 Der Cron-Job kann auch manuell getriggert werden:
@@ -107,6 +109,9 @@ python3 scripts/sync-versions.py --check --api-mode \
 
 Endet mit Code 1 und schreibt nichts, wenn `index.html`/`README.md`/`FAQ.md`
 nicht auf dem Stand der Nachbar-Repos sind. Genau so läuft `check-sync.yml`.
+Für das `FAQPage`-Schema ist `python3 scripts/sync-faq-schema.py --check` das
+Äquivalent: Exit 1, wenn der ausgelieferte Block nicht zur sichtbaren
+FAQ-Sektion passt (fehlend oder veraltet) — ebenfalls ohne zu schreiben.
 
 ## Hinweis
 

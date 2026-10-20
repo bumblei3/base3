@@ -109,8 +109,8 @@ base3 hat vier Workflows (`.github/workflows/`) — GitHub listet zusätzlich
 | Workflow | Zweck | Trigger |
 |---|---|---|
 | `pages.yml` | Deploy der Staged-Liste (`index.html`, `assets/`, `og-image.png` **+** `og-image.webp`, Icons + Favicons, `manifest.webmanifest`, `robots.txt`, `sitemap.xml`); danach Job `Verify live deployment` | push auf `main` |
-| `sync-versions.yml` | Heiler: Pills/JSON-LD/FAQ/README + „Was ist neu"-Bullets + `sitemap.xml`-lastmod | täglich 02:00 UTC + manuell |
-| `check-sync.yml` | Wächter: failt, wenn committede Pills, Bullets oder `lastmod` veraltet sind | push, täglich 01:55 UTC + manuell |
+| `sync-versions.yml` | Heiler: Pills/JSON-LD/FAQ/README + „Was ist neu"-Bullets + `sitemap.xml`-lastmod + FAQPage-Schema | täglich 02:00 UTC + manuell |
+| `check-sync.yml` | Wächter: failt, wenn committede Pills, Bullets oder `lastmod` veraltet sind oder das FAQPage-Schema von der FAQ-Sektion abweicht | push, täglich 01:55 UTC + manuell |
 | `check-links.yml` | Wächter: alle ausgehenden Links aus den drei Dateien erreichbar? | push, montags 03:00 UTC + manuell |
 
 Die Bullets kommen aus den Release-Notes des jeweils neuesten Releases
@@ -118,6 +118,13 @@ Die Bullets kommen aus den Release-Notes des jeweils neuesten Releases
 (erst Klammerdetails, dann der abschließende Satz, erst dann hart am Wortrand).
 Ohne `--api-mode` bleibt die „Was ist neu"-Sektion unangetastet
 (`--no-whats-new` schaltet sie grundsätzlich ab).
+
+Das `FAQPage`-JSON-LD (`scripts/sync-faq-schema.py`) wird **aus der sichtbaren
+FAQ-Sektion abgeleitet**, nicht parallel gepflegt: sonst driftet es bei der
+ersten geänderten Antwort auseinander — und die Antwort „Welche Versionen sind
+aktuell?" schreibt `sync-versions.py` bei jedem Sub-Release neu. Der Heiler
+läuft deshalb in der Reihenfolge Versions-Sync → FAQ-Schema, und
+`check-sync.yml` prüft beide fixed points (`--check`, schreibt nichts).
 
 `check-sync.yml` läuft **bevor** `sync-versions.yml`: ein roter Run heißt, dass
 `sync-versions.py` das Drift-Problem nicht automatisch heilen konnte
@@ -138,9 +145,10 @@ Tests (kein Netz nötig, Fixtures unter `tests/fixtures/`):
 
 ```bash
 python3 -m pip install pytest
-python3 -m pytest          # Sync, Sitemap, Validator, Deploy-Liste, Live-Ableitung
+python3 -m pytest          # Sync, Sitemap, Validator, Deploy-Liste, FAQ-Schema, Live-Ableitung
 python3 scripts/validate_landing_page.py   # Tag-Balance, JSON-LD, Link-Inventar
 python3 scripts/check-deployed.py          # Live-Seite == Repo? (braucht Netz)
+python3 scripts/sync-faq-schema.py --check # FAQPage-JSON-LD == FAQ-Sektion?
 ```
 
 Die Patch-Funktionen arbeiten auf Dateikopien in `tmp_path`; nur die

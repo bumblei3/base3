@@ -88,6 +88,97 @@
     ]
   }
   </script>
+  <!-- faq-schema:start — generiert aus der FAQ-Sektion von scripts/sync-faq-schema.py -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "inLanguage": "de-DE",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Was ist base3?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "base3 ist eine statische Landing Page, die als Eintrittspunkt für zwei eigenständige Schach-Varianten dient — zwei Experimente an der Grenze dessen, was ein Schachspiel sein kann, ohne sich in einen Multiplayer-Komplex zu verrenken."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Wo kann ich spielen?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Beide Spiele sind als PWA im Browser spielbar. Die Live-Demos brauchen keine Installation: Schach9x9 Live-Demo; Trischach Live-Demo"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Welche Versionen sind aktuell?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Schach9x9: v2.0.0 (2026-08-23); Trischach: v1.6.0 (2026-08-24)"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Ist base3 noch aktiv?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "base3 als Landing Page ist aktiv — sie wird gepflegt, wenn die Subprojekte Releases haben. Die Entwicklung findet jedoch in den eigenständigen Repos statt."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Was sind Feenfiguren?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Schach9x9 ergänzt das 8×8-Schachbrett auf einem 9×9-Brett: Erzbischof (Läufer+Springer), Kanzler (Turm+Springer), Engel (Defensiv). Wer normales Schach kennt, findet sofort rein; die Tiefe kommt von den neuen Figuren."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Wie verändert sich das Spiel durch 9×9?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Längere Partien mit mehr Entwicklungsmöglichkeiten; Andere Eröffnungen — bekannte 8×8-Eröffnungen lassen sich nicht 1:1 übernehmen; Neue Figurenwerte — Engel wertvoll für das Gefüge, Erzbischof für den Angriff; KI-Personen — nicht nur stärker/schwächer, sondern unterschiedliche Strategiegewichte"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Wie funktioniert Trischach?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Trischach ist 3-Spieler-Schach auf einem sechseckigen Brett. Drei Fraktionen — Feuer 🔥, Natur 🌿, Wasser 🌊 — stehen in einem zyklischen Kampf: Feuer > Natur > Wasser > Feuer. Das Spiel ist eine permanente Neu-Berechnung von Allianzen und Risiken — nicht nur „wer schlägt wen\", sondern „wer steht wie zueinander\"."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Gibt es Blog, Roadmap oder Newsletter?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Nein — base3 ist eine statische Landing Page ohne Blog oder Newsletter. Änderungen und Releases werden ausschließlich über die GitHub-Repos kommuniziert (Changelog, Releases)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Wie kann ich beitragen?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "base3 selbst (das Verweis-Repo) benötigt keine Beiträge — außer bei Landing-Page-Aktualisierungen (Version-Pills, neue Releases). Schach9x9: Issues, Pull Requests; Trischach: Issues, Pull Requests"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Ist base3 offline-fähig?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "base3 lässt sich über das Web-Manifest unter /base3/ auf den Home-Bildschirm legen. Die Seite selbst bleibt eine statische GitHub-Pages-Seite und braucht eine Internetverbindung. Die Spiel-Demos (Schach9x9, Trischach) sind nach dem ersten Laden als PWA offline-fähig."
+        }
+      }
+    ]
+  }
+  </script>
+  <!-- faq-schema:end -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />

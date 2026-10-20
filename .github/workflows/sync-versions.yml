@@ -44,6 +44,12 @@ jobs:
             --schach-repo-owner bumblei3 --schach-repo-name schach9x9 \
             --trischach-repo-owner bumblei3 --trischach-repo-name trischach
 
+      # Nach dem Versions-Patch: das FAQPage-JSON-LD wird aus der sichtbaren
+      # FAQ-Sektion abgeleitet, also erst danach erzeugen (die Antwort
+      # „Welche Versionen sind aktuell?“ enthält die Pills).
+      - name: Regenerate FAQPage schema
+        run: python3 scripts/sync-faq-schema.py
+
       - name: Commit and push if changed
         run: |
           git diff --quiet || {

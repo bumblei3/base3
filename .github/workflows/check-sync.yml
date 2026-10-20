@@ -43,6 +43,9 @@ jobs:
           python3 scripts/sync-versions.py --check --api-mode \
             --schach-repo-owner bumblei3 --schach-repo-name schach9x9 \
             --trischach-repo-owner bumblei3 --trischach-repo-name trischach
+
+      - name: Check FAQPage schema (dry-run, no writes)
+        run: python3 scripts/sync-faq-schema.py --check
   tests:
     name: Unit tests (sync script)
     runs-on: ubuntu-latest
