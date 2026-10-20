@@ -157,9 +157,10 @@ Beiträge sind über die eigenständigen Repos möglich:
 ## Ist base3 offline-fähig?
 
 base3 lässt sich über das Web-Manifest unter /base3/ auf den Home-Bildschirm
-legen. Die Seite selbst bleibt eine statische GitHub-Pages-Seite und braucht eine
-Internetverbindung. Die **Spiel-Demos** (Schach9x9, Trischach) sind nach dem
-ersten Laden als PWA offline-fähig.
+legen. Ein Service Worker speichert die Seite beim ersten Besuch — danach ist
+sie auch offline erreichbar. Online immer frisch: network-first, der Cache ist
+nur der Offline-Fallback. Die **Spiel-Demos** (Schach9x9, Trischach) sind
+ebenfalls nach dem ersten Laden offline-fähig.
 
 ## Siehe auch
 

@@ -12,6 +12,16 @@
   <!-- Dark-Theme ansagen: dunkle Scrollleisten, Formular-Controls und
        Firefox-UI statt der hellen Browser-Defaults. -->
   <meta name="color-scheme" content="dark" />
+  <!-- Offline-Fallback (Service Worker, network-first — siehe sw.js). Auf
+       load gelegt, damit die Registrierung dem Seitenaufbau nicht im Weg
+       liegt; ohne HTTPS oder ohne Unterstützung passiert einfach nichts. -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      addEventListener('load', function () {
+        navigator.serviceWorker.register('/base3/sw.js', { scope: '/base3/' });
+      });
+    }
+  </script>
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Base3" />
@@ -181,7 +191,7 @@
         "name": "Ist base3 offline-fähig?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "base3 lässt sich über das Web-Manifest unter /base3/ auf den Home-Bildschirm legen. Die Seite selbst bleibt eine statische GitHub-Pages-Seite und braucht eine Internetverbindung. Die Spiel-Demos (Schach9x9, Trischach) sind nach dem ersten Laden als PWA offline-fähig."
+          "text": "base3 lässt sich über das Web-Manifest unter /base3/ auf den Home-Bildschirm legen. Ein Service Worker speichert die Seite beim ersten Besuch — danach ist sie auch offline erreichbar. Online immer frisch: network-first, der Cache ist nur der Offline-Fallback. Die Spiel-Demos (Schach9x9, Trischach) sind ebenfalls nach dem ersten Laden offline-fähig."
         }
       }
     ]
@@ -770,7 +780,7 @@
           </article>
           <article class="faq-card">
             <h3 class="faq-q">Ist base3 offline-fähig?</h3>
-            <p class="faq-a">base3 lässt sich über das Web-Manifest unter /base3/ auf den Home-Bildschirm legen. Die Seite selbst bleibt eine statische GitHub-Pages-Seite und braucht eine Internetverbindung. Die <b>Spiel-Demos</b> (Schach9x9, Trischach) sind nach dem ersten Laden als PWA offline-fähig.</p>
+            <p class="faq-a">base3 lässt sich über das Web-Manifest unter /base3/ auf den Home-Bildschirm legen. Ein Service Worker speichert die Seite beim ersten Besuch — danach ist sie auch offline erreichbar. Online immer frisch: network-first, der Cache ist nur der Offline-Fallback. Die <b>Spiel-Demos</b> (Schach9x9, Trischach) sind ebenfalls nach dem ersten Laden offline-fähig.</p>
           </article>
         </div>
       </section>

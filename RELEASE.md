@@ -83,8 +83,8 @@ in schach9x9 oder trischach aktualisiert werden.
    ```
 
    Das `pages.yml`-Workflow deployt automatisch nach dem Push — mit
-   `index.html`, `assets/`, `og-image.png`, den Icons, `manifest.webmanifest`,
-   `robots.txt` und `sitemap.xml`.
+   `index.html`, `assets/`, `og-image.png`, `sw.js`, den Icons,
+   `manifest.webmanifest`, `robots.txt` und `sitemap.xml`.
 
 ### Automatisierter Pfad (Standard in base3)
 

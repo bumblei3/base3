@@ -77,6 +77,9 @@ def referenced_files() -> set[str]:
         raw.append(match.group(1))
     mani = MANIFEST.read_text(encoding="utf-8")
     raw.extend(re.findall(r"\"src\"\s*:\s*\"([^\"]+)\"", mani))
+    # Service Worker: die Registrierung ist ein JS-Aufruf, kein href/src —
+    # ohne diese Zeile würde sw.js nicht geprüft und könnte live 404en.
+    raw.extend(re.findall(r"serviceWorker\.register\(\s*[\"']([^\"']+)[\"']", src))
 
     out: set[str] = set()
     for value in raw:
