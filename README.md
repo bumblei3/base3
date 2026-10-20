@@ -27,7 +27,7 @@ genauso wichtig ist wie der Brettaufbau.
 Die Plattform existiert, weil beides zwei Seiten derselben Neugier ist: Schach
 verändern, ohne es zu verlassen. Code, Build und CI der Spiele leben in den
 eigenständigen Repos. base3 ist der Türkeiler: die Landing Page mit eigenen
-Tests und vier Workflows.
+Tests und fünf Workflows.
 
 **Offline:** Ein Service Worker (`sw.js`) macht die Seite nach dem ersten Besuch
 auch ohne Verbindung erreichbar. Er arbeitet *network-first* — online immer die
@@ -107,8 +107,8 @@ bis zum strategischen 3-Spieler-Hex-Schach.
 
 ## CI & Tests
 
-base3 hat vier Workflows (`.github/workflows/`) — GitHub listet zusätzlich
-`Dependabot Updates` als fünften, dafür gibt es hier aber keine Datei:
+base3 hat fünf Workflows (`.github/workflows/`) — GitHub listet zusätzlich
+`Dependabot Updates` als sechsten, dafür gibt es hier aber keine Datei:
 
 | Workflow | Zweck | Trigger |
 |---|---|---|
@@ -116,6 +116,7 @@ base3 hat vier Workflows (`.github/workflows/`) — GitHub listet zusätzlich
 | `sync-versions.yml` | Heiler: Pills/JSON-LD/FAQ/README + „Was ist neu"-Bullets + `sitemap.xml`-lastmod + FAQPage-Schema | täglich 02:00 UTC + manuell |
 | `check-sync.yml` | Wächter: failt, wenn committede Pills, Bullets oder `lastmod` veraltet sind oder das FAQPage-Schema von der FAQ-Sektion abweicht; prüft zusätzlich pytest, `validate_landing_page.py`, den W3C-Nu-HTML-Check und den WCAG-Kontrast | push, PR, täglich 01:55 UTC + manuell |
 | `check-links.yml` | Wächter: alle ausgehenden Links aus den drei Dateien erreichbar? | push, montags 03:00 UTC + manuell |
+| `lighthouse.yml` | Lighthouse-Audit der Landing Page (Performance/A11y/Best-Practices/SEO) | push auf `main`, manuell |
 
 Die Bullets kommen aus den Release-Notes des jeweils neuesten Releases
 (GitHub Releases API) — im `--api-mode`. Zu lange Zeilen werden gekürzt
