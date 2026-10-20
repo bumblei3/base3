@@ -165,3 +165,33 @@ def test_color_scheme_is_announced():
     """Dark-Theme ansagen, damit Browser-UI (Scrollbar, Controls) dunkel bleibt."""
     assert 'name="color-scheme"' in HTML
     assert 'content="dark"' in HTML
+
+
+def test_total_deployed_weight_within_budget():
+    """Gesamtgewicht der ausgelieferten Site darf 500 KB nicht ueberschreiten
+    (Performance / Mobilfunk). Schuetzt vor versehentlich wieder hochgeladenen
+    Originalen."""
+    import os
+    from pathlib import Path
+
+    BASE = Path(__file__).resolve().parent.parent
+    top_level = (
+        "index.html", "404.html", "robots.txt", "sitemap.xml", "og-image.png",
+        "sw.js", "apple-touch-icon.png", "icon-192.png", "icon-512.png",
+        "icon-maskable-512.png", "favicon.ico", "favicon-32.png",
+        "manifest.webmanifest",
+    )
+    total = 0
+    for name in top_level:
+        p = BASE / name
+        if p.is_file():
+            total += p.stat().st_size
+    assets_dir = BASE / "assets"
+    if assets_dir.is_dir():
+        for root, _, files in os.walk(assets_dir):
+            for f in files:
+                total += (Path(root) / f).stat().st_size
+    budget = 500 * 1024
+    assert total <= budget, (
+        f"Deploy-Gewicht {total} Bytes > {budget} Bytes (500 KB)"
+    )
