@@ -12,6 +12,10 @@
   <!-- Dark-Theme ansagen: dunkle Scrollleisten, Formular-Controls und
        Firefox-UI statt der hellen Browser-Defaults. -->
   <meta name="color-scheme" content="dark" />
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'"
+  />
   <!-- Offline-Fallback (Service Worker, network-first — siehe sw.js). Auf
        load gelegt, damit die Registrierung dem Seitenaufbau nicht im Weg
        liegt; ohne HTTPS oder ohne Unterstützung passiert einfach nichts. -->
