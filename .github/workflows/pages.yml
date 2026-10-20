@@ -25,10 +25,12 @@ jobs:
 
       # Nur ausliefern, was die Seite wirklich referenziert — sonst landen
       # tests/, scripts/ und .github/ unter der Pages-URL.
+      # tests/test_pages_deploy.py wacht darüber, dass diese Liste zu den
+      # Referenzen in index.html und im Manifest passt.
       - name: Stage deploy files
         run: |
           mkdir -p _site/assets
-          cp index.html robots.txt sitemap.xml og-image.png apple-touch-icon.png icon-192.png icon-512.png manifest.webmanifest _site/
+          cp index.html robots.txt sitemap.xml og-image.png og-image.webp apple-touch-icon.png icon-192.png icon-512.png favicon.ico favicon-32.png manifest.webmanifest _site/
           cp -r assets/. _site/assets/
 
       - name: Upload Pages artifact
