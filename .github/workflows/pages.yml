@@ -21,7 +21,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
       # Nur ausliefern, was die Seite wirklich referenziert — sonst landen
       # tests/, scripts/ und .github/ unter der Pages-URL.
@@ -34,13 +34,13 @@ jobs:
           cp -r assets/. _site/assets/
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v5
         with:
           path: _site
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
 
   # Ein grüner Deploy beweist nur, dass das Artefakt hochgeladen wurde — nicht,
   # dass die Seite vollständig ist (genau das war schon der Fall: drei
@@ -51,10 +51,10 @@ jobs:
     needs: deploy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.12"
 
