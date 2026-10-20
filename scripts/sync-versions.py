@@ -36,6 +36,7 @@ import json
 import re
 import subprocess
 import sys
+import urllib.error
 import urllib.request
 from pathlib import Path
 
@@ -111,14 +112,10 @@ def release_date_from_github(repo_owner: str, repo_name: str, version: str) -> s
     tag = f"v{version}"
     url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/releases/tags/{tag}"
     try:
-        req = urllib.request.Request(
-            url, headers={"Accept": "application/vnd.github+json"}
-        )
-        with urllib.request.urlopen(req, timeout=15) as resp:
-            data = json.loads(resp.read().decode("utf-8"))
-            published = data.get("published_at") or data.get("created_at") or ""
-            if published:
-                return published[:10]
+        data = _github_get(url)
+        published = data.get("published_at") or data.get("created_at") or ""
+        if published:
+            return published[:10]
     except Exception:
         pass
     return "????-??-??"
@@ -158,12 +155,43 @@ def _get_base_lastmod() -> str:
     return datetime.date.today().strftime("%Y-%m-%d")
 
 
+def _github_get(url: str, *, attempts: int = 3) -> dict:
+    """GET gegen die GitHub-API mit Retry/Backoff für transiente Fehler.
+
+    429 / 5xx und Netzwerkfehler werden mit exponentiellem Backoff (bzw.
+    Retry-After) wiederholt; 404 u. ä. schlagen sofort fehl.
+    """
+    import time
+
+    last_exc: Exception | None = None
+    for i in range(attempts):
+        try:
+            req = urllib.request.Request(
+                url, headers={"Accept": "application/vnd.github+json"}
+            )
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                return json.loads(resp.read().decode("utf-8"))
+        except urllib.error.HTTPError as exc:
+            last_exc = exc
+            # 404/403/410 etc. → nicht wiederholen
+            if exc.code not in (429, 500, 502, 503, 504):
+                raise
+            wait = 2 ** i
+            if exc.headers is not None:
+                ra = exc.headers.get("Retry-After")
+                if ra and ra.isdigit():
+                    wait = min(int(ra), 10)
+            time.sleep(wait)
+        except (urllib.error.URLError, TimeoutError, OSError) as exc:
+            last_exc = exc
+            time.sleep(2 ** i)
+    if last_exc is not None:
+        raise last_exc
+    raise RuntimeError("GitHub request failed")
+
+
 def _api_get_json(url: str) -> dict:
-    req = urllib.request.Request(
-        url, headers={"Accept": "application/vnd.github+json"}
-    )
-    with urllib.request.urlopen(req, timeout=15) as resp:
-        return json.loads(resp.read().decode("utf-8"))
+    return _github_get(url)
 
 
 def fetch_release_body(owner: str, name: str) -> str | None:
@@ -321,15 +349,11 @@ def fetch_remote_package_json(owner: str, name: str) -> dict | None:
     """
     url = f"https://api.github.com/repos/{owner}/{name}/contents/package.json"
     try:
-        req = urllib.request.Request(
-            url, headers={"Accept": "application/vnd.github+json"}
-        )
-        with urllib.request.urlopen(req, timeout=15) as resp:
-            payload = json.loads(resp.read().decode("utf-8"))
-            content = payload.get("content", "")
-            if content:
-                raw = base64.b64decode(content).decode("utf-8")
-                return json.loads(raw)
+        payload = _github_get(url)
+        content = payload.get("content", "")
+        if content:
+            raw = base64.b64decode(content).decode("utf-8")
+            return json.loads(raw)
     except Exception:
         pass
     return None
