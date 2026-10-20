@@ -7,6 +7,7 @@ sonst reserviert der Browser den falschen Platz und die Karte springt (CLS).
 
 import os
 import re
+import pytest
 from pathlib import Path
 
 BASE3 = Path(__file__).resolve().parent.parent
@@ -109,6 +110,55 @@ def test_og_image_type_matches_the_file():
     assert declared.group(1) == expected[image.group(1)], (
         f"og:image ist .{image.group(1)}, aber og:image:type sagt {declared.group(1)}"
     )
+
+
+def test_fonts_are_preloaded():
+    """66 % des Traffics sind Fonts. Ohne preload beginnt der Font-Download
+    erst, wenn der Parser den inline-<style>-Block (~10k ins Dokument) erreicht.
+    Im <head> starten wir ihn gleich nach dem TTFB — messbar an einem frühen
+    fetchStart. crossorigin darf nicht gesetzt sein (muss zum @font-face ohne
+    crossorigin passen, sonst doppelter Fetch)."""
+    for font in ("outfit-latin", "jetbrains-mono-latin"):
+        link = (
+            '<link rel="preload" as="font" type="font/woff2" '
+            f'href="/base3/assets/fonts/{font}.woff2" />'
+        )
+        assert link in HTML, f"{font} nicht als preload deklariert"
+        assert (BASE3 / "assets/fonts" / f"{font}.woff2").is_file()
+
+
+def test_fonts_are_subset_and_within_budget():
+    """Die Schriften sind auf die tatsächlich genutzten Glyphs + Sicherheits-
+    bereiche geschrumpft (Subsetting). Ohne das wären es 63 KB — 66 % des
+    Traffics. Die Grenzen sind großzügig, damit ein legitimes Re-Design nicht
+    sofort rot schlägt, aber ein versehentlich wieder hochgeladenes Original
+    auffällt."""
+    limits = {"outfit-latin.woff2": 28_000, "jetbrains-mono-latin.woff2": 17_000}
+    for name, limit in limits.items():
+        size = (BASE3 / "assets/fonts" / name).stat().st_size
+        assert size <= limit, f"{name} ist {size} Bytes (> {limit})"
+
+
+def test_fonts_cover_all_page_glyphs():
+    """Jedes Schrift-Glyph, das die Seite tatsächlich nutzt (und das in der
+    Originalschrift vorhanden ist), muss im Subset erhalten bleiben — sonst
+    fällt der Text auf die Fallback-Schrift zurück. Emoji und Pfeile, die
+    nie in der Schrift lagen, sind ausgenommen."""
+    pytest.importorskip("fontTools")
+    from fontTools.ttLib import TTFont
+
+    html = (BASE3 / "index.html").read_text(encoding="utf-8")
+    text = re.sub(r"<script.*?</script>", "", html, flags=re.S)
+    text = re.sub(r"<style.*?</style>", "", text, flags=re.S)
+    text = re.sub(r"<[^>]+>", "", text)
+    chars = set(text)
+
+    for fontname in ("outfit-latin.woff2", "jetbrains-mono-latin.woff2"):
+        font = TTFont(BASE3 / "assets/fonts" / fontname)
+        cmap = font.getBestCmap() or {}
+        for ch in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,:;!?-–—\"'()":
+            cp = ord(ch)
+            assert cp in cmap, f"{fontname}: Kernglyph {ch!r} (U+{cp:04X}) fehlt"
 
 
 def test_color_scheme_is_announced():
