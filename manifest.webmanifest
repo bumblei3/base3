@@ -6,6 +6,9 @@
   "start_url": "/base3/",
   "scope": "/base3/",
   "display": "standalone",
+  "lang": "de",
+  "dir": "ltr",
+  "categories": ["games", "entertainment"],
   "background_color": "#02040a",
   "theme_color": "#02040a",
   "icons": [
@@ -20,6 +23,40 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
+    },
+    {
+      "src": "/base3/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/base3/assets/preview-schach9x9.png",
+      "sizes": "400x400",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Schach9x9 — 9×9-Brett mit den drei Feenfiguren"
+    },
+    {
+      "src": "/base3/assets/preview-trischach.png",
+      "sizes": "400x400",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Trischach — Hex-Brett mit Feuer, Natur und Wasser"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Schach9x9 — Regeln & Demo",
+      "short_name": "Schach9x9",
+      "url": "/base3/#schach9x9"
+    },
+    {
+      "name": "Trischach — Regeln & Demo",
+      "short_name": "Trischach",
+      "url": "/base3/#trischach"
     }
   ]
 }

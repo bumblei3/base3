@@ -594,9 +594,15 @@ def patch_index(
         changed = changed or hit
 
     def pill(card: str, ver: str, date: str) -> None:
-        """Version-Pill: unbekanntes Datum (????-??-??) stehen lassen, nicht überschreiben."""
+        """Version-Pill: unbekanntes Datum (????-??-??) stehen lassen, nicht überschreiben.
+
+        `[^>]*>` nach der Klasse: die Karte darf weitere Attribute tragen (z. B.
+        id="schach9x9" für die Manifest-Shortcuts). Ein Muster, das exakt
+        `<article class="game-card schach9x9">` verlangt, patcht sonst still
+        gar nichts mehr.
+        """
         pat = (
-            rf'(<article class="game-card {card}">[\s\S]*?<span class="version-pill">)'
+            rf'(<article class="game-card {card}\b[^>]*>[\s\S]*?<span class="version-pill">)'
             rf"v{VER}( · (?:{DATE_SLOT})?)?(</span>)"
         )
         repl = (

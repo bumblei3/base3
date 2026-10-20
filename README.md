@@ -163,6 +163,11 @@ die drei Links sichtbar und umbrechend, statt hinter einem funktionslosen
 ☰-Button zu verschwinden. Action-Updates kommen gruppiert als eine PR pro Woche
 (`.github/dependabot.yml`), geprüft von `check-sync.yml` (jetzt auch bei PRs).
 
+Das Web-Manifest ist vollständig für den Install-Prompt: `any`-Icons 192/512,
+ein **maskables** 512er-Icon (randlos bis in die Ecken, damit der kreisförmige
+Zuschnitt keine Kerben zeigt), zwei `screenshots` und zwei `shortcuts`
+(`/#schach9x9`, `/#trischach` — dafür tragen die Spielkarten IDs).
+
 Tests (kein Netz nötig, Fixtures unter `tests/fixtures/`):
 
 ```bash
