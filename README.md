@@ -149,15 +149,23 @@ unbemerkt. Ist der Fremddienst nicht erreichbar, meldet das Script
 „NICHT PRÜFBAR" und endet mit 0 (Lint, kein Korrektheits-Gate); mit
 `--require-api` wird auch das zum Fehler.
 
+Die Schriften (Outfit, JetBrains Mono) liegen **lokal** unter `assets/fonts/`
+(Variable Fonts, latin-Subset, ~62 KB) — Details in `assets/fonts/README.md`.
+Vorher kam die Font-CSS als render-blockender Cross-Origin-Request von
+`fonts.googleapis.com`: gemessen FCP 1040 ms bei TTFB 367 ms, und die IP jedes
+Besuchers ging an Google. `scripts/fetch-fonts.py` lädt die Dateien neu (Netz
+nötig), `tests/test_fonts.py` hält den Zustand „alles lokal" fest.
+
 Tests (kein Netz nötig, Fixtures unter `tests/fixtures/`):
 
 ```bash
 python3 -m pip install pytest
-python3 -m pytest          # Sync, Sitemap, Validator, Deploy-Liste, FAQ-Schema, Live-Ableitung
+python3 -m pytest          # Sync, Sitemap, Validator, Deploy-Liste, FAQ-Schema, Schriften, Live-Ableitung
 python3 scripts/validate_landing_page.py   # Tag-Balance, JSON-LD, Link-Inventar
 python3 scripts/validate-html.py --strict  # echter HTML-Standardcheck (W3C Nu, braucht Netz)
 python3 scripts/check-deployed.py          # Live-Seite == Repo? (braucht Netz)
 python3 scripts/sync-faq-schema.py --check # FAQPage-JSON-LD == FAQ-Sektion?
+python3 scripts/fetch-fonts.py             # Schriften neu laden (nur bei Font-Update)
 ```
 
 Die Patch-Funktionen arbeiten auf Dateikopien in `tmp_path`; nur die

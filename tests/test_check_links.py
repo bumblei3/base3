@@ -23,13 +23,34 @@ def test_collects_links_from_all_sources():
 
 
 def test_preconnect_hints_are_excluded():
-    """<link rel="preconnect"> ist kein Navigationsziel (404 dort ist normal)."""
+    """<link rel="preconnect"> ist kein Navigationsziel (404 dort ist normal).
+
+    Prüft den Filter an einem synthetischen Dokument, nicht am Seitenzustand —
+    sonst hängt der Test daran, ob die Seite gerade Preconnect-Hints setzt.
+    """
+    import re
+
+    def collect(text: str) -> set[str]:
+        links = set()
+        for match in re.finditer(r'(?:href|src)="([^"]+)"', text):
+            links.add(match.group(1))
+        links -= set(re.findall(r'<link rel="preconnect" href="([^"]+)"', text))
+        return {u for u in links if u.startswith(("http://", "https://"))}
+
+    text = (
+        '<link rel="preconnect" href="https://cdn.example" />'
+        '<link rel="stylesheet" href="https://cdn.example/app.css" />'
+    )
+    urls = collect(text)
+    assert "https://cdn.example" not in urls, "preconnect-Hint darf nicht geprüft werden"
+    assert "https://cdn.example/app.css" in urls, "das echte Ziel muss geprüft werden"
+
+
+def test_page_has_no_third_party_font_dependency():
+    """Seit dem Self-Hosting gehört kein Font-CDN mehr in die geprüften Ziele."""
     found = cl.collect_links()
-    all_urls = {u for urls in found.values() for u in urls}
-    assert "https://fonts.googleapis.com" not in all_urls
-    assert "https://fonts.gstatic.com" not in all_urls
-    # Die eigentliche Stylesheet-URL bleibt geprüft
-    assert any("fonts.googleapis.com/css2" in u for u in all_urls)
+    urls = {u for urls in found.values() for u in urls}
+    assert not [u for u in urls if "fonts.googleapis.com" in u or "fonts.gstatic.com" in u]
 
 
 def test_skips_non_http_schemes():

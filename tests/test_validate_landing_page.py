@@ -59,10 +59,19 @@ def test_detects_missing_jsonld():
 
 # ---------------------------------------------------------- Link-Inventar
 def test_collects_outbound_links():
-    links = vlp.collect_links(REAL)
-    assert "https://bumblei3.github.io/schach9x9/" in links
-    assert "https://github.com/bumblei3/trischach" in links
-    assert len(links) >= 8
+    links = set(vlp.collect_links(REAL))
+    # Die sechs Ziele, die die Seite nach außen anbietet (drei Demos, drei Repos).
+    expected = {
+        "https://bumblei3.github.io/schach9x9/",
+        "https://bumblei3.github.io/trischach/",
+        "https://github.com/bumblei3/base3",
+        "https://github.com/bumblei3/schach9x9",
+        "https://github.com/bumblei3/trischach",
+        "https://bumblei3.github.io/base3/",
+    }
+    assert expected <= links
+    # Kein Third-Party-CDN mehr (Schriften sind lokal, siehe tests/test_fonts.py)
+    assert not [u for u in links if "fonts.g" in u]
 
 
 def test_skips_anchors_and_data_uris():

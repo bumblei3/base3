@@ -179,11 +179,24 @@
   }
   </script>
   <!-- faq-schema:end -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
   <style>
+    /* Schriften selbst gehostet (scripts/fetch-fonts.py): kein Cross-Origin-
+       Request vor dem ersten Paint, keine IP-Übermittlung an Google.
+       Variable Fonts — eine Datei deckt den Gewichtsbereich ab. */
+    @font-face {
+      font-family: 'JetBrains Mono';
+      font-style: normal;
+      font-weight: 400 600;
+      font-display: swap;
+      src: url('./assets/fonts/jetbrains-mono-latin.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'Outfit';
+      font-style: normal;
+      font-weight: 300 800;
+      font-display: swap;
+      src: url('./assets/fonts/outfit-latin.woff2') format('woff2');
+    }
     :root {
       --color-text-primary: #f1f5f9;
       --color-text-secondary: #cbd5e1;
