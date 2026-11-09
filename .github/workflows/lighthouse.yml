@@ -13,7 +13,7 @@ jobs:
   lighthouse:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - name: Serve site
         run: |
           python3 -m http.server 8765 --directory . &
