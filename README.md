@@ -109,15 +109,17 @@ bis zum strategischen 3-Spieler-Hex-Schach.
 ## CI & Tests
 
 base3 hat fünf Workflows (`.github/workflows/`) — GitHub listet zusätzlich
-`Dependabot Updates` als sechsten, dafür gibt es hier aber keine Datei:
+`Dependabot Updates` als sechsten, dafür gibt es hier aber keine Datei.
+Versions-Sync und Drift-Guard sind entfernt. Pills zieht bei einem
+Sub-Release `python3 scripts/sync-versions.py` lokal, siehe `RELEASE.md`.
 
 | Workflow | Zweck | Trigger |
 |---|---|---|
 | `pages.yml` | Deploy der Staged-Liste (`index.html`, **`404.html`**, `assets/`, `og-image.png`, **`sw.js`**, Icons + Favicons, `manifest.webmanifest`, `robots.txt`, `sitemap.xml`); danach Job `Verify live deployment` | push auf `main` |
-| `sync-versions.yml` | Heiler: Pills/JSON-LD/FAQ/README + „Was ist neu"-Bullets + `sitemap.xml`-lastmod + FAQPage-Schema | täglich 02:00 UTC + manuell |
-| `check-sync.yml` | Wächter: failt, wenn committede Pills, Bullets oder `lastmod` veraltet sind oder das FAQPage-Schema von der FAQ-Sektion abweicht; prüft zusätzlich pytest, `validate_landing_page.py`, den W3C-Nu-HTML-Check und den WCAG-Kontrast | push, PR, täglich 01:55 UTC + manuell |
-| `check-links.yml` | Wächter: alle ausgehenden Links aus den drei Dateien erreichbar? | push, montags 03:00 UTC + manuell |
+| `tests.yml` | pytest, `validate_landing_page.py`, W3C-Nu-HTML-Check und WCAG-Kontrast | push, PR + manuell |
+| `check-links.yml` | alle ausgehenden Links aus den drei Dateien erreichbar? | push, montags 03:00 UTC + manuell |
 | `lighthouse.yml` | Lighthouse-Audit der Landing Page (Performance/A11y/Best-Practices/SEO) | push auf `main`, manuell |
+| `a11y.yml` | axe-core, WCAG 2.x | push, PR + manuell |
 
 Die Bullets kommen aus den Release-Notes des jeweils neuesten Releases
 (GitHub Releases API) — im `--api-mode`. Zu lange Zeilen werden gekürzt
@@ -127,14 +129,10 @@ Ohne `--api-mode` bleibt die „Was ist neu"-Sektion unangetastet
 
 Das `FAQPage`-JSON-LD (`scripts/sync-faq-schema.py`) wird **aus der sichtbaren
 FAQ-Sektion abgeleitet**, nicht parallel gepflegt: sonst driftet es bei der
-ersten geänderten Antwort auseinander — und die Antwort „Welche Versionen sind
-aktuell?" schreibt `sync-versions.py` bei jedem Sub-Release neu. Der Heiler
-läuft deshalb in der Reihenfolge Versions-Sync → FAQ-Schema, und
-`check-sync.yml` prüft beide fixed points (`--check`, schreibt nichts).
+ersten geänderten Antwort auseinander. Die Antwort „Welche Versionen sind
+aktuell?" schreibt `sync-versions.py`, wenn man es lokal laufen lässt.
+pytest prüft, dass der committede Block zur FAQ-Sektion passt.
 
-`check-sync.yml` läuft **bevor** `sync-versions.yml`: ein roter Run heißt, dass
-`sync-versions.py` das Drift-Problem nicht automatisch heilen konnte
-(API-Rate-Limit, fehlende Rechte) und die Seite veraltete Zahlen zeigt.
 `check-links.yml` wertet 403/429/503 als „nicht beurteilbar" und ignoriert
 `<link rel="preconnect">` (ein 404 dort ist normal).
 
@@ -148,7 +146,7 @@ nicht dass die Seite vollständig ist — genau das passierte, als drei in
 lieferten, während jeder Job grün war.
 
 `scripts/validate-html.py` schickt die Seite an den **W3C-Nu-Validator** und
-läuft in `check-sync.yml` mit `--strict` (Warnungen zählen wie Fehler). Der
+läuft in `tests.yml` mit `--strict` (Warnungen zählen wie Fehler). Der
 eigene Tag-Balance-Check ist blind für Standard-Verstöße, die der Browser
 gnädig repariert — so blieb ein `data:`-URI mit rohen Leerzeichen im `href`
 unbemerkt. Ist der Fremddienst nicht erreichbar, meldet das Script
@@ -167,7 +165,7 @@ JavaScript, gleiche Schriften wie die Landing Page). Die Mobile-Navigation häng
 an der `.js`-Class, die ein früher Inline-Script setzt: ohne JavaScript bleiben
 die drei Links sichtbar und umbrechend, statt hinter einem funktionslosen
 ☰-Button zu verschwinden. Action-Updates kommen gruppiert als eine PR pro Woche
-(`.github/dependabot.yml`), geprüft von `check-sync.yml` (jetzt auch bei PRs).
+(`.github/dependabot.yml`), geprüft von `tests.yml` bei PRs.
 
 Das Web-Manifest ist vollständig für den Install-Prompt: `any`-Icons 192/512,
 ein **maskables** 512er-Icon (randlos bis in die Ecken, damit der kreisförmige

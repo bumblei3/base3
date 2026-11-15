@@ -1,0 +1,53 @@
+name: Tests
+
+# pytest, Seiten-Validator, W3C-Nu und Kontrast.
+# Versions-Sync und Drift-Guard laufen nicht in CI. Pills aktualisiert
+# das Script lokal, siehe RELEASE.md.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      # Volle History: Tests rufen _get_base_lastmod() auf, das git log
+      # über index.html/README.md/FAQ.md liest. Bei fetch-depth: 1 hat
+      # HEAD keinen Parent, und das Pathspec-Log liefert HEADs Datum.
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install test dependencies
+        run: pip install pytest pillow
+
+      - name: Run tests
+        run: python3 -m pytest
+
+      - name: Validate page (tags, JSON-LD, links)
+        run: python3 scripts/validate_landing_page.py
+
+      # Echter Standardcheck (W3C Nu): findet Verstöße, die der eigene
+      # Tag-Balance-Check nicht sieht (z. B. rohe Leerzeichen in einem
+      # data:-URI). --strict: Warnungen zählen wie Fehler.
+      - name: Validate HTML (W3C Nu, strict)
+        run: python3 scripts/validate-html.py --strict --file index.html --file 404.html
+
+      - name: Check WCAG contrast
+        run: python3 scripts/check-contrast.py

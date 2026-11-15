@@ -133,7 +133,7 @@ def _get_base_lastmod() -> str:
     """
     try:
         # Sitemap bewusst ausgeschlossen: er wird von diesem Script selbst
-        # geschrieben; sonst würde der Heiler-Commit (toucht nur sitemap.xml)
+        # geschrieben; sonst würde ein Commit, der nur sitemap.xml anfasst,
         # base_lastmod auf sein eigenes UTC-Datum ziehen und bei jedem Lauf
         # um einen Tag zurückdriften.
         targets = [str(p.relative_to(BASE3)) for p in (INDEX_HTML, README_MD, FAQ_MD)]
@@ -614,7 +614,7 @@ def main():
         if any_changed:
             print(
                 "FEHLER: Version-Pills sind nicht auf dem Stand der Nachbar-Repos. "
-                "Fix: 'gh workflow run sync-versions.yml' (oder --api-mode lokal).",
+                "Fix: python3 scripts/sync-versions.py lokal ausführen.",
                 file=sys.stderr,
             )
             sys.exit(1)
