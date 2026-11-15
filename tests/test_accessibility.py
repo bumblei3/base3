@@ -120,6 +120,17 @@ def test_hero_offers_both_games():
     assert ".hero-actions" in reduced
 
 
+def test_trischach_mentions_solo_mode():
+    card = HTML.split('id="trischach"', 1)[1].split("</article>", 1)[0]
+    assert "<li>Solo gegen die KI</li>" in card
+    how = HTML.split('class="how-to-card trischach-card"', 1)[1].split("</article>", 1)[0]
+    assert "Solo gegen die KI, oder eine Runde zu dritt." in how
+    platform = HTML.split('<section class="platform-intro"', 1)[1].split("</section>", 1)[0]
+    assert "Solo gegen die KI" in platform
+    faq = (BASE3 / "FAQ.md").read_text(encoding="utf-8")
+    assert "Solo-Modus: eine Fraktion gegen die KI" in faq
+
+
 def test_whats_new_matches_the_live_games():
     stale = "Tipps in Kampagnen nur mit Perk"
     splitting = "Code-Splitting"

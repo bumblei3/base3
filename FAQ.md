@@ -121,6 +121,7 @@ Feuer 🔥, Natur 🌿, Wasser 🌊 — stehen in einem zyklischen Kampf:
 Jede Fraktion ist stark gegen eine andere und schwach gegen die dritte.
 Das Spiel ist eine permanente Neu-Berechnung von Allianzen und Risiken —
 nicht nur „wer schlägt wen“, sondern „wer steht wie zueinander“.
+Dazu gibt es einen Solo-Modus: eine Fraktion gegen die KI.
 
 ### Spielerisches Erlebnis
 

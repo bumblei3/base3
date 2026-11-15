@@ -82,6 +82,7 @@ bis zum strategischen 3-Spieler-Hex-Schach.
 3-Spieler Hexagonales Schach mit Stein-Schere-Papier-Kampfmechanik. *(aktuell: v1.7.0)*
 
 - 3 Fraktionen (Feuer 🔥 / Natur 🌿 / Wasser 🌊)
+- Solo gegen die KI
 - RPS Kampfmechanik (Feuer > Natur > Wasser > Feuer)
 - Engine: Alpha-Beta, 4 Persönlichkeiten, Pondering
 - Auto-Battle Turniere mit Elo-Rating
