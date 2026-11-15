@@ -104,6 +104,22 @@ def test_landing_page_omits_siehe_auch_card():
     assert "## Siehe auch" in faq
 
 
+def test_hero_offers_both_games():
+    hero = HTML.split('<section class="hero">', 1)[1].split(
+        '<section class="platform-intro"', 1
+    )[0]
+    assert hero.index('<div class="hero-actions">') < hero.index("dev-status-note")
+    actions = hero.split('<div class="hero-actions">', 1)[1].split("</div>", 1)[0]
+    assert 'href="https://bumblei3.github.io/schach9x9/">Schach9x9 spielen</a>' in actions
+    assert 'href="https://bumblei3.github.io/trischach/">Trischach spielen</a>' in actions
+    css = HTML.split(".hero-actions {", 1)[1].split("}", 1)[0]
+    assert "flex-wrap: wrap" in css
+    reduced = HTML.split("@media (prefers-reduced-motion: reduce)", 1)[1].split(
+        "@media print", 1
+    )[0]
+    assert ".hero-actions" in reduced
+
+
 def test_play_faq_uses_demo_names():
     assert ">Schach9x9 Live-Demo</a>" in HTML
     assert ">Trischach Live-Demo</a>" in HTML

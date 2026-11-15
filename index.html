@@ -332,9 +332,18 @@
     }
     .hero .subtitle {
       font-size: clamp(1rem, 2.5vw, 1.3rem); color: var(--color-text-secondary); font-weight: 300;
-      margin: 0 0 var(--space-xl); max-width: 620px; line-height: 1.6;
+      margin: 0 0 var(--space-lg); max-width: 620px; line-height: 1.6;
       animation: fadeInUp 0.5s ease 0.2s forwards; opacity: 0;
     }
+    .hero-actions {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-sm);
+      margin: 0 0 var(--space-xl);
+      animation: fadeInUp 0.5s ease 0.25s forwards; opacity: 0;
+    }
+    .hero-actions .play-btn.schach9x9 { background: linear-gradient(135deg, #4f46e5, #db2777); color: white; }
+    .hero-actions .play-btn.schach9x9:hover { background: linear-gradient(135deg, #6366f1, #ec4899); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4); }
+    .hero-actions .play-btn.trischach { background: linear-gradient(135deg, #c2410c, #047857, #2563eb); color: white; }
+    .hero-actions .play-btn.trischach:hover { background: linear-gradient(135deg, #ea580c, #059669, #3b82f6); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255, 69, 0, 0.4); }
     .dev-status-note {
       max-width: 42rem; margin: 0 auto var(--space-xl); padding: var(--space-sm) var(--space-md);
       background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.25);
@@ -528,7 +537,7 @@
          die Animation sichtbar. Mit 'animation: none' blieb die Seite sonst leer
          (Überschrift, Karten, FAQ, Statistik) — für Nutzer mit reduzierter
          Bewegung. Deshalb hier ausdrücklich auf 1 setzen. */
-      .hero h1, .hero .subtitle, .platform-intro, .whats-new,
+      .hero h1, .hero .subtitle, .hero-actions, .platform-intro, .whats-new,
       .game-card, .how-to, .faq, .stats { opacity: 1 !important; }
     }
 
@@ -547,7 +556,7 @@
       body { background: #fff; color: #111; }
       body::before, .top-nav, .hero-badge, .skip-link { display: none; }
       /* Auch hier: ohne Animation wäre der Startzustand opacity: 0. */
-      .hero h1, .hero .subtitle, .platform-intro, .whats-new,
+      .hero h1, .hero .subtitle, .hero-actions, .platform-intro, .whats-new,
       .game-card, .how-to, .faq, .stats { animation: none !important; opacity: 1 !important; }
       .platform-card, .whats-new-card, .how-to-card, .faq-card, .game-card {
         background: #fff; border: 1px solid #bbb; box-shadow: none;
@@ -606,6 +615,10 @@
         Zwei einzigartige Schachvarianten auf einer Plattform — vom klassischen 9×9 Brett mit Feenfiguren
         bis zum strategischen 3-Spieler-Hex-Schach. Code & Entwicklung leben in den eigenständigen Repos.
       </p>
+      <div class="hero-actions">
+        <a class="play-btn schach9x9" href="https://bumblei3.github.io/schach9x9/">Schach9x9 spielen</a>
+        <a class="play-btn trischach" href="https://bumblei3.github.io/trischach/">Trischach spielen</a>
+      </div>
 
       <p class="dev-status-note">
         Die aktive Entwicklung findet in den eigenständigen Projekten
