@@ -120,6 +120,20 @@ def test_hero_offers_both_games():
     assert ".hero-actions" in reduced
 
 
+def test_whats_new_matches_the_live_games():
+    stale = "Tipps in Kampagnen nur mit Perk"
+    splitting = "Code-Splitting"
+    perk = "Der Hinweis-Button bleibt frei."
+    solo = "Solo-Modus: eine Fraktion gegen die KI"
+    tempo = "Kürzere Zugzeit, ohne die Engine zu schwächen"
+    for text in (HTML, (BASE3 / "FAQ.md").read_text(encoding="utf-8"), (BASE3 / "README.md").read_text(encoding="utf-8")):
+        assert stale not in text
+        assert splitting not in text
+        assert perk in text
+        assert solo in text
+        assert tempo in text
+
+
 def test_schach9x9_mentions_daily_puzzle_and_later_campaign():
     card = HTML.split('id="schach9x9"', 1)[1].split("</article>", 1)[0]
     assert "<li>Tägliches Puzzle</li>" in card

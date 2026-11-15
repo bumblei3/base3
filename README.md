@@ -99,12 +99,13 @@ bis zum strategischen 3-Spieler-Hex-Schach.
 
 - Kapitel 7–12: Erzbischof-Gabel, Kanzler-Spieß, Engel vs Dame, Nachtreiter-Linien, Feenrat, Imperator-Finale
 - 8 handgemachte Puzzles, jede Lösung engine-verifiziert Matt in 1
-- Perk „Taktik-Genie" wirksam (Tipps in Kampagnen nur mit Perk)
+- Perk „Taktik-Genie“ zeigt zu Missionsbeginn einmal den besten Zug. Der Hinweis-Button bleibt frei.
 - Ein Talent pro Feenfigur mit echtem Effekt (+Gold/+XP)
 
 ### Trischach · v1.7.0 (2026-10-20)
 
-- Code-Splitting — game.ts in separate chunk
+- Solo-Modus: eine Fraktion gegen die KI
+- Kürzere Zugzeit, ohne die Engine zu schwächen
 
 ## CI & Tests
 
