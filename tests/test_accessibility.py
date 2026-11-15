@@ -120,6 +120,18 @@ def test_hero_offers_both_games():
     assert ".hero-actions" in reduced
 
 
+def test_schach9x9_mentions_daily_puzzle_and_later_campaign():
+    card = HTML.split('id="schach9x9"', 1)[1].split("</article>", 1)[0]
+    assert "<li>Tägliches Puzzle</li>" in card
+    assert "Kampagne über Akt II hinaus" in card
+    how = HTML.split('class="how-to-card schach9x9-card"', 1)[1].split("</article>", 1)[0]
+    assert "tägliches Puzzle" in how
+    assert "über die sechs Kapitel von Akt II hinaus" in how
+    faq = (BASE3 / "FAQ.md").read_text(encoding="utf-8")
+    assert "tägliches Puzzle" in faq
+    assert "über die sechs Kapitel von Akt II hinaus" in faq
+
+
 def test_play_faq_uses_demo_names():
     assert ">Schach9x9 Live-Demo</a>" in HTML
     assert ">Trischach Live-Demo</a>" in HTML

@@ -69,7 +69,8 @@ bis zum strategischen 3-Spieler-Hex-Schach.
 - Engine-Analyse-Modus & Zug-Qualitäts-Indikatoren
 - Variantenbaum nach Solo-Partien (Top-Züge + Fortsetzung)
 - Eröffnungs-Trainer
-- Kampagnen-Modus & Talentbaum (XP)
+- Tägliches Puzzle
+- Kampagne über Akt II hinaus & Talentbaum (XP)
 - 3D-Schlachtmodus (Three.js, Skins)
 - PWA & Mobile Ready (Touch, Offline)
 
