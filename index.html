@@ -337,13 +337,17 @@
     }
     .hero-actions {
       display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-sm);
-      margin: 0 0 var(--space-xl);
+      margin: 0 0 var(--space-md);
       animation: fadeInUp 0.5s ease 0.25s forwards; opacity: 0;
     }
     .hero-actions .play-btn.schach9x9 { background: linear-gradient(135deg, #4f46e5, #db2777); color: white; }
     .hero-actions .play-btn.schach9x9:hover { background: linear-gradient(135deg, #6366f1, #ec4899); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4); }
     .hero-actions .play-btn.trischach { background: linear-gradient(135deg, #c2410c, #047857, #2563eb); color: white; }
     .hero-actions .play-btn.trischach:hover { background: linear-gradient(135deg, #ea580c, #059669, #3b82f6); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255, 69, 0, 0.4); }
+    .install-note {
+      max-width: 38rem; margin: 0 auto var(--space-xl); padding: 0 var(--space-md);
+      color: var(--color-text-secondary); font-size: 0.95rem; line-height: 1.5; text-align: center;
+    }
     .dev-status-note {
       max-width: 42rem; margin: 0 auto var(--space-xl); padding: var(--space-sm) var(--space-md);
       background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.25);
@@ -619,6 +623,11 @@
         <a class="play-btn schach9x9" href="https://bumblei3.github.io/schach9x9/">Schach9x9 spielen</a>
         <a class="play-btn trischach" href="https://bumblei3.github.io/trischach/">Trischach spielen</a>
       </div>
+      <p class="install-note">
+        Im Browser lassen sich beide Spiele als App installieren. Danach starten sie
+        als eigenes Fenster, ohne die Adresse. Eine Windows-Datei und eine Steam-Seite
+        gibt es nicht.
+      </p>
 
       <p class="dev-status-note">
         Die aktive Entwicklung findet in den eigenständigen Projekten

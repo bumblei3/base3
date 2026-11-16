@@ -120,6 +120,18 @@ def test_hero_offers_both_games():
     assert ".hero-actions" in reduced
 
 
+def test_hero_says_install_is_the_browser_not_steam():
+    hero = HTML.split('<section class="hero">', 1)[1].split(
+        '<section class="platform-intro"', 1
+    )[0]
+    note = " ".join(
+        hero.split('<p class="install-note">', 1)[1].split("</p>", 1)[0].split()
+    )
+    assert "Im Browser lassen sich beide Spiele als App installieren." in note
+    assert "Eine Windows-Datei und eine Steam-Seite gibt es nicht." in note
+    assert hero.index("hero-actions") < hero.index("install-note") < hero.index("dev-status-note")
+
+
 def test_trischach_mentions_solo_mode():
     card = HTML.split('id="trischach"', 1)[1].split("</article>", 1)[0]
     assert "<li>Solo gegen die KI</li>" in card
