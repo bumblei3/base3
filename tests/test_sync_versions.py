@@ -81,7 +81,7 @@ def test_index_faq_lists_replace_fake_bullets():
     assert '<h3 class="faq-q">Was gibt es Neues?</h3>' not in ORIGINAL_INDEX
     assert "faq-a\">•" not in ORIGINAL_INDEX
     assert '<li><b>Schach9x9:</b> v2.0.0 (2026-08-23)</li>' in ORIGINAL_INDEX
-    assert 'href="https://github.com/bumblei3/schach9x9">Issues, Pull Requests</a>' in ORIGINAL_INDEX
+    assert 'href="https://github.com/bumblei3/schach9x9/issues/new?template=playtest.yml">Playtest</a>' in ORIGINAL_INDEX
 
 
 def test_patch_index_keeps_unknown_version_shape():

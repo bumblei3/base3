@@ -1,0 +1,30 @@
+name: Feedback
+description: Feedback zu base3 ist ausdrücklich erwünscht
+title: "Feedback: "
+labels: ["feedback"]
+body:
+  - type: dropdown
+    id: page
+    attributes:
+      label: Welche Seite
+      options:
+        - Startseite
+        - Schach9x9-Karte
+        - Trischach-Karte
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: Dein Feedback
+      description: Eindrücke, Ideen oder was unklar ist.
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser
+      description: Optional.
+      placeholder: Firefox, Handy
+    validations:
+      required: false

@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Schach9x9-Playtest
+    url: https://github.com/bumblei3/schach9x9/issues/new?template=playtest.yml
+    about: Fehler oder Vorschlag aus einer Schach9x9-Partie.
+  - name: Trischach-Feedback
+    url: https://github.com/bumblei3/trischach/issues/new?template=feedback.md
+    about: Ideen, Balance oder Bedienung in Trischach.
