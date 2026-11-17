@@ -66,10 +66,18 @@ test('offline: die Startseite lädt nach dem ersten Besuch ohne Netz', async ({
     '/base3/sw.js',
   );
   // Die Karten-Vorschauen sind die Seite — offline dürfen sie nicht
-  // Platzhalter bleiben. Erst scrollen: sie sind lazy und läden sonst gar
-  // nicht.
-  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-  await page.waitForTimeout(700);
+  // Platzhalter bleiben. Erst scrollen: sie sind lazy. Und schrittweise,
+  // nicht mit einem Sprung ans Ende — Chrome lädt lazy-Bilder außerhalb
+  // seiner Entfernungsschwelle nicht, und die Schwelle hängt von der
+  // Verbindungsgeschwindigkeit ab.
+  await page.evaluate(async () => {
+    const step = window.innerHeight / 2;
+    for (let y = 0; y <= document.body.scrollHeight; y += step) {
+      window.scrollTo(0, y);
+      await new Promise((resolve) => setTimeout(resolve, 120));
+    }
+  });
+  await page.waitForTimeout(800);
   const imgs = await page.evaluate(() =>
     [...document.querySelectorAll('#schach9x9 img, #trischach img')].map((i) => ({
       src: i.currentSrc,
