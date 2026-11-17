@@ -34,6 +34,28 @@ def _bullet_lists(text: str) -> list[str]:
 NEW = ("9.9.9", "2099-01-01", "8.8.8", "2099-02-02")
 
 
+def test_whats_new_labels_match_the_version_pills():
+    """Label, Pill und README-/FAQ-Überschrift nennen dieselbe Version.
+
+    Der Pill liefert der Sync, die Bullets sind handgepflegt. Weicht das Label
+    ab, steht auf der Karte eine Änderungsliste der vorherigen Version unter der
+    neuen Nummer — der Sync prüft das nicht, weil er die Bullets nicht berührt.
+    """
+    for label in ("Schach9x9", "Trischach"):
+        m = re.search(r'whats-new-label">' + label + r" · (v[\d.]+)", ORIGINAL_INDEX)
+        assert m, f"whats-new-Label für {label} nicht gefunden"
+        version = m.group(1)
+        assert f'<span class="version-pill">{version}' in ORIGINAL_INDEX, (
+            f"{label}: Pill {version} nicht gefunden"
+        )
+        assert f"### {label} · {version} (" in ORIGINAL_README, (
+            f"{label}: README-Überschrift weicht vom Label ab"
+        )
+        assert f"**{label} ({version}):**" in ORIGINAL_FAQ, (
+            f"{label}: FAQ-Überschrift weicht vom Label ab"
+        )
+
+
 # ------------------------------------------------------------ clean_bullet
 def test_clean_bullet_strips_markdown_and_issue_refs():
     out = sv.clean_bullet("- **Deterministisches Tagespuzzle** (#140): FNV-1a-Auswahl pro Datum.")

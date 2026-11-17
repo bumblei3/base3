@@ -43,9 +43,10 @@ Die aktuellen Versionen sind:
 
 Die Version-Pills, JSON-LD und README-Angaben lassen sich mit
 `python3 scripts/sync-versions.py` aus den Nachbar-Repos ziehen.
-Die „Was ist neu“-Bullets kommen aus den Release-Notes der jeweiligen
-neuesten Releases (GitHub Releases API) und werden vom selben Script
-aktualisiert.
+Die „Was ist neu“-Bullets sind handgepflegt: Die Auto-Extraktion aus den
+Release-Notes liefert dort oft Maintenance-PRs (Bundle-Aufteilung,
+Abhängigkeits-Bumps), nicht das, was Besucher sehen. Deshalb schreibt das
+Script die Bullets nicht.
 
 ## Was gibt es Neues?
 
@@ -53,10 +54,10 @@ Die Landing Page zeigt in der „Was ist neu“-Sektion die wichtigsten Änderun
 der aktuellen Versionen.
 
 **Schach9x9 (v2.1.0):**
-- Kapitel 7–12: Erzbischof-Gabel, Kanzler-Spieß, Engel vs Dame, Nachtreiter-Linien, Feenrat, Imperator-Finale
-- 8 handgemachte Puzzles, jede Lösung engine-verifiziert Matt in 1
-- Perk „Taktik-Genie“ zeigt zu Missionsbeginn einmal den besten Zug. Der Hinweis-Button bleibt frei.
-- Ein Talent pro Feenfigur mit echtem Effekt (+Gold/+XP)
+- Brett wieder quadratisch — die Eval-Bar hatte es in jedem Modus auf 279×335 gestutzt
+- Kreuz-Modus im 3D: das Brett hält 45 Felder, die blockierten Ecken fehlen wirklich
+- Kampagne Akt IV (Kapitel 19–25) ist dabei
+- „Problem melden“ unter Einstellungen — vorbefülltes GitHub-Issue mit Stellung und Client-Fehlern
 
 **Trischach (v1.7.0):**
 - Solo-Modus: eine Fraktion gegen die KI
@@ -77,7 +78,7 @@ Schach9x9 läuft im Browser — keine Installation nötig.
 
 - **Regeln:** 9×9 Brett mit den drei Feenfiguren (siehe unten). Zusätzlich gibt
   es einen 8×8-Modus mit klassischen Standardregeln.
-- **Starten:** Klassisches Spiel, tägliches Puzzle, Kampagne über die sechs Kapitel von Akt II hinaus, oder Eröffnungs-Trainer.
+- **Starten:** Klassisches Spiel, tägliches Puzzle, Kampagne mit Akt II (Kapitel 7–12) und Akt IV (Kapitel 19–25), oder Eröffnungs-Trainer.
 - **KI-Gegner:** Fünf Persönlichkeiten, jede mit eigener Stärke und Spielweise.
 - **Offline:** Nach dem ersten Laden lässt sich die PWA installieren und offline
   spielen.

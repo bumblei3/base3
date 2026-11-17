@@ -70,7 +70,7 @@ bis zum strategischen 3-Spieler-Hex-Schach.
 - Variantenbaum nach Solo-Partien (Top-Züge + Fortsetzung)
 - Eröffnungs-Trainer
 - Tägliches Puzzle
-- Kampagne über Akt II hinaus & Talentbaum (XP)
+- Kampagne bis Akt IV & Talentbaum (XP)
 - 3D-Schlachtmodus (Three.js, Skins)
 - PWA & Mobile Ready (Touch, Offline)
 
@@ -98,10 +98,10 @@ bis zum strategischen 3-Spieler-Hex-Schach.
 
 ### Schach9x9 · v2.1.0 (2026-11-16)
 
-- Kapitel 7–12: Erzbischof-Gabel, Kanzler-Spieß, Engel vs Dame, Nachtreiter-Linien, Feenrat, Imperator-Finale
-- 8 handgemachte Puzzles, jede Lösung engine-verifiziert Matt in 1
-- Perk „Taktik-Genie“ zeigt zu Missionsbeginn einmal den besten Zug. Der Hinweis-Button bleibt frei.
-- Ein Talent pro Feenfigur mit echtem Effekt (+Gold/+XP)
+- Brett wieder quadratisch — die Eval-Bar hatte es in jedem Modus auf 279×335 gestutzt
+- Kreuz-Modus im 3D: das Brett hält 45 Felder, die blockierten Ecken fehlen wirklich
+- Kampagne Akt IV (Kapitel 19–25) ist dabei
+- „Problem melden" unter Einstellungen — vorbefülltes GitHub-Issue mit Stellung und Client-Fehlern
 
 ### Trischach · v1.7.0 (2026-10-20)
 

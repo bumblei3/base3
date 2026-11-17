@@ -144,29 +144,38 @@ def test_trischach_mentions_solo_mode():
 
 
 def test_whats_new_matches_the_live_games():
+    """Die Karten nennen das, was die *aktuelle* Version enthält.
+
+    Geprüft wurde das historisch: Unter der Beschriftung „Schach9x9 · v2.1.0"
+    standen die Highlights von v2.0.0, weil der lokale Sync nur die Versionsstand-
+    Pillen austauscht und die Bullets handgepflegt sind.
+    """
     stale = "Tipps in Kampagnen nur mit Perk"
     splitting = "Code-Splitting"
-    perk = "Der Hinweis-Button bleibt frei."
+    board = "Brett wieder quadratisch"
+    cross = "Kreuz-Modus im 3D"
+    campaign = "Kampagne Akt IV (Kapitel 19–25)"
+    report = "Problem melden"
+    report_where = "unter Einstellungen"
     solo = "Solo-Modus: eine Fraktion gegen die KI"
     tempo = "Kürzere Zugzeit, ohne die Engine zu schwächen"
     for text in (HTML, (BASE3 / "FAQ.md").read_text(encoding="utf-8"), (BASE3 / "README.md").read_text(encoding="utf-8")):
         assert stale not in text
         assert splitting not in text
-        assert perk in text
-        assert solo in text
-        assert tempo in text
+        for bullet in (board, cross, campaign, report, report_where, solo, tempo):
+            assert bullet in text
 
 
 def test_schach9x9_mentions_daily_puzzle_and_later_campaign():
     card = HTML.split('id="schach9x9"', 1)[1].split("</article>", 1)[0]
     assert "<li>Tägliches Puzzle</li>" in card
-    assert "Kampagne über Akt II hinaus" in card
+    assert "Kampagne bis Akt IV" in card
     how = HTML.split('class="how-to-card schach9x9-card"', 1)[1].split("</article>", 1)[0]
     assert "tägliches Puzzle" in how
-    assert "über die sechs Kapitel von Akt II hinaus" in how
+    assert "Akt II (Kapitel 7–12) und Akt IV (Kapitel 19–25)" in how
     faq = (BASE3 / "FAQ.md").read_text(encoding="utf-8")
     assert "tägliches Puzzle" in faq
-    assert "über die sechs Kapitel von Akt II hinaus" in faq
+    assert "Akt II (Kapitel 7–12) und Akt IV (Kapitel 19–25)" in faq
 
 
 def test_play_faq_uses_demo_names():
