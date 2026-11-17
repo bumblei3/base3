@@ -28,8 +28,13 @@ const CACHE_VERSION = 'v2';
 const CACHE_NAME = `base3-${CACHE_VERSION}`;
 
 /* Was offline unbedingt gehen muss. Kleiner, expliziter Kernel statt
- * „alles“: Bilder und Unterseiten kommen beim ersten Online-Besuch
- * ohnehin in den Cache und sind danach offline verfügbar. */
+ * „alles“: Unterseiten kommen beim ersten Online-Besuch ohnehin in den Cache.
+ *
+ * Die Karten-Vorschauen sind eine bewusste Ausnahme: Sie sind das, was die
+ * Seite eigentlich zeigt, aber `loading="lazy"` liegt sie unterhalb der
+ * ersten Ansicht — ohne Precache waren sie offline Platzhalter (der
+ * Laufzeit-Cache legt sie nicht immer ab). Nur die WebP-Variante, das ist
+ * das kleine Teil (23 KB statt 191 KB für beide PNGs). */
 const SHELL = [
   'index.html',
   '404.html',
@@ -42,6 +47,8 @@ const SHELL = [
   'favicon-32.png',
   'assets/fonts/outfit-latin.woff2',
   'assets/fonts/jetbrains-mono-latin.woff2',
+  'assets/preview-schach9x9.webp',
+  'assets/preview-trischach.webp',
 ];
 
 self.addEventListener('install', (event) => {

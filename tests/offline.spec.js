@@ -65,6 +65,21 @@ test('offline: die Startseite lädt nach dem ersten Besuch ohne Netz', async ({
   expect(await page.evaluate(() => navigator.serviceWorker?.controller?.scriptURL)).toContain(
     '/base3/sw.js',
   );
+  // Die Karten-Vorschauen sind die Seite — offline dürfen sie nicht
+  // Platzhalter bleiben. Erst scrollen: sie sind lazy und läden sonst gar
+  // nicht.
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await page.waitForTimeout(700);
+  const imgs = await page.evaluate(() =>
+    [...document.querySelectorAll('#schach9x9 img, #trischach img')].map((i) => ({
+      src: i.currentSrc,
+      ok: i.complete && i.naturalWidth > 0,
+    })),
+  );
+  expect(imgs).toHaveLength(2);
+  for (const img of imgs) {
+    expect(img.ok, `Vorschau offline nicht geladen: ${img.src}`).toBe(true);
+  }
 });
 
 test('offline: eine unbekannte URL liefert die gecachte 404-Seite', async ({

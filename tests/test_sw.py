@@ -143,6 +143,17 @@ def test_offline_navigation_resolves_the_directory_index():
     )
 
 
+def test_precache_covers_the_card_previews():
+    """Die Vorschauen gehören zur Seite — offline müssen sie mit sein.
+
+    Sie sind `loading="lazy"` unterhalb der ersten Ansicht, und der
+    Laufzeit-Cache legt sie nicht immer ab: ohne Precache waren die Karten
+    offline Platzhalter.
+    """
+    assert "'assets/preview-schach9x9.webp'" in CODE
+    assert "'assets/preview-trischach.webp'" in CODE
+
+
 def test_old_caches_are_dropped_on_activate():
     """Ohne Aufräumen bliebe ein alter Cache-Name liegen und servierte nach
     einer Strategie-Änderung noch die bisherige Variante."""
