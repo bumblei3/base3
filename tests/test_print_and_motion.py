@@ -17,21 +17,26 @@ BASE3 = Path(__file__).resolve().parent.parent
 HTML = (BASE3 / "index.html").read_text(encoding="utf-8")
 STYLE = HTML[HTML.index("<style>") + len("<style>"):HTML.index("</style>")]
 
+NOT_FOUND = (BASE3 / "404.html").read_text(encoding="utf-8")
+NOT_FOUND_STYLE = NOT_FOUND[
+    NOT_FOUND.index("<style>") + len("<style>"):NOT_FOUND.index("</style>")
+]
 
-def _block(header_regex: str) -> str:
+
+def _block(header_regex: str, css: str = STYLE) -> str:
     """Den Inhalt eines @media-Blocks über Klammerzählung holen."""
-    match = re.search(header_regex, STYLE)
+    match = re.search(header_regex, css)
     if not match:
         return ""
-    start = STYLE.index("{", match.start())
+    start = css.index("{", match.start())
     depth, i = 0, start
-    while i < len(STYLE):
-        if STYLE[i] == "{":
+    while i < len(css):
+        if css[i] == "{":
             depth += 1
-        elif STYLE[i] == "}":
+        elif css[i] == "}":
             depth -= 1
             if depth == 0:
-                return STYLE[start + 1:i]
+                return css[start + 1:i]
         i += 1
     raise AssertionError(f"Block {header_regex} ist nicht geschlossen")
 
@@ -141,3 +146,32 @@ def test_print_keeps_cards_whole_and_shows_link_targets():
     css = _block(r"@media\s*print")
     assert "break-inside: avoid" in css, "Karten dürfen nicht über Seiten umbrechen"
     assert re.search(r"a\[href\^=\"http\"\]::after", css), "Link-Ziele werden nicht ausgedruckt"
+
+
+# ------------------------------------------------------------ 404-Seite
+def test_not_found_links_the_favicon():
+    """Ohne Icon-Links fragt der Browser /favicon.ico am Host-Wurzelpfad an.
+
+    Dort gibt es nichts — jede Fehlerseite erzeugte damit einen Konsolen-404.
+    """
+    assert re.search(r"<link[^>]+rel=\"shortcut icon\"", NOT_FOUND), (
+        "404.html verlinkt kein Favicon"
+    )
+
+
+def test_not_found_print_keeps_text_readable():
+    """Die Fehlerseite druckt nur mit umgestellten Token.
+
+    Früher blieben .hint/p auf #8a98b8 (2.89:1) und die 404-Zahl auf #818cf8
+    (2.98:1) — beides auf weiß kaum lesbar, am PDF gemessen.
+    """
+    css = _block(r"@media\s*print", NOT_FOUND_STYLE)
+    assert "--color-text-muted: #444" in css, "Print: text-muted bleibt zu hell"
+    assert "--color-bg-glass: #fff" in css, "Print: Glas-Karte bleibt dunkel"
+    assert re.search(r"\.code\s*\{\s*color:\s*#111", css), (
+        "Print: die 404-Zahl bleibt zu hell"
+    )
+    assert re.search(r"a\.card\[href\]::after", css), (
+        "Print: Link-Ziele fehlen (auch der relative Startseiten-Link)"
+    )
+    assert "overflow-wrap" in css, "Print: die URL läuft über den Kartenrand"
