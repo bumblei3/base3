@@ -38,7 +38,7 @@ der Code hier ist ausschließlich die Landing Page (HTML/CSS).
 
 Die aktuellen Versionen sind:
 
-- **Schach9x9:** v2.0.0 (2026-08-23)
+- **Schach9x9:** v2.1.0 (2026-11-16)
 - **Trischach:** v1.7.0 (2026-10-20)
 
 Die Version-Pills, JSON-LD und README-Angaben lassen sich mit
@@ -52,7 +52,7 @@ aktualisiert.
 Die Landing Page zeigt in der „Was ist neu“-Sektion die wichtigsten Änderungen
 der aktuellen Versionen.
 
-**Schach9x9 (v2.0.0):**
+**Schach9x9 (v2.1.0):**
 - Kapitel 7–12: Erzbischof-Gabel, Kanzler-Spieß, Engel vs Dame, Nachtreiter-Linien, Feenrat, Imperator-Finale
 - 8 handgemachte Puzzles, jede Lösung engine-verifiziert Matt in 1
 - Perk „Taktik-Genie“ zeigt zu Missionsbeginn einmal den besten Zug. Der Hinweis-Button bleibt frei.

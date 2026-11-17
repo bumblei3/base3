@@ -85,7 +85,8 @@ def test_index_placeholder_is_idempotent():
 
 def test_readme_unknown_date_is_not_written():
     out, _ = sv.patch_readme(ORIGINAL_README, "9.9.9", UNKNOWN, "8.8.8", UNKNOWN)
-    assert "### Schach9x9 · v9.9.9 (2026-08-23)" in out
+    (s_v, s_d), _ = _current_pills(ORIGINAL_INDEX)
+    assert f"### Schach9x9 · v9.9.9 ({s_d})" in out
     assert UNKNOWN not in out
 
 

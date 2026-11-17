@@ -62,7 +62,7 @@ bis zum strategischen 3-Spieler-Hex-Schach.
 
 ### ♟️ Schach9x9
 
-9×9 Brett mit Feenfiguren (Erzbischof, Kanzler, Engel). *(aktuell: v2.0.0)*
+9×9 Brett mit Feenfiguren (Erzbischof, Kanzler, Engel). *(aktuell: v2.1.0)*
 
 - 9×9 Brett mit Feenfiguren (Erzbischof, Kanzler, Engel)
 - 5 KI-Persönlichkeiten + adaptives Zeitmanagement
@@ -96,7 +96,7 @@ bis zum strategischen 3-Spieler-Hex-Schach.
 
 ## Was ist neu
 
-### Schach9x9 · v2.0.0 (2026-08-23)
+### Schach9x9 · v2.1.0 (2026-11-16)
 
 - Kapitel 7–12: Erzbischof-Gabel, Kanzler-Spieß, Engel vs Dame, Nachtreiter-Linien, Feenrat, Imperator-Finale
 - 8 handgemachte Puzzles, jede Lösung engine-verifiziert Matt in 1

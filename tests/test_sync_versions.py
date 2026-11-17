@@ -5,6 +5,7 @@ release_date_from_repo wird für deterministische Datumsangaben monkeypatcht.
 """
 
 import importlib.util
+import re
 import sys
 from pathlib import Path
 
@@ -77,19 +78,33 @@ def test_patch_index_noop_when_already_current():
     assert not changed
 
 
+def _current_pill(html: str, name: str) -> str:
+    """Dercommittede Pill eines Spiels, aus der FAQ-Versionsliste gelesen.
+
+    Hartkodierte Versionsnummern/Daten würden diesen Test bei jedem Release
+    der Nachbar-Repos rot machen — geprüft wird die Struktur, nicht der Stand.
+    """
+    m = re.search(r"<b>" + name + r":</b> (v[\d.]+) \((\d{4}-\d{2}-\d{2})\)", html)
+    assert m, f"FAQ-Versionsliste für {name} nicht gefunden"
+    return f"{m.group(1)} ({m.group(2)})"
+
+
 def test_index_faq_lists_replace_fake_bullets():
     assert '<h3 class="faq-q">Was gibt es Neues?</h3>' not in ORIGINAL_INDEX
     assert "faq-a\">•" not in ORIGINAL_INDEX
-    assert '<li><b>Schach9x9:</b> v2.0.0 (2026-08-23)</li>' in ORIGINAL_INDEX
+    assert f"<li><b>Schach9x9:</b> {_current_pill(ORIGINAL_INDEX, 'Schach9x9')}</li>" in ORIGINAL_INDEX
     assert 'href="https://github.com/bumblei3/schach9x9/issues/new?template=playtest.yml">Playtest</a>' in ORIGINAL_INDEX
 
 
 def test_patch_index_keeps_unknown_version_shape():
     """Ein Pill ganz ohne Datum wird ebenfalls gefunden (Regex-Toleranz)."""
-    broken = ORIGINAL_INDEX.replace("v2.0.0 · 2026-08-23", "v2.0.0")
+    pill = _current_pill(ORIGINAL_INDEX, "Schach9x9")
+    version = pill.split(" ", 1)[0]
+    broken = ORIGINAL_INDEX.replace(pill, version)
+    assert broken != ORIGINAL_INDEX, "Pill nicht gefunden — Regex trifft die echten Bytes nicht"
     out, changed = sv.patch_index(broken, *NEW)
     assert changed
-    assert "v2.0.0 ·" not in out
+    assert f"{version} ·" not in out
 
 
 # ---------------------------------------------------------------- README.md
