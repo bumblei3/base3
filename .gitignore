@@ -23,5 +23,8 @@ playwright-report/
 # Build-Artefakt für den Pages-Deploy (nur index.html + assets/)
 _site/
 
+# Lighthouse-Serverbaum: das Repo liegt dort als base3/ aus
+.lh/
+
 # Hermes agent session data
 .hermes/

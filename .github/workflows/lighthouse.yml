@@ -2,7 +2,7 @@ name: Lighthouse
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   workflow_dispatch:
 
 permissions:
@@ -14,15 +14,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+      # Pages serviert das Repo unter /base3/, und index.html nutzt absolute
+      # /base3/-Pfade (Schriften, Manifest, Service Worker). Wird stattdessen
+      # die Wurzel serviert, meldet der Audit 404er bei genau diesen Dateien
+      # und wertet sie als Konsolenfehler — gemessen würde eine URL, die es
+      # live nicht gibt. Der Symlink legt das Repo unter /base3/ aus.
+      - name: Expose repo under /base3/
+        run: |
+          mkdir -p .lh
+          ln -sfn "$PWD" .lh/base3
       - name: Serve site
         run: |
-          python3 -m http.server 8765 --directory . &
+          python3 -m http.server 8765 --directory .lh &
           sleep 2
-          curl -sSf http://localhost:8765/ >/dev/null
+          curl -sSf http://localhost:8765/base3/ >/dev/null
       - name: Run Lighthouse
         uses: treosh/lighthouse-ci-action@v12
         with:
-          urls: http://localhost:8765/
+          urls: http://localhost:8765/base3/
           configPath: ./.lighthouserc.json
           uploadArtifacts: true
           temporaryPublicStorage: true
