@@ -24,7 +24,7 @@
 /* Bei einer Strategie-Änderung hochzählen — activate räumt dann die
  * alten Caches weg, sonst serviert ein schon aktiver Besucher noch die
  * bisherige Variante. */
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v2';
 const CACHE_NAME = `base3-${CACHE_VERSION}`;
 
 /* Was offline unbedingt gehen muss. Kleiner, expliziter Kernel statt
@@ -95,11 +95,21 @@ const fromNetwork = (request) =>
     return response;
   });
 
-/* Offline-Navigation: erst die exakt angefragte URL, dann die 404-Seite,
- * zuletzt die Startseite — nie ein weißer Screen. */
+/* Offline-Navigation: exakte URL, dann der Verzeichnis-Index, dann die
+ * 404-Seite, zuletzt die Startseite — nie ein weißer Screen.
+ *
+ * Der Verzeichnis-Index ist kein Extra: Pages liefert /base3/ als
+ * /base3/index.html aus, der Cache kennt aber nur die zweite Form. Ohne
+ * diesen Schritt bekam ein Besucher, der offline neu lädt, die 404-Seite
+ * statt der Startseite. */
 const offlineNavigation = (request) =>
   caches
     .match(request)
+    .then(
+      (hit) =>
+        hit ||
+        (request.url.endsWith('/') && caches.match(`${request.url}index.html`)),
+    )
     .then((hit) => hit || caches.match('404.html'))
     .then((hit) => hit || caches.match('index.html'))
     .then((hit) => hit || Response.error());

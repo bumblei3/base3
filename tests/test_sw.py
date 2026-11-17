@@ -2,9 +2,10 @@
 
 Der SW wird von der Seite selbst registriert (`serviceWorker.register(...)`),
 nicht per href/src. Diese Tests prüfen deshalb die Verdrahtung und die
-Strategie strukturell; das eigentliche Offline-Verhalten steht in der
-Doku von sw.js und wird lokal im Browser gegen den laufenden Server geprüft
-(CI hat keinen Browser).
+Strategie strukturell. Das echte Offline-Verhalten steht in
+`tests/offline.spec.js` und läuft im Browser (Playwright, `a11y.yml` hat
+dort Chromium): `context.setOffline(true)` plus geleertem HTTP-Cache schaltet
+das Netz ab, sodass ein Render nur über den Service Worker gehen kann.
 """
 
 import importlib.util
@@ -122,6 +123,24 @@ def test_offline_navigation_is_not_a_blank_page():
     assert "caches.match('404.html')" in CODE
     assert "caches.match('index.html')" in CODE
     assert "Response.error()" in CODE
+
+
+def test_offline_navigation_resolves_the_directory_index():
+    """/base3/ ist offline die Startseite, nicht die 404.
+
+    Pages liefert /base3/ als /base3/index.html aus, der Cache kennt aber nur
+    die zweite Form — ohne den Verzeichnis-Index-Schritt landete ein offline
+    neu ladender Besucher auf der 404-Seite. tests/offline.spec.js prüft das
+    im Browser; diese Prüfung hält die Reihenfolge auch ohne einen fest.
+    """
+    chain = CODE.split("const offlineNavigation", 1)[1].split("self.addEventListener", 1)[0]
+    assert "endsWith('/')" in chain, (
+        "offlineNavigation prüft nicht auf eine Verzeichnis-URL"
+    )
+    assert "index.html`)" in chain, "der Verzeichnis-Index wird nicht aufgelöst"
+    assert chain.index("`${request.url}index.html`") < chain.index("'404.html'"), (
+        "die 404-Seite würde vor der Startseite gewinnen"
+    )
 
 
 def test_old_caches_are_dropped_on_activate():
