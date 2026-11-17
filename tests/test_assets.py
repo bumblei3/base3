@@ -7,6 +7,7 @@ sonst reserviert der Browser den falschen Platz und die Karte springt (CLS).
 
 import os
 import re
+import unicodedata
 import pytest
 from pathlib import Path
 
@@ -159,25 +160,37 @@ def test_fonts_are_subset_and_within_budget():
 
 
 def test_fonts_cover_all_page_glyphs():
-    """Jedes Schrift-Glyph, das die Seite tatsächlich nutzt (und das in der
-    Originalschrift vorhanden ist), muss im Subset erhalten bleiben — sonst
-    fällt der Text auf die Fallback-Schrift zurück. Emoji und Pfeile, die
-    nie in der Schrift lagen, sind ausgenommen."""
-    pytest.importorskip("fontTools")
+    """Jedes Schrift-Glyph, das die Seite tatsächlich nutzt, muss im Subset
+    erhalten bleiben — sonst fällt der Text auf die Fallback-Schrift zurück.
+
+    Geprüft wird der sichtbare Text, nicht der ganzeAlphabet-Satz: Pfeile,
+    ☰, ♟, ⬡ und Emoji lagen nie in Outfit/JetBrains und laufen absichtlich
+    über die Systemschrift. Früher stand hier `pytest.importorskip`, die
+    Prüfung lief deshalb nie — und ein Kernsatz aus dem gesamten Alphabet
+    hätte sie zum Schwimmen gebracht (J und Y sind nicht im Subset, werden
+    auf der Seite aber auch nicht benutzt).
+    """
     from fontTools.ttLib import TTFont
 
     html = (BASE3 / "index.html").read_text(encoding="utf-8")
     text = re.sub(r"<script.*?</script>", "", html, flags=re.S)
     text = re.sub(r"<style.*?</style>", "", text, flags=re.S)
     text = re.sub(r"<[^>]+>", "", text)
-    chars = set(text)
+
+    # Buchstaben, Zahlen und Interpunktion müssen in der Schrift sein.
+    required = {
+        ch for ch in set(text) if unicodedata.category(ch)[0] in ("L", "N", "P")
+    }
+    assert required, "keine Textzeichen gefunden — der Test prüft nichts"
 
     for fontname in ("outfit-latin.woff2", "jetbrains-mono-latin.woff2"):
-        font = TTFont(BASE3 / "assets/fonts" / fontname)
+        font = TTFont(BASE3 / "assets" / "fonts" / fontname)
         cmap = font.getBestCmap() or {}
-        for ch in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,:;!?-–—\"'()":
-            cp = ord(ch)
-            assert cp in cmap, f"{fontname}: Kernglyph {ch!r} (U+{cp:04X}) fehlt"
+        missing = sorted(ch for ch in required if ord(ch) not in cmap)
+        assert not missing, (
+            f"{fontname}: Zeichen mit Systemschrift statt Outfit/JetBrains: "
+            f"{''.join(missing)!r}"
+        )
 
 
 def test_color_scheme_is_announced():

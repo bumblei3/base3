@@ -180,7 +180,7 @@ Zuschnitt keine Kerben zeigt), zwei `screenshots` und zwei `shortcuts`
 Tests (kein Netz nötig, Fixtures unter `tests/fixtures/`):
 
 ```bash
-python3 -m pip install pytest
+python3 -m pip install pytest pillow fonttools brotli playwright
 python3 -m pytest          # Sync, Sitemap, Validator, Deploy-Liste, FAQ-Schema, Schriften, Live-Ableitung
 python3 scripts/validate_landing_page.py   # Tag-Balance, JSON-LD, Link-Inventar
 python3 scripts/validate-html.py --strict --file index.html --file 404.html  # HTML-Standard (W3C Nu)

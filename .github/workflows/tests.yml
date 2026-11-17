@@ -35,7 +35,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install test dependencies
-        run: pip install pytest pillow
+        run: pip install pytest pillow fonttools brotli playwright
 
       - name: Run tests
         run: python3 -m pytest
