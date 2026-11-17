@@ -206,6 +206,21 @@ def test_fairy_pieces_match_the_game():
         )
 
 
+def test_docs_agree_that_the_whats_new_bullets_are_handwritten():
+    """README und FAQ durften behaupten, die Bullets kämen vom Script.
+
+    Die Auto-Extraktion lieferte „Code-Splitting", die Bullets wurden von Hand
+    korrigiert und werden von einem Test festgehalten — die Doku sagte aber
+    noch das Gegenteil.
+    """
+    for name in ("README.md", "FAQ.md"):
+        text = (BASE3 / name).read_text(encoding="utf-8")
+        assert "handgepflegt" in text, f"{name} sage nicht, dass die Bullets handgepflegt sind"
+        assert "Bullets kommen aus den Release-Notes" not in text, (
+            f"{name} behauptet noch, die Bullets kämen aus den Release-Notes"
+        )
+
+
 def test_play_faq_uses_demo_names():
     assert ">Schach9x9 Live-Demo</a>" in HTML
     assert ">Trischach Live-Demo</a>" in HTML

@@ -124,13 +124,13 @@ Sub-Release `python3 scripts/sync-versions.py` lokal, siehe `RELEASE.md`.
 | `tests.yml` | pytest, `validate_landing_page.py`, W3C-Nu-HTML-Check und WCAG-Kontrast | push, PR + manuell |
 | `check-links.yml` | alle ausgehenden Links aus den drei Dateien erreichbar? | push, montags 03:00 UTC + manuell |
 | `lighthouse.yml` | Lighthouse-Audit der Landing Page (Performance/A11y/Best-Practices/SEO) | push auf `main`, manuell |
-| `a11y.yml` | axe-core, WCAG 2.x | push, PR + manuell |
+| `a11y.yml` | axe-core, WCAG 2.x (Startseite + 404) | push, PR + manuell |
 
-Die Bullets kommen aus den Release-Notes des jeweils neuesten Releases
-(GitHub Releases API) — im `--api-mode`. Zu lange Zeilen werden gekürzt
-(erst Klammerdetails, dann der abschließende Satz, erst dann hart am Wortrand).
-Ohne `--api-mode` bleibt die „Was ist neu"-Sektion unangetastet
-(`--no-whats-new` schaltet sie grundsätzlich ab).
+Die „Was ist neu"-Bullets sind handgepflegt: Die Auto-Extraktion aus den
+Release-Notes liefert dort oft Maintenance-PRs (Bundle-Aufteilung,
+Abhängigkeits-Bumps), nicht das, was Besucher sehen. Im lokalen Modus lässt
+`sync-versions.py` sie deshalb unangetastet; nur `--api-mode` schreibt sie
+(außer mit `--no-whats-new`).
 
 Das `FAQPage`-JSON-LD (`scripts/sync-faq-schema.py`) wird **aus der sichtbaren
 FAQ-Sektion abgeleitet**, nicht parallel gepflegt: sonst driftet es bei der
