@@ -186,10 +186,8 @@ def test_color_scheme_is_announced():
     assert 'content="dark"' in HTML
 
 
-def test_total_deployed_weight_within_budget():
-    """Gesamtgewicht der ausgelieferten Site darf 500 KB nicht ueberschreiten
-    (Performance / Mobilfunk). Schuetzt vor versehentlich wieder hochgeladenen
-    Originalen."""
+def _deploy_weight(exclude=()) -> int:
+    """Summe der ausgelieferten Dateien (Top-Level + assets/), inkl. WebP."""
     import os
     from pathlib import Path
 
@@ -202,6 +200,8 @@ def test_total_deployed_weight_within_budget():
     )
     total = 0
     for name in top_level:
+        if name in exclude:
+            continue
         p = BASE / name
         if p.is_file():
             total += p.stat().st_size
@@ -210,7 +210,25 @@ def test_total_deployed_weight_within_budget():
         for root, _, files in os.walk(assets_dir):
             for f in files:
                 total += (Path(root) / f).stat().st_size
+    return total
+
+
+def test_visitor_payload_within_budget():
+    """Die Besucher-Payload darf 500 KB nicht ueberschreiten (Mobilfunk).
+
+    og-image.jpg ist bewusst ausgenommen: Crawler laden es, Besucher nie.
+    Es wäre falsch, eine reichere Social-Karte an der Performance-Grenze
+    vorbeizulassen, nur weil sie keinen Besucher kostet.
+    """
     budget = 500 * 1024
+    total = _deploy_weight(exclude=("og-image.jpg",))
     assert total <= budget, (
-        f"Deploy-Gewicht {total} Bytes > {budget} Bytes (500 KB)"
+        f"Besucher-Payload {total} Bytes > {budget} Bytes (500 KB)"
     )
+
+
+def test_og_image_stays_reasonable():
+    """Die Social-Karte ist Crawler-only — darf trotzdem nicht wuchern."""
+    limit = 100 * 1024
+    size = (Path(__file__).resolve().parent.parent / "og-image.jpg").stat().st_size
+    assert size <= limit, f"og-image.jpg ist {size} Bytes (> {limit} Bytes)"

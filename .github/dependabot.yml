@@ -1,8 +1,8 @@
 version: 2
 # Wöchentliche, gruppierte Updates für die Actions in .github/workflows/.
 # Eine Sammel-PR pro Woche (statt einer PR pro Action), damit die Rotationsliste
-# nicht zumüllt. Geprüft werden die PRs von check-sync.yml (jetzt auch bei
-# pull_request) — dort laufen pytest, Validator und der Nu-HTML-Check.
+# nicht zumüllt. Geprüft werden die PRs von tests.yml (pull_request-Trigger) —
+# dort laufen pytest, Validator und der Nu-HTML-Check.
 updates:
   - package-ecosystem: github-actions
     directory: "/"
