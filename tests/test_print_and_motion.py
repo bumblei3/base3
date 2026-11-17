@@ -92,6 +92,30 @@ def test_print_block_suppresses_decorations():
         assert decor in css, f"{decor} fehlt in den Print-Regeln (Deko/Interaktion auf Papier)"
 
 
+def test_print_makes_gradient_headline_visible():
+    """Die h1 bekommt ihre Farbe aus background-clip: text.
+
+    Die Füllung ist transparent, die Farbe lebt im Verlaufs-Hintergrund — und
+    den druckt ein Browser nicht. Ohne eine eigene Füllung im Print-Block
+    bliebe die Überschrift unsichtbar; im erzeugten PDF war oberhalb des
+    Untertitels alles weiß.
+    """
+    gradient = [
+        " ".join(selector.split())
+        for selector, body in _rules(STYLE)
+        if "background-clip: text" in body
+    ]
+    assert gradient, "kein Gradient-Text gefunden — der Test prüft nichts"
+    css = _block(r"@media\s*print")
+    assert "-webkit-text-fill-color" in css, (
+        "Gradient-Text hat im Druck keine eigene Füllung und wäre auf Papier "
+        "unsichtbar"
+    )
+    assert re.search(r"background:\s*none", css), (
+        "der Verlauf selbst muss im Druck weg, er würde Tinte kosten"
+    )
+
+
 def test_print_keeps_cards_whole_and_shows_link_targets():
     css = _block(r"@media\s*print")
     assert "break-inside: avoid" in css, "Karten dürfen nicht über Seiten umbrechen"

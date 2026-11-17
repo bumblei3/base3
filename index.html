@@ -559,6 +559,11 @@
       }
       body { background: #fff; color: #111; }
       body::before, .top-nav, .hero-badge, .skip-link { display: none; }
+      /* Gradient-Text: die h1 hat eine transparente Füllung und bekommt ihre
+         Farbe aus dem Verlaufs-Hintergrund — den druckt ein Browser nicht.
+         Ohne eine eigene Füllung bliebe die Überschrift auf Papier
+         unsichtbar (festgestellt am erzeugten PDF: neben der h1 weiß). */
+      .hero h1 { background: none; -webkit-text-fill-color: currentColor; }
       /* Auch hier: ohne Animation wäre der Startzustand opacity: 0. */
       .hero h1, .hero .subtitle, .hero-actions, .platform-intro, .whats-new,
       .game-card, .how-to, .faq, .stats { animation: none !important; opacity: 1 !important; }
