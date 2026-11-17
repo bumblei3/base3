@@ -1,7 +1,7 @@
 const { defineConfig } = require('@playwright/test');
 module.exports = defineConfig({
   testDir: './tests',
-  testMatch: /(a11y|offline)\.spec\.js/,
+  testMatch: /(a11y|offline|responsive)\.spec\.js/,
   // GitHub Pages serviert das Repo unter /base3/, und index.html referenziert
   // Schriften, Manifest und Service Worker als /base3/... . Der Scan muss
   // dieselbe URL prüfen — sonst laufen diese Dateien in 404 und axe sieht
