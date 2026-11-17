@@ -116,6 +116,27 @@ def test_print_makes_gradient_headline_visible():
     )
 
 
+def test_faq_links_react_on_hover():
+    """Die FAQ ist die linkreichste Sektion — Hover muss sich merken.
+
+    `.faq a:hover` war ein Noop (gleiche Farbe wie `.faq a`). An der
+    berechneten Style ist gemessen: weder Farbe noch Dekoration änderten sich,
+    während Navi- und Footer-Links reagieren.
+
+    Der Normalzustand war übrigens auch zu dunkel: #6366f1 auf der Glas-Karte
+    sind 4.0:1, unter AA — siehe check-contrast.py.
+    """
+    rules = dict(_rules(STYLE))
+    base = rules.get(".faq a")
+    hover = rules.get(".faq a:hover")
+    assert base is not None, ".faq a fehlt"
+    assert hover is not None, ".faq a:hover fehlt"
+    assert " ".join(hover.split()) != " ".join(base.split()), (
+        ".faq a:hover ist ein No-op — kein Hover-Feedback in der linkreichsten "
+        "Sektion"
+    )
+
+
 def test_print_keeps_cards_whole_and_shows_link_targets():
     css = _block(r"@media\s*print")
     assert "break-inside: avoid" in css, "Karten dürfen nicht über Seiten umbrechen"

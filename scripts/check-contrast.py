@@ -160,6 +160,11 @@ def build_pairs() -> list[tuple[str, str, str, bool]]:
         ("text-secondary auf Seitenhintergrund", c["text-secondary"], c["base"], False),
         ("text-muted auf Seitenhintergrund", c["text-muted"], c["base"], False),
         ("aktive Nav/Footer-Links auf Seitenhintergrund", c["accent-hover"], c["base"], False),
+        # Die FAQ-Links lagen auf --color-accent-primary (#6366f1): 4.0:1 auf
+        # der Glas-Karte, auch auf der dunkelsten Fläche nur 4.5:1 — unter AA.
+        # Hover zählt als Normaltext, nicht als großer Text.
+        ("FAQ-Links auf Glas-Karte", c["accent-hover"], c["glass"], False),
+        ("FAQ-Links im Hover auf Glas-Karte", c["text-primary"], c["glass"], False),
         ("Hero-Badge-Text auf Badge-Fläche", c["accent-hover"], c["badge"], False),
         ("Play-Button Schach9x9 (dunkelster Verlaufsstopp)", "#ffffff", "#4f46e5", False),
         ("Play-Button Trischach (dunkelster Verlaufsstopp)", "#ffffff", "#2563eb", False),

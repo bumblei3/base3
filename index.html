@@ -512,11 +512,18 @@
     }
     .faq-card { background: var(--color-bg-glass); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-md); backdrop-filter: blur(12px); text-align: left; }
     .faq-links { margin: 0.35rem 0 0 0; padding-left: 1.1rem; font-size: 0.85rem; color: var(--color-text-primary); line-height: 1.6; }
-    .faq-links a { color: var(--color-accent-primary); display: inline-block; min-height: 24px; padding: 3px 0; }
+    .faq-links a { display: inline-block; min-height: 24px; padding: 3px 0; }
     .faq-q { font-size: 0.85rem; font-weight: 600; color: var(--color-text-secondary); margin: 0 0 var(--space-xs); text-transform: uppercase; letter-spacing: 0.04em; text-align: center; }
     .faq-a { font-size: 0.9rem; color: var(--color-text-primary); line-height: 1.6; }
-    .faq a { color: var(--color-accent-primary); }
-    .faq a:hover { color: var(--color-accent-primary); }
+    /* --color-accent-primary (#6366f1) als kleine Textfarbe auf dunklem Grund:
+       4.0:1 auf der Glas-Karte, 4.5:1 auf der dunkelsten Fläche — beides unter
+       AA. Darum die hellere Variante, wie bei Navi und Footer. */
+    .faq a { color: var(--color-accent-hover); }
+    /* Die Regel war hier als No-op stehen geblieben (gleiche Farbe wie der
+       Normalzustand) — gemessen an der berechneten Style änderte sich bei
+       Hover nichts. Die FAQ ist die linkreichste Sektion, sie soll wie die
+       Navi reagieren. */
+    .faq a:hover { color: var(--color-text-primary); }
 
     /* Stats */
     .stats { display: flex; justify-content: center; flex-wrap: wrap; gap: var(--space-xl); padding: var(--space-xl); margin-top: var(--space-xl); border-top: 1px solid var(--color-border); animation: fadeInUp 0.5s ease 0.5s forwards; opacity: 0; }
