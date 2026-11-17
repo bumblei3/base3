@@ -76,8 +76,27 @@ def test_webp_source_is_referenced():
 def test_og_image_has_social_dimensions():
     from PIL import Image
 
-    with Image.open(BASE3 / "og-image.png") as im:
+    with Image.open(BASE3 / "og-image.jpg") as im:
         assert im.size == (1200, 630), f"og-image ist {im.size}, erwartet 1200x630"
+
+
+def test_og_image_template_is_evergreen():
+    """Die Karte ist eine Link-Vorschau, kein Changelog.
+
+    Sie trug einmal Versionsnummern, die vier Releases veraltet waren. Sie
+    wird aus `scripts/og-image.html` gerendert — darum gilt: keine
+    Versionsnummer in der Quelle, und die Quelle muss neben dem Bild liegen.
+    """
+    template = BASE3 / "scripts" / "og-image.html"
+    assert template.is_file(), "og-image.html fehlt — og-image.jpg wäre wieder ein Handbild"
+    text = template.read_text(encoding="utf-8")
+    assert not re.search(r"\bv\d+\.\d+\.\d+\b", text), (
+        "og-image.html enthält eine Versionsnummer — die würde beim nächsten "
+        "Sub-Release falsch sein"
+    )
+    assert "preview-schach9x9" in text and "preview-trischach" in text, (
+        "og-image.html bindet die aktuellen Karten-Vorschauen nicht ein"
+    )
 
 
 def test_og_image_is_a_format_every_crawler_supports():
@@ -176,7 +195,7 @@ def test_total_deployed_weight_within_budget():
 
     BASE = Path(__file__).resolve().parent.parent
     top_level = (
-        "index.html", "404.html", "robots.txt", "sitemap.xml", "og-image.png",
+        "index.html", "404.html", "robots.txt", "sitemap.xml", "og-image.jpg",
         "sw.js", "apple-touch-icon.png", "icon-192.png", "icon-512.png",
         "icon-maskable-512.png", "favicon.ico", "favicon-32.png",
         "manifest.webmanifest",

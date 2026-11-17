@@ -117,7 +117,7 @@ Sub-Release `python3 scripts/sync-versions.py` lokal, siehe `RELEASE.md`.
 
 | Workflow | Zweck | Trigger |
 |---|---|---|
-| `pages.yml` | Deploy der Staged-Liste (`index.html`, **`404.html`**, `assets/`, `og-image.png`, **`sw.js`**, Icons + Favicons, `manifest.webmanifest`, `robots.txt`, `sitemap.xml`); danach Job `Verify live deployment` | push auf `main` |
+| `pages.yml` | Deploy der Staged-Liste (`index.html`, **`404.html`**, `assets/`, `og-image.jpg`, **`sw.js`**, Icons + Favicons, `manifest.webmanifest`, `robots.txt`, `sitemap.xml`); danach Job `Verify live deployment` | push auf `main` |
 | `tests.yml` | pytest, `validate_landing_page.py`, W3C-Nu-HTML-Check und WCAG-Kontrast | push, PR + manuell |
 | `check-links.yml` | alle ausgehenden Links aus den drei Dateien erreichbar? | push, montags 03:00 UTC + manuell |
 | `lighthouse.yml` | Lighthouse-Audit der Landing Page (Performance/A11y/Best-Practices/SEO) | push auf `main`, manuell |
@@ -183,6 +183,7 @@ python3 scripts/validate_landing_page.py   # Tag-Balance, JSON-LD, Link-Inventar
 python3 scripts/validate-html.py --strict --file index.html --file 404.html  # HTML-Standard (W3C Nu)
 python3 scripts/check-deployed.py          # Live-Seite == Repo? (braucht Netz)
 python3 scripts/sync-faq-schema.py --check # FAQPage-JSON-LD == FAQ-Sektion?
+python3 scripts/make-og-image.py           # og-image.jpg neu rendern (Playwright + Pillow)
 python3 scripts/fetch-fonts.py             # Schriften neu laden (nur bei Font-Update)
 ```
 

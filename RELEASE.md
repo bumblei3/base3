@@ -83,7 +83,7 @@ in schach9x9 oder trischach aktualisiert werden.
    ```
 
    Das `pages.yml`-Workflow deployt automatisch nach dem Push — mit
-   `index.html`, `assets/`, `og-image.png`, `sw.js`, den Icons,
+   `index.html`, `assets/`, `og-image.jpg`, `sw.js`, den Icons,
    `manifest.webmanifest`, `robots.txt` und `sitemap.xml`.
 
 ### Drift prüfen, ohne zu schreiben
@@ -99,6 +99,23 @@ nicht auf dem Stand der Nachbar-Repos sind. Das läuft lokal, nicht in CI.
 Für das `FAQPage`-Schema ist `python3 scripts/sync-faq-schema.py --check` das
 Äquivalent: Exit 1, wenn der ausgelieferte Block nicht zur sichtbaren
 FAQ-Sektion passt (fehlend oder veraltet) — ebenfalls ohne zu schreiben.
+
+## Die Social-Karte (og-image) erneuern
+
+`og-image.jpg` ist kein Handbild, sondern gerendert: `scripts/og-image.html`
+ist die Quelle, `scripts/make-og-image.py` rendert sie headless auf 1200×630
+(2x, dann herunterskaliert) und schreibt das JPEG.
+
+```bash
+python3 scripts/make-og-image.py
+```
+
+Die Karte enthält bewusst **keine Versionsnummern** — die gehen bei jedem
+Sub-Release verloren, und die Karte ist eine Link-Vorschau, kein Changelog.
+Sie bindet die Karten-Vorschauen aus `assets/preview-*.png` ein; ändern sich
+die Spiele optisch, einfach neu rendern und den Stand mit committen.
+
+JPEG gewählt, weil das Bild Fotos enthält: als PNG wären es ~283 KB.
 
 ## Hinweis
 

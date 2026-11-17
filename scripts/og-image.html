@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<!--
+  OG-/Twitter-Card-Quelle. Nicht von Hand bearbeiten:
+  `python3 scripts/make-og-image.py` rendert daraus og-image.jpg.
+
+  Enthält bewusst KEINE Versionsnummern: Die gehen bei jedem Sub-Release
+  verloren, und die Karte ist eine Link-Vorschau, kein Changelog.
+-->
+<style>
+  @font-face {
+    font-family: 'Outfit';
+    font-style: normal;
+    font-weight: 300 800;
+    font-display: block;
+    src: url('../assets/fonts/outfit-latin.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 400 600;
+    font-display: block;
+    src: url('../assets/fonts/jetbrains-mono-latin.woff2') format('woff2');
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    background:
+      radial-gradient(900px 520px at 10% -12%, rgba(99,102,241,0.30), transparent 62%),
+      radial-gradient(820px 500px at 106% 114%, rgba(59,130,246,0.24), transparent 62%),
+      #02040a;
+    color: #f1f5f9;
+    font-family: 'Outfit', system-ui, sans-serif;
+    padding: 42px 44px;
+    display: flex;
+    flex-direction: column;
+  }
+  header { display: flex; align-items: baseline; gap: 18px; }
+  .brand { font-size: 42px; font-weight: 800; letter-spacing: -0.6px; }
+  .brand span { color: #818cf8; }
+  .subtitle { font-size: 21px; font-weight: 500; color: #cbd5e1; }
+  .url {
+    margin-left: auto; font-family: 'JetBrains Mono', monospace;
+    font-size: 16px; color: #8a98b8; padding-bottom: 4px;
+  }
+  main {
+    flex: 1; display: flex; gap: 40px; align-items: center;
+    padding-bottom: 18px;
+  }
+  section {
+    flex: 1; min-width: 0; display: flex; align-items: center; gap: 26px;
+    background: rgba(20,28,58,0.55); border: 1px solid rgba(120,140,200,0.16);
+    border-radius: 22px; padding: 26px 28px;
+  }
+  .shot {
+    width: 300px; height: 300px; flex: none; border-radius: 16px; object-fit: cover;
+    border: 1px solid rgba(120,140,200,0.22); display: block;
+  }
+  h2 { font-size: 33px; font-weight: 700; letter-spacing: -0.4px; }
+  .tagline { font-size: 17px; line-height: 1.45; color: #cbd5e1; margin-top: 8px; }
+</style>
+</head>
+<body>
+  <header>
+    <div class="brand">♟ Base<span>3</span></div>
+    <div class="subtitle">Chess Platform</div>
+    <div class="url">bumblei3.github.io/base3</div>
+  </header>
+  <main>
+    <section>
+      <img class="shot" src="../assets/preview-schach9x9.png" alt="" />
+      <div>
+        <h2>Schach9x9</h2>
+        <p class="tagline">9×9 Brett mit Feenfiguren, 5 KI-Persönlichkeiten, 3D-Schlachtmodus</p>
+      </div>
+    </section>
+    <section>
+      <img class="shot" src="../assets/preview-trischach.png" alt="" />
+      <div>
+        <h2>Trischach</h2>
+        <p class="tagline">3-Spieler-Hex-Schach mit Stein-Schere-Papier-Kampf und Elo-Turnieren</p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
