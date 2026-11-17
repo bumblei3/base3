@@ -1,6 +1,7 @@
 """Tests für Kontrast-Check und Accessibility-Markup der Landing Page."""
 
 import importlib.util
+import re
 import sys
 from pathlib import Path
 
@@ -176,6 +177,33 @@ def test_schach9x9_mentions_daily_puzzle_and_later_campaign():
     faq = (BASE3 / "FAQ.md").read_text(encoding="utf-8")
     assert "tägliches Puzzle" in faq
     assert "Akt II (Kapitel 7–12) und Akt IV (Kapitel 19–25)" in faq
+
+
+def test_fairy_pieces_match_the_game():
+    """Die Feenfiguren beschreiben, was im Spiel steht — nicht was jemand
+    einmal davongeträumt hat.
+
+    Ursprung: Der Engel wurde als „Defensivfigur, die schützende Züge
+    ermöglicht und tief in die eigenen Linien zurückkehrt" angekündigt; er ist
+    in Wahrheit Dame + Springer und die stärkste Figur. Der Nachtreiter fehlte
+    in allen drei Dateien komplett.
+    """
+    names = ("Erzbischof", "Kanzler", "Nachtreiter", "Engel")
+    combos = ("Läufer+Springer", "Turm+Springer", "Dame+Springer", "gleitender")
+    texts = {
+        "index.html": HTML,
+        "README.md": (BASE3 / "README.md").read_text(encoding="utf-8"),
+        "FAQ.md": (BASE3 / "FAQ.md").read_text(encoding="utf-8"),
+    }
+    for label, text in texts.items():
+        flat = re.sub(r"\s+", "", text)
+        for name in names:
+            assert name in flat, f"{label}: {name} fehlt"
+        for combo in combos:
+            assert combo in flat, f"{label}: {combo} fehlt"
+        assert "Defensiv" not in flat, (
+            f"{label}: der Engel wird immer noch als Defensivfigur beschrieben"
+        )
 
 
 def test_play_faq_uses_demo_names():

@@ -14,8 +14,8 @@ base3 ist eine statische Landing Page, die als Eintrittspunkt für zwei eigenst�
 Schach-Varianten dient — zwei Experimente an der Grenze dessen, was ein Schachspiel
 sein kann, ohne sich in einen Multiplayer-Komplex zu verrenken.
 
-Die eine Seite ist **Schach9x9**: ein 9×9-Brett mit drei zusätzlichen Figuren
-(Erzbischof, Kanzler, Engel), die das klassische Schach-Puzzle erweitern, ohne
+Die eine Seite ist **Schach9x9**: ein 9×9-Brett mit Feenfiguren
+(Erzbischof, Kanzler, Nachtreiter, Engel), die das klassische Schach erweitern, ohne
 das Fundament zu zerstören. Fünf KI-Persönlichkeiten, ein Engine-Analyse-Modus und
 ein Eröffnungs-Trainer machen es zu einem Standalone-Schach-Erlebnis mit Tiefe.
 
@@ -39,15 +39,18 @@ oder Bilder ausliefern; deshalb wird darauf bewusst verzichtet.
 
 ## Feenfiguren im Detail
 
-Schach9x9 ergänzt das klassische 8×8-Schachbrett um drei zusätzliche Figuren.
-Die drei "Feenfiguren" sind:
+Schach9x9 ergänzt das Brett um vier Feenfiguren. Erzbischof und Kanzler stehen
+von Anfang an auf der Grundreihe, Nachtreiter und Engel kommen über den
+Upgrade-Shop dazu:
 
-- **Erzbischof** — kombiniert Läufer- und Springerzug in einer Figur.
-  Stärker als ein normaler Springer oder Läufer, aber teuer in der Entwicklung.
-- **Kanzler** — bewegt sich wie ein Turm, kann aber zusätzlich einen Springer-Zug
-  ausführen. Vereint Turm-Kraft mit der Flexibilität eines Springers.
-- **Engel** — eine Defensivfigur, die schützende Züge ermöglicht und tief in die
-  eigenen Linien zurückkehren kann. Weniger aggressiv, aber sehr pflegend.
+- **Erzbischof** (7 Punkte) — Läufer + Springer in einer Figur.
+  Stärker als beide Einzelfiguren, aber teuer in der Entwicklung.
+- **Kanzler** (9 Punkte) — Turm + Springer. Vereint Turm-Kraft mit der
+  Flexibilität eines Springers.
+- **Nachtreiter** (6 Punkte) — ein „gleitender" Springer: mehrere
+  Springer-Sprünge in einer Linie.
+- **Engel** (12 Punkte, Premium) — Dame + Springer. Die stärkste Figur des
+  Bretts.
 
 Die Feenfiguren verändern das Spiel dadurch, dass die Eröffnung und die Bündnis-Theorie
 neue Muster bekommen, ohne dass das klassische Schach-Grundverständnis über Bord geht.
@@ -62,9 +65,9 @@ bis zum strategischen 3-Spieler-Hex-Schach.
 
 ### ♟️ Schach9x9
 
-9×9 Brett mit Feenfiguren (Erzbischof, Kanzler, Engel). *(aktuell: v2.1.0)*
+9×9 Brett mit Feenfiguren (Erzbischof, Kanzler, Nachtreiter, Engel). *(aktuell: v2.1.0)*
 
-- 9×9 Brett mit Feenfiguren (Erzbischof, Kanzler, Engel)
+- 9×9 Brett mit Feenfiguren (Erzbischof, Kanzler, Nachtreiter, Engel)
 - 5 KI-Persönlichkeiten + adaptives Zeitmanagement
 - Engine-Analyse-Modus & Zug-Qualitäts-Indikatoren
 - Variantenbaum nach Solo-Partien (Top-Züge + Fortsetzung)

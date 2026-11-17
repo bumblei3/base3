@@ -10,7 +10,7 @@
 base3 ist eine statische Landing Page (GitHub Pages, `bumblei3.github.io/base3`), die als
 Eintrittspunkt für zwei eigenständige Schach-Spiele dient:
 
-- **Schach9x9** — 9×9 Brett mit Feenfiguren (Erzbischof, Kanzler, Engel)
+- **Schach9x9** — 9×9 Brett mit Feenfiguren (Erzbischof, Kanzler, Nachtreiter, Engel)
 - **Trischach** — 3-Spieler Hex-Schach mit Stein-Schere-Papier-Kampfmechanik
 
 base3 verwaltet **keine** eigene Spiele-Software mehr — sie ist ein Verweis-Repo,
@@ -76,7 +76,7 @@ base3 selbst hat keine eigene Funktionalität mehr — sie ist ein Index.
 Schach9x9 läuft im Browser — keine Installation nötig.
 [Schach9x9 Live-Demo](https://bumblei3.github.io/schach9x9/)
 
-- **Regeln:** 9×9 Brett mit den drei Feenfiguren (siehe unten). Zusätzlich gibt
+- **Regeln:** 9×9 Brett mit den Feenfiguren (siehe unten). Zusätzlich gibt
   es einen 8×8-Modus mit klassischen Standardregeln.
 - **Starten:** Klassisches Spiel, tägliches Puzzle, Kampagne mit Akt II (Kapitel 7–12) und Akt IV (Kapitel 19–25), oder Eröffnungs-Trainer.
 - **KI-Gegner:** Fünf Persönlichkeiten, jede mit eigener Stärke und Spielweise.
@@ -85,15 +85,17 @@ Schach9x9 läuft im Browser — keine Installation nötig.
 
 ## Was sind Feenfiguren?
 
-Schach9x9 ergänzt das klassische 8×8-Schachbrett um drei neue Figuren auf einem
-9×9-Brett. Die drei Feenfiguren heißen:
+Schach9x9 ergänzt das Brett um vier Feenfiguren auf einem 9×9-Brett. Erzbischof
+und Kanzler stehen von Anfang an auf der Grundreihe, Nachtreiter und Engel
+kommen über den Upgrade-Shop dazu:
 
-- **Erzbischof** — kombiniert die Bewegungen von Läufer und Springer in einer Figur.
-  Stärker als ein normaler Springer oder Läufer allein, aber teurer in der Entwicklung.
-- **Kanzler** — bewegt sich wie ein Turm, kann aber zusätzlich einen Springer-Zug
-  ausführen. Vereint Turm-Kraft mit der Flexibilität eines Springers.
-- **Engel** — eine Defensivfigur, die schützende Züge ermöglicht und tief in die
-  eigenen Linien zurückkehren kann. Weniger aggressiv, aber sehr pflegend.
+- **Erzbischof** (7 Punkte) — Läufer + Springer. Stärker als beide Einzelfiguren,
+  aber teurer in der Entwicklung.
+- **Kanzler** (9 Punkte) — Turm + Springer. Vereint Turm-Kraft mit der
+  Flexibilität eines Springers.
+- **Nachtreiter** (6 Punkte) — ein „gleitender“ Springer: mehrere Springer-Sprünge
+  in einer Linie.
+- **Engel** (12 Punkte, Premium) — Dame + Springer. Die stärkste Figur des Bretts.
 
 Die Feenfiguren verändern Eröffnung und Taktik, ohne das klassische
 Schach-Grundverständnis über Bord zu werfen. Wer normales Schach kennt, findet
@@ -105,8 +107,8 @@ Ein 9×9-Brett gibt mehr Raum, mehr Figuren und mehr Bewegungsfreiheit. Das füh
 
 - **Längere Partien** mit mehr Entwicklungsmöglichkeiten.
 - **Andere Eröffnungen** — bekannte 8×8-Eröffnungen lassen sich nicht 1:1 übernehmen.
-- **Neue Figurenwerte** — der Engel ist wertvoll für das eigene Gefüge, der
-  Erzbischof für den Angriff.
+- **Neue Figurenwerte** — der Engel (Dame + Springer) ist die stärkste Figur des
+  Bretts; Erzbischof und Kanzler mischen Läufer bzw. Turm mit Springer.
 - **KI-Persönlichkeiten** — nicht nur stärker/schwächer, sondern unterschiedliche
   Gewichtungen in der Strategie.
 

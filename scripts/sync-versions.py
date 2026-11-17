@@ -837,8 +837,12 @@ def patch_readme(
         md_text, hit = _sub(pat, repl, md_text)
         changed = changed or hit
 
+    # Die Aufzählung der Feenfiguren ist handgepflegt und ändert sich (neue
+    # Figur, andere Reihenfolge) — darum nicht fest kodieren: Ein Muster, das
+    # die konkrete Liste enthält, matcht nach der nächsten Änderung nicht mehr,
+    # und der Pill bleibt still stehen.
     apply(
-        rf"(Feenfiguren \(Erzbischof, Kanzler, Engel\)\. \*\(aktuell: v){VER}(\)\*)",
+        rf"(Feenfiguren \([^)]*\)\. \*\(aktuell: v){VER}(\)\*)",
         rf"\g<1>{sv}\g<2>",
     )
     apply(
