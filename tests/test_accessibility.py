@@ -35,7 +35,7 @@ def test_real_palette_has_no_failures():
     """Die committede Palette muss alle AA-Schwellen bestehen."""
     failures = [
         (name, cc.contrast_ratio(fg, bg), large)
-        for name, fg, bg, large in cc.PAIRS
+        for name, fg, bg, large in cc.build_pairs()
         if cc.contrast_ratio(fg, bg) < (cc.AA_LARGE if large else cc.AA_NORMAL)
     ]
     assert failures == []
