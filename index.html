@@ -402,7 +402,14 @@
       font-size: 0.85rem; color: var(--color-text-secondary); line-height: 1.5;
     }
     .whats-new-list li { display: flex; align-items: flex-start; gap: var(--space-xs); }
-    .whats-new-list li::before { content: '·'; color: var(--color-accent-primary); font-weight: 700; margin-top: 0.15em; }
+    /* Der Punkt ist dekorativ — als Textglyph (content: '·') landet er im
+       Accessibility-Tree und wird von Screenreadern vorgelesen, einmal pro
+       Bullet. Gleiche Begündung wie beim Stern in .features-list: Bild statt
+       Text. */
+    .whats-new-list li::before {
+      content: ''; flex: none; width: 0.3rem; height: 0.3rem; border-radius: 50%;
+      background: var(--color-accent-primary); margin-top: 0.55em;
+    }
 
     /* Games Grid */
     .games-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: var(--space-lg); max-width: 920px; width: 100%; margin: 0 auto; }
@@ -489,7 +496,12 @@
     .how-to-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.4rem 1rem; font-size: 0.9rem; color: var(--color-text-secondary); line-height: 1.55; }
     .how-to-list li { display: flex; gap: var(--space-xs); align-items: flex-start; }
     .how-to-list li strong { flex: none; white-space: nowrap; }
-    .how-to-list li::before { content: '•'; color: var(--color-accent-primary); font-weight: 700; }
+    /* Wie beim Stern und beim Whats-new-Punkt: dekorativ, also Bild statt
+       Textglyph — ein '•' würde im Accessibility-Tree landen. */
+    .how-to-list li::before {
+      content: ''; flex: none; width: 0.35rem; height: 0.35rem; border-radius: 50%;
+      background: var(--color-accent-primary); margin-top: 0.55em;
+    }
 
     /* Häufige Fragen */
     .faq { max-width: 920px; margin: 0 auto var(--space-xl); animation: fadeInUp 0.5s ease 0.7s forwards; opacity: 0; }

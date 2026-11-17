@@ -221,6 +221,33 @@ def test_docs_agree_that_the_whats_new_bullets_are_handwritten():
         )
 
 
+def test_decorative_bullets_are_not_text_glyphs():
+    """Ein content-Glyph in einem Pseudo-Element wird vom Screenreader gesagt.
+
+    Der Stern in .features-list ist schon als SVG-Maske umgesetzt, weil ein
+    Textglyph einmal pro Feature „Funkeln" vorgelesen wurde. Die Listenpunkte
+    in .whats-new-list und .how-to-list standen als '·' bzw. '•' und landeten
+    so im Accessibility-Tree — gemessen über Accessibility.getFullAXTree.
+    """
+    bodies = re.findall(r"::(?:before|after)\s*\{([^}]*)\}", HTML)
+    assert bodies, "keine Pseudo-Elemente gefunden — der Test prüft nichts"
+    glyphs = []
+    for body in bodies:
+        for match in re.finditer(r"content:\s*([^;]+);", body):
+            value = match.group(1).strip()
+            # Der Druckfall schreibt Link-Ziele mit (attr(href)) — kein Deko-
+            # Glyph, und bewusst hörbar.
+            if "attr(" in value:
+                continue
+            text = value.strip("'\"").strip()
+            if text:
+                glyphs.append(text)
+    assert glyphs == [], (
+        f"dekorative Pseudo-Elemente mit Textglyph: {glyphs!r} — das landet im "
+        "Accessibility-Tree und wird je Zeile vorgelesen"
+    )
+
+
 def test_play_faq_uses_demo_names():
     assert ">Schach9x9 Live-Demo</a>" in HTML
     assert ">Trischach Live-Demo</a>" in HTML
