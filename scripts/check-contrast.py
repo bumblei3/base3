@@ -118,6 +118,17 @@ def _rule_background(html: str, selector: str) -> str:
     return background.group(1).strip()
 
 
+def _css_blocks(html: str) -> list[tuple[str, str]]:
+    """(Selektor, Rumpf) für jede Regel des Stylesheets."""
+    blocks: list[tuple[str, str]] = []
+    for m in re.finditer(r"([^{}]+)\{([^{}]*)\}", html):
+        selector = " ".join(m.group(1).split())
+        if selector.startswith("@") or selector.startswith("/*"):
+            continue
+        blocks.append((selector, m.group(2)))
+    return blocks
+
+
 def _body_base(html: str) -> tuple[int, int, int]:
     """Dunkelster Hex-Stop des body-Gradienten — die konservative Fläche."""
     rule = re.search(r"(?m)^\s*body\s*\{([^}]*)\}", html)
@@ -198,6 +209,35 @@ def check_palette_consistency() -> list[str]:
     return errors
 
 
+def check_accent_primary_only_for_large_text() -> list[str]:
+    """`--color-accent-primary` (#6366f1) ist als kleine Textfarbe unter AA.
+
+    Auf allen Flächen 4.1–4.5:1, auf dem gerenderten Hintergrund 3.8:1. Die
+    FAQ-Links hat es so getroffen, und weder axe noch diese Prüfung sahen es.
+    Erlaubt ist daher nur großer Text (≥ 24px, oder ≥ 18.66px und fett) —
+    aktuell `.stat-value` (2rem, 4.47:1, AA-groß 3:1).
+    """
+    errors: list[str] = []
+    for selector, body in _css_blocks(INDEX_HTML.read_text(encoding="utf-8")):
+        if not re.search(r"(?:^|;)\s*color:\s*var\(--color-accent-primary\)", body):
+            continue
+        size = re.search(r"font-size:\s*([0-9.]+)\s*(rem|px|%)", body)
+        weight = re.search(r"font-weight:\s*([0-9]+)", body)
+        groß = False
+        if size:
+            wert = float(size.group(1))
+            if size.group(2) == "rem":
+                wert *= 16
+            fett = bool(weight) and int(weight.group(1)) >= 700
+            groß = wert >= 24 or (wert >= 18.66 and fett)
+        if not groß:
+            errors.append(
+                f"{selector}: color var(--color-accent-primary) — als kleine "
+                "Textfarbe unter AA (4.1–4.5:1); hellere Variante verwenden"
+            )
+    return errors
+
+
 def main() -> int:
     print(f"{'Paar':<46} {'Ratio':>6}  AA  AA-groß")
     failures: list[str] = []
@@ -216,10 +256,15 @@ def main() -> int:
     for error in errors:
         print(f"HINWEIS: {error}", file=sys.stderr)
 
-    if failures:
-        print("\nFEHLER (unter AA-Schwelle):", file=sys.stderr)
-        for failure in failures:
-            print(f"  - {failure}", file=sys.stderr)
+    klein_text = check_accent_primary_only_for_large_text()
+    for error in klein_text:
+        print(f"HINWEIS: {error}", file=sys.stderr)
+
+    if failures or klein_text:
+        if failures:
+            print("\nFEHLER (unter AA-Schwelle):", file=sys.stderr)
+            for failure in failures:
+                print(f"  - {failure}", file=sys.stderr)
         return 1
     print("\nCONTRAST OK")
     return 0
