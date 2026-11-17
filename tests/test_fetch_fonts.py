@@ -19,3 +19,23 @@ def test_face_re_matches():
     m = ff.FACE_RE.search(sample)
     assert m is not None
     assert m.group("subset") == "latin"
+
+
+def test_nach_dem_laden_wird_gestützt():
+    """Ohne den Schritt lädt der Besucher auch nie genutzte Glyphen mit.
+
+    Beide Dateien sind per Preload auf dem kritischen Pfad — 40,8 KB statt
+    29,7 KB waren es vor der Stützung.
+    """
+    quelle = (ROOT / "scripts" / "fetch-fonts.py").read_text(encoding="utf-8")
+    assert "subset-fonts.py" in quelle, "fetch-fonts.py stützt die Schriften nicht mehr"
+    assert "subset_out" in quelle, "der Stützschritt wird nicht aufgerufen"
+
+
+def test_gewichtsbereich_kommt_aus_der_achse():
+    """Die Regel darf enger sein als die fvar-Achse — sonst klemmt der Browser.
+
+    Der Bereich wird aus dem Font gelesen, nicht aus den angefragten Gewichten.
+    """
+    quelle = (ROOT / "scripts" / "fetch-fonts.py").read_text(encoding="utf-8")
+    assert "_gewichtsbereich" in quelle, "der Gewichtsbereich wird nicht aus der fvar-Achse gelesen"

@@ -16,6 +16,7 @@ Exit:    0 = alle Dateien geladen, 1 = Fehler
 """
 
 import argparse
+import importlib.util
 import re
 import sys
 import urllib.parse
@@ -83,9 +84,22 @@ def main() -> int:
         print(f"FEHLER: Google-CSS nicht abrufbar: {exc}", file=sys.stderr)
         return 1
 
+    # Noch einmal stützen: die Seiten rendern einen Teil des Subsets. Ohne
+    # diesen Schritt lädt der Besucher auch die Glyphen mit, die niemals
+    # erscheinen — beide Dateien sind per Preload auf dem kritischen Pfad.
+    skript = Path(__file__).resolve().parent / "subset-fonts.py"
+    spec = importlib.util.spec_from_file_location("subset_fonts", skript)
+    assert spec is not None and spec.loader is not None
+    modul = importlib.util.module_from_spec(spec)
+    sys.modules["subset_fonts"] = modul
+    spec.loader.exec_module(modul)
+    gewichtsbereich = modul._gewichtsbereich
+
     # Google liefert für eine Variable Font pro Gewicht dieselbe Datei → nach URL
     # gruppieren und ein @font-face mit Gewichtsbereich schreiben (sonst 5×32 KB
-    # identische Bytes im Repo).
+    # identische Bytes im Repo). Der Bereich kommt aus der fvar-Achse des
+    # Fonts, nicht aus den angefragten Gewichten — sonst klemmt der Browser
+    # spätere font-weight-Werte still auf die angeforderte Spanne.
     by_url: dict[str, dict] = {}
     for block in FACE_RE.finditer(css):
         if block.group("subset") != SUBSET:
@@ -107,7 +121,7 @@ def main() -> int:
         size = download(url, target)
         total += size
         count += 1
-        span = f"{weights[0]}" if weights[0] == weights[-1] else f"{weights[0]} {weights[-1]}"
+        span = gewichtsbereich(target)
         print(f"  {target.name:<32} {size/1024:6.1f} KB  Gewichte {span}", file=sys.stderr)
         rules.append(
             "    @font-face {\n"
@@ -125,7 +139,10 @@ def main() -> int:
 
     print(f"\n{count} Dateien, {total/1024:.1f} KB (latin) → {out_dir}", file=sys.stderr)
     print("\n".join(rules))
-    return 0
+
+    print("", file=sys.stderr)
+    return modul.subset_out(out_dir)
+
 
 
 if __name__ == "__main__":
