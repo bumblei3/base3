@@ -575,6 +575,7 @@ def main():
         (FAQ_MD, patch_faq, "FAQ.md"),
     )
     any_changed = False
+    pills_changed = False
     for path, fn, label in jobs:
         text = path.read_text(encoding="utf-8")
         new_text, changed = fn(text, sv, sd, tv, td, sbullets, tbullets)
@@ -590,6 +591,7 @@ def main():
                     f"{label}: Versionen → Schach9x9 v{sv} · {sd}, Trischach v{tv} · {td}"
                 )
             any_changed = True
+            pills_changed = True
         else:
             print(f"{label}: keine Änderungen (bereits aktuell)")
 
@@ -597,6 +599,7 @@ def main():
     base_lastmod = _get_base_lastmod()
     xml_text = SITEMAP_XML.read_text(encoding="utf-8")
     new_xml, xml_changed = patch_sitemap(xml_text, base_lastmod, sv, sd, tv, td)
+    sitemap_changed = bool(xml_changed)
     if xml_changed:
         if args.check:
             print(
@@ -612,13 +615,18 @@ def main():
 
     if args.check:
         if any_changed:
+            teile = []
+            if pills_changed:
+                teile.append("Version-Pills/README/FAQ")
+            if sitemap_changed:
+                teile.append("sitemap.xml-lastmod")
             print(
-                "FEHLER: Version-Pills sind nicht auf dem Stand der Nachbar-Repos. "
+                f"FEHLER: nicht auf dem Stand: {', '.join(teile)}. "
                 "Fix: python3 scripts/sync-versions.py lokal ausführen.",
                 file=sys.stderr,
             )
             sys.exit(1)
-        print("CHECK OK: index.html, README.md und FAQ.md sind aktuell.")
+        print("CHECK OK: index.html, README.md, FAQ.md und sitemap.xml sind aktuell.")
     elif any_changed:
         print(f"Angewendet: Schach9x9 v{sv} · {sd}, Trischach v{tv} · {td}")
     else:

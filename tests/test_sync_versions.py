@@ -241,3 +241,37 @@ def test_tests_workflow_checks_out_full_history():
             f"tests.yml: Checkout #{i} ohne fetch-depth: 0 — "
             "lastmod würde auf das Shallow-Randdatum fallen"
         )
+
+
+def test_check_nennt_sitemapdrift_beim_namen(monkeypatch, tmp_path, capsys):
+    """Driftet nur das Sitemap, darf die Meldung nicht von Pills sprechen.
+
+    Genau so sah es aus, als die Seite ohne Sub-Release geändert wurde:
+    „FEHLER: Version-Pills sind nicht auf dem Stand" — während die Pills
+    gerade geprüft und current waren. Die Botschaft verwirrt, wenn man
+    danach sucht.
+    """
+    _redirect_files(monkeypatch, tmp_path)
+    schach, trischach = _fake_repos(tmp_path)
+    monkeypatch.setattr(sv, "release_date_from_repo", lambda d, v: "2099-01-01")
+    basis = [
+        "sync-versions.py",
+        "--schach-path",
+        str(schach),
+        "--trischach-path",
+        str(trischach),
+    ]
+    monkeypatch.setattr(sys, "argv", basis)
+    sv.main()  # Pills stehen jetzt
+
+    sitemap = tmp_path / "sitemap.xml"
+    sitemap.write_text(SITEMAP_FIXED_POINT.replace("2099-01-01", "1999-01-01"), encoding="utf-8")
+    monkeypatch.setattr(sv, "SITEMAP_XML", sitemap)
+
+    monkeypatch.setattr(sys, "argv", basis + ["--check"])
+    with pytest.raises(SystemExit) as exc:
+        sv.main()
+    assert exc.value.code == 1
+    fehler = capsys.readouterr().err
+    assert "sitemap.xml-lastmod" in fehler, fehler
+    assert "Version-Pills" not in fehler, fehler
