@@ -886,12 +886,23 @@
   <script>
     const toggle = document.querySelector('.nav-toggle');
     const navLinks = document.querySelector('.nav-links');
-    toggle.addEventListener('click', () => {
-      const isOpen = navLinks.classList.toggle('open');
-      toggle.setAttribute('aria-expanded', isOpen);
+
+    const setOpen = (open) => {
+      navLinks.classList.toggle('open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+      // Die Beschriftung sagt, was der Knopf als Nächstes tut. Sie stand fest
+      // auf „Menü öffnen" — im geöffneten Zustand war sie damit falsch.
+      toggle.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen');
+    };
+
+    toggle.addEventListener('click', () => setOpen(!navLinks.classList.contains('open')));
+    // Escape schließt, wie ein Ausklapp-Menü sonst auch. Ohne diese Zeile
+    // blieb ein Tastaturnutzer im geöffneten Menü hängen.
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && navLinks.classList.contains('open')) setOpen(false);
     });
     navLinks.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => { navLinks.classList.remove('open'); toggle.setAttribute('aria-expanded', 'false'); });
+      link.addEventListener('click', () => setOpen(false));
     });
   </script>
 </body>
