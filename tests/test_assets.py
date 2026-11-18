@@ -245,3 +245,35 @@ def test_og_image_stays_reasonable():
     limit = 100 * 1024
     size = (Path(__file__).resolve().parent.parent / "og-image.jpg").stat().st_size
     assert size <= limit, f"og-image.jpg ist {size} Bytes (> {limit} Bytes)"
+
+
+def test_socialkarte_ist_nicht_aeltlich_als_die_vorschauen():
+    """Die Karte bindet beide Vorschauen ein — sie muss danach gerendert sein.
+
+    RELEASE.md sagt: „ändern sich die Spiele optisch, einfach neu rendern".
+    Geprüft wird das nicht, und der Missbrauch hat keine andere Sicht: die
+    Karte bleibt monatelang beim alten Bild, während die Seite schon das
+    neue zeigt. Verglichen wird über die Commit-Zeiten, nicht über mtime —
+    ein Checkout setzt alle mtimes auf denselben Wert.
+    """
+    import subprocess
+
+    def commit_zeit(*pfade: str) -> int:
+        ergebnis = subprocess.run(
+            ["git", "log", "-1", "--format=%ct", "--", *pfade],
+            capture_output=True, text=True, check=True, cwd=BASE3,
+        ).stdout.strip()
+        assert ergebnis, f"kein Commit für {pfade}"
+        return int(ergebnis)
+
+    karte = commit_zeit("og-image.jpg")
+    for vorschau in (
+        "assets/preview-schach9x9.png",
+        "assets/preview-schach9x9.webp",
+        "assets/preview-trischach.png",
+        "assets/preview-trischach.webp",
+    ):
+        assert karte >= commit_zeit(vorschau), (
+            f"{vorschau} ist neuer als og-image.jpg — die Social-Karte zeigt "
+            "ein veraltetes Bild (python3 scripts/make-og-image.py)"
+        )
