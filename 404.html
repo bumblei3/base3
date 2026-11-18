@@ -21,14 +21,21 @@
     @font-face {
       font-family: 'Outfit';
       font-style: normal;
-      font-weight: 300 800;
+      /* Die Achse des Fonts ist 100–900 (fvar), nicht 300–800. Die enge
+         Regel klemmte font-weight: 900 still auf 800 — gemessen: 900 und 800
+         renderten beide 1018,27 px, während index.html 900 korrekt bei
+         1031,10 px zeigt. Dieselbe Korrektur gilt für 404.html und
+         scripts/og-image.html. */
+      font-weight: 100 900;
       font-display: swap;
       src: url('./assets/fonts/outfit-latin.woff2') format('woff2');
     }
     @font-face {
       font-family: 'JetBrains Mono';
       font-style: normal;
-      font-weight: 400 600;
+      /* Achse 400–800 (früher 400–600). Auf 404.html steht h1 bei 700 und
+         .brand bei 800 — beide klemmten auf 600. */
+      font-weight: 400 800;
       font-display: swap;
       src: url('./assets/fonts/jetbrains-mono-latin.woff2') format('woff2');
     }

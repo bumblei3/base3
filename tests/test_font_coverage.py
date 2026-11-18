@@ -33,15 +33,42 @@ _spec.loader.exec_module(sf)
 FACE_RE = re.compile(r"@font-face\s*\{(?P<body>.*?)\}", re.S)
 WOFF2_MAGIC = b"wOF2"
 
+# Jede Datei im Repo mit einer @font-face-Regel — abgeleitet, nicht gelistet.
+# Die Fehler in 404.html (Outfit 300–800 statt 100–900, JetBrains Mono 400–600
+# statt 400–800) blieben unentdeckt, weil nur index.html gelesen wurde —
+# gemessen klemmte 900 auf 800 und 700/800 auf 600. Eine vierte Seite mit
+# Schriftregeln soll nicht wieder still mitwandern.
+FONT_SEITEN = tuple(
+    sorted(
+        str(p.relative_to(BASE3))
+        for p in BASE3.rglob("*.html")
+        if "@font-face" in p.read_text(encoding="utf-8")
+    )
+)
+
 
 def _faces() -> list[dict]:
+    """@font-face-Regeln aller Schriften-Seiten, mit Quell-Datei.
+
+    Nicht nur index.html: 404.html und die OG-Quelle tragen eigene Regeln, und
+    dort stand der Gewichtsbereich zu schmal — ohne diese Liste prüft der
+    Achsen-Wächter nur die eine Seite, die schon stimmte.
+    """
     out = []
-    for match in FACE_RE.finditer(HTML):
-        body = match.group("body")
-        src = re.search(r"url\('([^']+)'\)", body)
-        weight = re.search(r"font-weight:\s*([\d ]+);", body)
-        assert src and weight, body[:80]
-        out.append({"path": src.group(1), "weights": [int(w) for w in weight.group(1).split()]})
+    for seite in FONT_SEITEN:
+        quelle = (BASE3 / seite).read_text(encoding="utf-8")
+        for match in FACE_RE.finditer(quelle):
+            body = match.group("body")
+            src = re.search(r"url\('([^']+)'\)", body)
+            weight = re.search(r"font-weight:\s*([\d ]+);", body)
+            assert src and weight, f"{seite}: unvollständige @font-face-Regel: {body[:80]}"
+            out.append(
+                {
+                    "seite": seite,
+                    "path": src.group(1),
+                    "weights": [int(w) for w in weight.group(1).split()],
+                }
+            )
     return out
 
 
@@ -95,13 +122,21 @@ def test_extraction_verschlingest_keinen_css_wortschatz():
 
 
 def test_gewichtsbereich_deckt_die_achse_ab():
-    """Eine zu schmale @font-face-Regel klemmt font-weight still."""
+    """Eine zu schmale @font-face-Regel klemmt font-weight still.
+
+    Gilt für jede Schriftseite, nicht nur index.html: 404.html hatte Outfit
+    300–800 bei einer Achse von 100–900 und JetBrains Mono 400–600 bei
+    400–800 — gemessen renderten 900 und 700/800 auf dem Randwert, nicht auf
+    dem angefragten Gewicht.
+    """
     for face in _faces():
-        pfad = (BASE3 / face["path"].lstrip("./")).resolve()
+        # Die url() ist relativ zur Quelldatei (404.html: ./…, og-image: ../…).
+        pfad = ((BASE3 / face["seite"]).parent / face["path"]).resolve()
+        assert pfad.is_file(), f"{face['seite']}: {face['path']} fehlt"
         bereich = sf._gewichtsbereich(pfad).split()
         lo, hi = int(bereich[0]), int(bereich[-1])
         assert face["weights"][0] <= lo and face["weights"][-1] >= hi, (
-            f"{pfad.name}: Regel {face['weights']} deckt die Achse "
+            f"{face['seite']}: {pfad.name} Regel {face['weights']} deckt die Achse "
             f"{lo}–{hi} nicht ab — font-weight würde geklemmt"
         )
 

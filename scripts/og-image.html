@@ -13,14 +13,18 @@
   @font-face {
     font-family: 'Outfit';
     font-style: normal;
-    font-weight: 300 800;
+    /* Achse 100–900 (fvar) — die enge Regel klemmte 900 auf 800. Die Social-
+       Karte wird aus dieser Datei gerendert, der Fehler wäre also auch im
+       geteilten Bild gewesen. Siehe index.html. */
+    font-weight: 100 900;
     font-display: block;
     src: url('../assets/fonts/outfit-latin.woff2') format('woff2');
   }
   @font-face {
     font-family: 'JetBrains Mono';
     font-style: normal;
-    font-weight: 400 600;
+    /* Achse 400–800 (früher 400–600). */
+    font-weight: 400 800;
     font-display: block;
     src: url('../assets/fonts/jetbrains-mono-latin.woff2') format('woff2');
   }
