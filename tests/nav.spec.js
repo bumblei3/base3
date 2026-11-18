@@ -15,6 +15,11 @@ test.describe('Mobil-Menü', () => {
     await expect(page.locator('.nav-toggle')).toBeVisible();
     await expect(page.locator('.nav-toggle')).toHaveAttribute('aria-expanded', 'false');
     await expect(page.locator('.nav-toggle')).toHaveAttribute('aria-label', 'Menü öffnen');
+    // Der Knopf muss das Panel ansprechen, das er schaltet — nicht nur
+    // aria-expanded mitgeben.
+    const ziel = await page.locator('.nav-toggle').getAttribute('aria-controls');
+    expect(ziel).toBeTruthy();
+    await expect(page.locator(`#${ziel}`)).toHaveClass(/nav-links/);
   });
 
   test('Klick öffnet und beschriftet um', async ({ page }) => {

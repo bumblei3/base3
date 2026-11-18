@@ -124,7 +124,7 @@ Sub-Release `python3 scripts/sync-versions.py` lokal, siehe `RELEASE.md`.
 | `tests.yml` | pytest, `validate_landing_page.py`, W3C-Nu-HTML-Check und WCAG-Kontrast | push, PR + manuell |
 | `check-links.yml` | alle ausgehenden Links aus den drei Dateien erreichbar? | push, montags 03:00 UTC + manuell |
 | `lighthouse.yml` | Lighthouse-Audit der Landing Page (Performance/A11y/Best-Practices/SEO) | push auf `main`, manuell |
-| `a11y.yml` | axe-core WCAG 2.x (Startseite + 404), Offline-Verhalten des Service Workers und horizontaler Überlauf in sieben Viewport-Breiten (320–1920 px) | push, PR + manuell |
+| `a11y.yml` | axe-core WCAG 2.x (Startseite + 404), Offline-Verhalten des Service Workers, das Mobil-Menü (Öffnen, Escape, Beschriftung, Viewports) und horizontaler Überlauf in sieben Viewport-Breiten (320–1920 px) | push, PR + manuell |
 
 Die „Was ist neu"-Bullets sind handgepflegt: Die Auto-Extraktion aus den
 Release-Notes liefert dort oft Maintenance-PRs (Bundle-Aufteilung,
@@ -159,11 +159,13 @@ unbemerkt. Ist der Fremddienst nicht erreichbar, meldet das Script
 `--require-api` wird auch das zum Fehler.
 
 Die Schriften (Outfit, JetBrains Mono) liegen **lokal** unter `assets/fonts/`
-(Variable Fonts, latin-Subset, ~62 KB) — Details in `assets/fonts/README.md`.
+(Variable Fonts, auf die genutzten Zeichen gestützt, ~30 KB) — Details in
+`assets/fonts/README.md`.
 Vorher kam die Font-CSS als render-blockender Cross-Origin-Request von
 `fonts.googleapis.com`: gemessen FCP 1040 ms bei TTFB 367 ms, und die IP jedes
 Besuchers ging an Google. `scripts/fetch-fonts.py` lädt die Dateien neu (Netz
-nötig), `tests/test_fonts.py` hält den Zustand „alles lokal" fest.
+nötig) und stützt sie gleich selbst, `tests/test_fonts.py` hält den Zustand
+„alles lokal" fest, `tests/test_font_coverage.py` prüft Zeichenmenge und Achsen.
 
 Fehlerseiten liefert Pages aus `404.html` (im Deploy-Artefakt, `noindex`, ohne
 JavaScript, gleiche Schriften wie die Landing Page). Die Mobile-Navigation hängt
@@ -187,7 +189,8 @@ python3 scripts/validate-html.py --strict --file index.html --file 404.html  # H
 python3 scripts/check-deployed.py          # Live-Seite == Repo? (braucht Netz)
 python3 scripts/sync-faq-schema.py --check # FAQPage-JSON-LD == FAQ-Sektion?
 python3 scripts/make-og-image.py           # og-image.jpg neu rendern (Playwright + Pillow)
-python3 scripts/fetch-fonts.py             # Schriften neu laden (nur bei Font-Update)
+python3 scripts/fetch-fonts.py             # Schriften neu laden + stützen (nur bei Font-Update)
+python3 scripts/subset-fonts.py --check    # Zeichenmenge und Achsen prüfen (ohne Netz)
 ```
 
 Die Patch-Funktionen arbeiten auf Dateikopien in `tmp_path`; nur die

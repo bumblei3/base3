@@ -18,8 +18,8 @@ BASE3 = Path(__file__).resolve().parent.parent
 MODULE_TO_PIP = {"PIL": "pillow", "fontTools": "fonttools"}
 
 # Pip-Pakete, die nicht direkt importiert werden, aber nötig sind: brotli
-# dekodiert WOFF2 für fontTools (test_fonts_cover_all_page_glyphs liest die
-# Schriften als TTFont).
+# dekodiert WOFF2 für fontTools (test_font_coverage liest die Schriften als
+# TTFont, um Zeichenmenge und fvar-Achsen zu prüfen).
 EXTRA_PIP = {"brotli"}
 
 
