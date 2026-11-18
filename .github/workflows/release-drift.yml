@@ -1,0 +1,55 @@
+name: Release-Drift
+
+# Nur lesend: vergleicht die angezeigten Versionen mit den neuesten Releases
+# von schach9x9 und trischach. Schreibt nichts, pusht nichts, öffnet keinen
+# PR und blockiert keinen Merge — der automatische Versions-Sync wurde bewusst
+# entfernt, die Pills pflegt das lokale Script (RELEASE.md). Dieser Wächter
+# bemerkt nur noch, wenn danach vergessen wurde.
+on:
+  schedule:
+    # Montags 05:00 UTC, nach der Dead-Link-Wache (03:00 UTC)
+    - cron: "0 5 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-drift
+  cancel-in-progress: true
+
+jobs:
+  drift:
+    name: Zeigt die Seite ältere Versionen als GitHub?
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Release-Drift prüfen
+        run: |
+          python3 scripts/check-release-drift.py \
+            --schach-repo-owner bumblei3 --schach-repo-name schach9x9 \
+            --trischach-repo-owner bumblei3 --trischach-repo-name trischach
+
+  # Der Deploy-Verify in pages.yml läuft nur direkt nach dem Push. Diese
+  # Woche-Wache fragt zusätzlich, ob die Live-Seite noch byte-identisch zum
+  # Repo steht — ein Seitenabbruch oder CDN-Drift wäre sonst bis zum nächsten
+  # Push unsichtbar.
+  live:
+    name: Live-Seite == Repo?
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Ausgelieferte Bytes gegen das Repo prüfen
+        run: python3 scripts/check-deployed.py

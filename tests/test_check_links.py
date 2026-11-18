@@ -82,3 +82,41 @@ def re_findall_html(text: str) -> list[str]:
 def test_soft_codes_are_not_failures():
     assert 403 in cl.SOFT_CODES and 429 in cl.SOFT_CODES
     assert 404 not in cl.SOFT_CODES
+
+
+# ------------------------------------------------- neue Quellen (sitemap/meta)
+
+
+def test_sitemap_locs_are_collected():
+    """Die Sitemap ist eine eigene Ausspielungsfläche für Suchmaschinen.
+
+    Ihre <loc>s waren die einzigen ausgehenden URLs, die kein Wächter sah.
+    """
+    found = cl.collect_links()
+    assert "sitemap.xml" in found, "sitemap.xml wird nicht gelesen"
+    assert "https://bumblei3.github.io/base3/" in found["sitemap.xml"]
+    assert "https://bumblei3.github.io/schach9x9/" in found["sitemap.xml"]
+    assert "https://bumblei3.github.io/trischach/" in found["sitemap.xml"]
+
+
+def test_meta_content_urls_are_collected():
+    """og:image / twitter:image stehen in content="", nicht in href/src.
+
+    Eine tote Social-Karte (LinkedIn, X) würde still ausgespielt — die
+    Social-Karte ist gerade deshalb gerendert, weil sie sichtbar zählt.
+    """
+    found = cl.collect_links()
+    assert "https://bumblei3.github.io/base3/og-image.jpg" in found["index.html"]
+
+
+def test_links_in_extrahiert_meta_und_loc():
+    """Synthetisch: meta-content und <loc>, aber keine href/src-Falle."""
+    text = (
+        '<meta property="og:image" content="https://example.com/card.jpg">'
+        '<meta name="twitter:site" content="@beispiel">'
+        "<url><loc> https://example.com/a </loc></url>"
+    )
+    assert cl._links_in(text) == {
+        "https://example.com/card.jpg",
+        "https://example.com/a",
+    }

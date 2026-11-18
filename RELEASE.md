@@ -121,9 +121,20 @@ JPEG gewählt, weil das Bild Fotos enthält: gemessen 234 KB als PNG gegen
 ## Hinweis
 
 base3 deployt über `pages.yml`. `tests.yml` führt pytest, den
-Seiten-Validator, den W3C-Nu-Check und den Kontrast-Check aus. Es gibt keinen
-Workflow mehr, der Version-Pills aus den Nachbar-Repos zieht oder diesen
-Stand in CI prüft. Das CI der Spiele lebt in den eigenständigen Repos:
+Seiten-Validator, den W3C-Nu-Check und den Kontrast-Check aus. Ein Workflow,
+der Version-Pills automatisch aus den Nachbar-Repos zieht, gibt es nicht mehr.
+Stattdessen wacht `release-drift.yml` einmal pro Woche **nur lesend** darüber,
+ob die Seite älter ist als das neueste Release von schach9x9/trischach —
+geschrieben oder gepusht wird nichts, ein Merge wird nicht blockiert.
+
+Die Pills pflegt nach wie vor lokal:
+
+```bash
+python3 scripts/sync-versions.py            # Sub-Repos liegen lokal
+python3 scripts/sync-versions.py --api-mode # nur GitHub-API
+```
+
+Das CI der Spiele lebt in den eigenständigen Repos:
 
 - https://github.com/bumblei3/schach9x9/actions
 - https://github.com/bumblei3/trischach/actions

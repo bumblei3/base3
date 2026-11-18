@@ -27,7 +27,7 @@ genauso wichtig ist wie der Brettaufbau.
 Die Plattform existiert, weil beides zwei Seiten derselben Neugier ist: Schach
 verändern, ohne es zu verlassen. Code, Build und CI der Spiele leben in den
 eigenständigen Repos. base3 ist der Türkeiler: die Landing Page mit eigenen
-Tests und fünf Workflows.
+Tests und sechs Workflows.
 
 **Offline:** Ein Service Worker (`sw.js`) macht die Seite nach dem ersten Besuch
 auch ohne Verbindung erreichbar. Er arbeitet *network-first* — online immer die
@@ -113,16 +113,19 @@ bis zum strategischen 3-Spieler-Hex-Schach.
 
 ## CI & Tests
 
-base3 hat fünf Workflows (`.github/workflows/`) — GitHub listet zusätzlich
-`Dependabot Updates` als sechsten, dafür gibt es hier aber keine Datei.
-Versions-Sync und Drift-Guard sind entfernt. Pills zieht bei einem
-Sub-Release `python3 scripts/sync-versions.py` lokal, siehe `RELEASE.md`.
+base3 hat sechs Workflows (`.github/workflows/`) — GitHub listet zusätzlich
+`Dependabot Updates` als siebten, dafür gibt es hier aber keine Datei.
+Der automatische Versions-Sync ist entfernt; `release-drift.yml` prüft nur
+lesend, ob die Seite älter ist als die neuesten Releases der Sub-Repos.
+Pills zieht bei einem Sub-Release `python3 scripts/sync-versions.py` lokal,
+siehe `RELEASE.md`.
 
 | Workflow | Zweck | Trigger |
 |---|---|---|
 | `pages.yml` | Deploy der Staged-Liste (`index.html`, **`404.html`**, `assets/`, `og-image.jpg`, **`sw.js`**, Icons + Favicons, `manifest.webmanifest`, `robots.txt`, `sitemap.xml`); danach Job `Verify live deployment` | push auf `main` |
 | `tests.yml` | pytest, `validate_landing_page.py`, W3C-Nu-HTML-Check und WCAG-Kontrast | push, PR + manuell |
-| `check-links.yml` | alle ausgehenden Links aus `index.html`, `404.html`, `README.md` und `FAQ.md` erreichbar? | push, PR, montags 03:00 UTC + manuell |
+| `check-links.yml` | alle ausgehenden Links aus `index.html`, `404.html`, `README.md`, `FAQ.md` und `sitemap.xml` erreichbar? (inkl. `<meta content>`-URLs wie `og:image`) | push, PR, montags 03:00 UTC + manuell |
+| `release-drift.yml` | zwei Wochenwachen, nur lesend: ist die angezeigte Version älter als das neueste Release von schach9x9/trischach, und ist die Live-Seite noch byte-identisch zum Repo? | montags 05:00 UTC + manuell |
 | `lighthouse.yml` | Lighthouse-Audit der Landing Page (Performance/A11y/Best-Practices/SEO) | push auf `main`, manuell |
 | `a11y.yml` | axe-core WCAG 2.x (Startseite + 404), Offline-Verhalten des Service Workers, das Mobil-Menü (Öffnen, Escape, Beschriftung, Viewports) und horizontaler Überlauf in neun Viewport-Breiten (320–1920 px, inkl. 480/640 als 200 %-Zoom-Stufen) | push, PR + manuell |
 
@@ -188,6 +191,7 @@ python3 -m pytest          # Sync, Sitemap, Validator, Deploy-Liste, FAQ-Schema,
 python3 scripts/validate_landing_page.py   # Tag-Balance, JSON-LD, Link-Inventar
 python3 scripts/validate-html.py --strict --file index.html --file 404.html  # HTML-Standard (W3C Nu)
 python3 scripts/check-deployed.py          # Live-Seite == Repo? (braucht Netz)
+python3 scripts/check-release-drift.py     # angezeigte Versionen == neueste Releases? (braucht Netz)
 python3 scripts/serve-preview.py --help    # Vorschau-Server wie Pages (gzip)
 python3 scripts/sync-faq-schema.py --check # FAQPage-JSON-LD == FAQ-Sektion?
 python3 scripts/make-og-image.py           # og-image.jpg neu rendern (Playwright + Pillow)

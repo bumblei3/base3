@@ -1,14 +1,19 @@
 #!/usr/bin/env python3
 """check-links.py — prüft alle ausgehenden Links von base3 auf Erreichbarkeit.
 
-Zieht die Links aus index.html, 404.html, README.md und FAQ.md (Markdown-
-Links inklusive), ruft sie parallel per HEAD ab und meldet nicht erreichbare
-Ziele. So fängt der Workflow umbenannte Repos, verschobene Demos oder
-abgeschaltete Seiten — bevor ein Besucher darauf stößt.
+Zieht die Links aus index.html, 404.html, README.md, FAQ.md und sitemap.xml
+(Markdown-Links und <meta content>-URLS inklusive), ruft sie parallel per HEAD ab
+und meldet nicht erreichbare Ziele. So fängt der Workflow umbenannte Repos,
+verschobene Demos oder abgeschaltete Seiten — bevor ein Besucher darauf stößt.
 
 404.html gehört dazu, weil es ausgeliefert wird: genau dort landet ein
 Besucher mit einem alten Link, und die vier Ziele (Startseite, beide Demos,
 Repository) waren bisher ungeprüft.
+
+sitemap.xml und die Meta-Angaben (og:image, og:url, twitter:image) fehlten
+bisher: eine tote og:image zerstört die Social-Karte still, und eine tote
+<loc> führt Suchmaschinen in den 404 — ohne dass ein anderer Wächter etwas
+sieht.
 
 Aufruf:  python3 scripts/check-links.py [--workers 8] [--timeout 20]
 Exit:    0 = alle Links erreichbar, 1 = mindestens einer fehlerhaft
@@ -28,13 +33,42 @@ from pathlib import Path
 BASE3 = Path(__file__).resolve().parent.parent
 
 # Dateien, aus denen Links gezogen werden
-SOURCES = ("index.html", "404.html", "README.md", "FAQ.md")
+SOURCES = ("index.html", "404.html", "README.md", "FAQ.md", "sitemap.xml")
 
 # Statuscodes, die keine harte Aussage erlauben
 SOFT_CODES = {403, 405, 429, 503}
 
 # Nicht prüfbar — kein HTTP-Ziel
 SKIP_PREFIXES = ("mailto:", "tel:", "javascript:", "data:", "#")
+
+
+def _links_in(text: str) -> set[str]:
+    """Links aus einem einzelnen Dokument (nur http/https)."""
+    links = set()
+    # HTML: href="..." / src="..."
+    for match in re.finditer(r'(?:href|src)="([^"]+)"', text):
+        links.add(match.group(1))
+    # Meta-Angaben: og:image / og:url / twitter:image stehen in
+    # content="...", nicht in href/src — eine tote og:image würde sonst die
+    # Social-Karte still kaputtmachen, ohne dass ein Wächter sieht.
+    for match in re.finditer(r'<meta[^>]+content="(https?://[^"]+)"', text):
+        links.add(match.group(1))
+    # Sitemap: <loc> ist das einzige Link-Element dort.
+    for match in re.finditer(r"<loc>([^<]+)</loc>", text):
+        links.add(match.group(1).strip())
+    # <link rel="preconnect"> ist nur ein DNS-/TLS-Hinweis, kein Ziel —
+    # ein 404 dort ist normal und würde den Check falsch rot machen.
+    preconnect = set(re.findall(r'<link rel="preconnect" href="([^"]+)"', text))
+    links -= preconnect
+    # Markdown: [Text](url) und <url>
+    for match in re.finditer(r"\[[^\]]*\]\(([^)\s]+)\)", text):
+        links.add(match.group(1))
+    for match in re.finditer(r"<(https?://[^>\s]+)>", text):
+        links.add(match.group(1))
+    return {
+        url for url in links
+        if url.startswith(("http://", "https://")) and not url.startswith(SKIP_PREFIXES)
+    }
 
 
 def collect_links() -> dict[str, set[str]]:
@@ -44,25 +78,7 @@ def collect_links() -> dict[str, set[str]]:
         path = BASE3 / name
         if not path.is_file():
             continue
-        text = path.read_text(encoding="utf-8")
-        links = set()
-        # HTML: href="..." / src="..."
-        for match in re.finditer(r'(?:href|src)="([^"]+)"', text):
-            links.add(match.group(1))
-        # <link rel="preconnect"> ist nur ein DNS-/TLS-Hinweis, kein Ziel —
-        # ein 404 dort ist normal und würde den Check falsch rot machen.
-        preconnect = set(re.findall(r'<link rel="preconnect" href="([^"]+)"', text))
-        links -= preconnect
-        # Markdown: [Text](url) und <url>
-        for match in re.finditer(r"\[[^\]]*\]\(([^)\s]+)\)", text):
-            links.add(match.group(1))
-        for match in re.finditer(r"<(https?://[^>\s]+)>", text):
-            links.add(match.group(1))
-        links = {
-            url for url in links
-            if url.startswith(("http://", "https://")) and not url.startswith(SKIP_PREFIXES)
-        }
-        found[name] = links
+        found[name] = _links_in(path.read_text(encoding="utf-8"))
     return found
 
 
