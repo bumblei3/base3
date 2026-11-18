@@ -624,6 +624,13 @@
       main a[href^="http"]::after {
         content: " (" attr(href) ")"; font-size: 0.78em; color: #444; word-break: break-all;
       }
+      /* Der Footer liegt außerhalb von <main> — ohne diese Regel druckte die
+         letzte Zeile der Seite (GitHub, Feedback, beide Demos, die beiden
+         Repos) als bloßer Text, auf Papier ohne erreichbares Ziel. Am PDF
+         gemessen: „GitHub Feedback Schach9x9 Demo Trischach Demo" ohne URL. */
+      .footer a[href]::after {
+        content: " (" attr(href) ")"; font-size: 0.78em; color: #444; word-break: break-all;
+      }
       h1, h2, h3 { break-after: avoid; }
     }
     /* Accessibility: Skip-Link (nur bei Tastaturfokus sichtbar) */

@@ -148,6 +148,20 @@ def test_print_keeps_cards_whole_and_shows_link_targets():
     assert re.search(r"a\[href\^=\"http\"\]::after", css), "Link-Ziele werden nicht ausgedruckt"
 
 
+def test_print_schreibt_auch_die_footer_ziele_mit():
+    """Der Footer liegt außerhalb von <main> — die Regel darf nicht nur main decken.
+
+    Am erzeugten PDF gemessen: die letzte Zeile der Seite (GitHub, Feedback,
+    beide Demos, die beiden Repos) erschien als bloßer Text, ohne Ziel. Auf
+    Papier ist so kein Link erreichbar.
+    """
+    css = _block(r"@media\s*print")
+    assert re.search(r"\.footer\s+a\[href\]::after", css), (
+        "Footer-Links werden ohne Ziel ausgedruckt — der Footer liegt "
+        "außerhalb von <main>"
+    )
+
+
 # ------------------------------------------------------------ 404-Seite
 def test_not_found_links_the_favicon():
     """Ohne Icon-Links fragt der Browser /favicon.ico am Host-Wurzelpfad an.
