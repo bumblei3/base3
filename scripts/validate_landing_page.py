@@ -96,6 +96,29 @@ def collect_links(html_text: str) -> list[str]:
     return sorted(links)
 
 
+def check_lokale_referenzen(html_text: str, basis: Path) -> list[str]:
+    """Lokale Ziele (href/src) müssen zu einer Datei im Repo führen.
+
+    `check-links.py` schaut nur auf http(s), `check-deployed.py` findet eine
+    kaputte lokale Referenz erst, nachdem die Seite mit einem 404 live
+    steht. Das hier fängt sie vor dem Push.
+    """
+    fehlend: list[str] = []
+    for treffer in re.finditer(r'(?:href|src)="([^"]+)"', html_text):
+        ziel = treffer.group(1)
+        if ziel.startswith(("http://", "https://", "data:", "#", "mailto:", "tel:", "javascript:")):
+            continue
+        rel = ziel
+        for prefix in ("./", "/base3/", "/"):
+            if rel.startswith(prefix):
+                rel = rel[len(prefix):]
+                break
+        rel = rel.split("#")[0].split("?")[0]
+        if rel and not (basis / rel).exists():
+            fehlend.append(ziel)
+    return fehlend
+
+
 def main() -> int:
     if not INDEX_HTML.is_file():
         print(f"FEHLER: {INDEX_HTML} nicht gefunden", file=sys.stderr)
@@ -111,6 +134,10 @@ def main() -> int:
     jsonld_errors = check_jsonld(html_text)
     failures.extend(jsonld_errors)
     print(f"JSON-LD:     {'OK' if not jsonld_errors else str(len(jsonld_errors)) + ' Fehler'}")
+
+    lokal = check_lokale_referenzen(html_text, INDEX_HTML.parent)
+    failures.extend(f"lokales Ziel fehlt: {ziel}" for ziel in lokal)
+    print(f"Lokale Ziele: {'OK' if not lokal else str(len(lokal)) + ' fehlen'}")
 
     links = collect_links(html_text)
     print(f"Link-Inventar: {len(links)} ausgehende Links")

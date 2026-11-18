@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 """check-links.py — prüft alle ausgehenden Links von base3 auf Erreichbarkeit.
 
-Zieht die Links aus index.html, README.md und FAQ.md (Markdown-Links inklusive),
-ruft sie parallel per HEAD ab und meldet nicht erreichbare Ziele. So fängt der
-Workflow umbenannte Repos, verschobene Demos oder abgeschaltete Seiten — bevor
-ein Besucher darauf stößt.
+Zieht die Links aus index.html, 404.html, README.md und FAQ.md (Markdown-
+Links inklusive), ruft sie parallel per HEAD ab und meldet nicht erreichbare
+Ziele. So fängt der Workflow umbenannte Repos, verschobene Demos oder
+abgeschaltete Seiten — bevor ein Besucher darauf stößt.
+
+404.html gehört dazu, weil es ausgeliefert wird: genau dort landet ein
+Besucher mit einem alten Link, und die vier Ziele (Startseite, beide Demos,
+Repository) waren bisher ungeprüft.
 
 Aufruf:  python3 scripts/check-links.py [--workers 8] [--timeout 20]
 Exit:    0 = alle Links erreichbar, 1 = mindestens einer fehlerhaft
@@ -24,7 +28,7 @@ from pathlib import Path
 BASE3 = Path(__file__).resolve().parent.parent
 
 # Dateien, aus denen Links gezogen werden
-SOURCES = ("index.html", "README.md", "FAQ.md")
+SOURCES = ("index.html", "404.html", "README.md", "FAQ.md")
 
 # Statuscodes, die keine harte Aussage erlauben
 SOFT_CODES = {403, 405, 429, 503}

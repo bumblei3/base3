@@ -90,3 +90,26 @@ def test_main_returns_zero_for_real_page(capsys):
     out = capsys.readouterr().out
     assert "VALIDATION OK" in out
     assert "Tag-Balance: OK" in out
+
+
+# ------------------------------------------------------------ Lokale Ziele
+def test_reale_seite_hat_alle_lokalen_ziele():
+    assert vlp.check_lokale_referenzen(REAL, BASE3) == []
+
+
+def test_fundfindet_kaputte_lokale_referenz(tmp_path):
+    """Eine Tippfehler-Adresse darf nicht erst live als 404 auffallen.
+
+    check-links.py prüft nur http(s), check-deployed.py erst nach dem Deploy.
+    """
+    (tmp_path / "assets").mkdir()
+    (tmp_path / "assets" / "da.png").write_bytes(b"x")
+    html = (
+        '<img src="./assets/da.png">'
+        '<img src="./assets/fehlt.png">'
+        '<a href="#absatz">x</a>'
+        '<a href="./">Start</a>'
+        '<a href="mailto:x@y.z">m</a>'
+        '<link rel="icon" href="data:image/svg+xml,...">'
+    )
+    assert vlp.check_lokale_referenzen(html, tmp_path) == ["./assets/fehlt.png"]

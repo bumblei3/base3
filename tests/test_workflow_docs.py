@@ -31,3 +31,17 @@ def test_workflow_comments_name_existing_workflows():
             f"{path.name} erwähnt Workflows, die es nicht gibt: "
             f"{sorted(mentioned - existing)}"
         )
+
+
+def test_dead_link_wache_laeuft_auch_bei_prs():
+    """Ein Tippfehler in einer neuen URL darf nicht erst nach dem Merge auffallen.
+
+    Die Wache prüft externe Ziele — sie ist in einem PR genau so möglich wie
+    auf main, und ein kaputter Link wäre dann schon vor dem Merge rot.
+    """
+    import re
+
+    text = (BASE3 / ".github" / "workflows" / "check-links.yml").read_text(encoding="utf-8")
+    assert re.search(r"(?m)^  pull_request:\s*$", text), (
+        "check-links.yml läuft nicht auf PRs"
+    )

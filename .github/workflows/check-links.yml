@@ -1,9 +1,14 @@
 name: Check links (dead-link guard)
 
-# Prüft alle ausgehenden Links aus index.html / README.md / FAQ.md.
+# Prüft alle ausgehenden Links aus index.html / 404.html / README.md / FAQ.md.
 # Fängt umbenannte Repos, verschobene Demos oder abgeschaltete Seiten.
+#
+# Auch auf PRs: ein Tippfehler in einer neuen URL würde sonst erst beim
+# nächsten Push auf main auffallen — also erst nach dem Merge.
 on:
   push:
+    branches: [main]
+  pull_request:
     branches: [main]
   workflow_dispatch:
   schedule:

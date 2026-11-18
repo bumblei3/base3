@@ -22,6 +22,20 @@ def test_collects_links_from_all_sources():
     assert "https://github.com/bumblei3/trischach" in all_urls
 
 
+def test_die_fehlerseite_liefert_ihre_ziele_in_die_prüfung():
+    """404.html wird ausgeliefert — ihre vier Ziele müssen geprüft werden.
+
+    Ein Besucher mit einem alten Link landet genau dort; dasselbe gilt für
+    die Dead-Link-Wache wie für die Startseite.
+    """
+    found = cl.collect_links()
+    assert "404.html" in found, "404.html wird nicht gelesen"
+    ziele = found["404.html"]
+    assert "https://bumblei3.github.io/schach9x9/" in ziele
+    assert "https://bumblei3.github.io/trischach/" in ziele
+    assert "https://github.com/bumblei3/base3" in ziele
+
+
 def test_preconnect_hints_are_excluded():
     """<link rel="preconnect"> ist kein Navigationsziel (404 dort ist normal).
 
