@@ -381,26 +381,38 @@ def test_fließtext_liegt_über_der_lesbarkeits_schwelle():
     News, Footer) ist 13 px im Browser eine Augenbelastung. Fließtext liegt
     jetzt bei 1rem, Listen bei 0.95rem — der Test hält die Schwelle fest,
     damit sie nicht still wieder nach unten optimiert wird.
+
+    Gilt für jede ausgelieferte Seite, nicht nur die Startseite: auf 404.html
+    stand `.hint` bei 0.82rem (13,1 px) und die Karten bei 0.92rem — die
+    Fehlerseite war die einzige Seite unter dem Sockel.
     """
     import re
 
     regeln = {
-        ".platform-card p": 16,
-        ".faq-a": 16,
-        ".how-to-list": 16,
-        ".footer": 16,
-        ".features-list": 15.2,
-        ".whats-new-list": 15.2,
-        ".faq-links": 15.2,
+        "index.html": {
+            ".platform-card p": 16,
+            ".faq-a": 16,
+            ".how-to-list": 16,
+            ".footer": 16,
+            ".features-list": 15.2,
+            ".whats-new-list": 15.2,
+            ".faq-links": 15.2,
+        },
+        "404.html": {
+            "a.card": 15.2,
+            ".hint": 15.2,
+        },
     }
-    for selektor, minimum in regeln.items():
-        treffer = re.search(rf"{re.escape(selektor)}\s*\{{([^}}]*)\}}", HTML)
-        assert treffer, f"{selektor} nicht im CSS gefunden"
-        größe = re.search(r"font-size:\s*([0-9.]+)\s*rem", treffer.group(1))
-        assert größe, f"{selektor} hat keine rem-Schriftgröße"
-        assert float(größe.group(1)) * 16 >= minimum - 0.01, (
-            f"{selektor}: {float(größe.group(1)) * 16:.1f}px liegt unter {minimum}px"
-        )
+    for seite, regeln_pro_seite in regeln.items():
+        quelle = (BASE3 / seite).read_text(encoding="utf-8")
+        for selektor, minimum in regeln_pro_seite.items():
+            treffer = re.search(rf"{re.escape(selektor)}\s*\{{([^}}]*)\}}", quelle)
+            assert treffer, f"{seite}: {selektor} nicht im CSS gefunden"
+            größe = re.search(r"font-size:\s*([0-9.]+)\s*rem", treffer.group(1))
+            assert größe, f"{seite}: {selektor} hat keine rem-Schriftgröße"
+            assert float(größe.group(1)) * 16 >= minimum - 0.01, (
+                f"{seite}: {selektor}: {float(größe.group(1)) * 16:.1f}px liegt unter {minimum}px"
+            )
 
 
 def test_was_ist_neu_bullets_sind_einspaltig():
