@@ -5,8 +5,10 @@ index.html). Die width/height-Attribute müssen zur intrinsischen Größe passen
 sonst reserviert der Browser den falschen Platz und die Karte springt (CLS).
 """
 
+import importlib.util
 import os
 import re
+import sys
 import unicodedata
 import pytest
 from pathlib import Path
@@ -277,3 +279,149 @@ def test_socialkarte_ist_nicht_aeltlich_als_die_vorschauen():
             f"{vorschau} ist neuer als og-image.jpg — die Social-Karte zeigt "
             "ein veraltetes Bild (python3 scripts/make-og-image.py)"
         )
+
+
+# --------------------------------------------------- og-image-Generator (main)
+def _make_og_image():
+    """make-og-image.py laden — der Dateiname mit Bindestrich ist kein Modulname."""
+    spec = importlib.util.spec_from_file_location(
+        "make_og_image", BASE3 / "scripts" / "make-og-image.py"
+    )
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules["make_og_image"] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+class _FakePage:
+    """Schreibt ein PNG statt zu rendern — der Rest des Pfads bleibt echt."""
+
+    def __init__(self, pixel_size):
+        from PIL import Image
+
+        self._image = Image.new("RGB", pixel_size, (10, 10, 20))
+        self.goto_url = None
+        self.clip = None
+
+    def goto(self, url, wait_until=None):
+        self.goto_url = url
+
+    def evaluate(self, expression):
+        return None
+
+    def wait_for_timeout(self, ms):
+        return None
+
+    def screenshot(self, path, clip=None):
+        self.clip = clip
+        self._image.save(path)
+
+
+class _FakeBrowser:
+    def __init__(self, page):
+        self._page = page
+        self.closed = False
+        self.kwargs = None
+
+    def new_page(self, **kwargs):
+        self.kwargs = kwargs
+        return self._page
+
+    def close(self):
+        self.closed = True
+
+
+class _FakeChromium:
+    def __init__(self, browser):
+        self._browser = browser
+        self.launch_kwargs = None
+
+    def launch(self, **kwargs):
+        self.launch_kwargs = kwargs
+        return self._browser
+
+
+class _FakePlaywright:
+    def __init__(self, browser):
+        self.chromium = _FakeChromium(browser)
+
+
+class _FakeSyncPlaywright:
+    def __init__(self, playwright):
+        self._playwright = playwright
+        self.entered = False
+
+    def __enter__(self):
+        self.entered = True
+        return self._playwright
+
+    def __exit__(self, *args):
+        return False
+
+
+def _install_fake_chromium(monkeypatch, browser):
+    """Ersetzt den Browser durch ein Fake — ohne ihn wäre das ein Online-Test."""
+    import playwright.sync_api
+
+    fake = _FakeSyncPlaywright(_FakePlaywright(browser))
+    monkeypatch.setattr(playwright.sync_api, "sync_playwright", lambda: fake)
+    return fake
+
+
+def test_og_image_generator_erzeugt_jpeg_in_der_richtigen_groesse(
+    tmp_path, monkeypatch, capsys
+):
+    """Der Generator selbst, nicht nur seine Helfer.
+
+    make-og-image.py lief nur von Hand — ein geänderter Pfad darin bliebe
+    unentdeckt, bis jemand die Karte neu rendert. Hier läuft `main()` bis zum
+    Schreiben des JPEG durch; gerendert wird nicht, aber Viewport, Clip,
+    Skalierung und Speicherung sind echt.
+    """
+    module = _make_og_image()
+    ausgabe = tmp_path / "og-image.jpg"
+    monkeypatch.setattr(module, "OUT", ausgabe)
+    monkeypatch.setattr(module, "TEMPLATE", BASE3 / "scripts" / "og-image.html")
+    monkeypatch.setattr(module, "find_chromium", lambda: "/fake/chromium")
+
+    # DPR 2: der Screenshot ist 2400x1260 und wird auf 1200x630 skaliert.
+    seite = _FakePage((module.WIDTH * module.DPR, module.HEIGHT * module.DPR))
+    browser = _FakeBrowser(seite)
+    fake = _install_fake_chromium(monkeypatch, browser)
+
+    module.main()
+
+    from PIL import Image
+
+    with Image.open(ausgabe) as im:
+        assert im.format == "JPEG", f"{im.format} statt JPEG"
+        assert im.size == (module.WIDTH, module.HEIGHT), im.size
+    assert seite.goto_url == (BASE3 / "scripts" / "og-image.html").as_uri()
+    assert seite.clip == {
+        "x": 0,
+        "y": 0,
+        "width": module.WIDTH,
+        "height": module.HEIGHT,
+    }
+    assert browser.kwargs["viewport"] == {
+        "width": module.WIDTH,
+        "height": module.HEIGHT,
+    }
+    assert browser.kwargs["device_scale_factor"] == module.DPR
+    assert browser.closed, "Browser nicht geschlossen"
+    assert fake.entered, "sync_playwright nicht als Context Manager genutzt"
+    assert not ausgabe.with_name("og-image.tmp.png").exists(), (
+        "Temporärdatei nicht aufgeräumt"
+    )
+    assert "og-image.jpg:" in capsys.readouterr().out
+
+
+def test_og_image_generator_bricht_ab_wenn_die_vorlage_feht(tmp_path, monkeypatch):
+    """Ohne Vorlage darf nichts geschrieben werden."""
+    module = _make_og_image()
+    monkeypatch.setattr(module, "OUT", tmp_path / "og-image.jpg")
+    monkeypatch.setattr(module, "TEMPLATE", tmp_path / "fehlt.html")
+    with pytest.raises(SystemExit):
+        module.main()
+    assert not (tmp_path / "og-image.jpg").exists()
