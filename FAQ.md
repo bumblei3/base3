@@ -78,7 +78,7 @@ Schach9x9 läuft im Browser — keine Installation nötig.
 
 - **Regeln:** 9×9 Brett mit den Feenfiguren (siehe unten). Zusätzlich gibt
   es einen 8×8-Modus mit klassischen Standardregeln.
-- **Starten:** Klassisches Spiel, tägliches Puzzle, Kampagne mit Akt II (Kapitel 7–12) und Akt IV (Kapitel 19–25), oder Eröffnungs-Trainer.
+- **Starten:** Klassisches Spiel, tägliches Puzzle, Kampagne Akt I–IV (Kapitel 1–25), oder Eröffnungs-Trainer.
 - **KI-Gegner:** Fünf Persönlichkeiten, jede mit eigener Stärke und Spielweise.
 - **Offline:** Nach dem ersten Laden lässt sich die PWA installieren und offline
   spielen.

@@ -173,10 +173,13 @@ def test_schach9x9_mentions_daily_puzzle_and_later_campaign():
     assert "Kampagne bis Akt IV" in card
     how = HTML.split('class="how-to-card schach9x9-card"', 1)[1].split("</article>", 1)[0]
     assert "tägliches Puzzle" in how
-    assert "Akt II (Kapitel 7–12) und Akt IV (Kapitel 19–25)" in how
+    # Die Kampagne hat vier Akte: I (1–6), II (7–12), III (13–18), IV (19–25)
+    # — js/campaign/campaignData.ts im schach9x9-Repo. Hier stand früher nur
+    # „Akt II und Akt IV", also die Hälfte.
+    assert "Kampagne Akt I–IV (Kapitel 1–25)" in how
     faq = (BASE3 / "FAQ.md").read_text(encoding="utf-8")
     assert "tägliches Puzzle" in faq
-    assert "Akt II (Kapitel 7–12) und Akt IV (Kapitel 19–25)" in faq
+    assert "Kampagne Akt I–IV (Kapitel 1–25)" in faq
 
 
 def test_fairy_pieces_match_the_game():

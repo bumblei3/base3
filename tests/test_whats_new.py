@@ -288,3 +288,4 @@ def test_patch_faq_replaces_bullet_list():
     once, _ = sv.patch_faq(ORIGINAL_FAQ, *NEW, BULLETS, BULLETS)
     _, again = sv.patch_faq(once, *NEW, BULLETS, BULLETS)
     assert not again
+
