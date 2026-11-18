@@ -130,7 +130,7 @@ siehe `RELEASE.md`.
 | `check-links.yml` | alle ausgehenden Links aus `index.html`, `404.html`, `README.md`, `FAQ.md` und `sitemap.xml` erreichbar? (inkl. `<meta content>`-URLs wie `og:image`) | push, PR, montags 03:00 UTC + manuell |
 | `release-drift.yml` | zwei Wochenwachen, nur lesend: ist die angezeigte Version älter als das neueste Release von schach9x9/trischach, und ist die Live-Seite noch byte-identisch zum Repo? | montags 05:00 UTC + manuell |
 | `lighthouse.yml` | Lighthouse-Audit der Landing Page (Performance/A11y/Best-Practices/SEO) | push auf `main`, manuell |
-| `a11y.yml` | axe-core WCAG 2.x (Startseite + 404), Offline-Verhalten des Service Workers, das Mobil-Menü (Öffnen, Escape, Beschriftung, Viewports) und horizontaler Überlauf in neun Viewport-Breiten (320–1920 px, inkl. 480/640 als 200 %-Zoom-Stufen) | push, PR + manuell |
+| `a11y.yml` | axe-core WCAG 2.x (Startseite + 404), Offline-Verhalten des Service Workers, das Mobil-Menü (Öffnen, Escape, Beschriftung, Viewports) und horizontaler Überlauf auf Startseite und 404 in neun Viewport-Breiten (320–1920 px, inkl. 480/640 als 200 %-Zoom-Stufen) | push, PR + manuell |
 
 Die „Was ist neu"-Bullets sind handgepflegt: Die Auto-Extraktion aus den
 Release-Notes liefert dort oft Maintenance-PRs (Bundle-Aufteilung,

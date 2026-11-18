@@ -10,8 +10,21 @@ const { test, expect } = require('@playwright/test');
 // darüber prüfen nur, dass die Seite auf dem Gerät passt.
 const WIDTHS = [320, 360, 390, 480, 640, 768, 1024, 1280, 1920];
 
-async function loadFully(page) {
-  await page.goto('/base3/');
+// Beide ausgelieferten Seiten. Die 404 war die einzige Seite ohne
+// Responsive-Prüfung — dieselbe Lücke, in der auf ihr auch schon zwei
+// Schriftdefekte unentdeckt blieben (Achsen, Fließtext-Sockel). Ein eigener
+// Marker pro Seite verhindert, dass ein Server-404 still als „ungelesen"
+// durchläuft: der hat dieselbe URL und wäre sonst ein grüner Test, der nichts
+// prüft.
+const PAGES = [
+  { path: '/base3/', name: 'Startseite', marker: /^Base3 Chess Platform$/ },
+  { path: '/base3/404.html', name: '404', marker: /^Diese Seite gibt es nicht$/ },
+];
+
+async function loadFully(page, path, marker) {
+  await page.goto(path);
+  // Erst prüfen, dass wir wirklich UNSERE Seite scannen.
+  await expect(page.locator('h1')).toHaveText(marker);
   // Erst scrollen: die Karten-Vorschauen sind lazy und reservieren sonst
   // keinen Platz.
   await page.evaluate(async () => {
@@ -25,17 +38,19 @@ async function loadFully(page) {
   await page.waitForTimeout(250);
 }
 
-for (const width of WIDTHS) {
-  test(`${width}px: kein horizontaler Überlauf`, async ({ page }) => {
-    await page.setViewportSize({ width, height: 900 });
-    await loadFully(page);
-    const state = await page.evaluate(() => ({
-      overflow: document.documentElement.scrollWidth - window.innerWidth,
-      scrollWidth: document.documentElement.scrollWidth,
-    }));
-    expect(
-      state.overflow,
-      `bei ${width}px ist die Seite ${state.scrollWidth}px breit statt ${width}px`,
-    ).toBeLessThanOrEqual(0);
-  });
+for (const { path, name, marker } of PAGES) {
+  for (const width of WIDTHS) {
+    test(`${name} ${width}px: kein horizontaler Überlauf`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await loadFully(page, path, marker);
+      const state = await page.evaluate(() => ({
+        overflow: document.documentElement.scrollWidth - window.innerWidth,
+        scrollWidth: document.documentElement.scrollWidth,
+      }));
+      expect(
+        state.overflow,
+        `bei ${width}px ist die Seite ${state.scrollWidth}px breit statt ${width}px`,
+      ).toBeLessThanOrEqual(0);
+    });
+  }
 }
