@@ -369,3 +369,32 @@ def test_features_star_is_not_a_text_glyph():
     assert "content: ''" in body, "Stern muss mit content:'' gerendert werden"
     assert "mask" in body, "Stern muss als SVG-Maske gerendert werden"
     assert "✦" not in body, "✦ als Textglyph würde vorgelesen"
+
+
+def test_fließtext_liegt_über_der_lesbarkeits_schwelle():
+    """Die dichten Abschnitte hatten 0.82–0.9rem Fließtext.
+
+    WCAG verlangt kein Minimum, aber bei diesen Textmengen (FAQ, Regeln,
+    News, Footer) ist 13 px im Browser eine Augenbelastung. Fließtext liegt
+    jetzt bei 1rem, Listen bei 0.95rem — der Test hält die Schwelle fest,
+    damit sie nicht still wieder nach unten optimiert wird.
+    """
+    import re
+
+    regeln = {
+        ".platform-card p": 16,
+        ".faq-a": 16,
+        ".how-to-list": 16,
+        ".footer": 16,
+        ".features-list": 15.2,
+        ".whats-new-list": 15.2,
+        ".faq-links": 15.2,
+    }
+    for selektor, minimum in regeln.items():
+        treffer = re.search(rf"{re.escape(selektor)}\s*\{{([^}}]*)\}}", HTML)
+        assert treffer, f"{selektor} nicht im CSS gefunden"
+        größe = re.search(r"font-size:\s*([0-9.]+)\s*rem", treffer.group(1))
+        assert größe, f"{selektor} hat keine rem-Schriftgröße"
+        assert float(größe.group(1)) * 16 >= minimum - 0.01, (
+            f"{selektor}: {float(größe.group(1)) * 16:.1f}px liegt unter {minimum}px"
+        )
