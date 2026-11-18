@@ -35,6 +35,9 @@ frische Datei, der Cache ist ausschließlich der Offline-Fallback. Dateinamen
 sind nicht gehasht, ein cache-first würde nach einer Änderung noch alte Schriften
 oder Bilder ausliefern; deshalb wird darauf bewusst verzichtet.
 
+**Lizenz:** WTFPL — wie in den beiden Spiel-Repos. Kopieren, ändern und
+weitergeben ist ausdrücklich erlaubt, die Landing Page ebenso wie die Spiele.
+
 ---
 
 ## Feenfiguren im Detail
