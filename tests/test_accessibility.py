@@ -398,3 +398,19 @@ def test_fließtext_liegt_über_der_lesbarkeits_schwelle():
         assert float(größe.group(1)) * 16 >= minimum - 0.01, (
             f"{selektor}: {float(größe.group(1)) * 16:.1f}px liegt unter {minimum}px"
         )
+
+
+def test_was_ist_neu_bullets_sind_einspaltig():
+    """Die Bullets sind ganze Sätze, die Karten schmal (max ~345 px).
+
+    Bei `1fr 1fr` kamen auf 1280 px 142 px Spalten zusammen und ein Bullet
+    brach in 6–7 Zeilen — gemessen. Die sibling-Regel `.features-list`
+    kürzt unter 768 px ebenfalls auf eine Spalte, dort sind die Einträge
+    aber kurze Phrasen.
+    """
+    treffer = re.search(r"\.whats-new-list\s*\{([^}]*)\}", HTML)
+    assert treffer, ".whats-new-list nicht im CSS gefunden"
+    assert "grid-template-columns: 1fr;" in treffer.group(1), (
+        ".whats-new-list ist wieder zweispaltig — die Sätze brechen in "
+        "schmalen Spalten in 6–7 Zeilen"
+    )

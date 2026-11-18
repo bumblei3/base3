@@ -402,8 +402,11 @@
     }
     .whats-new-card.schach9x9-card .whats-new-label { color: #c7d2fe; border-color: rgba(99,102,241,0.4); }
     .whats-new-card.trischach-card .whats-new-label { color: #bfdbfe; border-color: rgba(59,130,246,0.4); }
+    /* Eine Spalte. Die Bullets sind ganze Sätze, und die Karten sind mit
+       minmax(280px, 1fr) schmal — bei 1fr 1fr kamen auf 1280 px 142 px
+       Spalten zusammen, ein Bullet brach in 6–7 Zeilen. Gemessen. */
     .whats-new-list {
-      list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 1rem;
+      list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: 0.5rem;
       font-size: 0.95rem; color: var(--color-text-secondary); line-height: 1.6;
     }
     .whats-new-list li { display: flex; align-items: flex-start; gap: var(--space-xs); }
