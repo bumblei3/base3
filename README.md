@@ -202,6 +202,16 @@ python3 scripts/fetch-fonts.py             # Schriften neu laden + stützen (nur
 python3 scripts/subset-fonts.py --check    # Zeichenmenge und Achsen prüfen (ohne Netz)
 ```
 
+Die Browser-Suite (axe WCAG, Service-Worker-Offline, horizontaler Überlauf,
+Mobil-Menü) läuft in `a11y.yml` und braucht Node + Chromium. Sie startet den
+Vorschau-Server selbst (`playwright.config.js`), lokal also:
+
+```bash
+npm ci
+npx playwright install chromium
+npx playwright test
+```
+
 Die Patch-Funktionen arbeiten auf Dateikopien in `tmp_path`; nur die
 Versions-/Datumsquellen werden monkeypatcht.
 

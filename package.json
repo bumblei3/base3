@@ -1,6 +1,13 @@
 {
   "name": "base3",
   "private": true,
+  "description": "Landing page for the chess variants Schach9x9 and Trischach.",
+  "homepage": "https://bumblei3.github.io/base3/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bumblei3/base3.git"
+  },
+  "license": "WTFPL",
   "devDependencies": {
     "@playwright/test": "^1.48.0",
     "@axe-core/playwright": "^4.10.0"
