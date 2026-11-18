@@ -45,3 +45,23 @@ def test_dead_link_wache_laeuft_auch_bei_prs():
     assert re.search(r"(?m)^  pull_request:\s*$", text), (
         "check-links.yml läuft nicht auf PRs"
     )
+
+
+def test_dependabot_deckt_die_npm_abweisungen_ab():
+    """Playwright und axe-core treiben die Accessibility- und Offline-Tests.
+
+    Ohne npm-Eintrag drifteten beide still — und eine neue Playwright-Version
+    zieht ein anderes Browser-Revision nach sich, das die Testergebnisse
+    verändern kann.
+
+    Bewusst ohne yaml-Import geprüft: tests/test_readme_deps.py leitet aus
+    den Imports der Suite die pip-Abhängigkeiten ab, und pyyaml würde sonst
+    die Installzeile in README und tests.yml zusätzlich aufblähen.
+    """
+    text = (BASE3 / ".github" / "dependabot.yml").read_text(encoding="utf-8")
+    assert "package-ecosystem: npm" in text, (
+        "dependabot.yml prüft nicht die npm-Abhängigkeiten"
+    )
+    assert (BASE3 / "package-lock.json").is_file(), (
+        "npm ohne package-lock.json — npm ci in a11y.yml bräuchte den Lockstand"
+    )

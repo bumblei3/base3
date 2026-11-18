@@ -171,8 +171,9 @@ Fehlerseiten liefert Pages aus `404.html` (im Deploy-Artefakt, `noindex`, ohne
 JavaScript, gleiche Schriften wie die Landing Page). Die Mobile-Navigation hängt
 an der `.js`-Class, die ein früher Inline-Script setzt: ohne JavaScript bleiben
 die drei Links sichtbar und umbrechend, statt hinter einem funktionslosen
-☰-Button zu verschwinden. Action-Updates kommen gruppiert als eine PR pro Woche
-(`.github/dependabot.yml`), geprüft von `tests.yml` bei PRs.
+☰-Button zu verschwinden. Action- und npm-Updates kommen gruppiert als eine PR
+pro Woche (`.github/dependabot.yml`), geprüft von `tests.yml` bzw. `a11y.yml`
+bei PRs.
 
 Das Web-Manifest ist vollständig für den Install-Prompt: `any`-Icons 192/512,
 ein **maskables** 512er-Icon (randlos bis in die Ecken, damit der kreisförmige
