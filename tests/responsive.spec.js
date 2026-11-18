@@ -3,7 +3,12 @@ const { test, expect } = require('@playwright/test');
 // Breakpoints und Geräteklassen, für die die Seite laufen soll. Ein
 // horizontaler Überlauf ist die eine Responsive-Fehlerart, die weder axe noch
 // der Seiten-Validator sehen — sie fällt nur auf, wenn man wirklich rendert.
-const WIDTHS = [320, 360, 390, 768, 1024, 1280, 1920];
+//
+// 480 und 640 sind nicht Geräte, sondern Zoomstufen: 640 CSS px entsprechen
+// 200 % Browserzoom bei einem 1280er-Fenster, 480 knapp 267 %. Genau dort
+// bricht WCAG 1.4.4 (Text vergrößern) und 1.4.10 (Reflow) — die Breiten
+// darüber prüfen nur, dass die Seite auf dem Gerät passt.
+const WIDTHS = [320, 360, 390, 480, 640, 768, 1024, 1280, 1920];
 
 async function loadFully(page) {
   await page.goto('/base3/');

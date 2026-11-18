@@ -124,7 +124,7 @@ Sub-Release `python3 scripts/sync-versions.py` lokal, siehe `RELEASE.md`.
 | `tests.yml` | pytest, `validate_landing_page.py`, W3C-Nu-HTML-Check und WCAG-Kontrast | push, PR + manuell |
 | `check-links.yml` | alle ausgehenden Links aus den drei Dateien erreichbar? | push, montags 03:00 UTC + manuell |
 | `lighthouse.yml` | Lighthouse-Audit der Landing Page (Performance/A11y/Best-Practices/SEO) | push auf `main`, manuell |
-| `a11y.yml` | axe-core WCAG 2.x (Startseite + 404), Offline-Verhalten des Service Workers, das Mobil-Menü (Öffnen, Escape, Beschriftung, Viewports) und horizontaler Überlauf in sieben Viewport-Breiten (320–1920 px) | push, PR + manuell |
+| `a11y.yml` | axe-core WCAG 2.x (Startseite + 404), Offline-Verhalten des Service Workers, das Mobil-Menü (Öffnen, Escape, Beschriftung, Viewports) und horizontaler Überlauf in neun Viewport-Breiten (320–1920 px, inkl. 480/640 als 200 %-Zoom-Stufen) | push, PR + manuell |
 
 Die „Was ist neu"-Bullets sind handgepflegt: Die Auto-Extraktion aus den
 Release-Notes liefert dort oft Maintenance-PRs (Bundle-Aufteilung,

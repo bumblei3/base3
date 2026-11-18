@@ -92,9 +92,9 @@ def main() -> None:
         image = im.convert("RGB")
         if image.size != (WIDTH, HEIGHT):
             image = image.resize((WIDTH, HEIGHT), Image.Resampling.LANCZOS)
-        # JPEG, nicht PNG: die Karte enthält die beiden Spiel-Vorschauen, ein
-        # PNG daraus ist ~283 KB, JPEG ~66 KB — und og:image:width/height sowie
-        # die Crawler brauchen kein Alphakanal.
+        # JPEG, nicht PNG: die Karte enthält die beiden Spiel-Vorschauen —
+        # gemessen 234 KB als PNG gegen 59 KB als JPEG, und og:image:width/
+        # height sowie die Crawler brauchen kein Alphakanal.
         image.save(OUT, "JPEG", quality=JPEG_QUALITY, optimize=True, progressive=True)
     tmp.unlink(missing_ok=True)
 
