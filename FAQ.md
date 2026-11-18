@@ -91,7 +91,7 @@ kommen über den Upgrade-Shop dazu:
 
 - **Erzbischof** (7 Punkte) — Läufer + Springer. Stärker als beide Einzelfiguren,
   aber teurer in der Entwicklung.
-- **Kanzler** (9 Punkte) — Turm + Springer. Vereint Turm-Kraft mit der
+- **Kanzler** (8 Punkte) — Turm + Springer. Vereint Turm-Kraft mit der
   Flexibilität eines Springers.
 - **Nachtreiter** (6 Punkte) — ein „gleitender“ Springer: mehrere Springer-Sprünge
   in einer Linie.

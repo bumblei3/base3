@@ -209,6 +209,41 @@ def test_fairy_pieces_match_the_game():
         )
 
 
+def test_figurenwerte_kommen_aus_dem_spiel():
+    """Die Punktezahlen der Feenfiguren stehen in js/config.ts des Spiels.
+
+    Quelle: `SHOP_PIECES` (Anzeigewerte im Upgrade-Shop) und `PIECE_VALUES`
+    (Materialwert der KI) in js/config.ts von schach9x9. Beide Tabellen
+    stehen auf 8 für den Kanzler, mit dem Vermerk „Fixed from 9 to 8" —
+    README und FAQ hielten an der alten 9 fest.
+
+    Genau die Falle, vor der der Skill warnt: Zahlen, die natürlich klingen,
+    werden erfunden und überleben jede Doku-Runde. Der Stand liegt als
+    Fixture bei; ändert das Spiel die Zahl, müssen Fixture und Doku im
+    selben Schritt gehen — sonst schlägt dieser Test fehl.
+    """
+    fixture = BASE3 / "tests" / "fixtures" / "schach9x9-shop-pieces.txt"
+    werte: dict[str, int] = {}
+    for zeile in fixture.read_text(encoding="utf-8").splitlines():
+        zeile = zeile.strip()
+        if not zeile or zeile.startswith("#"):
+            continue
+        schluessel, punkte, name = zeile.split()
+        werte[name] = int(punkte)
+    assert werte, "Fixture leer"
+
+    for doku in ("README.md", "FAQ.md"):
+        text = (BASE3 / doku).read_text(encoding="utf-8")
+        for name, punkte in werte.items():
+            # \b, weil der Engel „(12 Punkte, Premium)" heißt — die Zahl
+            # darf also von einem Komma gefolgt sein.
+            treffer = re.search(rf"\*\*{re.escape(name)}\*\* \({punkte} Punkte\b", text)
+            assert treffer, (
+                f"{doku}: {name} steht nicht mit {punkte} Punkten da "
+                f"(Quelle: js/config.ts SHOP_PIECES im schach9x9-Repo)"
+            )
+
+
 def test_docs_agree_that_the_whats_new_bullets_are_handwritten():
     """README und FAQ durften behaupten, die Bullets kämen vom Script.
 

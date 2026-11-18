@@ -1,0 +1,16 @@
+# Figurenwerte aus dem schach9x9-Repo, Stand 2026-11-18.
+#
+# Quelle: js/config.ts, SHOP_PIECES (dort gleichzeitig die Anzeigewerte für
+# den Upgrade-Shop) und PIECE_VALUES (Materialwert der KI). Beide tabellen
+# stehen auf 8 für den Kanzler — im Code steht der Vermerk
+# "Fixed from 9 to 8". README.md und FAQ.md hielten an der alten 9 fest.
+#
+# tests/test_accessibility.py liest diese Datei und verlangt die Werte in
+# README.md und FAQ.md. Ändert das Spiel die Zahl, müssen Fixture und Doku
+# im selben Schritt gehen — sonst schlägt der Test fehl.
+#
+# Format: SCHLÜSSEL PUNKTE NAME
+ARCHBISHOP 7 Erzbischof
+CHANCELLOR 8 Kanzler
+NIGHTRIDER 6 Nachtreiter
+ANGEL 12 Engel
