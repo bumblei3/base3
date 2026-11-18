@@ -187,6 +187,7 @@ python3 -m pytest          # Sync, Sitemap, Validator, Deploy-Liste, FAQ-Schema,
 python3 scripts/validate_landing_page.py   # Tag-Balance, JSON-LD, Link-Inventar
 python3 scripts/validate-html.py --strict --file index.html --file 404.html  # HTML-Standard (W3C Nu)
 python3 scripts/check-deployed.py          # Live-Seite == Repo? (braucht Netz)
+python3 scripts/serve-preview.py --help    # Vorschau-Server wie Pages (gzip)
 python3 scripts/sync-faq-schema.py --check # FAQPage-JSON-LD == FAQ-Sektion?
 python3 scripts/make-og-image.py           # og-image.jpg neu rendern (Playwright + Pillow)
 python3 scripts/fetch-fonts.py             # Schriften neu laden + stützen (nur bei Font-Update)

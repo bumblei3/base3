@@ -29,7 +29,10 @@ def test_lighthouse_workflow_serves_the_repo_under_base3():
     assert "urls: http://localhost:8765/base3/" in text, (
         "lighthouse.yml auditet nicht die /base3/-URL"
     )
-    assert "--directory .lh" in text, "lighthouse.yml serviert die Wurzel statt .lh/"
+    assert "serve-preview.py" in text, (
+        "lighthouse.yml serviert mit python3 -m http.server — der liefert weder "
+        "gzip noch Cache-Control, Lighthouse maß 93 KiB statt der 44 KiB live"
+    )
     assert "ln -sfn" in text and ".lh/base3" in text, (
         "lighthouse.yml legt das Repo nicht unter .lh/base3 aus"
     )

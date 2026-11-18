@@ -23,9 +23,13 @@ jobs:
         run: |
           mkdir -p .lh
           ln -sfn "$PWD" .lh/base3
-      - name: Serve site
+      - name: Serve site wie Pages
         run: |
-          python3 -m http.server 8765 --directory .lh &
+          # python3 -m http.server liefert weder gzip noch Cache-Control —
+          # Lighthouse hat das ausgewertet: uses-text-compression: 0 und eine
+          # Gesamtgröße von 93 KiB, live sind es 44 KiB. Der Audit maß also
+          # eine Auslieferung, die die Seite nie benutzt.
+          python3 scripts/serve-preview.py --port 8765 --root .lh &
           sleep 2
           curl -sSf http://localhost:8765/base3/ >/dev/null
       - name: Run Lighthouse

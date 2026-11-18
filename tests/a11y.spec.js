@@ -30,3 +30,22 @@ for (const { path, marker } of PAGES) {
     expect(results.violations).toEqual([]);
   });
 }
+
+// Der Gate lief immer im Ausgangszustand und auf Desktop-Breite. Das
+// geöffnete Mobil-Menü ist eine eigene Überlagerung mit eigenem Kontrast und
+// eigenem Fokus — den hat axe nie geprüft.
+test('geöffnetes Mobil-Menü hat keine axe-Verstöße', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/base3/');
+  await expect(page.locator('h1')).toHaveText(/^Base3 Chess Platform$/);
+  await page.locator('.nav-toggle').click();
+  await expect(page.locator('.nav-links')).toBeVisible();
+  await expect(page.locator('.nav-toggle')).toHaveAttribute('aria-expanded', 'true');
+  const results = await new AxeBuilder({ page })
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+    .analyze();
+  if (results.violations.length) {
+    console.log('menü', JSON.stringify(results.violations, null, 2));
+  }
+  expect(results.violations).toEqual([]);
+});
