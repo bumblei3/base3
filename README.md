@@ -145,7 +145,10 @@ Die „Was ist neu"-Bullets sind handgepflegt: Die Auto-Extraktion aus den
 Release-Notes liefert dort oft Maintenance-PRs (Bundle-Aufteilung,
 Abhängigkeits-Bumps), nicht das, was Besucher sehen. Im lokalen Modus lässt
 `sync-versions.py` sie deshalb unangetastet; nur `--api-mode` schreibt sie
-(außer mit `--no-whats-new`).
+(außer mit `--no-whats-new`). `--api-mode --check` wertet ihre Abweichung
+deshalb als HINWEIS und endet mit 0 — als Drift zählen nur Pills,
+Release-Daten und `sitemap.xml`. Sonst wäre der Guard permanent rot, und
+sein „Fix"-Hinweis empfahl genau den Lauf, der die Hand-Pflege überschreibt.
 
 Das `FAQPage`-JSON-LD (`scripts/sync-faq-schema.py`) wird **aus der sichtbaren
 FAQ-Sektion abgeleitet**, nicht parallel gepflegt: sonst driftet es bei der

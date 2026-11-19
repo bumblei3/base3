@@ -21,6 +21,13 @@ aus den Release-Notes des neuesten Releases des jeweiligen Repos. Zu lange
 Bullets werden gekürzt (erst Klammerdetails, dann der abschließende Satz,
 erst danach hart am Wortrand). Mit --no-whats-new bleibt die Liste unangetastet.
 
+`--check` zählt nur Pills, Release-Daten und sitemap.xml als Drift. Die
+Was-ist-neu-Bullets sind handgepflegt; weichen sie von den Release-Notes ab,
+meldet `--check` das als HINWEIS und endet mit 0 — sonst würde der Guard
+permanent rot sein und sein „Fix"-Hinweis genau den Lauf empfehlen, der die
+Hand-Pflege überschreibt. Mit `--no-whats-new` bleibt die Liste garantiert
+unangetastet.
+
 Aufruf: python3 scripts/sync-versions.py
         python3 scripts/sync-versions.py --schach-path ../schach9x9 --trischach-path ../trischach
         python3 scripts/sync-versions.py --api-mode
@@ -576,10 +583,17 @@ def main():
     )
     any_changed = False
     pills_changed = False
+    drift = False
     for path, fn, label in jobs:
         text = path.read_text(encoding="utf-8")
         new_text, changed = fn(text, sv, sd, tv, td, sbullets, tbullets)
-        if changed:
+        # Die Was-ist-neu-Bullets sind handgepflegt (tests/test_whats_new.py).
+        # Ihr Abweichen ist kein Versionsdrift — Pills, Release-Daten und die
+        # Sitemap schon. Ohne diese Zweitbetrachtung schlägt der Guard permanent
+        # fehl, und der „Fix"-Hinweis ruft einen Sync herbei, der die
+        # handgeschriebenen Bullets mit dem Rohlaut der Release-Notes überschreibt.
+        _, changed_versions = fn(text, sv, sd, tv, td, [], [])
+        if changed_versions:
             if args.check:
                 print(
                     f"DRIFT: {label} wäre nicht aktuell "
@@ -592,6 +606,18 @@ def main():
                 )
             any_changed = True
             pills_changed = True
+            drift = True
+        elif changed:
+            if args.check:
+                print(
+                    f"HINWEIS: {label} — Was-ist-neu-Bullets weichen von den "
+                    "Release-Notes ab. Sie sind handgepflegt und gelten nicht als "
+                    "Drift; ein Lauf mit --no-whats-new schont sie."
+                )
+            else:
+                path.write_text(new_text, encoding="utf-8")
+                print(f"{label}: Was-ist-neu-Bullets → Release-Notes")
+                any_changed = True
         else:
             print(f"{label}: keine Änderungen (bereits aktuell)")
 
@@ -610,11 +636,12 @@ def main():
             SITEMAP_XML.write_text(new_xml, encoding="utf-8")
             print(f"sitemap.xml: lastmod → base3={base_lastmod}, schach9x9={sd}, trischach={td}")
         any_changed = True
+        drift = True
     else:
         print("sitemap.xml: keine Änderungen (bereits aktuell)")
 
     if args.check:
-        if any_changed:
+        if drift:
             teile = []
             if pills_changed:
                 teile.append("Version-Pills/README/FAQ")

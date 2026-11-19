@@ -275,3 +275,114 @@ def test_check_nennt_sitemapdrift_beim_namen(monkeypatch, tmp_path, capsys):
     fehler = capsys.readouterr().err
     assert "sitemap.xml-lastmod" in fehler, fehler
     assert "Version-Pills" not in fehler, fehler
+
+
+# ---------------------------------------------------- API-Modus: Bullets ≠ Drift
+def _redirect_api(monkeypatch, tmp_path: Path) -> tuple[Path, Path, Path]:
+    """API-Modus mit den *aktuellen* Versionswerten aus der Seite.
+
+    Damit ist versionsseitig nichts drin — nur die Bullets weichen ab.
+    """
+    copies = []
+    for src, dst in (
+        (BASE3 / "index.html", tmp_path / "index.html"),
+        (BASE3 / "README.md", tmp_path / "README.md"),
+        (BASE3 / "FAQ.md", tmp_path / "FAQ.md"),
+    ):
+        dst.write_text(src.read_text(encoding="utf-8"), encoding="utf-8")
+        copies.append(dst)
+    monkeypatch.setattr(sv, "INDEX_HTML", copies[0])
+    monkeypatch.setattr(sv, "README_MD", copies[1])
+    monkeypatch.setattr(sv, "FAQ_MD", copies[2])
+
+    sitemap = tmp_path / "sitemap.xml"
+    sitemap.write_text(
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        "  <url>\n"
+        "    <loc>https://bumblei3.github.io/base3/</loc>\n"
+        "    <lastmod>2099-01-01</lastmod>\n"
+        "  </url>\n"
+        "  <url>\n"
+        "    <loc>https://bumblei3.github.io/schach9x9/</loc>\n"
+        "    <lastmod>2026-11-16</lastmod>\n"
+        "  </url>\n"
+        "  <url>\n"
+        "    <loc>https://bumblei3.github.io/trischach/</loc>\n"
+        "    <lastmod>2026-10-20</lastmod>\n"
+        "  </url>\n"
+        "</urlset>\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(sv, "SITEMAP_XML", sitemap)
+    monkeypatch.setattr(sv, "_get_base_lastmod", lambda: "2099-01-01")
+    monkeypatch.setattr(
+        sv,
+        "version_from_remote_package",
+        lambda owner, name: "2.1.0" if name == "schach9x9" else "1.7.0",
+    )
+    monkeypatch.setattr(
+        sv,
+        "release_date_from_github",
+        lambda owner, name, version: "2026-11-16" if name == "schach9x9" else "2026-10-20",
+    )
+    return copies[0], copies[1], copies[2]
+
+
+API_ARGS = [
+    "sync-versions.py",
+    "--api-mode",
+    "--schach-repo-owner",
+    "bumblei3",
+    "--schach-repo-name",
+    "schach9x9",
+    "--trischach-repo-owner",
+    "bumblei3",
+    "--trischach-repo-name",
+    "trischach",
+]
+
+
+def test_check_wertet_handgeschriebene_bullets_nicht_als_drift(
+    monkeypatch, tmp_path, capsys
+):
+    """Nur die Bullets weichen ab → HINWEIS, Exit 0, nichts geschrieben.
+
+    Die Bullets sind handgepflegt (tests/test_whats_new.py). Würde der Guard
+    sie als Drift zählen, wäre er permanent rot — und sein „Fix"-Hinweis
+    empfiehlt genau den Lauf, der die Hand-Pflege überschreibt.
+    """
+    idx, readme, faq = _redirect_api(monkeypatch, tmp_path)
+    monkeypatch.setattr(
+        sv,
+        "fetch_release_body",
+        lambda owner, name: "- Brandneue Meldung, die in der Seite noch nicht steht und dort auch nicht stehen sollte.",
+    )
+    monkeypatch.setattr(sys, "argv", API_ARGS + ["--check"])
+
+    sv.main()  # kein SystemExit → Exit 0
+
+    out = capsys.readouterr().out
+    assert "HINWEIS" in out, out
+    assert "DRIFT" not in out, out
+    assert idx.read_text(encoding="utf-8") == ORIGINAL_INDEX, "--check darf nichts schreiben"
+    assert readme.read_text(encoding="utf-8") == ORIGINAL_README
+    assert faq.read_text(encoding="utf-8") == ORIGINAL_FAQ
+
+
+def test_check_bei_versionsdrift_endet_mit_eins(monkeypatch, tmp_path, capsys):
+    """Weicht die Version ab, zählt es weiterhin als Drift — Exit 1."""
+    _redirect_api(monkeypatch, tmp_path)
+    monkeypatch.setattr(
+        sv, "version_from_remote_package", lambda owner, name: "9.9.9"
+    )
+    monkeypatch.setattr(
+        sv, "fetch_release_body", lambda owner, name: "- Bullet aus den Release-Notes."
+    )
+    monkeypatch.setattr(sys, "argv", API_ARGS + ["--check"])
+
+    with pytest.raises(SystemExit) as exc:
+        sv.main()
+
+    assert exc.value.code == 1
+    assert "DRIFT" in capsys.readouterr().out
