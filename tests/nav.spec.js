@@ -64,4 +64,29 @@ test.describe('Mobil-Menü', () => {
     await expect(page.locator('.nav-toggle')).toBeHidden();
     await expect(page.locator('.nav-links')).toBeVisible();
   });
+
+  // Progressive Enhancement: die Kommentare in index.html behaupten, dass die
+  // drei Links ohne JavaScript sichtbar bleiben (nur umbrechend) und der
+  // ☰-Knopf dann gar nicht erst erscheint — sonst stünde ein funktionsloser
+  // Knopf über einer versteckten Navigation. Genau deshalb hängt die
+  // Mobil-Navigation an der .js-Class. Ohne diesen Test wäre das eine
+  // Behauptung, die eine CSS-Änderung still durchgehen ließe, und der
+  // Handy-Besucher hätte plötzlich keine Navigation.
+  test('ohne JavaScript bleibt die Navigation sichtbar', async ({ browser }) => {
+    const ctx = await browser.newContext({ javaScriptEnabled: false });
+    const page = await ctx.newPage();
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/base3/');
+    await expect(page.locator('.nav-links')).toBeVisible();
+    await expect(page.locator('.nav-toggle')).toBeHidden();
+    const ziele = await page
+      .locator('.nav-links a')
+      .evaluateAll((links) => links.map((a) => a.getAttribute('href')));
+    expect(ziele).toEqual([
+      './',
+      'https://bumblei3.github.io/schach9x9/',
+      'https://bumblei3.github.io/trischach/',
+    ]);
+    await ctx.close();
+  });
 });
