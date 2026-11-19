@@ -12,7 +12,9 @@ on:
     branches: [main]
   workflow_dispatch:
   schedule:
-    # Wöchentlich Montags 03:00 UTC (nach dem nightly sync)
+    # Wöchentlich Montags 03:00 UTC. Der Kommentar sagte früher „nach dem
+    # nightly sync" — den gibt es nicht mehr: Der Versions-Sync läuft lokal
+    # (RELEASE.md), in CI wacht nur release-drift.yml darüber.
     - cron: "0 3 * * 1"
 
 permissions:
