@@ -21,10 +21,15 @@
  */
 'use strict';
 
-/* Bei einer Strategie-Änderung hochzählen — activate räumt dann die
- * alten Caches weg, sonst serviert ein schon aktiver Besucher noch die
- * bisherige Variante. */
-const CACHE_VERSION = 'v2';
+/* Hochzählen, wenn sich der Precache-Inhalt oder die Strategie ändert —
+ * activate räumt dann die alten Caches weg. Der Browser installiert den
+ * Worker nur neu, wenn sich sw.js bytegenau ändert; ohne eine neue
+ * Cache-Version behält ein bereits aktiver Besucher die alten Dateien
+ * dauerhaft. Genau das war der Fall: v2 stand seit 5738521, während
+ * index.html und 404.html mehrmals neu gepresst wurden (Footer-Ziele im
+ * Druck, Font-Achsen, Fließtext-Sockel) — ein Wiederbesucher hätte die alte
+ * 404.html mit geklemmten Schriften behalten. */
+const CACHE_VERSION = 'v3';
 const CACHE_NAME = `base3-${CACHE_VERSION}`;
 
 /* Was offline unbedingt gehen muss. Kleiner, expliziter Kernel statt

@@ -75,6 +75,12 @@ in schach9x9 oder trischach aktualisiert werden.
    Der `--check`-Lauf muss exit 0 liefern, sonst ist ein Fixed-Point verletzt
    (ein zweiter Sync-Lauf darf nichts mehr ändern). CI ruft diesen Check nicht auf.
 
+   **Service-Worker-Cache:** Wenn sich Precache-Inhalt oder -Strategie
+   ändert, `CACHE_VERSION` in `sw.js` hochzählen. Der Browser installiert den
+   Worker nur neu, wenn sich `sw.js` bytegenau ändert — ohne die neue
+   Cache-Version behält ein bereits aktiver Besucher die alten Dateien
+   dauerhaft, und die neue `404.html` bleibt ihm unerreichbar.
+
 5. Committe die Änderungen:
    ```bash
    git add index.html README.md FAQ.md sitemap.xml
