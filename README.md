@@ -35,6 +35,15 @@ frische Datei, der Cache ist ausschließlich der Offline-Fallback. Dateinamen
 sind nicht gehasht, ein cache-first würde nach einer Änderung noch alte Schriften
 oder Bilder ausliefern; deshalb wird darauf bewusst verzichtet.
 
+**Cache-Fenster:** GitHub Pages liefert jede Datei — auch `index.html` — mit
+`cache-control: max-age=600` plus `etag`/`last-modified` aus, und die Header
+sind dort nicht konfigurierbar (per `curl -I` geprüft). Ein Wiederbesucher
+kann daher bis zu zehn Minuten nach einem Deploy die vorherige Seite sehen,
+auch wenn der Service Worker network-first ist: der Browser beantwortet die
+Anfrage aus seinem HTTP-Cache. Weil die Dateinamen nicht gehasht sind, würde
+ein Versions-Suffix auf der URL nichts daran ändern — das Fenster liegt in den
+Headern, nicht in den Pfaden.
+
 **Lizenz:** WTFPL — wie in den beiden Spiel-Repos. Kopieren, ändern und
 weitergeben ist ausdrücklich erlaubt, die Landing Page ebenso wie die Spiele.
 
